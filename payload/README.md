@@ -71,6 +71,10 @@ With `SEED_DEMO=true`, an empty database gets demo content on first start
 
 ## Changing the content model
 
+Create migrations with `npm run migrate:create <name>`: it turns on the Blob storage
+adapter (which adds a column to Media) so the schema matches production on Vercel.
+
+
 Fields are defined in code (`src/collections`, `src/blocks.ts`, `src/globals`). After a
 change, run `npm run payload migrate:create <name>` and commit the migration. Each
 school's site applies new migrations automatically when it starts, so one push
