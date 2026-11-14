@@ -112,7 +112,7 @@ export function link(name = 'link'): Field {
       {
         type: 'row',
         fields: [
-          segmented('type', 'Link to', [['page', 'A page'], ['url', 'A web address']], { default: 'page' }),
+          segmented('type', 'Link to', [['page', 'Page'], ['url', 'Web address']], { default: 'page' }),
           {
             name: 'page',
             label: 'Page',

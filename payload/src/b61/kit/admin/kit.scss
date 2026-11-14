@@ -62,3 +62,22 @@
 
 /* A link inside a list row is part of that row: no group rules above and below. */
 .b61-list .group-field { border-top: 0; border-bottom: 0; padding-top: 0; padding-bottom: 0; margin: 0; }
+
+/*
+ * Rows never squeeze a field below a usable width. Where a row is narrow
+ * (inside a Content card, a nested list, a phone), its fields stack instead.
+ */
+.field-type.row {
+  container-type: inline-size;
+}
+@container (max-width: 480px) {
+  .field-type.row .row__fields {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+  .field-type.row .row__fields > * {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+}
