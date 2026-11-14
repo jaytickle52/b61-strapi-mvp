@@ -70,6 +70,19 @@ export default {
   register() {},
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
+    // Hosts (Railway) stop the old copy with SIGTERM on every redeploy. Shut down
+    // cleanly and exit 0 so a normal redeploy isn't reported as a crash.
+    const shutdown = async (signal: string) => {
+      strapi.log.info(`[b61] ${signal} received, shutting down`);
+      try {
+        await strapi.destroy();
+      } finally {
+        process.exit(0);
+      }
+    };
+    process.once('SIGTERM', () => void shutdown('SIGTERM'));
+    process.once('SIGINT', () => void shutdown('SIGINT'));
+
     await ensureFrontendToken(strapi);
 
     strapi.db.lifecycles.subscribe({

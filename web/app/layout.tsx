@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import type { CSSProperties } from "react";
-import { draftMode } from "next/headers";
 import "./globals.css";
 import { getSettings } from "@/lib/strapi";
+import { isPreview } from "@/lib/preview";
 import { PreviewBanner, SiteFooter, SiteHeader } from "@/components/SiteChrome";
+import PreviewRefresher from "@/components/PreviewRefresher";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
@@ -26,7 +27,7 @@ const FONT_STACKS: Record<string, string> = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const [settings, draft] = await Promise.all([getSettings(), draftMode()]);
+  const [settings, preview] = await Promise.all([getSettings(), isPreview()]);
   const heading = settings.headingFont ?? "Fraunces";
   const body = settings.bodyFont ?? "Inter";
   const fontsHref = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(heading)}:wght@400;600&family=${encodeURIComponent(body)}:wght@400;600&display=swap`;
@@ -47,7 +48,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="stylesheet" href={fontsHref} />
       </head>
       <body className="flex min-h-full flex-col" style={theme}>
-        {draft.isEnabled && <PreviewBanner />}
+        {preview && <PreviewBanner />}
+        {preview && <PreviewRefresher strapiOrigin={new URL(process.env.STRAPI_URL || "http://localhost:1337").origin} />}
         <SiteHeader settings={settings} />
         <main className="flex-1">{children}</main>
         <SiteFooter settings={settings} />

@@ -52,7 +52,7 @@ Each school needs **one secret**, `SCHOOL_SECRET` (a long random string), set to
 
 ## Deploy one school
 
-1. **Railway:** new project → GitHub repo → this repo. In the service's Settings: root directory `/cms`, healthcheck path `/_health`. Add a PostgreSQL database and a volume mounted at `/app/public/uploads` (so uploaded photos survive redeploys). Variables: the cms table plus `PORT=1337` and `NODE_ENV=production`; `SCHOOL_SECRET` can be `${{secret(64)}}`. Generate a public domain on port 1337.
+1. **Railway:** new project → GitHub repo → this repo. In the service's Settings: root directory `/cms`, healthcheck path `/_health`, start command `node node_modules/@strapi/strapi/bin/strapi.js start` (not `npm run start`, so redeploys shut down cleanly instead of reporting a crash). Add a PostgreSQL database and a volume mounted at `/app/public/uploads` (so uploaded photos survive redeploys). Variables: the cms table plus `PORT=1337` and `NODE_ENV=production`; `SCHOOL_SECRET` can be `${{secret(64)}}`. Generate a public domain on port 1337.
 2. **Vercel:** new project → this repo, root directory `web`. Set the web variables with the Railway URL. Set Deployment Protection to previews only, so staff can open the live site. Deploy.
 3. Back in Railway, set `FRONTEND_URL` to the Vercel URL and redeploy.
 4. Open `<railway-url>/admin` and create the first admin account.

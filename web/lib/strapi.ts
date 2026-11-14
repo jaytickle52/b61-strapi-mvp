@@ -1,6 +1,6 @@
 import qs from "qs";
-import { draftMode } from "next/headers";
 import { secret } from "@/lib/secrets";
+import { isPreview } from "@/lib/preview";
 
 const STRAPI_URL = (process.env.STRAPI_URL || "http://localhost:1337").replace(/\/$/, "");
 const TOKEN = secret("FRONTEND_API_TOKEN", "STRAPI_API_TOKEN");
@@ -49,7 +49,7 @@ export function mediaUrl(media: Media | undefined): string | null {
  * it reads unsaved-to-live drafts; otherwise only published content.
  */
 async function get<T>(path: string, params: Record<string, unknown> = {}): Promise<T> {
-  const { isEnabled } = await draftMode();
+  const isEnabled = await isPreview();
   const query = qs.stringify({ ...params, status: isEnabled ? "draft" : "published" }, { encodeValuesOnly: true });
   const res = await fetch(`${STRAPI_URL}/api/${path}?${query}`, {
     headers: TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {},
