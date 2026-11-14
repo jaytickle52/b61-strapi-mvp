@@ -356,6 +356,111 @@ export interface Page {
             blockType: 'b61Split';
           }
         | {
+            eyebrow?: string | null;
+            lines?:
+              | {
+                  text: string;
+                  emphasize?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            /**
+             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+             */
+            contentBlocks?:
+              | {
+                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                  body?: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: any;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  } | null;
+                  text?: string | null;
+                  attribution?: string | null;
+                  photo?: (number | null) | Media;
+                  icon?:
+                    | (
+                        | 'dot'
+                        | 'check'
+                        | 'email'
+                        | 'phone'
+                        | 'location'
+                        | 'calendar'
+                        | 'clock'
+                        | 'link'
+                        | 'star'
+                        | 'heart'
+                        | 'book'
+                        | 'people'
+                        | 'cross'
+                        | 'school'
+                      )
+                    | null;
+                  hasLink?: boolean | null;
+                  link?: {
+                    type?: ('page' | 'url') | null;
+                    page?: (number | null) | Page;
+                    url?: string | null;
+                    newTab?: boolean | null;
+                  };
+                  scale?: ('regular' | 'display') | null;
+                  divider?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            buttons?:
+              | {
+                  label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  link?: {
+                    type?: ('page' | 'url') | null;
+                    page?: (number | null) | Page;
+                    url?: string | null;
+                    newTab?: boolean | null;
+                  };
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            headPosition?: ('above' | 'beside') | null;
+            columnBalance?: number | null;
+            textAlign?: ('left' | 'center') | null;
+            /**
+             * Where the text column sits in the band.
+             */
+            position?: ('left' | 'center') | null;
+            measureStep?: number | null;
+            headingWidth?: ('text' | 'full') | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            iconlistStyle?: ('standard' | 'links') | null;
+            iconlistEdges?: boolean | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            headingRule?: ('site' | 'none' | 'trailing') | null;
+            entrance?: ('on' | 'off') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Prose';
+          }
+        | {
             heading?: string | null;
             intro?: string | null;
             /**
@@ -413,27 +518,6 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'ctaBand';
-          }
-        | {
-            heading?: string | null;
-            body?: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            } | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'prose';
           }
       )[]
     | null;
@@ -990,6 +1074,79 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        b61Prose?:
+          | T
+          | {
+              eyebrow?: T;
+              lines?:
+                | T
+                | {
+                    text?: T;
+                    emphasize?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              contentBlocks?:
+                | T
+                | {
+                    type?: T;
+                    body?: T;
+                    text?: T;
+                    attribution?: T;
+                    photo?: T;
+                    icon?: T;
+                    hasLink?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                          newTab?: T;
+                        };
+                    scale?: T;
+                    divider?: T;
+                    id?: T;
+                  };
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    variant?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                          newTab?: T;
+                        };
+                    fullWidth?: T;
+                    id?: T;
+                  };
+              headPosition?: T;
+              columnBalance?: T;
+              textAlign?: T;
+              position?: T;
+              measureStep?: T;
+              headingWidth?: T;
+              padTop?: T;
+              padBottom?: T;
+              iconlistStyle?: T;
+              iconlistEdges?: T;
+              surface?: T;
+              eyebrowRule?: T;
+              headingRule?: T;
+              entrance?: T;
+              id?: T;
+              blockName?: T;
+            };
         cardGrid?:
           | T
           | {
@@ -1039,14 +1196,6 @@ export interface PagesSelect<T extends boolean = true> {
                     url?: T;
                     style?: T;
                   };
-              id?: T;
-              blockName?: T;
-            };
-        prose?:
-          | T
-          | {
-              heading?: T;
-              body?: T;
               id?: T;
               blockName?: T;
             };

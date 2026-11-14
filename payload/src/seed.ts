@@ -1,5 +1,5 @@
 import type { Payload } from 'payload'
-import { demoHeroes, demoSplits, ensureDemoImages } from './b61/demo'
+import { demoHeroes, demoProse, demoSplits, ensureDemoImages } from './b61/demo'
 
 // Fictional demo schools, same content as the Strapi build so the two editors
 // can be compared like for like. SEED_SCHOOL picks one.
@@ -214,7 +214,7 @@ export async function seedDemoSchool(payload: Payload, key: string) {
       seoDescription: `Schedule a tour of ${name}`,
       sections: [
         heroes.visit,
-        { blockType: 'prose', heading: 'How to schedule', body: p(`Call ${profile.settings.phone} or email ${profile.settings.email} and our admissions team will find a time that works for you.`) },
+        demoProse({ phone: profile.settings.phone as string, email: profile.settings.email as string, address: profile.settings.address as string }),
         { blockType: 'cardGrid', heading: 'Upcoming events for families', source: 'upcoming-events', limit: 3, columns: 'three', tone: 'muted' },
       ],
     },

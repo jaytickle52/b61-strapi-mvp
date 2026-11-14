@@ -84,7 +84,7 @@ export const ICON_OPTIONS: [string, string][] = [
  * pull quotes and icon rows, in any order. Consecutive icon rows render as one
  * list. Shared by Split, Prose and CTA Band.
  */
-export function contentBlocksField(): ArrayField {
+export function contentBlocksField(o: { emphasisScale?: boolean; dividers?: boolean } = {}): ArrayField {
   const is = (t: string) => (_: unknown, s: any) => (s?.type ?? 'body') === t
   return list(
     'contentBlocks',
@@ -126,6 +126,22 @@ export function contentBlocksField(): ArrayField {
         ],
       },
       { ...link(), admin: { hideGutter: true, condition: (_: unknown, s: any) => s?.type === 'iconrow' && Boolean(s?.hasLink) } } as Field,
+      // Prose: emphasis at body-adjacent or display size.
+      ...(o.emphasisScale
+        ? [
+            segmented(
+              'scale',
+              'Scale',
+              [
+                ['regular', 'Regular'],
+                ['display', 'Display'],
+              ],
+              { default: 'regular', condition: is('emphasis') },
+            ),
+          ]
+        : []),
+      // Prose: a hairline above this block (never above the first).
+      ...(o.dividers ? [toggle('divider', 'Divider above')] : []),
     ],
     { admin: { description: 'Body copy, emphasis lines, pull quotes and icon rows, in any order.' } },
   )

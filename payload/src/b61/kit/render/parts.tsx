@@ -89,6 +89,8 @@ type Block = {
   photo?: any
   icon?: string | null
   hasLink?: boolean | null
+  scale?: string | null
+  divider?: boolean | null
   link?: Parameters<typeof resolveLink>[0]
 }
 
@@ -97,30 +99,60 @@ type Block = {
  * element's class prefix (b61-split, b61-prose...). Consecutive icon rows
  * become one list.
  */
-export function ContentBlocks({ blocks, prefix, ri }: { blocks?: Block[] | null; prefix: string; ri: RevealAttr }) {
+export function ContentBlocks({
+  blocks,
+  prefix,
+  ri,
+  emphasisScale = false,
+  linkList = false,
+  listEdges = false,
+}: {
+  blocks?: Block[] | null
+  prefix: string
+  ri: RevealAttr
+  /** Prose: emphasis lines carry a Regular/Display scale class. */
+  emphasisScale?: boolean
+  /** Prose "Link list" style: linked rows get an arrow, rows get rules. */
+  linkList?: boolean
+  listEdges?: boolean
+}) {
   const out: ReactNode[] = []
   const list = blocks ?? []
   let rows: ReactNode[] = []
+  let listDivided = ''
   const flush = (key: string) => {
-    if (rows.length) out.push(<ul key={key} className="b61-iconlist b61-block" {...ri}>{rows}</ul>)
+    if (rows.length)
+      out.push(
+        <ul
+          key={key}
+          className={`b61-iconlist${linkList ? ' b61-iconlist--links' : ''}${linkList && listEdges ? ' b61-iconlist--edges' : ''} b61-block${listDivided}`}
+          {...ri}
+        >
+          {rows}
+        </ul>,
+      )
     rows = []
   }
   list.forEach((b, i) => {
     const type = b?.type ?? 'body'
     const key = b?.id ?? String(i)
+    // A hairline above this block (Prose), never above the first.
+    const dv = b?.divider && i > 0 ? ` ${prefix}__block--divided` : ''
     if (type !== 'iconrow') flush(`list-${key}`)
+    else if (!rows.length) listDivided = dv
     if (type === 'body' && b.body) {
       out.push(
-        <div key={key} className={`${prefix}__body b61-block breakdance-rich-text-styles`} {...ri}>
+        <div key={key} className={`${prefix}__body b61-block${dv} breakdance-rich-text-styles`} {...ri}>
           <RichText data={b.body as SerializedEditorState} disableContainer />
         </div>,
       )
     } else if (type === 'emphasis' && b.text) {
-      out.push(<p key={key} className={`${prefix}__emphasis b61-block`} {...ri}>{b.text}</p>)
+      const scale = emphasisScale ? ` ${prefix}__emphasis--${b.scale ?? 'regular'}` : ''
+      out.push(<p key={key} className={`${prefix}__emphasis${scale} b61-block${dv}`} {...ri}>{b.text}</p>)
     } else if (type === 'quote' && b.text) {
       const photo = imgProps(b.photo, '120px')
       out.push(
-        <figure key={key} className={`${prefix}__quote${photo ? ` ${prefix}__quote--photo` : ''} b61-block`} {...ri}>
+        <figure key={key} className={`${prefix}__quote${photo ? ` ${prefix}__quote--photo` : ''} b61-block${dv}`} {...ri}>
           {photo && (
             <div className={`${prefix}__quote-photo`}>
               <img {...photo} alt="" loading="lazy" />
@@ -137,8 +169,9 @@ export function ContentBlocks({ blocks, prefix, ri }: { blocks?: Block[] | null;
     } else if (type === 'iconrow' && b.text) {
       const { href, newTab } = b.hasLink ? resolveLink(b.link) : { href: null, newTab: false }
       const icon = b.icon && b.icon !== 'dot' ? b.icon : null
+      const linked = linkList && Boolean(href)
       rows.push(
-        <li key={key} className="b61-iconlist__row">
+        <li key={key} className={`b61-iconlist__row${linked ? ' b61-iconlist__row--linked' : ''}`}>
           <span className={`b61-iconlist__mark${icon ? '' : ' b61-iconlist__mark--dot'}`} aria-hidden="true">
             <B61Icon name={icon} />
           </span>
@@ -151,6 +184,11 @@ export function ContentBlocks({ blocks, prefix, ri }: { blocks?: Block[] | null;
               b.text
             )}
           </span>
+          {linked && (
+            <span className="b61-iconlist__arrow" aria-hidden="true">
+              &rarr;
+            </span>
+          )}
         </li>,
       )
     }

@@ -1,0 +1,43 @@
+/*
+ * Per-instance rules shared by band elements (from each element's css.twig):
+ * the eyebrow rule. Root modifier class b61-erule-<choice>; "Site default"
+ * adds no class, so site tokens decide. Add a new element's eyebrow class to
+ * the :is() lists. Specificity: two classes, above the single-class base.
+ */
+.b61-erule-none :is(.b61-split__eyebrow, .b61-prose__eyebrow),
+.b61-erule-leading :is(.b61-split__eyebrow, .b61-prose__eyebrow),
+.b61-erule-trailing :is(.b61-split__eyebrow, .b61-prose__eyebrow),
+.b61-erule-both :is(.b61-split__eyebrow, .b61-prose__eyebrow) { column-gap: var(--b61-eyebrow-rule-gap); }
+.b61-erule-trailing :is(.b61-split__eyebrow, .b61-prose__eyebrow) { width: 100%; }
+
+.b61-erule-none :is(.b61-split__eyebrow, .b61-prose__eyebrow)::before,
+.b61-erule-trailing :is(.b61-split__eyebrow, .b61-prose__eyebrow)::before { display: none; }
+.b61-erule-leading :is(.b61-split__eyebrow, .b61-prose__eyebrow)::before {
+  content: "";
+  display: inline-block;
+  flex: 0 0 auto;
+  width: var(--b61-eyebrow-rule-width, 40px);
+  height: var(--b61-eyebrow-rule-thickness);
+  background: var(--b61-eyebrow-rule-color, var(--b61-accent));
+}
+.b61-erule-both :is(.b61-split__eyebrow, .b61-prose__eyebrow)::before {
+  content: "";
+  display: inline-block;
+  flex: 0 0 auto;
+  width: var(--b61-eyebrow-rule-width, 40px);
+  height: var(--b61-rule-trail-thickness);
+  background: color-mix(in srgb, currentColor var(--b61-rule-trail-strength-flank), transparent);
+}
+.b61-erule-none :is(.b61-split__eyebrow, .b61-prose__eyebrow)::after,
+.b61-erule-leading :is(.b61-split__eyebrow, .b61-prose__eyebrow)::after { display: none; }
+.b61-erule-trailing :is(.b61-split__eyebrow, .b61-prose__eyebrow)::after {
+  display: flex;
+  flex: 1 1 var(--b61-rule-trail-min);
+}
+.b61-erule-both :is(.b61-split__eyebrow, .b61-prose__eyebrow)::after {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: var(--b61-eyebrow-rule-width, 40px);
+  margin-inline-start: 0;
+  background: color-mix(in srgb, currentColor var(--b61-rule-trail-strength-flank), transparent);
+}

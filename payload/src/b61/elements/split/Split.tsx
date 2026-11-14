@@ -47,7 +47,7 @@ export default function B61Split({ block, index = 0 }: { block: SplitBlock; inde
     `b61-split--side-${side}`,
     block.stackOrder === 'media' && 'b61-split--stack-media',
     `b61-split--ha-${block.headingAlign ?? 'left'}`,
-    block.eyebrowRule && block.eyebrowRule !== 'site' && `b61-split--rule-${block.eyebrowRule}`,
+    block.eyebrowRule && block.eyebrowRule !== 'site' && `b61-erule-${block.eyebrowRule}`,
   ]
     .filter(Boolean)
     .join(' ')

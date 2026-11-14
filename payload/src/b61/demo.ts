@@ -213,3 +213,44 @@ export function demoSplits(opts: { name: string; mission: string; phone?: string
     },
   } as const
 }
+
+/**
+ * Demo B61 Prose for the Visit page: heading beside the text, body copy, a
+ * display-size emphasis line, then a link list of ways to get in touch.
+ * `heading` and `body` carry over an existing block's words when upgrading.
+ */
+export function demoProse(opts: { heading?: string; body?: unknown; phone?: string; email?: string; address?: string }) {
+  const rows = [
+    ...(opts.phone ? [{ type: 'iconrow', icon: 'phone', text: `Call ${opts.phone}`, hasLink: true, link: { type: 'url', url: `tel:${opts.phone.replace(/[^0-9+]/g, '')}` } }] : []),
+    ...(opts.email ? [{ type: 'iconrow', icon: 'email', text: `Email ${opts.email}`, hasLink: true, link: { type: 'url', url: `mailto:${opts.email}` } }] : []),
+    ...(opts.address
+      ? [{ type: 'iconrow', icon: 'location', text: 'Get directions', hasLink: true, link: { type: 'url', url: `https://maps.google.com/?q=${encodeURIComponent(opts.address.replace(/\n/g, ', '))}`, newTab: true } }]
+      : []),
+  ]
+  return {
+    blockType: 'b61Prose',
+    eyebrow: 'Plan your visit',
+    headingLevel: 'auto',
+    lines: [{ text: opts.heading || 'How to schedule', emphasize: false }],
+    contentBlocks: [
+      {
+        type: 'body',
+        body:
+          opts.body ??
+          para('Tours run Tuesday through Thursday mornings and take about an hour. Bring your questions; bring your kids if you like.'),
+      },
+      { type: 'emphasis', scale: 'display', text: 'Most families know within the first ten minutes.' },
+      ...rows.map((r, i) => (i === 0 ? { ...r, divider: true } : r)),
+    ],
+    headPosition: 'beside',
+    textAlign: 'left',
+    position: 'center',
+    headingWidth: 'text',
+    iconlistStyle: 'links',
+    iconlistEdges: true,
+    surface: 'none',
+    eyebrowRule: 'site',
+    headingRule: 'site',
+    entrance: 'on',
+  } as const
+}

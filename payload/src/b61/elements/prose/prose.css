@@ -1,0 +1,591 @@
+/* ---------------------------------------------------------------------------
+   B61 PROSE
+
+   Surfaces, stack rhythm (.b61-block), the button base and the focus ring now
+   live in assets/components.css; what remains here is what only a prose band
+   needs.
+
+   DIALS
+   Nothing below paints a colour, weight or border directly — every value is a
+   custom property the base rule reads, so a site re-skins any role by
+   redeclaring a handful of variables (Breakdance > Variables, a child theme, or
+   a wrapper class) and never edits this file.
+
+   Declared on the REGION, not the element root: surface sets the --b61-on-bg-*
+   globals on the region, and a var() inside a custom property resolves against
+   the element the property is declared on. On the root these dials could not
+   see them — which is how an accent band once rendered accent text on accent
+   ground and lost a whole line.
+
+   Declared inside :where() so they carry ZERO specificity: any site rule wins
+   without !important.
+   --------------------------------------------------------------------------- */
+:where(.b61-prose__region) {
+  /* Emphasis — the single non-body line type, in its two scales. Regular is
+     the old lead: body face, heavier, accent-coloured. Display is the old
+     lead-only treatment: display face, one step up the scale, regular weight,
+     ink-coloured, and carrying its own measure. */
+  /* 1.47.0: emphasis was body size in semibold red (4.97:1 on white on
+     Potomac), set apart by colour alone. It now steps up the type scale and
+     reads in ink, and the red moves to a short rule above it, where it
+     marks the line without the words depending on its contrast. */
+  --b61-prose-emphasis-font: var(--b61-font-display);
+  --b61-prose-emphasis-size: var(--b61-text-h3);
+  --b61-prose-emphasis-leading: 1.35;
+  --b61-prose-emphasis-weight: 500;
+  --b61-prose-emphasis-rule-color: var(--b61-accent);
+  --b61-prose-emphasis-rule-length: 2.5rem;
+  --b61-prose-emphasis-rule-gap: var(--b61-space-sm);
+  --b61-prose-emphasis-color: var(--b61-on-bg-ink, var(--b61-ink));
+
+  --b61-prose-display-font: var(--b61-font-display);
+  --b61-prose-display-leading: 1.45;
+  --b61-prose-display-weight: 400;
+  --b61-prose-display-color: var(--b61-on-bg-ink, var(--b61-ink));
+
+  /* Rhythm and rule geometry. Every one of these was a literal inherited from
+     the fixed-ladder version, and every one is a decision a site might want to
+     make, so every one is a dial. */
+  --b61-prose-eyebrow-space: 0.875rem;
+  /* Head-beside-body. The RATIO is a house dial, not a control: an editor
+     choosing per-band how wide a headline column is, is panel noise and a page
+     that drifts out of alignment with itself. Same call as Split's Overlap. */
+  --b61-prose-head-col: minmax(0, var(--b61-prose-head-ratio));
+  --b61-prose-beside-gap: clamp(32px, 5vw, 72px);
+  --b61-prose-heading-space: 1.25rem;
+  --b61-prose-body-para-space: 1.2em;
+  /* Body-copy sections (1.69.0). A heading inside the body belongs to the text
+     under it, so it sits close to that text and far from the text before it:
+     the space below a heading is small, and a body block that OPENS with a
+     heading starts a new section with a wider seam than the ordinary stack
+     gap. Before this the two were near equal (19px under the heading, 16px
+     between blocks), so a run of heading + paragraph blocks read as one list
+     of lines. */
+  --b61-prose-body-heading-space: 0.4em;
+  --b61-prose-section-space: var(--b61-space-xl);
+  /* Divider above (1.69.0): the air on EACH side of the hairline, and the
+     hairline itself -- the band's ink thinned the same way as the heading's
+     trailing rule, so it follows the surface onto a dark band.
+     1.69.2: the divider no longer ADDS space. It splits the ordinary section
+     seam in half and sits in the middle of it, so a divided block is exactly
+     as far from its neighbour as an undivided one (it was 40 + 40 = 80px). */
+  --b61-prose-divider-space: calc(var(--b61-prose-section-space) / 2);
+  --b61-prose-divider-color: color-mix(in srgb, var(--b61-on-bg-ink, var(--b61-ink)) var(--b61-rule-trail-strength, 14%), transparent);
+  --b61-prose-divider-thickness: var(--b61-rule-trail-thickness, 1px);
+  --b61-prose-quote-rule: var(--b61-on-bg-line, var(--b61-secondary));
+  --b61-prose-quote-rule-width: var(--b61-frame-width);
+  --b61-prose-quote-size: var(--b61-text-h3);
+  --b61-prose-link-pad-y: 11px;
+  --b61-prose-link-pad-x: 2px;
+}
+
+.b61-prose {
+  width: 100%;
+  align-self: stretch;
+  display: block;
+}
+
+/* Band spacing. Two controls rather than one, because the case that hurts is a
+   pair of same-coloured bands stacking to double padding — which needs the
+   bottom of one and the top of the next set independently. */
+.b61-prose__region {
+  display: block;
+  --band-pt: var(--b61-pad-block);
+  --band-pb: var(--b61-pad-block);
+  padding: var(--band-pt) var(--b61-pad-inline) var(--band-pb);
+}
+
+.b61-prose__region--pt-tight { --band-pt: var(--b61-pad-block-tight); }
+.b61-prose__region--pt-none { --band-pt: 0; }
+.b61-prose__region--pb-tight { --band-pb: var(--b61-pad-block-tight); }
+.b61-prose__region--pb-none { --band-pb: 0; }
+
+/* ---------------------------------------------------------------------------
+   MEASURE AND ALIGNMENT
+   The measures are stated in px, not `ch`: `ch` resolves against the inner's
+   computed font size (the inherited ~16px) while the prose body is set in
+   EB Garamond at 19–20px, so a `ch` cap rendered at about two-thirds of the
+   characters per line it named.
+
+   THE CAP IS --b61-width, NOT --b61-width-narrow. It was the narrow column,
+   which quietly destroyed the control: St. Mark's sets --b61-width-narrow to
+   760px, so Regular (820) and Wide (900) both clamped to 760 and rendered
+   identically, and Narrow sat 40px off them. Three steps, one and a half
+   distinct widths, and the cap doing all the work.
+
+   --b61-width-narrow is a site's READING column, which is the same order of
+   magnitude as these measures — so capping one with the other is capping a
+   value with its own peer. The guard that was actually wanted is "a measure may
+   not outgrow the page's content column", and that is --b61-width.
+   --------------------------------------------------------------------------- */
+/* The measure is a DIAL rather than a max-width applied directly, because it
+   now has two possible homes: the whole inner when the head sits above, and the
+   BODY COLUMN ONLY when it sits beside. A measure is a reading measure — it
+   caps a column of running text — so once the band holds two columns it belongs
+   to the one carrying the prose, not to the band.
+
+   Safe to alias: the targets (--b61-measure-* and --b61-width) are never
+   re-declared on a descendant, so this cannot freeze the way a --b61-on-bg-*
+   alias would. See the alias-scope note. */
+.b61-prose__inner--mnarrow { --b61-prose-measure: min(var(--b61-measure-narrow), var(--b61-width)); }
+.b61-prose__inner--mregular { --b61-prose-measure: min(var(--b61-measure-regular), var(--b61-width)); }
+.b61-prose__inner--mwide { --b61-prose-measure: min(var(--b61-measure-wide), var(--b61-width)); }
+
+.b61-prose__inner {
+  margin: 0 auto;
+  max-width: var(--b61-prose-measure);
+}
+
+/* POSITION (1.70.0). Left starts the column on the page's CONTENT COLUMN,
+   not the band's padded edge. 100% is the region's content box, so the
+   offset is half of whatever the band is wider than --b61-width, and 0 once
+   the column fills the band -- the same arithmetic as CTA Band. The measure
+   still caps the width; only where the column starts changes. Beside
+   already spans --b61-width, where this offset works out to the centred
+   margin, so it is harmless there. */
+.b61-prose__inner--pleft {
+  margin-left: max(0px, calc((100% - var(--b61-width)) / 2));
+  margin-right: auto;
+}
+
+/* HEADING WIDTH (1.73.0). The Width slider sets the READING measure, and by
+   default the heading is held to it too, because the whole inner is capped.
+   Full lets the eyebrow and heading span the content column while everything
+   under them keeps the measure - a big display heading wrapping to a body
+   copy measure is often three short lines where two long ones were wanted.
+   The subheadline stays with the text: it is a standfirst, and at display
+   size a full-column line of it is too long to read. The display-scale
+   emphasis line keeps the measure it carries for itself.
+
+   The inner widens and the cap moves down onto the blocks, each placed with
+   the alignment dial, so centred text stays centred under a wide heading.
+   Not beside: there the heading already has a column of its own. */
+.b61-prose__inner--hfull:not(.b61-prose__inner--beside) {
+  max-width: var(--b61-width);
+}
+.b61-prose__inner--hfull:not(.b61-prose__inner--beside) > :not(.b61-prose__eyebrow, .b61-prose__heading, .b61-prose__emphasis--display) {
+  max-width: var(--b61-prose-measure);
+  margin-inline: var(--b61-align-inline, 0);
+}
+
+/* ---------------------------------------------------------------------------
+   HEAD BESIDE BODY
+
+   The band widens to the full content column and the measure moves down to the
+   body, so the prose keeps exactly the line length it had while the heading
+   gets its own column beside it.
+
+   Declared AFTER the measure rules on purpose: `--beside` and `--m*` sit on the
+   same element at the same specificity, so the max-width override is decided by
+   source order. Stated here rather than relied upon quietly.
+   --------------------------------------------------------------------------- */
+/* MEASURE STILL MEANS SOMETHING HERE, and making it so took a second pass.
+
+   The first version capped the body column with the measure and left the track
+   at 1fr. Measured: narrow, regular and wide all rendered a 656px body, because
+   at a 1200px band a two-column body track is narrower than even the narrowest
+   measure (720px), so the cap never bit. Three steps, one width — the SAME
+   failure this file already documents for --b61-width-narrow, found the same
+   way, by measuring rather than reading.
+
+   Beside, the measure therefore drives the RATIO instead of a cap: a wider
+   measure gives the prose more of the band. It keeps its meaning — how wide is
+   the running text — and all three values are distinct. The cap below stays as
+   a ceiling for a site whose content column is wide enough for it to matter. */
+.b61-prose__inner--beside.b61-prose__inner--mnarrow { --b61-prose-body-col: 0.85fr; }
+.b61-prose__inner--beside.b61-prose__inner--mregular { --b61-prose-body-col: 1fr; }
+.b61-prose__inner--beside.b61-prose__inner--mwide { --b61-prose-body-col: 1.3fr; }
+
+.b61-prose__inner--beside {
+  display: grid;
+  grid-template-columns: var(--b61-prose-head-col) minmax(0, var(--b61-prose-body-col));
+  gap: var(--b61-prose-beside-gap);
+  align-items: var(--b61-prose-beside-align);
+  max-width: var(--b61-width);
+}
+
+.b61-prose__inner--beside .b61-prose__main {
+  max-width: var(--b61-prose-measure);
+}
+
+/* The heading column does not wrap its own text to the body's measure — it is a
+   headline, not prose, and it has a column of its own to fill. */
+.b61-prose__inner--beside .b61-prose__head {
+  max-width: none;
+}
+
+/* Stacked, there is no second column. The wrappers become blocks in the normal
+   flow and the row gap supplies the seam the column break used to. */
+@media (max-width: 1023px) {
+  .b61-prose__inner--beside {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: var(--b61-prose-measure);
+    /* Stacked, the gap is vertical: a wide Column gap step (1.71.0) must not
+       open a canyon between heading and text on a tablet or phone. */
+    gap: min(var(--b61-prose-beside-gap), var(--b61-space-2xl));
+  }
+  .b61-prose__inner--beside .b61-prose__main {
+    max-width: none;
+  }
+}
+
+/* Alignment reaches every block, not only the heading group. Centred lists
+   still set their own items left — a centred bullet list is unreadable. */
+/* ALIGNMENT IS A SET OF DIALS (1.65.0), not a pair of classes. A class cannot
+   change per breakpoint -- only values coming through css.twig can -- so the
+   alignment classes no longer drive anything (they are still emitted as a
+   styling hook for sites that key on them, and they carry the BASE value) and
+   every rule that used to key on them now reads a custom property instead. css.twig publishes the set on the element root
+   for whichever breakpoints the author actually set; the fallbacks below are
+   this element's default, so an instance that never touched the control emits
+   nothing and renders exactly as it did. */
+.b61-prose__inner { text-align: var(--b61-align-text, left); }
+.b61-prose__body ul,
+.b61-prose__body ol {
+  display: var(--b61-align-list-display, block);
+  text-align: var(--b61-align-list-text, inherit);
+}
+.b61-prose__inner .b61-btn-group { justify-content: var(--b61-align-justify, flex-start); }
+/* Icon list (1.73.0): a fit-content block (components.css), so centring moves
+   the whole list and each mark stays beside its text. */
+.b61-prose__inner .b61-iconlist { margin-inline: var(--b61-align-inline, 0); }
+
+/* ---------------------------------------------------------------------------
+   HEADING GROUP
+   --------------------------------------------------------------------------- */
+
+/* Prose's eyebrow carries no rule BY DEFAULT: a prose band is a column of
+   running text, and a rule reads as a decoration hanging off the left margin
+   of a centred column. Since 1.67.0 that is a default, not a limit -- the
+   Eyebrow rule control (Design > Appearance) gives Prose leading, trailing and
+   both-sides rules like every other element. */
+.b61-prose__eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: var(--b61-align-justify, flex-start);
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-eyebrow-size);
+  font-weight: var(--b61-eyebrow-weight);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: var(--b61-eyebrow-case);
+  color: var(--b61-on-bg-accent, var(--b61-accent-text));
+  margin: 0;
+}
+
+.b61-prose__heading {
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-prose-heading-size);
+  line-height: 1.2;
+  margin: 0;
+  color: var(--b61-on-bg-ink, var(--b61-ink));
+}
+
+/* One heading tag, N spans. Each line is display:block so it breaks without a
+   <br>, and emphasis is a class on the line rather than a separate element —
+   which is what let the heading group drop its position control entirely. */
+.b61-prose__heading-line {
+  display: block;
+}
+
+/* Line-level emphasis and an inline <em> inside a line are the same device, so
+   they get the same treatment. */
+.b61-prose__heading-line--em,
+.b61-prose__heading em {
+  font-style: italic;
+  color: var(--b61-on-bg-accent, var(--b61-heading-accent));
+}
+
+/* The "second headline" role: display face like the heading, one step down the
+   scale, weight and colour pulled back so two display lines read as a pair
+   rather than as a competition. */
+.b61-prose__subhead {
+  font-family: var(--b61-font-display);
+  font-weight: 400;
+  font-size: var(--b61-text-h3);
+  line-height: 1.25;
+  color: var(--b61-on-bg-muted, var(--b61-muted));
+  margin: 0;
+}
+
+.b61-prose__subhead em {
+  font-style: italic;
+  color: var(--b61-on-bg-accent, var(--b61-heading-accent));
+}
+
+/* ---------------------------------------------------------------------------
+   MAIN CONTENT
+   --------------------------------------------------------------------------- */
+
+/* Emphasis — one line that is not body copy. It replaced both the lead-in and
+   the closing line: with the main content dragged rather than ranked, those two
+   were the same device named for two positions. */
+.b61-prose__emphasis {
+  font-family: var(--b61-prose-emphasis-font);
+  font-size: var(--b61-prose-emphasis-size);
+  line-height: var(--b61-prose-emphasis-leading);
+  font-weight: var(--b61-prose-emphasis-weight);
+  color: var(--b61-prose-emphasis-color);
+  margin: 0;
+}
+
+/* The statement scale — the Home mission line. Previously this was DERIVED
+   from "a lead with no body", so adding a paragraph silently reset the type of
+   a line nobody had touched. It is a dial now, and a statement line can sit
+   anywhere in the stack rather than only alone.
+
+   It carries its own measure because the inner's measure is set for body copy:
+   this line is display face at up to 30px, so the column that reads well for
+   body would give it roughly half the characters per line it was written for.
+   Stated in `ch` at its own size and capped by the content column, and because
+   the measure scales with the clamped type it needs no breakpoint override. */
+.b61-prose__emphasis--display {
+  font-family: var(--b61-prose-display-font);
+  font-size: var(--b61-prose-emphasis-display-size);
+  line-height: var(--b61-prose-display-leading);
+  font-weight: var(--b61-prose-display-weight);
+  color: var(--b61-prose-display-color);
+  max-width: min(var(--b61-prose-emphasis-display-measure), var(--b61-width));
+}
+
+.b61-prose__emphasis--display {
+  margin-inline: var(--b61-align-inline, 0);
+}
+
+.b61-prose__emphasis em {
+  font-style: italic;
+  color: var(--b61-on-bg-accent, var(--b61-heading-accent));
+}
+
+/* A pull quote typed as a block and a blockquote typed into the rich-text body
+   get the same look, so editors get one result either way. */
+.b61-prose__quote,
+.b61-prose__body blockquote {
+  margin: 0;
+  padding: var(--b61-space-2xs) 0 var(--b61-space-2xs) var(--b61-space-lg);
+  border: 0;
+  border-left: var(--b61-prose-quote-rule-width) solid var(--b61-prose-quote-rule);
+  font-family: var(--b61-font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--b61-prose-quote-size);
+  line-height: 1.4;
+  color: var(--b61-on-bg-ink, var(--b61-ink));
+}
+
+.b61-prose__quote blockquote {
+  margin: 0;
+}
+
+.b61-prose__quote p,
+.b61-prose__body blockquote p {
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0;
+}
+
+.b61-prose__quote figcaption,
+.b61-prose__body blockquote cite {
+  display: block;
+  margin-top: var(--b61-space-sm);
+  font-family: var(--b61-font-ui);
+  font-style: normal;
+  font-size: var(--b61-text-label);
+  font-weight: 600;
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--b61-on-bg-muted, var(--b61-muted));
+}
+
+/* ---------------------------------------------------------------------------
+   RICH TEXT BODY
+   Prose is the long-form element, so its body carries real document styling —
+   headings, lists, links — where a split's body is a paragraph or two.
+   --------------------------------------------------------------------------- */
+.b61-prose__body {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  color: var(--b61-on-bg-ink, var(--b61-ink));
+}
+
+.b61-prose__body > *:first-child { margin-top: 0; }
+.b61-prose__body > *:last-child { margin-bottom: 0; }
+
+.b61-prose__body p { margin: 0 0 var(--b61-prose-body-para-space); }
+
+.b61-prose__body h2,
+.b61-prose__body h3,
+.b61-prose__body h4 {
+  font-family: var(--b61-font-display);
+  font-weight: 400;
+  line-height: 1.25;
+  margin: 1.8em 0 var(--b61-prose-body-heading-space);
+  color: inherit;
+}
+
+.b61-prose__body ul,
+.b61-prose__body ol { margin: 0 0 var(--b61-prose-body-para-space); padding-left: 1.4em; }
+.b61-prose__body li { margin: 0 0 0.5em; }
+
+/* Inline links: the padding is an accessibility floor, sizing the target to
+   44px without changing the line's rhythm — the negative margin gives the space
+   back to the layout. Larger is fine; smaller is a bug. */
+.b61-prose__body a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  padding: var(--b61-prose-link-pad-y) var(--b61-prose-link-pad-x);
+  margin: calc(-1 * var(--b61-prose-link-pad-y)) calc(-1 * var(--b61-prose-link-pad-x));
+  display: inline-block;
+}
+
+.b61-prose__body a:hover { text-decoration-thickness: 2px; }
+
+/* Inline links sit tighter than a button, so they take the site's focus width
+   with a smaller offset. Both are existing site tokens. */
+.b61-prose__body a:focus-visible {
+  outline: var(--b61-focus-width) solid var(--b61-focus, var(--b61-ink));
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   STACK RHYTHM
+
+   The fixed ladder could hard-code its own margins because the order was known.
+   Once any role can follow any role, per-role bottom margins collide. So the
+   gap between stack items is the STACK's job (.b61-block in components.css),
+   and only the seams that need to differ are named here.
+   --------------------------------------------------------------------------- */
+.b61-prose__eyebrow + .b61-prose__heading {
+  margin-top: var(--b61-prose-eyebrow-space);
+}
+
+.b61-prose__heading + .b61-prose__subhead,
+.b61-prose__subhead + .b61-prose__subhead {
+  margin-top: var(--b61-space-sm);
+}
+
+.b61-prose__heading + .b61-block:not(.b61-prose__subhead) {
+  margin-top: var(--b61-prose-heading-space);
+}
+
+/* A body block that opens with a heading starts a new section (1.69.0).
+   `:has()` rather than a control: the heading already says "new section", and
+   asking an editor to say it twice is how the two drift apart. Browsers
+   without :has() keep the ordinary stack gap. */
+.b61-block + .b61-prose__body:has(> :is(h2, h3, h4):first-child) {
+  margin-top: var(--b61-prose-section-space);
+}
+
+/* DIVIDER ABOVE (1.69.0). Out-specifies both the stack gap and the section
+   seam above, so a divided block is spaced the same whatever it follows or
+   opens with. */
+.b61-prose__inner .b61-block + .b61-block.b61-prose__block--divided {
+  margin-top: var(--b61-prose-divider-space);
+  padding-top: var(--b61-prose-divider-space);
+  border-top: var(--b61-prose-divider-thickness) solid var(--b61-prose-divider-color);
+}
+
+/* A pull quote is a set piece and wants air on both sides regardless of what it
+   lands between — the one block whose spacing is about the block, not the seam. */
+.b61-block + .b61-prose__quote,
+.b61-prose__quote + .b61-block {
+  margin-top: var(--b61-space-lg);
+}
+
+/* ---------------------------------------------------------------------------
+   PULL QUOTE WITH PHOTO (1.46.0)
+   An optional small round portrait sits beside the quote. The gold rule moves
+   from the figure to the text column so it still runs beside the words, not
+   between the photo and the words. Size is a dial.
+   --------------------------------------------------------------------------- */
+:where(.b61-prose__quote--photo) {
+  --prose-quote-photo-size: 5.5rem;
+  --prose-quote-photo-gap: var(--b61-space-lg);
+}
+
+.b61-prose__quote--photo {
+  display: flex;
+  align-items: center;
+  gap: var(--prose-quote-photo-gap);
+  padding: 0;
+  border-left: 0;
+}
+
+.b61-prose__quote-photo {
+  flex: none;
+  width: var(--prose-quote-photo-size);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--b61-surface);
+}
+
+.b61-prose__quote-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.b61-prose__quote-text {
+  min-width: 0;
+  padding: var(--b61-space-2xs) 0 var(--b61-space-2xs) var(--b61-space-lg);
+  border-left: var(--b61-prose-quote-rule-width) solid var(--b61-prose-quote-rule);
+}
+
+@media (max-width: 767px) {
+  :where(.b61-prose__quote--photo) {
+    --prose-quote-photo-size: 4rem;
+    --prose-quote-photo-gap: var(--b61-space-md);
+  }
+}
+
+/* EMPHASIS RULE (1.47.0) — a short accent bar above the line. Decorative, so
+   it carries no text-contrast burden; the words themselves are ink. The Prose
+   display scale keeps its own look. */
+.b61-prose__emphasis:not(.b61-prose__emphasis--display)::before {
+  content: "";
+  display: var(--b61-prose-emphasis-rule-above);
+  width: var(--b61-prose-emphasis-rule-length);
+  border-top: var(--b61-frame-width) solid var(--b61-on-bg-line, var(--b61-prose-emphasis-rule-color));
+  margin-bottom: var(--b61-prose-emphasis-rule-gap);
+}
+
+.b61-prose__emphasis em {
+  color: var(--b61-on-bg-accent, var(--b61-accent-text));
+}
+
+/* EMPHASIS RULE BELOW (1.67.0) — the same accent bar, under the line instead
+   of over it, on BOTH scales. Off by default. It follows the column's
+   alignment through --b61-align-inline, so a centred prose centres it. */
+.b61-prose__emphasis::after {
+  content: "";
+  display: var(--b61-prose-emphasis-rule-below);
+  width: var(--b61-prose-emphasis-rule-length);
+  border-top: var(--b61-frame-width) solid var(--b61-rule-accent, var(--b61-prose-emphasis-rule-color));
+  margin-block-start: var(--b61-prose-emphasis-rule-below-gap);
+  margin-inline: var(--b61-align-inline, 0);
+}
+
+/* HEADING TRAILING RULE (1.67.0) — a hairline from the end of the heading's
+   LAST line to the column edge. Two dials, set together: the last line becomes
+   a flex row (--b61-heading-rule-trail-line: flex) and the rule a flex item
+   (--b61-heading-rule-trail: flex). Their defaults, block and none, leave the
+   line a plain block exactly as before. Meant for a one-line section title:
+   inside a flex line an inline <em> becomes its own flex item. */
+.b61-prose__heading-line:last-child {
+  display: var(--b61-heading-rule-trail-line);
+  align-items: center;
+  justify-content: var(--b61-align-justify, flex-start);
+}
+.b61-prose__heading-line:last-child::after {
+  content: "";
+  display: var(--b61-heading-rule-trail);
+  flex: 1 1 var(--b61-rule-trail-min);
+  height: var(--b61-rule-trail-thickness);
+  margin-inline-start: var(--b61-rule-trail-gap);
+  background: color-mix(in srgb, var(--b61-on-bg-ink, var(--b61-ink)) var(--b61-rule-trail-strength), transparent);
+}

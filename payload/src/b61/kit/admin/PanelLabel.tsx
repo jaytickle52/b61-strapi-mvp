@@ -25,6 +25,8 @@ export function PanelLabel(props: Spec) {
       }
       const v = fields[`${prefix}${s.name}`]?.value
       if (v === null || v === undefined || v === '') return s.unset ?? null
+      // "Site default" says nothing about this element, so it stays out of the header.
+      if (v === 'site') return null
       if (typeof v === 'boolean') return v ? s.labels?.true ?? null : null
       if (s.prefix) return `${s.prefix} ${v}`
       return s.labels?.[String(v)] ?? String(v)

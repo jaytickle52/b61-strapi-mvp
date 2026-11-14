@@ -41,45 +41,6 @@
   --b61-split-stack-media-order: 1;
 }
 
-/* Eyebrow rule ("Site default" adds no class) */
-.b61-split--rule-none .b61-split__eyebrow,
-.b61-split--rule-leading .b61-split__eyebrow,
-.b61-split--rule-trailing .b61-split__eyebrow,
-.b61-split--rule-both .b61-split__eyebrow { column-gap: var(--b61-eyebrow-rule-gap); }
-.b61-split--rule-trailing .b61-split__eyebrow { width: 100%; }
-
-.b61-split--rule-none .b61-split__eyebrow::before,
-.b61-split--rule-trailing .b61-split__eyebrow::before { display: none; }
-.b61-split--rule-leading .b61-split__eyebrow::before {
-  content: "";
-  display: inline-block;
-  flex: 0 0 auto;
-  width: var(--b61-eyebrow-rule-width, 40px);
-  height: var(--b61-eyebrow-rule-thickness);
-  background: var(--b61-eyebrow-rule-color, var(--b61-accent));
-}
-.b61-split--rule-both .b61-split__eyebrow::before {
-  content: "";
-  display: inline-block;
-  flex: 0 0 auto;
-  width: var(--b61-eyebrow-rule-width, 40px);
-  height: var(--b61-rule-trail-thickness);
-  background: color-mix(in srgb, currentColor var(--b61-rule-trail-strength-flank), transparent);
-}
-.b61-split--rule-none .b61-split__eyebrow::after,
-.b61-split--rule-leading .b61-split__eyebrow::after { display: none; }
-.b61-split--rule-trailing .b61-split__eyebrow::after {
-  display: flex;
-  flex: 1 1 var(--b61-rule-trail-min);
-}
-.b61-split--rule-both .b61-split__eyebrow::after {
-  display: inline-block;
-  flex: 0 0 auto;
-  width: var(--b61-eyebrow-rule-width, 40px);
-  margin-inline-start: 0;
-  background: color-mix(in srgb, currentColor var(--b61-rule-trail-strength-flank), transparent);
-}
-
 /* Column balance: the component sets --b61-split-balance inline. */
 
 /* Gallery column count, set on the grid itself. The plugin sets the count on

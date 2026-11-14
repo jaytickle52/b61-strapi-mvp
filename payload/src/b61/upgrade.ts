@@ -1,5 +1,5 @@
 import type { Payload, PayloadRequest } from 'payload'
-import { demoHeroes, demoSplits, ensureDemoImages } from './demo'
+import { demoHeroes, demoProse, demoSplits, ensureDemoImages } from './demo'
 import { PROFILES } from '../seed'
 
 /*
@@ -76,5 +76,41 @@ export async function upgradeDemoSplits(payload: Payload, req: PayloadRequest | 
     sections.splice(at, 0, split as any)
     await payload.update({ collection: 'pages', id: page.id, data: { sections, _status: 'published' }, req })
     payload.logger.info(`[b61] Added a B61 Split to "${page.title}"`)
+  }
+}
+
+/*
+ * Run once by the b61_prose migration. Each old simple "Text" block becomes a
+ * B61 Prose in the same place, keeping its heading and body. On the Visit page
+ * it also gains the demo's contact link list and the heading-beside layout.
+ */
+export async function upgradeDemoProse(
+  payload: Payload,
+  req: PayloadRequest | undefined,
+  old: { page: number; pos: number; heading: string | null; body: unknown }[],
+) {
+  if (!old.length) return
+  const settings = await payload.findGlobal({ slug: 'school-settings', depth: 0, req })
+  const byPage = new Map<number, typeof old>()
+  for (const o of old) byPage.set(o.page, [...(byPage.get(o.page) ?? []), o])
+
+  for (const [pageId, blocks] of byPage) {
+    const page = await payload.findByID({ collection: 'pages', id: pageId, depth: 0, req }).catch(() => null)
+    if (!page) continue
+    const sections = [...(page.sections ?? [])]
+    for (const o of [...blocks].sort((a, b) => a.pos - b.pos)) {
+      const prose =
+        page.slug === 'visit'
+          ? demoProse({ heading: o.heading ?? undefined, body: o.body ?? undefined, phone: settings.phone || undefined, email: settings.email || undefined, address: settings.address || undefined })
+          : {
+              blockType: 'b61Prose',
+              headingLevel: 'auto',
+              lines: o.heading ? [{ text: o.heading, emphasize: false }] : [],
+              contentBlocks: o.body ? [{ type: 'body', body: o.body }] : [],
+            }
+      sections.splice(Math.min(o.pos - 1, sections.length), 0, prose as any)
+    }
+    await payload.update({ collection: 'pages', id: pageId, data: { sections, _status: 'published' }, req })
+    payload.logger.info(`[b61] Converted ${blocks.length} Text block(s) to B61 Prose on "${page.title}"`)
   }
 }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import RichText from "@/components/RichText";
 import B61Hero from "@/b61/elements/hero/Hero";
 import B61Split from "@/b61/elements/split/Split";
+import B61Prose from "@/b61/elements/prose/Prose";
 import {
   formatDate,
   getEvents,
@@ -136,17 +137,6 @@ function CtaBand({ s }: { s: Section }) {
   );
 }
 
-function Prose({ s }: { s: Section }) {
-  return (
-    <section className="py-14 sm:py-20">
-      <div className={`${wrap} max-w-3xl`}>
-        {s.heading && <h2 className="mb-5 text-3xl">{s.heading}</h2>}
-        <RichText content={s.body} />
-      </div>
-    </section>
-  );
-}
-
 export default function Sections({ sections }: { sections: Section[] | any[] }) {
   return (
     <>
@@ -158,7 +148,7 @@ export default function Sections({ sections }: { sections: Section[] | any[] }) 
           case "cardGrid": return <CardGrid key={key} s={s} />;
           case "statsBand": return <StatsBand key={key} s={s} />;
           case "ctaBand": return <CtaBand key={key} s={s} />;
-          case "prose": return <Prose key={key} s={s} />;
+          case "b61Prose": return <B61Prose key={key} block={s as any} index={i} />;
           default: return null;
         }
       })}

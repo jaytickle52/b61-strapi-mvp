@@ -1,0 +1,31 @@
+/*
+ * B61 Prose: per-instance rules (css.twig in the plugin), as modifier classes.
+ * The eyebrow rule is shared: styles/kit-instance.css.
+ */
+
+/* Text alignment */
+.b61-prose.b61-prose--ta-center {
+  --b61-align-text: center;
+  --b61-align-inline: auto;
+  --b61-align-justify: center;
+  --b61-align-list-display: inline-block;
+  --b61-align-list-text: left;
+}
+.b61-prose.b61-prose--ta-left {
+  --b61-align-text: left;
+  --b61-align-inline: 0;
+  --b61-align-justify: flex-start;
+  --b61-align-list-display: block;
+  --b61-align-list-text: inherit;
+}
+
+/* Heading rule ("Site default" adds no class) */
+.b61-prose--hrule-trailing .b61-prose__heading-line:last-child { display: flex; align-items: center; }
+.b61-prose--hrule-trailing .b61-prose__heading-line:last-child::after { display: block; }
+.b61-prose--hrule-none .b61-prose__heading-line:last-child { display: block; }
+.b61-prose--hrule-none .b61-prose__heading-line:last-child::after { display: none; }
+
+/* Width and column balance steps: the component sets custom properties inline
+   (--b61-prose-mstep, --b61-prose-bstep). */
+.b61-prose--mstep .b61-prose__inner { --b61-prose-measure: min(var(--b61-prose-mstep), var(--b61-width)); }
+.b61-prose--bstep .b61-prose__inner--beside { --b61-prose-head-col: minmax(0, 1fr); --b61-prose-body-col: var(--b61-prose-bstep); }
