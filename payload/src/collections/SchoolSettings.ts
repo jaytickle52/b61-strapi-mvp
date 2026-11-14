@@ -16,7 +16,7 @@ export const SchoolSettings: CollectionConfig = {
     livePreview: { url: ({ data }) => previewUrl('/', (data as any)?.school) },
   },
   access: { read: publishedOrSignedIn, create: signedIn, update: signedIn },
-  versions: { drafts: { autosave: { interval: 400 } } },
+  versions: { drafts: { autosave: { interval: 400 } }, maxPerDoc: 25 },
   fields: [
     {
       type: 'tabs',

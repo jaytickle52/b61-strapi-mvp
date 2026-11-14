@@ -5,9 +5,10 @@ import { sectionBlocks } from '../blocks'
 
 // Every editable item saves drafts as you type (autosave), so the live preview
 // beside the form updates within a moment without clicking Save.
+// History keeps the newest 25 versions per item, which keeps the database small.
 const drafts = {
   drafts: { autosave: { interval: 400 }, schedulePublish: true },
-  maxPerDoc: 50,
+  maxPerDoc: 25,
 }
 
 // Where an item appears on the website. The preview runs on the same site as

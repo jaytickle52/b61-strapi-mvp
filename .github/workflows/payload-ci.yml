@@ -1,0 +1,105 @@
+# Safety net for the Payload school sites (payload/ folder).
+# On every pull request and every push to main it:
+#   1. type-checks the code,
+#   2. fails if a database change was made without its migration,
+#   3. fails if the generated types are out of date,
+#   4. builds the site against a fresh, seeded database, starts it, and loads
+#      every school's public pages plus the editor (scripts/smoke.mjs).
+# Vercel still deploys main on its own; a red check here means look before you trust that deploy.
+name: Payload checks
+
+on:
+  pull_request:
+    paths: ['payload/**', '.github/workflows/payload-ci.yml']
+  push:
+    branches: [main]
+    paths: ['payload/**', '.github/workflows/payload-ci.yml']
+
+concurrency:
+  group: payload-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: payload
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: b61
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/b61
+      SCHOOL_SECRET: ci-only-not-a-real-secret
+      SEED_DEMO: 'true'
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: payload/package-lock.json
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Type check
+        run: |
+          npx next typegen
+          npx tsc --noEmit
+
+      - name: Migrations exist for every database change
+        run: |
+          npm run migrate:create -- ci_drift_check --skip-empty
+          if ls src/migrations | grep -q ci_drift_check; then
+            echo "::error::The collections changed but no migration was created. Run: npm run migrate:create <name>"
+            exit 1
+          fi
+
+      - name: Generated types are up to date
+        env:
+          BLOB_READ_WRITE_TOKEN: vercel_blob_rw_schemaonly_x
+        run: |
+          npm run generate:types
+          if ! git diff --quiet -- src/payload-types.ts; then
+            echo "::error::src/payload-types.ts is out of date. Run: BLOB_READ_WRITE_TOKEN=vercel_blob_rw_schemaonly_x npm run generate:types"
+            git diff --stat -- src/payload-types.ts
+            exit 1
+          fi
+
+      - name: Migrate and seed the demo schools
+        run: |
+          npx payload migrate
+          npx payload run src/scripts/seed.ts
+
+      - name: Build
+        run: npm run build
+
+      - name: Start the site
+        run: |
+          nohup npm start > /tmp/server.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/admin/login | grep -q 200; then exit 0; fi
+            sleep 2
+          done
+          echo "::error::The site did not start"; cat /tmp/server.log; exit 1
+
+      - name: Smoke test (every school's pages + the editor)
+        env:
+          BASE_URL: http://localhost:3000
+          SMOKE_EMAIL: ci@example.com
+          SMOKE_PASSWORD: ci-smoke-password-123
+        run: node scripts/smoke.mjs
+
+      - name: Server log
+        if: failure()
+        run: tail -200 /tmp/server.log || true

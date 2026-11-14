@@ -3048,6 +3048,7 @@ export interface Media {
   id: number;
   school?: (number | null) | School;
   alt: string;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -5868,6 +5869,7 @@ export interface StaffSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   school?: T;
   alt?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
