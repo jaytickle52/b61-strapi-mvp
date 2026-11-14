@@ -1,0 +1,3 @@
+/* Divider per-instance width (css.twig): width step overrides the fixed length. */
+.b61-rule--wstep .b61-rule__line,
+.b61-rule--wstep .b61-rule__ornament { width: var(--b61-div-len); max-width: 100%; }

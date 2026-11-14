@@ -1,5 +1,5 @@
 import type { Payload, PayloadRequest } from 'payload'
-import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages } from './demo'
+import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, statsFrom } from './demo'
 import { PROFILES } from '../seed'
 
 /*
@@ -72,7 +72,7 @@ export async function upgradeDemoSplits(payload: Payload, req: PayloadRequest | 
     const at =
       oldPositions[page.id as number] !== undefined
         ? Math.min(oldPositions[page.id as number] - 1, sections.length)
-        : Math.max(sections.findIndex((s) => s.blockType === 'statsBand') + 1, 1)
+        : Math.max(sections.findIndex((s) => ['statsBand', 'b61StatsBand'].includes(s.blockType as string)) + 1, 1)
     sections.splice(at, 0, split as any)
     await payload.update({ collection: 'pages', id: page.id, data: { sections, _status: 'published' }, req })
     payload.logger.info(`[b61] Added a B61 Split to "${page.title}"`)
@@ -175,5 +175,29 @@ export async function upgradeCardGrids(
     }
     await payload.update({ collection: 'pages', id: pageId, data: { sections, _status: 'published' }, req })
     payload.logger.info(`[b61] Converted ${blocks.length} card grid(s) to B61 Card Grid on "${page.title}"`)
+  }
+}
+
+/*
+ * Run once by the b61_simple migration. Each old stats band becomes a
+ * B61 Stats Band in the same place with the same heading, tone and figures.
+ */
+export async function upgradeStatsBands(
+  payload: Payload,
+  req: PayloadRequest | undefined,
+  old: { page: number; pos: number; heading: string | null; tone: string | null; stats: { value: string; label: string }[] }[],
+) {
+  if (!old.length) return
+  const byPage = new Map<number, typeof old>()
+  for (const o of old) byPage.set(o.page, [...(byPage.get(o.page) ?? []), o])
+  for (const [pageId, blocks] of byPage) {
+    const page = await payload.findByID({ collection: 'pages', id: pageId, depth: 0, req }).catch(() => null)
+    if (!page) continue
+    const sections = [...(page.sections ?? [])]
+    for (const o of [...blocks].sort((a, b) => a.pos - b.pos)) {
+      sections.splice(Math.min(o.pos - 1, sections.length), 0, statsFrom(o) as any)
+    }
+    await payload.update({ collection: 'pages', id: pageId, data: { sections, _status: 'published' }, req })
+    payload.logger.info(`[b61] Converted ${blocks.length} stats band(s) to B61 Stats Band on "${page.title}"`)
   }
 }

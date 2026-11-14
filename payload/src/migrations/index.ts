@@ -5,6 +5,7 @@ import * as migration_20261114_123220_b61_split from './20261114_123220_b61_spli
 import * as migration_20261114_130536_b61_prose from './20261114_130536_b61_prose';
 import * as migration_20261114_135744_b61_cta from './20261114_135744_b61_cta';
 import * as migration_20261114_140324_b61_card_grid from './20261114_140324_b61_card_grid';
+import * as migration_20261114_141516_b61_simple from './20261114_141516_b61_simple';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20261114_140324_b61_card_grid.up,
     down: migration_20261114_140324_b61_card_grid.down,
-    name: '20261114_140324_b61_card_grid'
+    name: '20261114_140324_b61_card_grid',
+  },
+  {
+    up: migration_20261114_141516_b61_simple.up,
+    down: migration_20261114_141516_b61_simple.down,
+    name: '20261114_141516_b61_simple'
   },
 ];

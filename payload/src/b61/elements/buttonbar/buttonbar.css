@@ -1,0 +1,116 @@
+/* ---------------------------------------------------------------------------
+   B61 BUTTON BAR (1.35.0)
+
+   Two edge-to-edge halves. Each half is a ground (b61-surface--X for the
+   paint, b61-band--X for the palette), so the link inside, its focus ring and
+   the hover wash all come from the half's own palette - a dark half and an
+   accent half side by side each resolve their own colours with no special
+   casing.
+
+   EDGE TO EDGE means the width of whatever holds it. Put the bar in a Section
+   with the `b61-bleed` class and no padding for a full-viewport bar; inside a
+   normal Section it spans the content width, which is also a legitimate use.
+
+   DIALS carry zero specificity (:where), so any site rule wins.
+   --------------------------------------------------------------------------- */
+:where(.b61-btnbar__row) {
+  --b61-btnbar-pad-block: var(--b61-space-lg);
+  --b61-btnbar-pad-block-large: var(--b61-space-xl);
+  --b61-btnbar-pad-inline: var(--b61-pad-inline);
+  --b61-btnbar-size: var(--b61-text-lg);
+  --b61-btnbar-size-large: var(--b61-text-h3);
+  --b61-btnbar-weight: 700;
+  --b61-btnbar-gap: 0;
+}
+
+.b61-btnbar {
+  width: 100%;
+  align-self: stretch;
+  display: block;
+}
+
+.b61-btnbar__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--b61-btnbar-gap);
+}
+
+.b61-btnbar__row--n1 {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* A half is a positioning context for the stretched link, and a flex box so the
+   label centres in whatever height the taller half sets. */
+.b61-btnbar__half {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--b61-btnbar-pad-block) var(--b61-btnbar-pad-inline);
+  transition: box-shadow var(--b61-ease);
+}
+
+.b61-btnbar__row--large .b61-btnbar__half {
+  padding-block: var(--b61-btnbar-pad-block-large);
+}
+
+/* The hover wash is the band's OWN secondary-hover scrim - a light wash on a
+   dark or accent half, a dark wash on a light one - painted as an inset shadow
+   so it sits over the ground and under the text. No new colour. */
+.b61-btnbar__half:hover {
+  box-shadow: inset 0 0 0 100vmax var(--b61-btn-secondary-hover-scrim, transparent);
+}
+
+/* THE SHARED TEXT LINK, RETUNED FROM A SCOPED SELECTOR (the settled pattern):
+   bar-scale type, no resting underline, underline on hover/focus as usual. The
+   colour, focus ring and arrow nudge are untouched and come from .b61-link. */
+.b61-btnbar .b61-btnbar__link {
+  font-size: var(--b61-btnbar-size);
+  font-weight: var(--b61-btnbar-weight);
+  text-decoration: none;
+  text-align: center;
+}
+
+.b61-btnbar__row--large .b61-btnbar__link {
+  font-size: var(--b61-btnbar-size-large);
+}
+
+/* The underline goes on the LABEL, not the link, so the arrow is not
+   underlined along with it. Hovering anywhere on the half counts. */
+.b61-btnbar .b61-btnbar__link:hover,
+.b61-btnbar .b61-btnbar__link:focus-visible {
+  text-decoration: none;
+}
+
+.b61-btnbar__half:hover .b61-btnbar__label,
+.b61-btnbar__link:focus-visible .b61-btnbar__label {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+/* The whole half clicks. The pseudo-element is transparent, so it paints
+   nothing; it only widens the hit area to the half. */
+.b61-btnbar__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* Hovering anywhere on the half should read as hovering the link. */
+.b61-btnbar__half:hover .b61-link-arrow {
+  transform: translateX(var(--b61-nudge));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .b61-btnbar__half { transition: none; }
+  .b61-btnbar__half:hover .b61-link-arrow { transform: none; }
+}
+
+/* Phones: the halves stack, first above second. Side by side at 390px each
+   label would get ~150px and wrap to three lines. */
+@media (max-width: 767px) {
+  .b61-btnbar__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

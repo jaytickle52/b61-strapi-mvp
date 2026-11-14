@@ -1,0 +1,181 @@
+/* ---------------------------------------------------------------------------
+   DIALS
+   Declared on the REGION at zero specificity, so a site re-skins by
+   redeclaring and never edits this file.
+
+   The eyebrow values below are PRESERVED from before the 1.17.0 sweep (sits above a large pull quote),
+   not fresh design decisions. The shared defaults are --b61-eyebrow-space and
+   --b61-eyebrow-rule-gap in tokens.css; delete an override here and the element
+   falls back to the house value.
+   --------------------------------------------------------------------------- */
+:where(.b61-quote__region) {
+  --b61-quote-eyebrow-space: var(--b61-space-lg);
+}
+
+.b61-quote {
+  width: 100%;
+  align-self: stretch;
+  text-align: center;
+}
+
+/* The watermark is absolutely positioned, so its containing block moves to the
+   region along with the padding — otherwise it would escape the band. */
+.b61-quote__region {
+  --quote-ink: var(--b61-on-bg-ink, var(--b61-ink));
+  --quote-muted: var(--b61-on-bg-muted, var(--b61-muted));
+  --quote-accent: var(--b61-on-bg-accent, var(--b61-accent-text));
+  --quote-line: var(--b61-on-bg-line, var(--b61-accent));
+  /* NORMAL MEANS NORMAL (1.63.0). Normal used to read --b61-quote-pad-block,
+     0.37 of the band rhythm (22-40px), while Tight read the shared
+     --b61-pad-block-tight (28-48px) -- so Tight padded MORE than Normal at
+     every width and Normal looked broken. Normal now pads like the other
+     bands, as Hero band mode has since 1.56.0. The compact pull-quote look
+     is Tight. --b61-quote-pad-block is retired. */
+  --band-pt: var(--b61-pad-block);
+  --band-pb: var(--b61-pad-block);
+  position: relative;
+  overflow: hidden;
+  padding: var(--band-pt) var(--b61-pad-inline) var(--band-pb);
+  color: var(--quote-ink);
+}
+
+/* SURFACES LIVE IN /assets. The region emits `b61-surface--<s>` for the ground
+   (assets/components.css) and `b61-band--<s>` for the palette
+   (assets/utilities.css). The rules that used to sit here set exactly the
+   pairings .b61-band--* already sets, on both soft and dark — so Testimonial
+   keeps no surface CSS of its own at all. The --quote-* locals in the base rule
+   read the globals and are the only thing needed. */
+
+/* TEXT ALIGNMENT (1.63.0). Set on the region so the mark, eyebrow, quote and
+   attribution all follow by inheritance -- the mark is a block whose glyph is
+   text, and the eyebrow and cite are inline-blocks. The column itself stays
+   centred on the band; only the copy inside it moves. */
+/* ALIGNMENT IS A SET OF DIALS (1.65.0), not a pair of classes. A class cannot
+   change per breakpoint -- only values coming through css.twig can -- so the
+   alignment classes no longer drive anything (they are still emitted as a
+   styling hook for sites that key on them, and they carry the BASE value) and
+   every rule that used to key on them now reads a custom property instead. css.twig publishes the set on the element root
+   for whichever breakpoints the author actually set; the fallbacks below are
+   this element's default, so an instance that never touched the control emits
+   nothing and renders exactly as it did. */
+.b61-quote__region { text-align: var(--b61-align-text, center); }
+
+.b61-quote__region--wfull { --quote-measure: none; }
+.b61-quote__region--wstandard { --quote-measure: var(--b61-width); }
+.b61-quote__region--wnarrow { --quote-measure: var(--b61-width-narrow); }
+
+.b61-quote__region--pt-tight { --band-pt: var(--b61-pad-block-tight); }
+.b61-quote__region--pt-none { --band-pt: 0; }
+.b61-quote__region--pb-tight { --band-pb: var(--b61-pad-block-tight); }
+.b61-quote__region--pb-none { --band-pb: 0; }
+
+.b61-quote__watermark {
+  position: absolute;
+  top: 50%;
+  right: 2%;
+  width: 34%;
+  max-width: 460px;
+  transform: translateY(-50%);
+  opacity: 0.08;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.b61-quote__watermark img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.b61-quote__inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--quote-measure, var(--b61-width-narrow));
+  margin: 0 auto;
+  /* VERTICAL ONLY (1.64.0). The 1.5rem of inline padding made this the one
+     inner in the kit that insets its own copy -- Prose, Split and CTA all run
+     max-width + auto margins and nothing else -- so a quote never lined up
+     with the band above or below it, and the measure came out 48px narrower
+     than the same width setting everywhere else. The region already pads with
+     --b61-pad-inline; this was a second helping. */
+  padding: var(--b61-space-xs) 0;
+}
+
+.b61-quote__mark {
+  display: block;
+  font-family: var(--b61-font-display);
+  font-size: var(--b61-quote-mark-size);
+  line-height: 0.6;
+  color: var(--quote-accent);
+  margin: 0 0 var(--b61-space-xs);
+  height: calc(var(--b61-quote-mark-size) * 0.5);
+}
+
+/* Room above the mark (1.77.0), opt-in: the glyph rises above its own
+   line box, so a band with no top padding clipped it. */
+.b61-quote__region--mark-room .b61-quote__mark {
+  margin-top: var(--b61-quote-mark-room);
+}
+
+.b61-quote__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-eyebrow-size);
+  font-weight: var(--b61-eyebrow-weight);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: var(--b61-eyebrow-case);
+  color: var(--quote-accent);
+  margin: 0 0 var(--b61-quote-eyebrow-space);
+}
+
+/* A <figure> carries a default 1em block margin and 40px inline margin in
+   every UA stylesheet. The quotation's spacing is the stack's job, not the
+   wrapper's. */
+.b61-quote__figure {
+  margin: 0;
+}
+
+.b61-quote__text {
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-quote-weight, 600);
+  font-style: italic;
+  font-size: var(--b61-quote-size, var(--b61-text-h2));
+  line-height: var(--b61-quote-leading, 1.12);
+  color: var(--quote-ink);
+  margin: 0 0 var(--b61-quote-cite-gap);
+  border: 0;
+  padding: 0;
+}
+
+/* Normal (upright) quote text (1.76.0), opt-in. The accent rule below keeps
+   typed-in italic words italic, so emphasis survives the switch. */
+.b61-quote__region--upright .b61-quote__text {
+  font-style: normal;
+}
+
+/* Accent word inside the quote: gold on a dark band, red on a light one. */
+.b61-quote__text em {
+  font-style: italic;
+  color: var(--quote-accent);
+}
+
+/* Attribution: UI face, tracked caps, small, in the text-safe accent. */
+.b61-quote__cite {
+  display: inline-block;
+  font-family: var(--b61-font-ui);
+  font-size: var(--b61-text-label);
+  font-weight: 600;
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--quote-accent);
+}
+
+
+@media (max-width: 640px) {
+  .b61-quote__watermark {
+    width: 60%;
+    opacity: 0.06;
+  }
+}

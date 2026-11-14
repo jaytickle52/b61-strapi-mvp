@@ -1,0 +1,135 @@
+/* The class is doubled on purpose. `.b61-rule` was a site-level utility on
+   sites built before this plugin (an eyebrow rule: width = the eyebrow rule
+   width, 2px tall, red fill, vertical margin). Those sites still carry it as a
+   Breakdance global selector, which loads AFTER this compiled file at the same
+   specificity and turned the whole Divider into an 80x96 red block (found on
+   St. Mark's specimen page, 2026-09-10). (0,2,0) wins without !important, and
+   the root restates every property that legacy rule set, so the element is
+   immune whether or not a site has cleaned its selectors out. */
+.b61-rule.b61-rule {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border: 0;
+  background: none;
+  align-self: stretch;
+  display: block;
+  padding: var(--b61-pad-block-tight) var(--b61-pad-inline);
+}
+
+.b61-rule__inner {
+  display: flex;
+  width: 100%;
+}
+
+.b61-rule__inner--aleft { justify-content: flex-start; }
+.b61-rule__inner--acenter { justify-content: center; }
+.b61-rule__inner--aright { justify-content: flex-end; }
+
+.b61-rule__line {
+  display: block;
+  border: 0;
+  border-radius: var(--b61-radius);
+}
+
+.b61-rule__line--wnarrow { width: 120px; }
+.b61-rule__line--wmedium { width: 360px; max-width: 100%; }
+/* Wide = the content measure, so a rule can span exactly what the bands above
+   and below it span. Full is the band itself. */
+.b61-rule__line--wwide { width: 100%; max-width: var(--b61-width); }
+.b61-rule__line--wfull { width: 100%; }
+
+.b61-rule__line--hairline { height: 1px; }
+.b61-rule__line--regular { height: 2px; }
+.b61-rule__line--heavy { height: 4px; }
+
+/* Resolved through --b61-rule-* so a dark band can retune them without a
+   control. See "Rule colors" in tokens.css. */
+.b61-rule__line--accent { background: var(--b61-rule-accent, var(--b61-accent)); }
+.b61-rule__line--ink { background: var(--b61-rule-ink, var(--b61-ink)); }
+.b61-rule__line--muted { background: var(--b61-rule-muted, var(--b61-muted)); }
+
+.b61-rule__ornament {
+  display: block;
+  line-height: 0;
+}
+
+.b61-rule__ornament--wnarrow { width: 120px; }
+.b61-rule__ornament--wmedium { width: 360px; max-width: 100%; }
+.b61-rule__ornament--wwide { width: 100%; max-width: var(--b61-width); }
+.b61-rule__ornament--wfull { width: 100%; }
+
+.b61-rule__ornament img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Center-out scroll reveal
+   ---------------------------------------------------------------------------
+   The rule/ornament is MASKED open from the middle outward as it scrolls into
+   view. Masking does not affect layout, so the divider reserves its full width
+   from first paint and nothing on the page shifts while it draws. Not
+   transform: scaleX() — that would stretch the artwork rather than reveal it.
+
+   The mask is a gradient that fades at both ends, and the animation grows it
+   from zero width at the centre. The soft stops are part of the mask image, so
+   they ride the leading edges outward and the rule appears to bleed into view
+   rather than being cut open. --b61-divider-reveal-feather is the softness.
+
+   This is a true scrub, not a fire-once trigger: `animation-timeline: view()`
+   makes animation progress a function of the element's position in the
+   viewport, so it plays backward when the page scrolls back up. The range is
+   two tokens (--b61-divider-reveal-start / --b61-divider-reveal-end) so the
+   client can retune where the reveal begins and completes without touching
+   element CSS. See "Divider — center-out scroll reveal" in tokens.css.
+
+   FALLBACK. Everything lives inside @supports (animation-timeline: view()).
+   A browser without scroll-driven animations never matches that block, so it
+   never sees the animation OR the collapsed mask — it renders the divider
+   fully drawn, its normal static state. The reveal is progressive enhancement
+   only; there is no state in which an unsupported browser hides the divider.
+
+   The reveal is opt-out per instance via the "Entrance animation" control
+   (Accents; it replaced the "Scroll reveal" toggle in 1.74.0), which
+   adds/removes .b61-rule__inner--reveal on the wrapper.
+   -------------------------------------------------------------------------- */
+
+@keyframes b61-rule-reveal {
+  from { -webkit-mask-size: var(--b61-divider-reveal-size-from); mask-size: var(--b61-divider-reveal-size-from); }
+  to { -webkit-mask-size: var(--b61-divider-reveal-size-to); mask-size: var(--b61-divider-reveal-size-to); }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .b61-rule__inner--reveal .b61-rule__line,
+    .b61-rule__inner--reveal .b61-rule__ornament {
+      -webkit-mask-image: var(--b61-divider-reveal-mask);
+      mask-image: var(--b61-divider-reveal-mask);
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      mask-position: center;
+      animation-name: b61-rule-reveal;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: var(--b61-divider-reveal-start) var(--b61-divider-reveal-end);
+      will-change: mask-size;
+    }
+  }
+}
+
+/* Belt and braces: even where the @supports block matched, an explicit
+   reduced-motion preference returns the divider to fully drawn and static. */
+@media (prefers-reduced-motion: reduce) {
+  .b61-rule__inner--reveal .b61-rule__line,
+  .b61-rule__inner--reveal .b61-rule__ornament {
+    animation: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+    will-change: auto;
+  }
+}

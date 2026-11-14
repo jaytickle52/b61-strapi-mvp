@@ -286,3 +286,12 @@ export function textAlignField(): Field {
     { default: 'left', iconOnly: true },
   )
 }
+
+/** The heading panel of a band: eyebrow, heading lines, level, subheadings and (optionally) an intro. */
+export function bandHeadFields(o: { levels?: ('h1' | 'h2' | 'h3' | 'h4')[]; intro?: boolean } = {}): Field[] {
+  return [
+    ...headingFields({ levels: o.levels ?? ['h2', 'h3', 'h4'] }),
+    subheadsField(),
+    ...(o.intro ? [{ name: 'intro', label: 'Intro', type: 'richText' } as Field] : []),
+  ]
+}

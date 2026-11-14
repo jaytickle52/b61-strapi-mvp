@@ -1,0 +1,2 @@
+/* Gallery per-instance rules (css.twig): column balance when text is beside. */
+.b61-gallery__region .b61-gallery__cols--bstep { --b61-gal-textcols: minmax(0, var(--b61-gal-bstep)) minmax(0, 1fr); }

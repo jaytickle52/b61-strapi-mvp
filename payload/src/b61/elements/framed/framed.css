@@ -1,0 +1,89 @@
+/*
+ * Framed Image is the library's one bare block: it owns a treatment, not a
+ * section. No region, no surface, no padding of its own. That is deliberate —
+ * it is the shape every other element takes when a B61 Section eventually owns
+ * the band, so this file is the worked example of that half of the model.
+ */
+.b61-fimg {
+  width: 100%;
+  align-self: stretch;
+  display: block;
+  position: relative;
+}
+
+/* The root stretches (Breakdance's .section-container is align-items:flex-start,
+   so anything that does not stretch collapses to content width). The *frame*
+   carries the measure, which is what makes Full/Standard/Narrow possible without
+   the root shrinking. */
+.b61-fimg__frame {
+  display: grid;
+  position: relative;
+  padding: var(--b61-frame-offset) 0 0 var(--b61-frame-offset);
+  isolation: isolate;
+  margin-inline: auto;
+}
+
+.b61-fimg__frame--wfull { max-width: none; }
+.b61-fimg__frame--wstandard { max-width: var(--b61-width); }
+.b61-fimg__frame--wnarrow { max-width: var(--b61-width-narrow); }
+
+.b61-fimg__frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--b61-frame-width) solid var(--b61-frame-color, var(--b61-primary));
+  /* Above the media: the frame is a plain border drawn ON the image edge,
+     not a box behind it. */
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Primary is the house frame: --b61-frame-color as tokens.css defines it (thin
+   red on this site), so no rule is needed for it. Secondary is the alternate
+   frame colour (--b61-frame-color-alt, gold here).
+   Role names, not colour names: the frame follows the site's palette, so
+   labelling these "red" and "gold" was wrong on this palette and would be wrong
+   on the next one too. */
+.b61-fimg__frame--secondary { --b61-frame-color: var(--b61-frame-color-alt, var(--b61-secondary)); }
+.b61-fimg__frame--accent { --b61-frame-color: var(--b61-accent); }
+
+.b61-fimg__frame--flip { padding: var(--b61-frame-offset) var(--b61-frame-offset) 0 0; }
+
+.b61-fimg__media {
+  position: relative;
+  z-index: 1;
+  min-height: 460px;
+  overflow: hidden;
+  margin: 0 calc(-1 * var(--b61-frame-offset)) calc(-1 * var(--b61-frame-offset)) 0;
+  background-color: var(--b61-surface);
+}
+
+.b61-fimg__frame--flip .b61-fimg__media { margin: 0 0 calc(-1 * var(--b61-frame-offset)) calc(-1 * var(--b61-frame-offset)); }
+
+/* Shape is an aspect ratio, not a height, so the frame stays proportionate at
+   every width instead of pinning a pixel height that breaks when the element is
+   narrowed. Fixed keeps the old min-height for instances built before this
+   control existed. */
+.b61-fimg__frame--shape-portrait .b61-fimg__media { aspect-ratio: 3 / 4; min-height: 0; }
+.b61-fimg__frame--shape-square .b61-fimg__media { aspect-ratio: 1 / 1; min-height: 0; }
+.b61-fimg__frame--shape-landscape .b61-fimg__media { aspect-ratio: 4 / 3; min-height: 0; }
+.b61-fimg__frame--shape-wide .b61-fimg__media { aspect-ratio: 16 / 9; min-height: 0; }
+
+.b61-fimg__media > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--b61-photo-focus, var(--b61-bg-position));
+}
+
+/* PHOTO RADIUS (1.53.0). The frame and the photo share --b61-radius-media,
+   the same value cards read (see tokens.css), so a card grid and a framed
+   photo on one page always have the same corners. 0 on a square site. */
+.b61-fimg__frame::before {
+  border-radius: var(--b61-radius-media);
+}
+
+.b61-fimg__media {
+  border-radius: var(--b61-radius-media);
+}

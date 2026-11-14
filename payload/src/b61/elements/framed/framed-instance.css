@@ -1,0 +1,2 @@
+/* Framed Image per-instance width (css.twig). */
+.b61-fimg__frame--wstep { max-width: var(--b61-fimg-max); }

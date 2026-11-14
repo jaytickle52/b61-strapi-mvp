@@ -1,0 +1,437 @@
+/* ---------------------------------------------------------------------------
+   DIALS
+   Declared on the REGION at zero specificity, so a site re-skins by
+   redeclaring and never edits this file.
+
+   The eyebrow values below are PRESERVED from before the 1.17.0 sweep (already the shared value),
+   not fresh design decisions. The shared defaults are --b61-eyebrow-space and
+   --b61-eyebrow-rule-gap in tokens.css; delete an override here and the element
+   falls back to the house value.
+   --------------------------------------------------------------------------- */
+:where(.b61-stats__region) {
+  --b61-stats-eyebrow-space: var(--b61-space-md);
+  --b61-stats-subhead-space: 0.75rem;
+  /* Inline style (1.76.0). */
+  --b61-stats-inline-figure-size: var(--b61-text-h3);
+  --b61-stats-inline-gap: var(--b61-space-md) clamp(20px, 3vw, 40px);
+  --b61-stats-inline-rule-space: var(--b61-space-sm);
+}
+
+.b61-stats {
+  width: 100%;
+  align-self: stretch;
+  display: block;
+}
+
+/* ---- Region ---------------------------------------------------------------
+   Surface colour and every text role live here, as locals, so a surface is a
+   token set rather than a background. Each local falls back through
+   --b61-on-bg-* first: with no B61 Section above it that global is unset and
+   the standalone value applies, which is today's behaviour exactly. */
+.b61-stats__region {
+  --stats-ink: var(--b61-on-bg-ink, var(--b61-ink));
+  --stats-muted: var(--b61-on-bg-muted, var(--b61-muted));
+  --stats-accent: var(--b61-on-bg-accent, var(--b61-accent-text));
+  --stats-figure: var(--b61-on-bg-line, var(--b61-accent));
+  --stats-line: var(--b61-on-bg-line, var(--b61-border));
+  --stats-figure-size: clamp(44px, 6vw, 76px);
+  display: block;
+  --band-pt: var(--b61-pad-block);
+  --band-pb: var(--b61-pad-block);
+  padding: var(--band-pt) var(--b61-pad-inline) var(--band-pb);
+  color: var(--stats-ink);
+}
+
+/* Band spacing. Two controls rather than one, because the case that hurts is a
+   pair of same-coloured bands stacking to double padding — which needs the
+   bottom of one and the top of the next set independently. Values come from
+   tokens.css so a B61 Section can later consume the same two. */
+.b61-stats__region--pt-tight { --band-pt: var(--b61-pad-block-tight); }
+.b61-stats__region--pt-none { --band-pt: 0; }
+.b61-stats__region--pb-tight { --band-pb: var(--b61-pad-block-tight); }
+.b61-stats__region--pb-none { --band-pb: 0; }
+
+/* SURFACES LIVE IN /assets — ground from `b61-surface--<s>`, palette from
+   `b61-band--<s>`, and the --stats-* base locals read the --b61-on-bg-* globals.
+   Ink, muted and accent are gone from here. What stays:
+
+   --stats-line is the rule BETWEEN stats, a hairline tuned per band rather than
+   "text on this band", so it has no global. --stats-surface is the band's own
+   background, used as the label colour on the inverted button. And on ACCENT the
+   figure breaks from the band's line colour — cream would sink into the band, so
+   the figure takes full ink instead. On soft and dark the figure follows the
+   band, which is what the base local already does. */
+.b61-stats__region.b61-surface--soft {
+  --stats-line: rgb(var(--b61-scrim-rgb) / 0.24);
+}
+
+.b61-stats__region.b61-surface--dark {
+  --stats-surface: var(--b61-surface-dark);
+  --stats-line: rgb(var(--b61-light-scrim-rgb) / 0.26);
+}
+
+.b61-stats__region.b61-surface--accent {
+  --stats-surface: var(--b61-surface-accent);
+  --stats-figure: var(--b61-on-surface-accent);
+  --stats-line: rgb(var(--b61-light-scrim-rgb) / 0.34);
+}
+
+/* ---- Figure scale --------------------------------------------------------- */
+.b61-stats__region--fig-large { --stats-figure-size: var(--b61-stats-figure-large); }
+.b61-stats__region--fig-medium { --stats-figure-size: var(--b61-stats-figure-medium); }
+.b61-stats__region--fig-small { --stats-figure-size: var(--b61-stats-figure-small); }
+
+/* ---- Head ----------------------------------------------------------------- */
+.b61-stats__head {
+  max-width: var(--b61-width);
+  margin: 0 auto clamp(36px, 5vw, 56px);
+}
+
+/* ALIGNMENT IS A SET OF DIALS (1.65.0), not a pair of classes. A class cannot
+   change per breakpoint -- only values coming through css.twig can -- so the
+   alignment classes no longer drive anything (they are still emitted as a
+   styling hook for sites that key on them, and they carry the BASE value) and
+   every rule that used to key on them now reads a custom property instead. css.twig publishes the set on the element root
+   for whichever breakpoints the author actually set; the fallbacks below are
+   this element's default, so an instance that never touched the control emits
+   nothing and renders exactly as it did. */
+.b61-stats__head { text-align: var(--b61-align-text, center); }
+
+/* `margin-left: 0` used to ride along with the left alignment, and it pulled the
+   head OUT of the content column: the head started at the region's padding edge
+   while the grid and the actions stayed in the centred --b61-width column, ten
+   pixels to its right. The eyebrow and the heading did not line up with the
+   figures underneath them at any viewport wide enough for the column to be
+   narrower than the region.
+
+   Alignment is about the TEXT inside the box, not about where the box starts.
+   Every sibling here shares one column; only the text alignment changes. */
+/* (head alignment now reads --b61-align-text above.) */
+
+.b61-stats__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-eyebrow-size);
+  font-weight: var(--b61-eyebrow-weight);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: var(--b61-eyebrow-case);
+  margin: 0 0 var(--b61-stats-eyebrow-space);
+  color: var(--stats-accent);
+}
+
+.b61-stats__heading {
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-stats-heading-size, var(--b61-text-h2));
+  line-height: 1.15;
+  margin: 0;
+  color: var(--stats-ink);
+}
+
+/* One heading tag, N spans. Each line is display:block so it breaks without a
+   <br>, which is what makes emphasis a per-line CLASS rather than a per-line
+   element — and what let the heading group drop its placement control. */
+.b61-stats__heading-line {
+  display: block;
+}
+
+/* Accent word: an emphasised heading LINE and an <em> inside the heading are
+   the same device. --stats-accent is gold on the dark band and the text-safe
+   red on light ones. The toggle is the control an editor gets now; the inline
+   <em> is what they typed into the old single Heading field, and it keeps
+   working so no existing band changes. */
+.b61-stats__heading-line--em,
+.b61-stats__heading em {
+  font-style: italic;
+  color: var(--stats-accent);
+}
+
+/* The "second headline" role: display face like the heading, one step down the
+   scale, weight and colour pulled back so two display lines read as a pair
+   rather than as a competition. Distinct from the intro below, which is body
+   copy — that is why both exist. */
+.b61-stats__subhead {
+  font-family: var(--b61-font-display);
+  font-weight: 400;
+  font-size: var(--b61-text-h3);
+  line-height: 1.25;
+  color: var(--stats-muted);
+  margin: var(--b61-stats-subhead-space) 0 0;
+}
+
+.b61-stats__subhead em {
+  font-style: italic;
+  color: var(--stats-accent);
+}
+
+.b61-stats__intro {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-stats-intro-size, var(--b61-text-body));
+  line-height: var(--b61-leading-body);
+  color: var(--stats-ink);
+  margin: var(--b61-space-md) 0 0;
+  max-width: 68ch;
+}
+
+.b61-stats__intro { margin-inline: var(--b61-align-inline, auto); }
+
+/* ---- Grid ----------------------------------------------------------------- */
+.b61-stats__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--b61-stats-cols, 3), minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 48px);
+  max-width: var(--b61-width);
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.b61-stats__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--b61-space-xs);
+}
+
+.b61-stats__item {
+  align-items: var(--b61-align-items, center);
+  text-align: var(--b61-align-text, center);
+}
+
+/* ---- Item style: geometry on the region, colour on the item ---------------- */
+
+/* Divided is a ruled grid, so the gap goes to zero and the breathing room moves
+   into each item's own padding. That is what lets the rules run continuous: with
+   a column gap, a top border would break at every column boundary, and with a
+   row gap the horizontal rule has no single place to sit. Every item carries a
+   top rule and a left rule, and each is then cleared at the edge of the grid:
+   the left rule at the start of every row, the top rule across the whole first
+   row. So the rules are DIVIDERS — they appear only between two things — and
+   the band has no bar hanging above its own first row. */
+.b61-stats__region--style-divided .b61-stats__grid { gap: 0; }
+
+.b61-stats__region--style-divided .b61-stats__item {
+  --stats-divider: color-mix(in srgb, color-mix(in srgb, var(--stats-ink) var(--b61-stats-divider-ink), var(--stats-line)) var(--b61-stats-divider-strength), transparent);
+  border-block-start: 1px solid var(--stats-divider);
+  border-inline-start: 1px solid var(--stats-divider);
+  --stats-pad-x: clamp(18px, 2.2vw, 28px);
+  padding: clamp(32px, 4.5vw, 52px) var(--stats-pad-x);
+}
+
+/* First item in each row keeps no left rule. Column count is a bounded enum, so
+   the row boundary is written out rather than guessed with :has(). Padding stays
+   symmetric on every item: clearing it here would pull the first column's copy
+   off-centre inside its own track.
+
+   Each breakpoint owns its row-start rule outright instead of overriding the one
+   above it. The chosen column count is only meaningful above 860px, and the
+   selector that carries it is three classes deep — a narrower breakpoint trying
+   to re-add a rule the column count cleared loses on specificity, not on order,
+   so no amount of moving it down the file would fix it. Scoping the column-count
+   rules to the width where they apply removes the fight entirely. */
+@media (min-width: 861px) {
+  .b61-stats__region--style-divided.b61-stats__region--cols2 .b61-stats__item:nth-child(2n + 1),
+  .b61-stats__region--style-divided.b61-stats__region--cols3 .b61-stats__item:nth-child(3n + 1),
+  .b61-stats__region--style-divided.b61-stats__region--cols4 .b61-stats__item:nth-child(4n + 1) {
+    border-inline-start: 0;
+  }
+
+  /* ...and the whole first row loses its top rule, so the first rule the eye
+     meets is the one dividing row 1 from row 2. Same enum, same reason it is
+     written out rather than guessed: the row width IS the column count. */
+  .b61-stats__region--style-divided.b61-stats__region--cols2 .b61-stats__item:nth-child(-n + 2),
+  .b61-stats__region--style-divided.b61-stats__region--cols3 .b61-stats__item:nth-child(-n + 3),
+  .b61-stats__region--style-divided.b61-stats__region--cols4 .b61-stats__item:nth-child(-n + 4) {
+    border-block-start: 0;
+  }
+}
+
+/* Two columns whatever the control says. */
+@media (max-width: 860px) and (min-width: 521px) {
+  .b61-stats__region--style-divided .b61-stats__item:nth-child(2n + 1) {
+    border-inline-start: 0;
+  }
+
+  .b61-stats__region--style-divided .b61-stats__item:nth-child(-n + 2) {
+    border-block-start: 0;
+  }
+}
+
+.b61-stats__region--style-boxed .b61-stats__item {
+  padding: clamp(24px, 3vw, 34px) clamp(20px, 2.4vw, 28px);
+  border-radius: var(--b61-radius-card);
+  border: 1px solid transparent;
+}
+
+/* Item surfaces reset the four locals, because a boxed item carries its own
+   background on every band. Outline alone inherits the band's palette. */
+.b61-stats__item--surf-card,
+.b61-stats__item--surf-light,
+.b61-stats__item--surf-soft,
+.b61-stats__item--surf-dark,
+.b61-stats__item--surf-accent {
+  color: var(--stats-ink);
+}
+
+.b61-stats__region--style-boxed .b61-stats__item--surf-card {
+  background: var(--b61-white);
+  border-color: var(--b61-border);
+  --stats-ink: var(--b61-ink);
+  --stats-muted: var(--b61-muted);
+  --stats-accent: var(--b61-accent-text);
+  --stats-figure: var(--b61-accent);
+}
+
+.b61-stats__region--style-boxed .b61-stats__item--surf-light {
+  background: var(--b61-surface);
+  border-color: var(--b61-border);
+  --stats-ink: var(--b61-on-surface);
+  --stats-muted: var(--b61-muted);
+  --stats-accent: var(--b61-accent-text);
+  --stats-figure: var(--b61-accent);
+}
+
+.b61-stats__region--style-boxed .b61-stats__item--surf-soft {
+  background: var(--b61-surface-soft);
+  --stats-ink: var(--b61-on-surface-soft);
+  --stats-muted: var(--b61-on-surface-soft);
+  --stats-accent: var(--b61-accent-text-on-soft);
+  --stats-figure: var(--b61-accent-text-on-soft);
+}
+
+.b61-stats__region--style-boxed .b61-stats__item--surf-dark {
+  background: var(--b61-surface-dark);
+  --stats-ink: var(--b61-on-surface-dark);
+  --stats-surface: var(--b61-surface-dark);
+  --stats-muted: var(--b61-on-dark-muted);
+  --stats-accent: var(--b61-on-dark-accent);
+  --stats-figure: var(--b61-on-dark-accent);
+}
+
+.b61-stats__region--style-boxed .b61-stats__item--surf-accent {
+  background: var(--b61-surface-accent);
+  --stats-ink: var(--b61-on-surface-accent);
+  --stats-surface: var(--b61-surface-accent);
+  --stats-muted: rgb(var(--b61-light-scrim-rgb) / 0.92);
+  --stats-accent: var(--b61-palette-paper);
+  --stats-figure: var(--b61-on-surface-accent);
+}
+
+.b61-stats__region--style-boxed .b61-stats__item--surf-outline {
+  background: transparent;
+  border-color: var(--stats-line);
+}
+
+/* INLINE (1.76.0): the compact style for stats set inside another band. A
+   small figure over its label, each stat behind a thin leading rule, always
+   start-aligned (a leading rule beside centred text reads as a mistake). The
+   figure size is its own dial, so the Figure size classes are outranked
+   rather than edited. Plain, Divided and Boxed are untouched: every rule here
+   needs the --style-inline class, which no existing instance carries. */
+.b61-stats__region--style-inline .b61-stats__grid { gap: var(--b61-stats-inline-gap); }
+
+.b61-stats__region.b61-stats__region--style-inline {
+  --stats-figure-size: var(--b61-stats-inline-figure-size);
+}
+
+.b61-stats__region--style-inline .b61-stats__item {
+  align-items: flex-start;
+  text-align: start;
+  gap: var(--b61-space-2xs);
+  padding-inline-start: var(--b61-stats-inline-rule-space);
+  border-inline-start: 1px solid color-mix(in srgb, color-mix(in srgb, var(--stats-ink) var(--b61-stats-divider-ink), var(--stats-line)) var(--b61-stats-divider-strength), transparent);
+}
+
+/* ---- Stat ----------------------------------------------------------------- */
+.b61-stats__value {
+  font-family: var(--b61-font-display);
+  font-weight: 400;
+  font-size: var(--stats-figure-size);
+  line-height: 1;
+  color: var(--stats-figure);
+}
+
+.b61-stats__label {
+  font-family: var(--b61-font-ui);
+  font-size: var(--b61-stats-label-size, var(--b61-text-label));
+  font-weight: var(--b61-stats-label-weight);
+  letter-spacing: var(--b61-stats-label-tracking);
+  text-transform: var(--b61-stats-label-case);
+  color: color-mix(in srgb, var(--stats-muted) var(--b61-stats-label-muted), var(--stats-ink));
+}
+
+/* Label above reads as an eyebrow over the figure. Order, not
+   column-reverse, so the note stays last. */
+.b61-stats__region--labove .b61-stats__label {
+  order: -1;
+  font-size: var(--b61-text-label);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  color: var(--stats-accent);
+}
+
+.b61-stats__note {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-label);
+  line-height: var(--b61-leading-body);
+  color: var(--stats-muted);
+}
+
+/* ---- Actions --------------------------------------------------------------- */
+.b61-stats__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--b61-space-md);
+  align-items: center;
+  max-width: var(--b61-width);
+  margin: clamp(36px, 5vw, 56px) auto 0;
+}
+
+.b61-stats__actions { justify-content: var(--b61-align-justify, center); }
+
+/* ---- Responsive ------------------------------------------------------------
+   The divided row-start rules live with their own breakpoints above, beside the
+   column count they belong to. */
+@media (max-width: 860px) {
+  .b61-stats__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 520px) {
+  .b61-stats__grid { grid-template-columns: minmax(0, 1fr); }
+
+  /* One column: the vertical rules have nothing to divide, and the horizontal
+     ones become the list separators — so the first item, having nothing above
+     it to be divided from, carries none. */
+  .b61-stats__region--style-divided .b61-stats__item {
+    border-inline-start: 0;
+  }
+
+  .b61-stats__region--style-divided .b61-stats__item:first-child {
+    border-block-start: 0;
+  }
+}
+
+/* ---- Flush left edge (1.76.1) ------------------------------------------------
+   Opt-in (design.stats.flush_edges -> --flush, Divided only). The row-start
+   items read --b61-stats-flush-start, which css.twig sets to 0 where the text
+   is left-aligned and clears where it is centred, so centred text keeps its
+   symmetric padding. Same row boundaries as the divider rules above, per
+   width; a column override re-derives them in css.twig. */
+@media (min-width: 861px) {
+  .b61-stats__region--flush.b61-stats__region--cols2 .b61-stats__item:nth-child(2n + 1),
+  .b61-stats__region--flush.b61-stats__region--cols3 .b61-stats__item:nth-child(3n + 1),
+  .b61-stats__region--flush.b61-stats__region--cols4 .b61-stats__item:nth-child(4n + 1) {
+    padding-inline-start: var(--b61-stats-flush-start, var(--stats-pad-x));
+  }
+}
+
+@media (max-width: 860px) and (min-width: 521px) {
+  .b61-stats__region--flush .b61-stats__item:nth-child(2n + 1) {
+    padding-inline-start: var(--b61-stats-flush-start, var(--stats-pad-x));
+  }
+}
+
+@media (max-width: 520px) {
+  .b61-stats__region--flush .b61-stats__item {
+    padding-inline-start: var(--b61-stats-flush-start, var(--stats-pad-x));
+  }
+}

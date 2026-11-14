@@ -1,3 +1,4 @@
+import { syncElementLibrary } from './b61/library'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -41,6 +42,7 @@ export default buildConfig({
   onInit: async (payload) => {
     if (process.env.SEED_DEMO === 'true') {
       await seedDemoSchool(payload, process.env.SEED_SCHOOL || 'cedar-ridge')
+      await syncElementLibrary(payload).catch((e) => payload.logger.error(`[b61] Element library: ${e.message}`))
     }
   },
 })

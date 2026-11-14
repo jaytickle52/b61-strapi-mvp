@@ -1,0 +1,505 @@
+/* ---------------------------------------------------------------------------
+   DIALS
+   Declared on the REGION at zero specificity, so a site re-skins by
+   redeclaring and never edits this file.
+
+   The eyebrow values below are PRESERVED from before the 1.17.0 sweep (12px / 12px, raw literals),
+   not fresh design decisions. The shared defaults are --b61-eyebrow-space and
+   --b61-eyebrow-rule-gap in tokens.css; delete an override here and the element
+   falls back to the house value.
+   --------------------------------------------------------------------------- */
+:where(.b61-gallery__region) {
+  --b61-gallery-eyebrow-space: 0.75rem;
+  --b61-gallery-eyebrow-rule-gap: 0.75rem;
+  /* ONE dial for the gap between tiles, read by all three modes — strip, grid
+     and masonry. They are the same design decision, and a site loosening its
+     photo spacing wants all three to move together, not two of them.
+     The masonry script reads the COMPUTED rowGap (with 20 only as a fallback),
+     so its row-span maths follows this dial with no further wiring. */
+  --b61-gallery-tile-gap: 20px;
+  /* The gap between the head's text and its nav buttons, and between the two
+     arrows. px, not rem: these space controls and boxes, not copy. */
+  --b61-gallery-head-gap: 20px;
+  --b61-gallery-nav-gap: 8px;
+  --b61-gallery-subhead-space: 0.75rem;
+  --b61-gallery-actions-space: 2.5rem;
+}
+
+.b61-gallery {
+  width: 100%;
+  align-self: stretch;
+  text-align: left;
+}
+
+/* ---- Region ---------------------------------------------------------------
+   Surface colour and every text role as locals, so a surface is a token set
+   rather than a background. Padding lives here, never on the root, so it moves
+   cleanly the day a B61 Section owns the band. */
+.b61-gallery__region {
+  --gal-ink: var(--b61-on-bg-ink, var(--b61-ink));
+  --gal-muted: var(--b61-on-bg-muted, var(--b61-muted));
+  --gal-accent: var(--b61-on-bg-accent, var(--b61-accent-text));
+  --gal-rule: var(--b61-on-bg-line, var(--b61-accent));
+  --gal-line: var(--b61-border);
+  --gal-caption: var(--gal-muted);
+  --gal-item-bg: var(--b61-surface);
+  --band-pt: var(--b61-pad-block);
+  --band-pb: var(--b61-pad-block);
+  padding: var(--band-pt) var(--b61-pad-inline) var(--band-pb);
+  color: var(--gal-ink);
+}
+
+/* Band spacing. Two controls rather than one, because the case that hurts is a
+   pair of same-coloured bands stacking to double padding — which needs the
+   bottom of one and the top of the next set independently. Values come from
+   tokens.css so a B61 Section can later consume the same two. */
+.b61-gallery__region--pt-tight { --band-pt: var(--b61-pad-block-tight); }
+.b61-gallery__region--pt-none { --band-pt: 0; }
+.b61-gallery__region--pb-tight { --band-pb: var(--b61-pad-block-tight); }
+.b61-gallery__region--pb-none { --band-pb: 0; }
+
+/* SURFACES LIVE IN /assets — the region emits `b61-surface--<s>` for the ground
+   and `b61-band--<s>` for the palette, and the --gal-* base locals read the
+   --b61-on-bg-* globals those set. Ink, muted, accent and rule are gone from
+   here; what stays is the state a gallery has that a band does not.
+
+   --gal-line is the hairline BETWEEN tiles and --gal-item-bg the tile's own
+   ground. Neither is "text on this band", so neither has a global — a tile is a
+   surface sitting ON the surface, and its wash is tuned per band. */
+.b61-gallery__region.b61-surface--soft {
+  --gal-line: rgb(var(--b61-scrim-rgb) / 0.24);
+  --gal-item-bg: var(--b61-white);
+}
+
+.b61-gallery__region.b61-surface--dark {
+  --gal-line: rgb(var(--b61-light-scrim-rgb) / 0.26);
+  --gal-item-bg: rgb(var(--b61-light-scrim-rgb) / 0.12);
+}
+
+.b61-gallery__region.b61-surface--accent {
+  --gal-line: rgb(var(--b61-light-scrim-rgb) / 0.34);
+  --gal-item-bg: rgb(var(--b61-light-scrim-rgb) / 0.14);
+  /* The item tile is a lightened wash over the band, so band-muted text is read
+     against a lighter ground than it was paired with: 4.39:1. Ink clears it. */
+  --gal-caption: var(--gal-ink);
+}
+
+/* ---- Head ----------------------------------------------------------------- */
+.b61-gallery__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--b61-gallery-head-gap);
+  margin: 0 auto 28px;
+  max-width: var(--b61-width);
+}
+
+.b61-gallery__headtext { min-width: 0; }
+
+.b61-gallery__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--b61-gallery-eyebrow-rule-gap);
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-eyebrow-size);
+  font-weight: var(--b61-eyebrow-weight);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: var(--b61-eyebrow-case);
+  color: var(--gal-accent);
+  margin: 0 0 var(--b61-gallery-eyebrow-space);
+}
+
+.b61-gallery__eyebrow::before {
+  content: "";
+  width: var(--b61-eyebrow-rule-width, 32px);
+  height: var(--b61-eyebrow-rule-thickness);
+  background: var(--gal-rule);
+  display: var(--b61-eyebrow-rule);
+}
+
+.b61-gallery__heading {
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-text-h2);
+  line-height: 1.2;
+  color: var(--gal-ink);
+  margin: 0;
+}
+
+/* One heading tag, N spans. Each line is display:block so it breaks without a
+   <br>, which is what makes emphasis a per-line CLASS rather than a per-line
+   element — and what let the heading group drop its placement control. */
+.b61-gallery__heading-line {
+  display: block;
+}
+
+/* An emphasised heading LINE and an <em> inside the heading are the same
+   device. The toggle is the control an editor gets now; the inline <em> is what
+   they typed into the old single Heading field — and this element's headings
+   were BUILT that way, one phrase per line with <br> and <em>, so it has to
+   keep working exactly as before. */
+.b61-gallery__heading-line--em,
+.b61-gallery__heading em {
+  font-style: italic;
+  color: var(--gal-accent);
+}
+
+/* The "second headline" role: display face like the heading, one step down the
+   scale, colour pulled back. Distinct from the intro below, which is body copy. */
+.b61-gallery__subhead {
+  font-family: var(--b61-font-display);
+  font-weight: 400;
+  font-size: var(--b61-text-h3);
+  line-height: 1.25;
+  color: var(--gal-muted);
+  margin: var(--b61-gallery-subhead-space) 0 0;
+}
+
+.b61-gallery__subhead em {
+  font-style: italic;
+  color: var(--gal-accent);
+}
+
+.b61-gallery__intro {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  color: var(--gal-muted);
+  margin: 0.875rem 0 0;
+  max-width: 68ch;
+}
+
+/* HEADING ALIGNMENT (1.74.0). css.twig sets the --b61-align-* dials on
+   __headtext only when Heading alignment is set; the fallbacks are the
+   existing left-set default. __headtext grows to fill the head so a centred
+   group centres in the band, not in its own content width (left-set text looks
+   the same either way; the strip nav still sits at the end). */
+.b61-gallery__headtext {
+  flex-grow: 1;
+  text-align: var(--b61-align-text, left);
+}
+.b61-gallery__intro { margin-inline: var(--b61-align-inline, 0); }
+.b61-gallery__eyebrow::before { display: var(--b61-align-eyebrow-rule, var(--b61-eyebrow-rule)); }
+
+/* ---- Nav ------------------------------------------------------------------
+   The arrows are the strip's affordance and its keyboard path. A bare
+   overflow container is not in the tab order in Chrome, so half a strip of
+   photos was pointer-only; two real buttons fix that natively. */
+.b61-gallery__nav {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--b61-gallery-nav-gap);
+}
+
+.b61-gallery__hint {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--gal-muted);
+  margin-right: 6px;
+}
+
+.b61-gallery__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  /* --gal-line is a divider hairline and lands at 1.4-2.2:1 on every surface.
+     The ring is this control's only boundary, so it takes the muted text colour
+     instead and clears the 3:1 non-text floor. */
+  border: 1px solid var(--gal-muted);
+  border-radius: var(--b61-radius-pill);
+  background: transparent;
+  color: var(--gal-ink);
+  cursor: pointer;
+  transition: background-color var(--b61-ease), border-color var(--b61-ease), opacity var(--b61-ease);
+}
+
+.b61-gallery__arrow:hover { background: rgb(var(--b61-scrim-rgb) / 0.08); }
+.b61-surface--dark .b61-gallery__arrow:hover,
+.b61-surface--accent .b61-gallery__arrow:hover { background: rgb(var(--b61-light-scrim-rgb) / 0.16); }
+
+.b61-gallery__arrow:focus-visible {
+  outline: 3px solid var(--b61-focus);
+  outline-offset: 3px;
+}
+
+.b61-surface--dark .b61-gallery__arrow:focus-visible,
+.b61-surface--accent .b61-gallery__arrow:focus-visible {
+  outline-color: var(--b61-focus-on-dark);
+}
+
+/* aria-disabled rather than the disabled attribute: a disabled button drops out
+   of the tab order mid-interaction and the focus ring vanishes with it. This
+   stays focusable and announces its state; the script makes the press a no-op. */
+.b61-gallery__arrow[aria-disabled="true"] {
+  opacity: 0.35;
+  cursor: default;
+}
+.b61-gallery__arrow[aria-disabled="true"]:hover { background: transparent; }
+
+/* No JS, no arrows that work — so the scrollbar stays until the script says
+   otherwise. `is-ready` is added by the inline script, which does not run in
+   the builder canvas, so editing keeps a working scrollbar too. */
+.b61-gallery__region:not(.is-ready) .b61-gallery__nav { display: none; }
+
+/* ---- Strip and grid -------------------------------------------------------- */
+.b61-gallery__strip {
+  max-width: var(--b61-width);
+  margin-inline: auto;
+}
+
+.b61-gallery__region--mode-strip .b61-gallery__strip {
+  display: flex;
+  gap: var(--b61-gallery-tile-gap);
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.b61-gallery__region--mode-strip .b61-gallery__strip::-webkit-scrollbar { height: 6px; }
+.b61-gallery__region--mode-strip .b61-gallery__strip::-webkit-scrollbar-thumb {
+  background: var(--gal-line);
+  border-radius: var(--b61-radius-pill);
+}
+
+/* Once the arrows are live the scrollbar is redundant chrome. Touch swipe and
+   trackpad scrolling still work — only the visible bar goes. */
+.b61-gallery__region.is-ready .b61-gallery__strip { scrollbar-width: none; }
+.b61-gallery__region.is-ready .b61-gallery__strip::-webkit-scrollbar { height: 0; }
+
+.b61-gallery__region--mode-grid .b61-gallery__strip {
+  display: grid;
+  grid-template-columns: repeat(var(--b61-gal-cols, 3), minmax(0, 1fr));
+  gap: var(--b61-gallery-tile-gap);
+}
+
+.b61-gallery__region--mode-grid.b61-gallery__region--cols2 .b61-gallery__strip { --b61-gal-cols: 2; }
+.b61-gallery__region--mode-grid.b61-gallery__region--cols3 .b61-gallery__strip { --b61-gal-cols: 3; }
+.b61-gallery__region--mode-grid.b61-gallery__region--cols4 .b61-gallery__strip { --b61-gal-cols: 4; }
+
+/* ---- Item ------------------------------------------------------------------ */
+.b61-gallery__item {
+  margin: 0;
+  overflow: hidden;
+  background: var(--gal-item-bg);
+  border-radius: var(--b61-radius-media);
+}
+
+.b61-gallery__region--mode-strip .b61-gallery__item {
+  flex: 0 0 auto;
+  width: var(--gal-item-w, clamp(260px, 32vw, 380px));
+  scroll-snap-align: start;
+}
+
+.b61-gallery__region--size-small .b61-gallery__item { --gal-item-w: clamp(180px, 20vw, 240px); }
+.b61-gallery__region--size-medium .b61-gallery__item { --gal-item-w: clamp(260px, 32vw, 380px); }
+.b61-gallery__region--size-large .b61-gallery__item { --gal-item-w: clamp(320px, 44vw, 520px); }
+
+.b61-gallery__item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--b61-motion-image) var(--b61-motion-ease);
+}
+
+.b61-gallery__item:hover img { transform: scale(var(--b61-zoom)); }
+
+/* Shape: Fixed keeps the 300px band that instances built before this control
+   were rendering. The ratios keep the frame proportionate at any width. */
+.b61-gallery__region--shape-fixed .b61-gallery__item img { height: 300px; }
+.b61-gallery__region--shape-portrait .b61-gallery__item img { height: auto; aspect-ratio: 3 / 4; }
+.b61-gallery__region--shape-square .b61-gallery__item img { height: auto; aspect-ratio: 1 / 1; }
+.b61-gallery__region--shape-landscape .b61-gallery__item img { height: auto; aspect-ratio: 4 / 3; }
+.b61-gallery__region--shape-wide .b61-gallery__item img { height: auto; aspect-ratio: 16 / 9; }
+
+/* ---- Caption ---------------------------------------------------------------
+   The element always emitted <figure>; until now there was never a
+   <figcaption>, which made the markup decorative rather than meaningful. */
+.b61-gallery__caption {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-label);
+  line-height: var(--b61-leading-body);
+  color: var(--gal-caption);
+  padding: 12px 14px 14px;
+}
+
+@media (max-width: 640px) {
+  .b61-gallery__region--mode-strip .b61-gallery__item { --gal-item-w: 78vw; }
+  .b61-gallery__region--shape-fixed .b61-gallery__item img { height: 240px; }
+  .b61-gallery__region--mode-grid .b61-gallery__strip { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .b61-gallery__region--mode-grid.b61-gallery__region--cols3 .b61-gallery__strip,
+  .b61-gallery__region--mode-grid.b61-gallery__region--cols4 .b61-gallery__strip { --b61-gal-cols: 2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .b61-gallery__item img,
+  .b61-gallery__arrow { transition: none; }
+  .b61-gallery__item:hover img { transform: none; }
+}
+
+/* ---- Media wrapper --------------------------------------------------------- */
+/* Every media branch shares one wrapper so the "beside" column has a single
+   child to size. It is transparent in the default stacked layout. */
+.b61-gallery__media { min-width: 0; }
+
+/* ---- Text beside media ----------------------------------------------------- */
+/* The head and the media sit in two columns. A strip opts out in the template
+   (it needs the full width to scroll), so this only ever wraps single, grid
+   and masonry. */
+.b61-gallery__cols {
+  max-width: var(--b61-width);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: var(--b61-gal-textcols, 1fr 1fr);
+  gap: var(--b61-gal-textgap, var(--b61-space-2xl, 56px));
+  align-items: center;
+}
+
+.b61-gallery__region--ratio-wide-text .b61-gallery__cols,
+.b61-gallery__region--ratio-text .b61-gallery__cols { --b61-gal-textcols: 1.15fr 1fr; }
+.b61-gallery__region--ratio-wide-media .b61-gallery__cols,
+.b61-gallery__region--ratio-media .b61-gallery__cols { --b61-gal-textcols: 1fr 2fr; }
+
+/* Inside the columns the head has already been placed, so it drops the centred
+   measure it uses when it sits above the photos. */
+.b61-gallery__cols .b61-gallery__head {
+  margin-inline: 0;
+  max-width: none;
+  display: block;
+}
+
+.b61-gallery__cols .b61-gallery__strip { max-width: none; margin-inline: 0; }
+
+/* ---- Actions --------------------------------------------------------------
+   New in 1.25.0. The GROUP is the shared .b61-btn-group; this element supplies
+   the gap above it and the content column.
+
+   Every sibling in this element — __head, __strip, __cols, __item--single,
+   __video — carries `max-width: var(--b61-width); margin-inline: auto`, so the
+   actions row does too or it would not line up with any of them. It sits
+   OUTSIDE __cols in the template, so unlike its siblings it never needs the
+   max-width:none escape: it always spans the band. */
+.b61-gallery__actions {
+  max-width: var(--b61-width);
+  margin: var(--b61-gallery-actions-space) auto 0;
+}
+
+@media (max-width: 900px) {
+  .b61-gallery__cols {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--b61-space-xl, 40px);
+  }
+}
+
+/* ---- Single ---------------------------------------------------------------- */
+.b61-gallery__item--single {
+  max-width: var(--b61-width);
+  margin-inline: auto;
+}
+
+.b61-gallery__cols .b61-gallery__item--single { max-width: none; margin-inline: 0; }
+
+/* ---- Video ----------------------------------------------------------------- */
+/* The box holds a 16:9 frame whether the source is an uploaded file or an
+   embed, so the surrounding rhythm does not move when the source changes. */
+.b61-gallery__video {
+  max-width: var(--b61-width);
+  margin-inline: auto;
+}
+
+.b61-gallery__cols .b61-gallery__video { max-width: none; margin-inline: 0; }
+
+.b61-gallery__video video,
+.b61-gallery__video iframe,
+.b61-gallery__video > div {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+  border-radius: var(--b61-radius-media);
+  background: var(--gal-item-bg);
+}
+
+.b61-gallery__video video { object-fit: cover; }
+
+/* ---- Masonry --------------------------------------------------------------- */
+/* Without scripting this is an even grid — a tidy, correct fallback. The script
+   adds `is-masonry`, which switches the rows to a fine track and lets each
+   figure span as many as its own proportion needs. Reading order is DOM order
+   either way, which is what separates this from a CSS-columns masonry. */
+.b61-gallery__region--mode-masonry .b61-gallery__strip {
+  display: grid;
+  grid-template-columns: repeat(var(--b61-gal-cols, 3), minmax(0, 1fr));
+  gap: var(--b61-gallery-tile-gap);
+  /* `start`, NOT the default `stretch`. A row span reserves tracks; if the
+     item stretched to fill them its measured height would be the SPAN, not the
+     content, and the next measurement would feed on its own output. */
+  align-items: start;
+}
+
+.b61-gallery__region--mode-masonry.b61-gallery__region--cols2 .b61-gallery__strip { --b61-gal-cols: 2; }
+.b61-gallery__region--mode-masonry.b61-gallery__region--cols3 .b61-gallery__strip { --b61-gal-cols: 3; }
+.b61-gallery__region--mode-masonry.b61-gallery__region--cols4 .b61-gallery__strip { --b61-gal-cols: 4; }
+
+/* Masonry is the one mode that keeps each photo's own proportion, so the shared
+   shape box is switched off rather than being one of the shape choices. */
+.b61-gallery__region--mode-masonry .b61-gallery__item img {
+  height: auto;
+  aspect-ratio: auto;
+}
+
+/* THE ROW GAP GOES TO ZERO once the script takes over, and each item's span
+   carries its own trailing gap instead. That is what makes the vertical gaps
+   exact.
+
+   With a row gap in play, an item's allocated height is
+   `span*row + (span-1)*rowGap`, so the quantum is `row + rowGap` — 28px at the
+   old 8px grain, which is why stacked photos sat 20 to 46px apart. With
+   rowGap 0 the quantum is just `row`, and at 1px the rounding disappears.
+
+   The COLUMN gap is untouched: it is still the tile gap, and it is what the
+   script reads to size the trailing space. */
+.b61-gallery__strip.is-masonry {
+  grid-auto-rows: var(--b61-gal-row, 1px);
+  row-gap: 0;
+  column-gap: var(--b61-gallery-tile-gap);
+  /* Each span ends with one tile-gap of empty rows, including the last item in
+     the tallest column — so pull that one back off, or the band gains a gap of
+     bottom padding nobody asked for. */
+  margin-bottom: calc(-1 * var(--b61-gallery-tile-gap));
+}
+
+.b61-gallery__strip.is-masonry .b61-gallery__item {
+  grid-row: span var(--b61-span, 24);
+}
+
+/* The same two-step ladder GRID uses: 3 or 4 columns become 2 at 900px, and
+   everything becomes a single stack at 640px.
+
+   These two rules used to live in ONE 900px query, where a blanket
+   `grid-template-columns: minmax(0, 1fr)` sat directly above the
+   `--b61-gal-cols: 2` line. The blanket rule won — template-columns no longer
+   read the variable — so masonry skipped the 2-column step entirely and went
+   straight from three columns to one at 900px, while the grid beside it stepped
+   down properly. The dead `--b61-gal-cols: 2` is what shows the ladder was the
+   intent. */
+@media (max-width: 900px) {
+  .b61-gallery__region--mode-masonry.b61-gallery__region--cols3 .b61-gallery__strip,
+  .b61-gallery__region--mode-masonry.b61-gallery__region--cols4 .b61-gallery__strip { --b61-gal-cols: 2; }
+}
+
+@media (max-width: 640px) {
+  .b61-gallery__region--mode-masonry .b61-gallery__strip { grid-template-columns: minmax(0, 1fr); }
+}

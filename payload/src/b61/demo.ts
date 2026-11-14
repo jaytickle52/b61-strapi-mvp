@@ -328,3 +328,17 @@ export function cardsFrom(o: {
     entrance: 'on',
   } as const
 }
+
+/** A B61 Stats Band from a heading, an old MVP tone and figure/label pairs. */
+export function statsFrom(o: { heading?: string | null; tone?: string | null; stats: { value?: string | null; label?: string | null }[]; eyebrow?: string }) {
+  const surface: Record<string, string> = { light: 'soft', muted: 'soft', brand: 'accent', dark: 'dark' }
+  return {
+    blockType: 'b61StatsBand' as const,
+    eyebrow: o.eyebrow,
+    lines: o.heading ? [{ text: o.heading }] : [],
+    stats: o.stats.map((s) => ({ figure: s.value ?? '', label: s.label ?? '' })),
+    columns: String(Math.min(Math.max(o.stats.length, 1), 4)),
+    surface: surface[o.tone ?? 'light'] ?? 'soft',
+    itemStyle: 'divided',
+  }
+}

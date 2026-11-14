@@ -200,3 +200,51 @@ export function ContentBlocks({
 function QuoteText({ wrap, className, children }: { wrap: boolean; className: string; children: ReactNode }) {
   return wrap ? <div className={className}>{children}</div> : <>{children}</>
 }
+
+/**
+ * A band's head group: eyebrow, heading lines, subheadings, intro, in a
+ * `${prefix}__head` wrapper. Renders nothing when all are empty.
+ */
+export function BandHead({
+  block,
+  prefix,
+  as,
+  headingId,
+  ri,
+  wrap = true,
+}: {
+  block: { eyebrow?: string | null; lines?: Line[] | null; subheads?: { id?: string | null; text?: string | null }[] | null; intro?: unknown }
+  prefix: string
+  as: 'h1' | 'h2' | 'h3' | 'h4'
+  headingId: string
+  ri: RevealAttr
+  wrap?: boolean
+}) {
+  const lines = (block.lines ?? []).filter((l) => l?.text)
+  const subs = (block.subheads ?? []).filter((s) => s?.text)
+  if (!block.eyebrow && !lines.length && !subs.length && !block.intro) return null
+  const inner = (
+    <>
+      {block.eyebrow && (
+        <span className={`${prefix}__eyebrow`} {...ri}>
+          {block.eyebrow}
+        </span>
+      )}
+      <HeadingLines as={as} id={headingId} className={`${prefix}__heading`} lineClass={`${prefix}__heading-line`} lines={lines} ri={ri} />
+      {subs.map((s, i) => (
+        <p key={s.id ?? i} className={`${prefix}__subhead`} {...ri}>
+          {s.text}
+        </p>
+      ))}
+      {Boolean(block.intro) && (
+        <div className={`${prefix}__intro breakdance-rich-text-styles`} {...ri}>
+          <RichText data={block.intro as SerializedEditorState} disableContainer />
+        </div>
+      )}
+    </>
+  )
+  return wrap ? <div className={`${prefix}__head`}>{inner}</div> : inner
+}
+
+/** Shared class helpers for a band's root: eyebrow rule. */
+export const eruleClass = (rule?: string | null) => (rule && rule !== 'site' ? `b61-erule-${rule}` : '')
