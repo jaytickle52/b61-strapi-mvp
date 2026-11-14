@@ -4,15 +4,15 @@
  * adds no class, so site tokens decide. Add a new element's eyebrow class to
  * the :is() lists. Specificity: two classes, above the single-class base.
  */
-.b61-erule-none :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow),
-.b61-erule-leading :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow),
-.b61-erule-trailing :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow),
-.b61-erule-both :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow) { column-gap: var(--b61-eyebrow-rule-gap); }
-.b61-erule-trailing :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow) { width: 100%; }
+.b61-erule-none :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-cards__eyebrow),
+.b61-erule-leading :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-cards__eyebrow),
+.b61-erule-trailing :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-cards__eyebrow),
+.b61-erule-both :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-cards__eyebrow) { column-gap: var(--b61-eyebrow-rule-gap); }
+.b61-erule-trailing :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-cards__eyebrow) { width: 100%; }
 
-.b61-erule-none :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow)::before,
-.b61-erule-trailing :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow)::before { display: none; }
-.b61-erule-leading :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow)::before {
+.b61-erule-none :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-cards__eyebrow)::before,
+.b61-erule-trailing :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-cards__eyebrow)::before { display: none; }
+.b61-erule-leading :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-cards__eyebrow)::before {
   content: "";
   display: inline-block;
   flex: 0 0 auto;
@@ -20,7 +20,7 @@
   height: var(--b61-eyebrow-rule-thickness);
   background: var(--b61-eyebrow-rule-color, var(--b61-accent));
 }
-.b61-erule-both :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow)::before {
+.b61-erule-both :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-cards__eyebrow)::before {
   content: "";
   display: inline-block;
   flex: 0 0 auto;
@@ -28,13 +28,13 @@
   height: var(--b61-rule-trail-thickness);
   background: color-mix(in srgb, currentColor var(--b61-rule-trail-strength-flank), transparent);
 }
-.b61-erule-none :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow)::after,
-.b61-erule-leading :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow)::after { display: none; }
-.b61-erule-trailing :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow)::after {
+.b61-erule-none :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-cards__eyebrow)::after,
+.b61-erule-leading :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-cards__eyebrow)::after { display: none; }
+.b61-erule-trailing :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-cards__eyebrow)::after {
   display: flex;
   flex: 1 1 var(--b61-rule-trail-min);
 }
-.b61-erule-both :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow)::after {
+.b61-erule-both :is(.b61-split__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-cards__eyebrow)::after {
   display: inline-block;
   flex: 0 0 auto;
   width: var(--b61-eyebrow-rule-width, 40px);
@@ -56,4 +56,20 @@
   --b61-align-justify: flex-start;
   --b61-align-list-display: block;
   --b61-align-list-text: inherit;
+}
+
+/* Heading/card alignment dials for grid bands (Card Grid): b61-halign-<choice>. */
+.b61-halign-center {
+  --b61-align-text: center;
+  --b61-align-inline: auto;
+  --b61-align-justify: center;
+  --b61-align-items: center;
+  --b61-align-eyebrow-rule: none;
+}
+.b61-halign-left {
+  --b61-align-text: left;
+  --b61-align-inline: 0;
+  --b61-align-justify: flex-start;
+  --b61-align-items: stretch;
+  --b61-align-eyebrow-rule: var(--b61-eyebrow-rule);
 }

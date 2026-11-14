@@ -11,13 +11,19 @@ import type { CheckboxField, Condition, Field, NumberField, RadioField, SelectFi
  * of these". Written as data, not a function, so panel headers can apply the
  * same rule when they summarise what is set.
  */
-export type WhenRule = { field: string; in?: (string | boolean | null)[]; filled?: boolean }
+export type WhenRule = { field?: string; in?: (string | boolean | null)[]; filled?: boolean; all?: WhenRule[] }
 export type When = WhenRule | WhenRule[]
 
+const ruleMatches = (r: WhenRule, sibling: Record<string, unknown> | undefined): boolean =>
+  r.all
+    ? r.all.every((x) => ruleMatches(x, sibling))
+    : r.filled
+      ? Boolean(sibling?.[r.field!])
+      : (r.in ?? []).includes((sibling?.[r.field!] as any) ?? null)
+
+/** A list of rules means "any of these"; a rule with `all` means "every one of these". */
 export const matches = (w: When, sibling: Record<string, unknown> | undefined) =>
-  (Array.isArray(w) ? w : [w]).some((r) =>
-    r.filled ? Boolean(sibling?.[r.field]) : (r.in ?? []).includes((sibling?.[r.field] as any) ?? null),
-  )
+  (Array.isArray(w) ? w : [w]).some((r) => ruleMatches(r, sibling))
 
 export const whenCondition = (w?: When): Condition | undefined => (w ? (_, sibling) => matches(w, sibling) : undefined)
 

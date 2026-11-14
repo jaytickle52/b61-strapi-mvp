@@ -1,7 +1,7 @@
 'use client'
 import { useFormFields, useRowLabel } from '@payloadcms/ui'
 
-type Rule = { field: string; in?: (string | boolean | null)[]; filled?: boolean }
+type Rule = { field?: string; in?: (string | boolean | null)[]; filled?: boolean; all?: Rule[] }
 type Spec = { label: string; summary?: { name: string; labels?: Record<string, string>; unset?: string; prefix?: string; when?: Rule | Rule[] }[] }
 
 /**
@@ -17,10 +17,12 @@ export function PanelLabel(props: Spec) {
     (props.summary ?? []).map((s) => {
       if (s.when) {
         const rules = Array.isArray(s.when) ? s.when : [s.when]
-        const ok = rules.some((r) => {
+        const test = (r: Rule): boolean => {
+          if (r.all) return r.all.every(test)
           const v = fields[`${prefix}${r.field}`]?.value as any
           return r.filled ? Boolean(v) : (r.in ?? []).includes(v ?? null)
-        })
+        }
+        const ok = rules.some(test)
         if (!ok) return null
       }
       const v = fields[`${prefix}${s.name}`]?.value

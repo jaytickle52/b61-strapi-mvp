@@ -1,5 +1,5 @@
 import type { Payload } from 'payload'
-import { demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages } from './b61/demo'
+import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages } from './b61/demo'
 
 // Fictional demo schools, same content as the Strapi build so the two editors
 // can be compared like for like. SEED_SCHOOL picks one.
@@ -193,9 +193,9 @@ export async function seedDemoSchool(payload: Payload, key: string) {
         heroes.home,
         { blockType: 'statsBand', heading: `${name} at a glance`, tone: 'light', stats: profile.stats },
         splits.home,
-        { blockType: 'cardGrid', heading: 'Programs', intro: "A path for every stage of your child's growth.",
-          source: 'programs', limit: 3, columns: 'three', tone: 'muted' },
-        { blockType: 'cardGrid', heading: 'Upcoming events', source: 'upcoming-events', limit: 3, columns: 'three', tone: 'light' },
+        cardsFrom({ heading: 'Programs', intro: "A path for every stage of your child's growth.",
+          source: 'programs', limit: 3, columns: 'three', tone: 'muted' }),
+        cardsFrom({ heading: 'Upcoming events', source: 'upcoming-events', limit: 3, columns: 'three', tone: 'light' }),
         demoCta({ image: imgs[3] }),
       ],
     },
@@ -205,7 +205,7 @@ export async function seedDemoSchool(payload: Payload, key: string) {
       sections: [
         heroes.about,
         splits.about,
-        { blockType: 'cardGrid', heading: 'Meet our leaders', source: 'staff', limit: 4, columns: 'four', tone: 'muted' },
+        cardsFrom({ heading: 'Meet our leaders', source: 'staff', limit: 4, columns: 'four', tone: 'muted' }),
       ],
     },
     {
@@ -214,7 +214,7 @@ export async function seedDemoSchool(payload: Payload, key: string) {
       sections: [
         heroes.visit,
         demoProse({ phone: profile.settings.phone as string, email: profile.settings.email as string, address: profile.settings.address as string }),
-        { blockType: 'cardGrid', heading: 'Upcoming events for families', source: 'upcoming-events', limit: 3, columns: 'three', tone: 'muted' },
+        cardsFrom({ heading: 'Upcoming events for families', source: 'upcoming-events', limit: 3, columns: 'three', tone: 'muted' }),
       ],
     },
   ]

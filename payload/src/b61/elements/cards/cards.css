@@ -1,0 +1,828 @@
+/* ---------------------------------------------------------------------------
+   DIALS
+   Declared on the REGION at zero specificity, so a site re-skins by
+   redeclaring and never edits this file.
+
+   The eyebrow values below are PRESERVED from before the 1.17.0 sweep (16px / 12px, raw literals),
+   not fresh design decisions. The shared defaults are --b61-eyebrow-space and
+   --b61-eyebrow-rule-gap in tokens.css; delete an override here and the element
+   falls back to the house value.
+   --------------------------------------------------------------------------- */
+:where(.b61-cards__region) {
+  --b61-cards-eyebrow-space: 1rem;
+  --b61-cards-subhead-space: 0.75rem;
+  --b61-cards-intro-space: 1.125rem;
+  --b61-cards-actions-space: 2.75rem;
+  --b61-cards-eyebrow-rule-gap: 0.75rem;
+  /* The gutter between cards. Raw 28px until 1.24.1; px, not rem, because it
+     spaces boxes rather than copy. */
+  --b61-cards-grid-gap: 28px;
+}
+
+.b61-cards {
+  width: 100%;
+  align-self: stretch;
+  text-align: left;
+}
+
+/* ---- Region ---------------------------------------------------------------
+   The root <section> is Breakdance's own tag, so the surface colour and its
+   matching text colours live on this inner wrapper. Surfaces ship as
+   contrast-checked pairs: the background and every text role move together. */
+.b61-cards__region {
+  /* ink, muted and accent read the band globals, because every per-surface value
+     this element used to set for them was identical to the band's. --cards-rule
+     deliberately does NOT: on soft the band's line colour differs from the
+     literal this element has always used, so globalising it would change the
+     rendering. Only globalise a local when it matches on EVERY surface. */
+  --cards-ink: var(--b61-on-bg-ink, var(--b61-ink));
+  --cards-muted: var(--b61-on-bg-muted, var(--b61-muted));
+  --cards-accent: var(--b61-on-bg-accent, var(--b61-accent-text));
+  --cards-rule: var(--b61-accent);
+  --cards-card-bg: var(--b61-white);
+  --cards-card-border: var(--b61-border);
+  /* Italic <em> accent words in headings and card titles: the band's accent
+     when a .b61-band--* utility sits above, the site's heading accent otherwise. */
+  --cards-heading-accent: var(--b61-on-bg-accent, var(--b61-heading-accent));
+  --band-pt: var(--b61-pad-block);
+  --band-pb: var(--b61-pad-block);
+  padding: var(--band-pt) var(--b61-pad-inline) var(--band-pb);
+  color: var(--cards-ink);
+}
+
+/* Band spacing. Two controls rather than one, because the case that hurts is a
+   pair of same-coloured bands stacking to double padding — which needs the
+   bottom of one and the top of the next set independently. Values come from
+   tokens.css so a B61 Section can later consume the same two. */
+.b61-cards__region--pt-tight { --band-pt: var(--b61-pad-block-tight); }
+.b61-cards__region--pt-none { --band-pt: 0; }
+.b61-cards__region--pb-tight { --band-pb: var(--b61-pad-block-tight); }
+.b61-cards__region--pb-none { --band-pb: 0; }
+
+/* SURFACES LIVE IN /assets — ground from `b61-surface--<s>`, palette from
+   `b61-band--<s>`. Ink and accent came out identical to the band on all three
+   surfaces and are gone. What stays is where this element differs. */
+
+/* Cards run muted a step brighter than the house band on dark: 0.88 against the
+   band's 0.86, measured for card copy rather than band copy. */
+.b61-cards__region.b61-surface--dark {
+  --cards-muted: rgb(var(--b61-light-scrim-rgb) / 0.88);
+  --cards-rule: var(--b61-on-dark-accent);
+}
+
+.b61-cards__region.b61-surface--accent {
+  --cards-rule: var(--b61-palette-paper);
+}
+
+/* Cards with their own surface reset to the light text pair, because the card
+   background is white on every band unless a card surface says otherwise. */
+.b61-cards__region--style-flat .b61-cards__card,
+.b61-cards__region--style-bordered .b61-cards__card {
+  --cards-ink: var(--b61-ink);
+  --cards-muted: var(--b61-muted);
+  --cards-accent: var(--b61-accent-text);
+  --cards-rule: var(--b61-accent);
+  --cards-heading-accent: var(--b61-heading-accent-text);
+  color: var(--cards-ink);
+}
+
+/* ---- Card surfaces ----------------------------------------------------------
+   Only flat and bordered cards carry a --csurf class (see html.twig).
+   Each surface is the same contrast-checked pair used for the band of that
+   name, set on the card itself so it can sit on any band. Light is the reset
+   above. The focus ring stays the BAND's, because it is drawn outside the card
+   on the band's background, not on the card. */
+.b61-cards__region--csurf-soft .b61-cards__card {
+  --cards-card-bg: var(--b61-surface-soft);
+  --cards-card-border: var(--b61-border);
+  --cards-ink: var(--b61-on-surface-soft);
+  --cards-muted: var(--b61-on-surface-soft);
+  --cards-accent: var(--b61-accent-text-on-soft);
+  --cards-rule: var(--b61-accent-text-on-soft);
+  --cards-heading-accent: var(--b61-accent-text-on-soft);
+}
+
+/* Primary = the navy programme card (Academics "Lower School / Upper School").
+   Every text role is --b61-on-primary; only the italic accent word and the
+   link's hover colour take the on-dark accent (gold, 4.79:1 on navy). */
+.b61-cards__region--csurf-primary .b61-cards__card {
+  --cards-card-bg: var(--b61-primary);
+  --cards-card-border: var(--b61-primary);
+  --cards-ink: var(--b61-on-primary);
+  --cards-muted: var(--b61-on-primary);
+  --cards-accent: var(--b61-on-primary);
+  --cards-rule: var(--b61-on-dark-accent);
+  --cards-heading-accent: var(--b61-on-dark-accent);
+  --cards-cta: var(--b61-on-primary);
+  --cards-cta-hover: var(--b61-on-dark-accent);
+}
+
+/* ---- Head ---------------------------------------------------------------- */
+.b61-cards__head {
+  max-width: var(--b61-width);
+  margin: 0 auto 44px;
+}
+
+.b61-cards__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--b61-cards-eyebrow-rule-gap);
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-eyebrow-size);
+  font-weight: var(--b61-eyebrow-weight);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: var(--b61-eyebrow-case);
+  color: var(--cards-accent);
+  margin: 0 0 var(--b61-cards-eyebrow-space);
+}
+
+.b61-cards__eyebrow::before {
+  content: "";
+  width: var(--b61-eyebrow-rule-width, 32px);
+  height: var(--b61-eyebrow-rule-thickness);
+  background: var(--cards-rule);
+  display: var(--b61-eyebrow-rule);
+}
+
+.b61-cards__heading {
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-text-h2);
+  line-height: 1.18;
+  color: var(--cards-ink);
+  margin: 0;
+}
+
+/* One heading tag, N spans. Each line is display:block so it breaks without a
+   <br>, which is what makes emphasis a per-line CLASS rather than a per-line
+   element — and what let the heading group drop its placement control. */
+.b61-cards__heading-line {
+  display: block;
+}
+
+/* House convention: an emphasised heading LINE and an <em> inside a heading are
+   the same device — the italic accent word. The toggle is the control an editor
+   gets now; the inline <em> is what they typed into the old single Heading
+   field, and it keeps working so no existing grid changes. */
+.b61-cards__heading-line--em,
+.b61-cards__heading em,
+.b61-cards__title em {
+  font-style: italic;
+  color: var(--cards-heading-accent);
+}
+
+/* The "second headline" role: display face like the heading, one step down the
+   scale, weight and colour pulled back so two display lines read as a pair
+   rather than as a competition. Distinct from the intro below, which is body
+   copy — that is why both exist. */
+.b61-cards__subhead {
+  font-family: var(--b61-font-display);
+  font-weight: 400;
+  font-size: var(--b61-text-h3);
+  line-height: 1.25;
+  color: var(--cards-muted);
+  margin: var(--b61-cards-subhead-space) 0 0;
+}
+
+.b61-cards__subhead em {
+  font-style: italic;
+  color: var(--cards-heading-accent);
+}
+
+.b61-cards__intro {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  color: var(--cards-muted);
+  margin: var(--b61-cards-intro-space) 0 0;
+  max-width: 68ch;
+}
+
+/* ---- Icon -----------------------------------------------------------------
+   An icon card is the same card with a different leading visual: small, flat and
+   inline-flow, where the image is large and full-bleed. It sits in the normal
+   flow rather than the media slot, so none of the negative-margin bleed applies.
+
+   Colour comes from --cards-accent, which every surface already redefines and
+   which bordered cards already reset to the light pair — so the
+   icon follows the band without a single new rule per surface. As non-text UI it
+   needs 3:1; the lowest --cards-accent on any surface is 5.42:1. */
+/* ICON SIZE (1.74.0). The dial is read, not declared, here so the region's
+   size class can set it; unset falls back to the Small step. */
+.b61-cards__icon {
+  display: block;
+  width: var(--cards-icon-size, var(--b61-cards-icon-sm));
+  height: var(--cards-icon-size, var(--b61-cards-icon-sm));
+  margin: 0 0 18px;
+  color: var(--cards-accent);
+  flex: 0 0 auto;
+}
+
+.b61-cards__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+/* OUTLINE ICONS KEEP THEIR OUTLINE (1.73.0). The fill above is right for a
+   solid glyph (Font Awesome, the built-in set) and wrong for an uploaded
+   outline icon: CSS outranks the svg's own fill="none", so the whole shape
+   filled in solid (St. Mark's Early Childhood, Jay). An svg that says it has
+   no fill keeps none, and its strokes take the same colour a solid icon
+   would, so an outline icon still follows the band. */
+.b61-cards__icon svg[fill="none"] { fill: none; }
+.b61-cards__icon svg [stroke]:not([stroke="none"]) { stroke: currentColor; }
+
+.b61-cards__icon { margin-inline: var(--b61-align-inline, 0); }
+
+.b61-cards__region--icon-md { --cards-icon-size: var(--b61-cards-icon-md); }
+.b61-cards__region--icon-lg { --cards-icon-size: var(--b61-cards-icon-lg); }
+
+/* No padding rule for icon cards on purpose. The base card already sets
+   30/32/34, and the plain style zeroes it because a plain card is just a column
+   in the grid — not because of image bleed. Restoring padding here would make a
+   plain icon card inset while a plain image card is not. */
+
+/* ---- Grid ---------------------------------------------------------------- */
+.b61-cards__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--b61-cols, 3), minmax(0, 1fr));
+  gap: var(--b61-cards-grid-gap);
+  max-width: var(--b61-width);
+  margin: 0 auto;
+}
+
+.b61-cards__card {
+  --cards-pad-x: 30px;
+  --cards-pad-t: 32px;
+  --cards-pad-b: 34px;
+  /* Side border width, one local so the media bleed below can cover it. */
+  --cards-border-w: 1px;
+  /* The "Explore program ->" line: ink at rest, the accent on hover/focus.
+     DECLARED ON THE CARD, NOT THE REGION. A var() inside a custom property
+     resolves against the element whose DECLARATION it is, not the element that
+     finally uses it. At region scope this alias froze the BAND's ink, and the
+     card's own --cards-ink reset (further down the tree) could not reach back
+     and change it -- so the CTA rendered white on a white card on a dark band.
+     Measured at 1:1 contrast before this moved. Declared here, it always
+     resolves against the card's final --cards-ink. */
+  --cards-cta: var(--cards-ink);
+  --cards-cta-hover: var(--cards-accent);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--cards-pad-t) var(--cards-pad-x) var(--cards-pad-b);
+  background: var(--cards-card-bg);
+  /* The border is a TRANSLUCENT hairline (ink at 10%). With the default
+     border-box clip it was painted over the card's own white, so it came out
+     near-white — invisible on a light band, a white outline beside the photo on
+     a dark one (Jay, 1.42.1). Clipped to the padding box, the hairline tints
+     whatever the card sits on instead, which is what a border is for. */
+  background-clip: padding-box;
+  /* One even hairline all the way round (1.50.0). The 3px accent bar on the
+     top edge was the stock "AI card" tell (Jay). The accent survives where it
+     means something: the icon, the index and the CTA hover. */
+  border: var(--cards-border-w) solid var(--cards-card-border);
+  border-radius: var(--b61-radius-card);
+  transition: box-shadow var(--b61-motion-base) var(--b61-motion-ease), transform var(--b61-motion-base) var(--b61-motion-ease);
+}
+
+/* ---- Card styles --------------------------------------------------------- */
+/* Movement means "this goes somewhere" (1.42.0). The lift used to belong to a
+   card STYLE — Elevated — so an unlinked card rose under the cursor and
+   promised a click that did nothing. It now belongs to the LINK: any card with
+   its own surface (flat, bordered) lifts when it is linked, and never when it
+   is not. Elevated is gone; it differed from Bordered only by this hover and a
+   0.04-alpha resting shadow nobody could see. Plain has no surface to lift —
+   its title/CTA underline is its feedback. */
+.b61-cards__region--style-flat .b61-cards__card--linked:hover,
+.b61-cards__region--style-flat .b61-cards__card--linked:focus-within,
+.b61-cards__region--style-bordered .b61-cards__card--linked:hover,
+.b61-cards__region--style-bordered .b61-cards__card--linked:focus-within {
+  box-shadow: var(--b61-shadow-lg);
+  transform: translateY(var(--b61-lift));
+}
+
+/* Flat: a coloured panel with no shadow, border or top rule — the mockup's
+   programme cards. Padding is one local so a site can retune it in one place.
+   The title is the SAME size as every other style (1.42.0): it used to step up
+   to H2 on the theory that flat was for one or two wide feature blocks, but
+   nothing kept it out of a 3-up, where it read as a different element. */
+.b61-cards__region--style-flat .b61-cards__card {
+  --cards-border-w: 0px;
+  --cards-pad-x: var(--b61-cards-flat-pad, var(--b61-space-xl));
+  --cards-pad-t: var(--b61-cards-flat-pad, var(--b61-space-xl));
+  --cards-pad-b: var(--b61-cards-flat-pad, var(--b61-space-xl));
+  border: 0;
+  box-shadow: none;
+}
+
+.b61-cards__region--style-plain .b61-cards__card {
+  --cards-border-w: 0px;
+  --cards-pad-x: 0px;
+  --cards-pad-t: 0px;
+  --cards-pad-b: 0px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.b61-cards__region--style-plain .b61-cards__media {
+  border-radius: var(--b61-radius-card);
+}
+
+/* ---- Overlay cards --------------------------------------------------------
+   The image is the card. Media, scrim and copy all occupy one grid cell, so
+   the card becomes a Z-stack rather than the column the other three styles
+   use. Everything above the card level — head, grid, columns, surface,
+   alignment, links — is shared, which is why this is a card style and not a
+   separate element. */
+.b61-cards__region--style-overlay .b61-cards__card {
+  display: grid;
+  grid-template-areas: "stack";
+  /* ONE EXPLICIT, SHRINKABLE COLUMN (1.63.0). The stack used to run on the
+     implicit column, which is `auto` -- and the aspect-ratio spacer below has
+     an automatic minimum width. When the copy made the row taller than the
+     tile, the spacer transferred that height back through its ratio into a
+     minimum WIDTH, the column grew past the card, and overflow: hidden cut the
+     right side off every line of text. Worst on tablet, where two columns make
+     cards narrow and copy tall. Measured on 1.62.0: a 306px square card laid
+     its copy out 428px wide. minmax(0, 1fr) pins the column to the card. */
+  grid-template-columns: minmax(0, 1fr);
+  padding: 0;
+  border: 0;
+  border-radius: var(--b61-radius-card);
+  box-shadow: none;
+  overflow: hidden;
+  /* Also the fallback for a card with no image: it reads as a deliberate dark
+     tile rather than a hole in the grid. */
+  background: var(--b61-surface-dark);
+  --cards-ink: var(--b61-on-surface-dark);
+  --cards-muted: rgb(var(--b61-light-scrim-rgb) / 0.92);
+  --cards-accent: var(--b61-on-dark-accent);
+  color: var(--cards-ink);
+}
+
+.b61-cards__region--style-overlay .b61-cards__card > * {
+  grid-area: stack;
+  min-width: 0;
+}
+
+/* The tile's proportion is a MINIMUM, not a cage. It used to be aspect-ratio
+   on the card itself, which fixes the height once the column width is known —
+   so a card whose copy ran longer than the tile had the overflow: hidden above
+   quietly cut the last sentence off. Carrying the ratio on a spacer in the
+   same grid area makes it the floor instead: short copy keeps the exact tile
+   it always had, long copy grows the row. */
+.b61-cards__region--style-overlay .b61-cards__card::before {
+  content: "";
+  grid-area: stack;
+  width: 100%;
+  /* `.card > *` does not reach a pseudo-element, so the spacer never got the
+     min-width: 0 its siblings have. Belt to the column's braces above. */
+  min-width: 0;
+  aspect-ratio: var(--cards-overlay-ratio, 3 / 4);
+  pointer-events: none;
+}
+
+/* Paint order is declared, not inherited from source order. Without this the
+   image's hover transform promotes it to its own compositing layer, which then
+   paints over an unpositioned scrim — the overlay vanished the instant a card
+   was hovered. */
+.b61-cards__region--style-overlay .b61-cards__media { position: relative; z-index: 0; }
+.b61-cards__region--style-overlay .b61-cards__scrim { z-index: 1; }
+.b61-cards__region--style-overlay .b61-cards__overlay-content { z-index: 2; }
+
+/* Centred text sets align-items on the card, and on a grid container that
+   retargets every item's align-self — which collapsed the empty scrim span to
+   zero height and made the wash disappear. The stack always stretches; the
+   copy block does its own positioning below. */
+/* An overlay card is a Z-stack: its layers always stretch, whatever the band's
+   alignment is doing to the copy inside them. */
+.b61-cards__region--style-overlay .b61-cards__card {
+  align-items: stretch;
+}
+
+.b61-cards__region--style-overlay .b61-cards__media,
+.b61-cards__region--style-overlay .b61-cards__scrim {
+  align-self: stretch;
+}
+
+.b61-cards__region--shapesquare .b61-cards__card { --cards-overlay-ratio: 1 / 1; }
+.b61-cards__region--shapelandscape .b61-cards__card { --cards-overlay-ratio: 4 / 3; }
+/* CUSTOM RATIO (1.77.0). --cards-ratio is set inline on the region from the
+   Ratio width / height controls, only when Custom is picked. */
+.b61-cards__region--ratio .b61-cards__card { --cards-overlay-ratio: var(--cards-ratio, 3 / 2); }
+
+/* THE PHOTO MUST NOT SIZE THE CARD (1.42.0). With the img in flow, the grid
+   row was sized from the image's own proportions before height:100% could
+   resolve — so a portrait photo made every card portrait and Square/Landscape
+   changed nothing (St. Mark's library is all portrait, so it was every card).
+   Taking the img out of flow leaves the media box with no height of its own;
+   it stretches to the row, and the row is the ::before spacer (the shape) or
+   the copy, whichever is taller. */
+.b61-cards__region--style-overlay .b61-cards__media {
+  margin: 0;
+  min-height: 0;
+  border-radius: 0;
+}
+
+.b61-cards__region--style-overlay .b61-cards__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform var(--b61-motion-image) var(--b61-motion-ease);
+}
+
+.b61-cards__region--style-overlay .b61-cards__card--linked:hover .b61-cards__media img,
+.b61-cards__region--style-overlay .b61-cards__card--linked:focus-within .b61-cards__media img {
+  transform: scale(var(--b61-zoom));
+}
+
+.b61-cards__scrim {
+  pointer-events: none;
+  position: relative;
+  background-color: rgb(var(--b61-scrim-rgb) / var(--cards-scrim-a, 0));
+  transition: background-color var(--b61-motion-base) var(--b61-motion-ease);
+}
+
+/* 0.75, not the 0.62 this started at. Against the worst case — a blown-out
+   white photo — 0.62 gave the eyebrow number 3.0:1 and the body 3.9:1, both
+   failing. At 0.75 they are 4.6:1 and 6.0:1, and the title 7.1:1. A wash over
+   an arbitrary photograph has to be darker than it looks like it needs to be. */
+.b61-cards__scrim--wash { --cards-scrim-a: 0.75; }
+
+/* Hover darkens rather than lightens, so the interaction can never cost
+   contrast. "None" stays none — the choice is respected on hover too. Linked
+   cards only, like the zoom and the lift. */
+.b61-cards__region--style-overlay .b61-cards__card--linked:hover .b61-cards__scrim--wash,
+.b61-cards__region--style-overlay .b61-cards__card--linked:focus-within .b61-cards__scrim--wash {
+  --cards-scrim-a: 0.84;
+}
+
+.b61-cards__region--style-overlay .b61-cards__card--linked:hover .b61-cards__scrim--gradient,
+.b61-cards__region--style-overlay .b61-cards__card--linked:focus-within .b61-cards__scrim--gradient {
+  --cards-scrim-a: 0.18;
+}
+
+/* The gradient rides on the copy block rather than on the card, so it covers
+   the text however long the copy runs and wherever the block sits — a card-
+   height gradient only reaches the text by luck. Sized so the copy band holds
+   at least 0.80 opacity: against the worst case, a pure white photo, that is
+   5.5:1 for the eyebrow number and 7.9:1 for the body. A card-height gradient
+   left the number at 4.2:1. */
+.b61-cards__region--ovlgradient .b61-cards__overlay-content {
+  padding-top: 72px;
+  background: linear-gradient(
+    to top,
+    rgb(var(--b61-scrim-rgb) / 0.92) 0%,
+    rgb(var(--b61-scrim-rgb) / 0.80) 58%,
+    rgb(var(--b61-scrim-rgb) / 0) 100%
+  );
+}
+
+.b61-cards__region--ovlgradient.b61-cards__region--postop .b61-cards__overlay-content {
+  padding-top: 26px;
+  padding-bottom: 72px;
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--b61-scrim-rgb) / 0.92) 0%,
+    rgb(var(--b61-scrim-rgb) / 0.80) 58%,
+    rgb(var(--b61-scrim-rgb) / 0) 100%
+  );
+}
+
+.b61-cards__region--ovlgradient.b61-cards__region--poscenter .b61-cards__overlay-content {
+  padding-top: 52px;
+  padding-bottom: 52px;
+  background: linear-gradient(
+    rgb(var(--b61-scrim-rgb) / 0) 0%,
+    rgb(var(--b61-scrim-rgb) / 0.86) 22%,
+    rgb(var(--b61-scrim-rgb) / 0.86) 78%,
+    rgb(var(--b61-scrim-rgb) / 0) 100%
+  );
+}
+
+.b61-cards__overlay-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 26px;
+  align-self: end;
+}
+
+.b61-cards__region--postop .b61-cards__overlay-content { align-self: start; }
+.b61-cards__region--poscenter .b61-cards__overlay-content { align-self: center; }
+.b61-cards__region--posbottom .b61-cards__overlay-content { align-self: end; }
+
+.b61-cards__overlay-content { align-items: var(--b61-align-items, stretch); }
+
+/* ---- Actions --------------------------------------------------------------
+   New in 1.22.0. The GROUP is the shared .b61-btn-group from
+   assets/components.css — this element contributes the gap above it and the
+   CONTENT COLUMN, neither of which components.css can know.
+
+   The column is not optional. .b61-cards__head and .b61-cards__grid both carry
+   `max-width: var(--b61-width); margin: 0 auto`, and the region's own padding
+   is wider than that column — so a button group with only a margin-top spans
+   the full region and starts well to the LEFT of the eyebrow, the heading and
+   the cards it belongs to. It has to be constrained the same way its siblings
+   are, or it does not line up with anything.
+
+   Left-aligned within that column by default, centred with the rest of the band
+   when the alignment control says so. */
+.b61-cards__actions {
+  max-width: var(--b61-width);
+  margin: var(--b61-cards-actions-space) auto 0;
+}
+
+/* ---- Text alignment ------------------------------------------------------ */
+/* ALIGNMENT IS A SET OF DIALS (1.65.0), not a pair of classes. A class cannot
+   change per breakpoint -- only values coming through css.twig can -- so the
+   alignment classes no longer drive anything (they are still emitted as a
+   styling hook for sites that key on them, and they carry the BASE value) and
+   every rule that used to key on them now reads a custom property instead. css.twig publishes the set on the element root
+   for whichever breakpoints the author actually set; the fallbacks below are
+   this element's default, so an instance that never touched the control emits
+   nothing and renders exactly as it did. */
+.b61-cards__region { text-align: var(--b61-align-text, left); }
+.b61-cards__intro { margin-inline: var(--b61-align-inline, 0); }
+.b61-cards__actions { justify-content: var(--b61-align-justify, flex-start); }
+.b61-cards__card { align-items: var(--b61-align-items, stretch); }
+.b61-cards__eyebrow::before { display: var(--b61-align-eyebrow-rule, var(--b61-eyebrow-rule)); }
+
+/* ---- Card parts ---------------------------------------------------------- */
+/* The photo bleeds over the SIDE borders as well as the padding (1.42.1): it
+   reaches the card's outer edge, so no hairline — and no sub-pixel sliver of
+   the card's white on fractional column widths — can sit beside it. It stops
+   under the top rule, which stays visible above the photo. */
+.b61-cards__media {
+  margin: calc(var(--cards-pad-t) * -1) calc((var(--cards-pad-x) + var(--cards-border-w)) * -1) 24px;
+  overflow: hidden;
+  align-self: stretch;
+}
+
+/* ROUND IMAGE CORNERS (1.76.0), Bordered and Flat only, opt-in. The photo
+   bleeds to the card's outer edge and sits under its top border, so its top
+   corners take the card's radius less that border: the curve then lands
+   exactly inside the card's own. Without the class nothing changes. */
+.b61-cards__region--img-round .b61-cards__media {
+  border-start-start-radius: max(0px, calc(var(--b61-radius-card) - var(--cards-border-w)));
+  border-start-end-radius: max(0px, calc(var(--b61-radius-card) - var(--cards-border-w)));
+}
+
+.b61-cards__media img {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  /* Per-card focal point (1.64.0), set inline on the card from the row's own
+     picker. Overlay cards inherit it: their img rule below changes the box,
+     not the crop. */
+  object-position: var(--b61-photo-focus, center);
+}
+
+/* Plain / Flat / Bordered with Image shape = Custom (1.77.0): the photo keeps
+   the chosen proportion at every width instead of the fixed 200px.
+   1.77.1: the ratio sits on the media BOX (as Framed Image does) and the img
+   fills it. On the img itself a lazy-load plugin's placeholder aspect-ratio
+   (Smush's .lazyload) won until the photo arrived, so the card jumped. */
+.b61-cards__region--ratio:not(.b61-cards__region--style-overlay) .b61-cards__media {
+  aspect-ratio: var(--cards-ratio, 3 / 2);
+}
+
+.b61-cards__region--ratio:not(.b61-cards__region--style-overlay) .b61-cards__media img {
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+.b61-cards__num {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--b61-eyebrow-tracking);
+  color: var(--cards-accent);
+  margin: 0 0 12px;
+}
+
+/* Per-card eyebrow ("KINDERGARTEN - 5TH GRADE"): the UI face, tracked caps,
+   in the card's accent role — which every surface already sets. */
+.b61-cards__eyebrow-item {
+  display: block;
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-text-label);
+  font-weight: 600;
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--cards-accent);
+  margin: 0 0 var(--b61-space-sm);
+}
+
+.b61-cards__title {
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-text-h3);
+  line-height: 1.3;
+  color: var(--cards-ink);
+  margin: 0 0 12px;
+}
+
+.b61-cards__body {
+  font-family: var(--b61-font-body);
+  color: var(--cards-muted);
+}
+
+.b61-cards__body p {
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  margin: 0 0 10px;
+}
+
+.b61-cards__body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---- Card links -----------------------------------------------------------
+   One link per card, on the title. The stretched ::after makes the whole card
+   clickable while keeping a single real link for keyboard and screen readers. */
+.b61-cards__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.b61-cards__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+/* A link typed into the card body sits above the stretched ::after, or every
+   click on it would land on the card's own link instead (1.44.0). */
+.b61-cards__body a {
+  position: relative;
+  z-index: 1;
+}
+
+.b61-cards__card--linked:hover .b61-cards__link {
+  color: var(--cards-ink);
+  text-decoration: var(--b61-cards-link-hover-line);
+  text-underline-offset: 3px;
+}
+
+/* The optional "Explore program ->" line. Same one-real-link contract as the
+   title link: the ::after stretches it over the card, and margin-top:auto
+   pins it to the card's foot so a row of cards lines its links up.
+   1.45.0: it IS the shared text link (.b61-link, house rule: no element
+   implements its own link), retuned here with two classes so it wins over
+   components.css regardless of load order. Every property .b61-link sets is
+   either restated or reset below, so the card's look did not change
+   (computed-style diff, old vs new: identical). */
+.b61-link.b61-cards__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: normal;
+  gap: var(--b61-space-xs);
+  min-height: auto;
+  margin-top: auto;
+  padding: var(--b61-space-lg) 0 0;
+  border-radius: 0;
+  line-height: inherit;
+  font-family: var(--b61-font-ui);
+  font-size: var(--b61-text-sm);
+  font-weight: 600;
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--cards-cta);
+  text-decoration: none;
+  transition: color var(--b61-ease);
+}
+
+/* CARD LINK TEXT (1.77.0), opt-in. Normal case drops the tracked caps; the
+   sizes step up the type scale from the default Small (--b61-text-sm). */
+.b61-cards__region--cta-normal .b61-link.b61-cards__cta {
+  text-transform: none;
+  letter-spacing: normal;
+}
+.b61-cards__region--cta-md .b61-link.b61-cards__cta { font-size: var(--b61-text-md); }
+.b61-cards__region--cta-lg .b61-link.b61-cards__cta { font-size: var(--b61-text-lg); }
+
+.b61-cards__cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.b61-cards__cta-arrow {
+  transition: transform var(--b61-ease);
+}
+
+.b61-cards__card--linked:hover .b61-cards__cta,
+.b61-cards__card--linked:focus-within .b61-cards__cta {
+  color: var(--cards-cta-hover);
+  text-decoration: var(--b61-cards-link-hover-line);
+  text-underline-offset: 3px;
+}
+
+.b61-cards__card--linked:hover .b61-cards__cta-arrow {
+  transform: translateX(var(--b61-nudge));
+}
+
+.b61-link.b61-cards__cta:focus-visible {
+  outline: none;
+}
+
+.b61-cards__link:focus-visible {
+  outline: none;
+}
+
+.b61-cards__card--linked:focus-within {
+  outline: var(--b61-focus-width) solid var(--b61-focus, var(--b61-ink));
+  outline-offset: var(--b61-focus-offset);
+}
+
+.b61-surface--dark .b61-cards__card--linked:focus-within,
+.b61-surface--accent .b61-cards__card--linked:focus-within {
+  outline-color: var(--b61-focus-on-dark);
+}
+
+/* ---- Responsive ---------------------------------------------------------- */
+/* Plugin breakpoints only. Three and four columns drop to two under 1023px;
+   every column count, two included, stacks to one under 767px. A one-column
+   grid (1.68.0) is left alone: the drop would otherwise WIDEN it to two. */
+@media (max-width: 1023px) {
+  .b61-cards__grid:not(.b61-cards__grid--c1) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .b61-cards__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Carousel arrangement (1.68.0) ----------------------------------------
+   The grid becomes the shared track (assets/components.css CAROUSEL). The
+   track rule loads before this file, so the grid's own display/columns would
+   win on equal specificity: the pair of classes settles it. Card spacing
+   stays this element's gap, so a grid and a carousel of the same cards sit
+   the same distance apart. */
+.b61-cards__grid.b61-car__track {
+  --b61-car-gap: var(--b61-cards-grid-gap);
+  display: flex;
+  grid-template-columns: none;
+  gap: var(--b61-car-gap);
+  max-width: none;
+  margin: 0;
+}
+
+.b61-cards__viewport,
+.b61-cards__headrow,
+.b61-cards__region--carousel > .b61-car__controls {
+  max-width: var(--b61-width);
+  margin-inline: auto;
+}
+
+.b61-cards__headrow {
+  margin-bottom: 44px;
+}
+
+.b61-cards__headrow > .b61-cards__head {
+  margin: 0;
+}
+
+/* Top right with no heading: the controls alone, on the right. */
+.b61-cards__headrow > .b61-car__controls:only-child {
+  margin-left: auto;
+}
+
+/* ---- Accessibility floor (principle 14) ---------------------------------- */
+.b61-cards__body a:focus-visible {
+  outline: 3px solid var(--b61-focus, var(--b61-ink));
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .b61-cards__card,
+  .b61-cards__scrim,
+  .b61-cards__cta,
+  .b61-cards__cta-arrow,
+  .b61-cards__region--style-overlay .b61-cards__media img {
+    transition: none;
+  }
+  .b61-cards__card--linked:hover .b61-cards__cta-arrow {
+    transform: none;
+  }
+  /* Same specificity as the lift rule (three classes), later in source. */
+  .b61-cards__region .b61-cards__card--linked:hover,
+  .b61-cards__region .b61-cards__card--linked:focus-within,
+  .b61-cards__region--style-overlay .b61-cards__card--linked:hover .b61-cards__media img,
+  .b61-cards__region--style-overlay .b61-cards__card--linked:focus-within .b61-cards__media img {
+    transform: none;
+  }
+}

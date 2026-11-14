@@ -1,3 +1,4 @@
+import { cardsFrom } from "@/b61/demo";
 import Sections from "@/components/Sections";
 import PageHeader from "@/components/PageHeader";
 
@@ -7,7 +8,7 @@ export default function ProgramsPage() {
   return (
     <>
       <PageHeader eyebrow="Academics" title="Our programs" />
-      <Sections sections={[{ blockType: "cardGrid", id: "all", source: "programs", limit: 12, columns: "three", tone: "light" }]} />
+      <Sections sections={[{ ...cardsFrom({ source: "programs", limit: 12, columns: "three", tone: "light" }), id: "all", entrance: "off" }]} />
     </>
   );
 }

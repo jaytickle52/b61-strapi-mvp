@@ -1,0 +1,6 @@
+/*
+ * B61 Card Grid: per-instance rules (css.twig in the plugin). Alignment dials
+ * and the eyebrow rule are shared (styles/kit-instance.css). Below 1024px the
+ * plugin's own default.css steps columns down; the editor's Columns choice is
+ * the desktop count.
+ */

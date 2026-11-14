@@ -1,5 +1,5 @@
 import type { Payload, PayloadRequest } from 'payload'
-import { demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages } from './demo'
+import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages } from './demo'
 import { PROFILES } from '../seed'
 
 /*
@@ -150,5 +150,30 @@ export async function upgradeDemoCta(
     }
     await payload.update({ collection: 'pages', id: pageId, data: { sections, _status: 'published' }, req })
     payload.logger.info(`[b61] Converted ${blocks.length} Call to action block(s) to B61 CTA Band on "${page.title}"`)
+  }
+}
+
+/*
+ * Run once by the b61_card_grid migration. Each old card grid becomes a
+ * B61 Card Grid in the same place with the same heading, intro, source,
+ * count, columns, tone and hand-written cards.
+ */
+export async function upgradeCardGrids(
+  payload: Payload,
+  req: PayloadRequest | undefined,
+  old: { page: number; pos: number; heading: string | null; intro: string | null; source: string | null; limit: number | null; columns: string | null; tone: string | null; cards: any[] }[],
+) {
+  if (!old.length) return
+  const byPage = new Map<number, typeof old>()
+  for (const o of old) byPage.set(o.page, [...(byPage.get(o.page) ?? []), o])
+  for (const [pageId, blocks] of byPage) {
+    const page = await payload.findByID({ collection: 'pages', id: pageId, depth: 0, req }).catch(() => null)
+    if (!page) continue
+    const sections = [...(page.sections ?? [])]
+    for (const o of [...blocks].sort((a, b) => a.pos - b.pos)) {
+      sections.splice(Math.min(o.pos - 1, sections.length), 0, cardsFrom(o) as any)
+    }
+    await payload.update({ collection: 'pages', id: pageId, data: { sections, _status: 'published' }, req })
+    payload.logger.info(`[b61] Converted ${blocks.length} card grid(s) to B61 Card Grid on "${page.title}"`)
   }
 }

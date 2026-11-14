@@ -287,3 +287,44 @@ export function demoCta(opts: {
     entrance: 'on',
   } as const
 }
+
+/**
+ * A B61 Card Grid from the simple card grid's settings (heading, intro,
+ * source, limit, columns, tone, cards). Used by the seed and by the upgrade
+ * that converts old card grids in place.
+ */
+export function cardsFrom(o: {
+  heading?: string | null
+  intro?: string | null
+  source?: string | null
+  limit?: number | null
+  columns?: string | null
+  tone?: string | null
+  cards?: { title?: string | null; body?: string | null; image?: number | null; link?: string | null }[]
+}) {
+  const cols: Record<string, string> = { two: '2', three: '3', four: '4' }
+  const tone: Record<string, string> = { light: 'none', muted: 'soft', brand: 'accent', dark: 'dark' }
+  const source = o.source ?? 'manual'
+  return {
+    blockType: 'b61CardGrid',
+    headingLevel: 'auto',
+    lines: o.heading ? [{ text: o.heading, emphasize: false }] : [],
+    ...(o.intro ? { intro: para(o.intro) } : {}),
+    source,
+    limit: o.limit ?? 3,
+    mediaType: source === 'manual' && !(o.cards ?? []).some((c) => c.image) ? 'none' : 'image',
+    cards: (o.cards ?? []).map((c) => ({
+      title: c.title ?? '',
+      ...(c.body ? { body: para(c.body) } : {}),
+      ...(c.image ? { image: c.image } : {}),
+      ...(c.link ? { link: { type: 'url', url: c.link }, linkText: 'Learn more' } : {}),
+    })),
+    arrangement: 'grid',
+    columns: cols[o.columns ?? 'three'] ?? '3',
+    textAlign: 'left',
+    cardStyle: source === 'staff' ? 'plain' : 'bordered',
+    cardSurface: 'light',
+    surface: tone[o.tone ?? 'light'] ?? 'none',
+    entrance: 'on',
+  } as const
+}

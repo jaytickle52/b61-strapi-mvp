@@ -3,6 +3,7 @@ import { B61Hero } from './b61/elements/hero/fields'
 import { B61Split } from './b61/elements/split/fields'
 import { B61Prose } from './b61/elements/prose/fields'
 import { B61Cta } from './b61/elements/cta/fields'
+import { B61CardGrid } from './b61/elements/cards/fields'
 
 // The sections an editor can add, reorder and remove on any page.
 // Each mirrors a Banner 61 design element; the website decides how it looks.
@@ -36,43 +37,6 @@ const button = (name: string, label: string): Field => ({
   ],
 })
 
-export const CardGrid: Block = {
-  slug: 'cardGrid',
-  admin: { components: { Label: { path: '@/b61/kit/admin/ElementLabel#ElementLabel', clientProps: { name: 'Card grid' } } } },
-  labels: { singular: 'Card grid', plural: 'Card grids' },
-  fields: [
-    { name: 'heading', type: 'text' },
-    { name: 'intro', type: 'textarea' },
-    {
-      name: 'source',
-      type: 'select',
-      defaultValue: 'manual',
-      options: [
-        { label: 'Cards I write here', value: 'manual' },
-        { label: 'Programs', value: 'programs' },
-        { label: 'Upcoming events', value: 'upcoming-events' },
-        { label: 'Latest news', value: 'latest-news' },
-        { label: 'Staff', value: 'staff' },
-      ],
-      admin: { description: 'Fill automatically from your programs, events, news or staff, or write cards by hand.' },
-    },
-    { name: 'limit', type: 'number', defaultValue: 3, min: 1, max: 12 },
-    { name: 'columns', type: 'select', defaultValue: 'three', options: ['two', 'three', 'four'] },
-    tone,
-    {
-      name: 'cards',
-      type: 'array',
-      admin: { condition: (_, sibling) => sibling?.source === 'manual' },
-      fields: [
-        { name: 'title', type: 'text', required: true },
-        { name: 'body', type: 'textarea' },
-        { name: 'image', type: 'upload', relationTo: 'media' },
-        { name: 'link', type: 'text' },
-      ],
-    },
-  ],
-}
-
 export const StatsBand: Block = {
   slug: 'statsBand',
   admin: { components: { Label: { path: '@/b61/kit/admin/ElementLabel#ElementLabel', clientProps: { name: 'Stats band' } } } },
@@ -92,4 +56,4 @@ export const StatsBand: Block = {
   ],
 }
 
-export const sectionBlocks = [B61Hero, B61Split, B61Prose, B61Cta, CardGrid, StatsBand]
+export const sectionBlocks = [B61Hero, B61Split, B61Prose, B61Cta, B61CardGrid, StatsBand]

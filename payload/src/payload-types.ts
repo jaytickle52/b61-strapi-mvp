@@ -563,30 +563,133 @@ export interface Page {
             blockType: 'b61Cta';
           }
         | {
-            heading?: string | null;
-            intro?: string | null;
-            /**
-             * Fill automatically from your programs, events, news or staff, or write cards by hand.
-             */
-            source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff') | null;
-            limit?: number | null;
-            columns?: ('two' | 'three' | 'four') | null;
-            /**
-             * Background color for this section
-             */
-            tone?: ('light' | 'muted' | 'brand' | 'dark') | null;
-            cards?:
+            eyebrow?: string | null;
+            lines?:
               | {
-                  title: string;
-                  body?: string | null;
-                  image?: (number | null) | Media;
-                  link?: string | null;
+                  text: string;
+                  emphasize?: boolean | null;
                   id?: string | null;
                 }[]
               | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            intro?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff') | null;
+            limit?: number | null;
+            mediaType?: ('image' | 'icon' | 'none') | null;
+            cards?:
+              | {
+                  image?: (number | null) | Media;
+                  icon?:
+                    | (
+                        | 'check'
+                        | 'email'
+                        | 'phone'
+                        | 'location'
+                        | 'calendar'
+                        | 'clock'
+                        | 'link'
+                        | 'star'
+                        | 'heart'
+                        | 'book'
+                        | 'people'
+                        | 'cross'
+                        | 'school'
+                      )
+                    | null;
+                  eyebrow?: string | null;
+                  title?: string | null;
+                  body?: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: any;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  } | null;
+                  link?: {
+                    type?: ('page' | 'url') | null;
+                    page?: (number | null) | Page;
+                    url?: string | null;
+                    newTab?: boolean | null;
+                  };
+                  /**
+                   * Shows a "Read more"-style link. Leave empty to link the title.
+                   */
+                  linkText?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            buttons?:
+              | {
+                  label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  link?: {
+                    type?: ('page' | 'url') | null;
+                    page?: (number | null) | Page;
+                    url?: string | null;
+                    newTab?: boolean | null;
+                  };
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            arrangement?: ('grid' | 'carousel') | null;
+            columns?: ('1' | '2' | '3' | '4') | null;
+            textAlign?: ('left' | 'center') | null;
+            advance?: ('one' | 'view') | null;
+            peek?: ('none' | 'small' | 'medium' | 'large') | null;
+            controlsPosition?:
+              ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
+            showCounter?: boolean | null;
+            showProgress?: boolean | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            cardStyle?: ('plain' | 'flat' | 'bordered' | 'overlay') | null;
+            cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
+            imageShape?: ('fixed' | 'custom') | null;
+            ratioW?: number | null;
+            ratioH?: number | null;
+            cardTextPosition?: ('top' | 'center' | 'bottom') | null;
+            mediaRound?: boolean | null;
+            iconSize?: ('sm' | 'md' | 'lg') | null;
+            showNumbers?: boolean | null;
+            ctaCase?: ('upper' | 'normal') | null;
+            ctaSize?: ('sm' | 'md' | 'lg') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            cardSurface?: ('light' | 'soft' | 'primary') | null;
+            cardOverlay?: ('none' | 'gradient' | 'wash') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
             id?: string | null;
             blockName?: string | null;
-            blockType: 'cardGrid';
+            blockType: 'b61CardGrid';
           }
         | {
             heading?: string | null;
@@ -1300,24 +1403,89 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
-        cardGrid?:
+        b61CardGrid?:
           | T
           | {
-              heading?: T;
+              eyebrow?: T;
+              lines?:
+                | T
+                | {
+                    text?: T;
+                    emphasize?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
               intro?: T;
               source?: T;
               limit?: T;
-              columns?: T;
-              tone?: T;
+              mediaType?: T;
               cards?:
                 | T
                 | {
+                    image?: T;
+                    icon?: T;
+                    eyebrow?: T;
                     title?: T;
                     body?: T;
-                    image?: T;
-                    link?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                          newTab?: T;
+                        };
+                    linkText?: T;
                     id?: T;
                   };
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    variant?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                          newTab?: T;
+                        };
+                    fullWidth?: T;
+                    id?: T;
+                  };
+              arrangement?: T;
+              columns?: T;
+              textAlign?: T;
+              advance?: T;
+              peek?: T;
+              controlsPosition?: T;
+              showCounter?: T;
+              showProgress?: T;
+              padTop?: T;
+              padBottom?: T;
+              cardStyle?: T;
+              cardShape?: T;
+              imageShape?: T;
+              ratioW?: T;
+              ratioH?: T;
+              cardTextPosition?: T;
+              mediaRound?: T;
+              iconSize?: T;
+              showNumbers?: T;
+              ctaCase?: T;
+              ctaSize?: T;
+              surface?: T;
+              cardSurface?: T;
+              cardOverlay?: T;
+              eyebrowRule?: T;
+              entrance?: T;
               id?: T;
               blockName?: T;
             };
