@@ -82,11 +82,17 @@ const slugify = (s: string) =>
 
 const p = (text: string) => [{ type: 'paragraph', children: [{ type: 'text', text }] }];
 
+/** A date `days` from now at `hour`:00 in the school's own time zone (not the server's). */
 const daysFromNow = (days: number, hour = 18) => {
-  const d = new Date();
-  d.setDate(d.getDate() + days);
-  d.setHours(hour, 0, 0, 0);
-  return d.toISOString();
+  const tz = process.env.SCHOOL_TIMEZONE || 'America/New_York';
+  const target = new Date(Date.now() + days * 86400000);
+  const ymd = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(target);
+  const guess = new Date(`${ymd}T${String(hour).padStart(2, '0')}:00:00Z`);
+  const shownHour = Number(new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', hourCycle: 'h23' }).format(guess));
+  let diff = shownHour - hour;
+  if (diff > 12) diff -= 24;
+  if (diff < -12) diff += 24;
+  return new Date(guess.getTime() - diff * 3600000).toISOString();
 };
 
 export async function seedDemoSchool(strapi: Core.Strapi, key: string) {
