@@ -34,6 +34,13 @@ markup and class names, and the plugin's own stylesheets copied in unchanged
 - The school's B61 palette and fonts come from School settings > Look.
 - School staff see both the Content and Design tabs.
 
+Every element is built with the **B61 editing kit** (`src/b61/kit/`) and follows
+`src/b61/EDITING-STANDARD.md`: `defineElement()` gives the Content / Design tabs,
+the Design panels in a fixed order with value summaries in their headers, and the
+section label; the shared controls (segmented buttons, step sliders, compact links)
+and field groups (heading, buttons, photo, padding, eyebrow rule, entrance) keep
+every element's form the same.
+
 ## Run locally
 
 ```bash

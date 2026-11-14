@@ -35,6 +35,7 @@ const button = (name: string, label: string): Field => ({
 
 export const Split: Block = {
   slug: 'split',
+  admin: { components: { Label: { path: '@/b61/kit/admin/ElementLabel#ElementLabel', clientProps: { name: 'Text and image' } } } },
   labels: { singular: 'Text and image', plural: 'Text and image' },
   fields: [
     { name: 'heading', type: 'text', required: true },
@@ -48,6 +49,7 @@ export const Split: Block = {
 
 export const CardGrid: Block = {
   slug: 'cardGrid',
+  admin: { components: { Label: { path: '@/b61/kit/admin/ElementLabel#ElementLabel', clientProps: { name: 'Card grid' } } } },
   labels: { singular: 'Card grid', plural: 'Card grids' },
   fields: [
     { name: 'heading', type: 'text' },
@@ -84,6 +86,7 @@ export const CardGrid: Block = {
 
 export const StatsBand: Block = {
   slug: 'statsBand',
+  admin: { components: { Label: { path: '@/b61/kit/admin/ElementLabel#ElementLabel', clientProps: { name: 'Stats band' } } } },
   labels: { singular: 'Stats band', plural: 'Stats bands' },
   fields: [
     { name: 'heading', type: 'text' },
@@ -102,6 +105,7 @@ export const StatsBand: Block = {
 
 export const CtaBand: Block = {
   slug: 'ctaBand',
+  admin: { components: { Label: { path: '@/b61/kit/admin/ElementLabel#ElementLabel', clientProps: { name: 'Call to action' } } } },
   labels: { singular: 'Call to action', plural: 'Calls to action' },
   fields: [
     { name: 'heading', type: 'text', required: true },
@@ -113,6 +117,7 @@ export const CtaBand: Block = {
 
 export const Prose: Block = {
   slug: 'prose',
+  admin: { components: { Label: { path: '@/b61/kit/admin/ElementLabel#ElementLabel', clientProps: { name: 'Text' } } } },
   labels: { singular: 'Text', plural: 'Text' },
   fields: [
     { name: 'heading', type: 'text' },

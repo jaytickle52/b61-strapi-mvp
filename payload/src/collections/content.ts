@@ -55,7 +55,7 @@ export const Pages: CollectionConfig = {
       name: 'sections',
       type: 'blocks',
       blocks: sectionBlocks,
-      admin: { description: 'Add, reorder and remove sections. Changes show in the live preview as you type.' },
+      admin: { initCollapsed: true, description: 'Add, reorder and remove sections. Open one to edit it; changes show in the live preview as you type.' },
     },
   ],
 }

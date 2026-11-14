@@ -153,13 +153,13 @@ export interface Page {
   slug: string;
   seoDescription?: string | null;
   /**
-   * Add, reorder and remove sections. Changes show in the live preview as you type.
+   * Add, reorder and remove sections. Open one to edit it; changes show in the live preview as you type.
    */
   sections?:
     | (
         | {
+            layoutMode?: ('cover' | 'band') | null;
             eyebrow?: string | null;
-            headingLevel?: ('h1' | 'h2' | 'h3') | null;
             lines?:
               | {
                   text: string;
@@ -167,10 +167,11 @@ export interface Page {
                   id?: string | null;
                 }[]
               | null;
-            subheadline?: string | null;
+            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3') | null;
             subheadlineScale?: ('display' | 'body' | 'meta') | null;
+            subheadline?: string | null;
             /**
-             * Short facts in small caps, e.g. "Grades PK-8", "Est. 1951".
+             * Short facts, e.g. "Grades PK-8", "Est. 1951".
              */
             metaItems?:
               | {
@@ -181,20 +182,20 @@ export interface Page {
             buttons?:
               | {
                   label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
                   link?: {
                     type?: ('page' | 'url') | null;
                     page?: (number | null) | Page;
                     url?: string | null;
                     newTab?: boolean | null;
                   };
-                  variant: 'primary' | 'secondary' | 'light' | 'link';
                   fullWidth?: boolean | null;
                   id?: string | null;
                 }[]
               | null;
             backgroundType?: ('image' | 'slideshow' | 'video') | null;
             /**
-             * Set the focal point on the photo itself (Media).
+             * To set the focal point, click the pencil on the photo, then Edit image.
              */
             image?: (number | null) | Media;
             slides?:
@@ -206,11 +207,12 @@ export interface Page {
             video?: (number | null) | Media;
             videoWebm?: (number | null) | Media;
             /**
-             * Shows while the video loads, if autoplay is blocked, and for visitors who turn off motion.
+             * Shows while the video loads, if autoplay is blocked, and when motion is turned off.
              */
             poster?: (number | null) | Media;
+            overlayStrength?: number | null;
             /**
-             * 1 to 3 images beside the text.
+             * 1 to 3 photos beside the text.
              */
             collage?:
               | {
@@ -218,20 +220,12 @@ export interface Page {
                   id?: string | null;
                 }[]
               | null;
-            overlayStrength?: number | null;
-            layoutMode?: ('cover' | 'band') | null;
             height?: ('short' | 'medium' | 'tall' | 'full') | null;
             bandSize?: ('compact' | 'standard') | null;
             verticalPosition?: ('top' | 'center' | 'bottom') | null;
             textAlign?: ('left' | 'center') | null;
-            /**
-             * 1 to 7
-             */
-            subheadlineWidth?: number | null;
-            /**
-             * 1 to 7
-             */
             columnBalance?: number | null;
+            subheadlineWidth?: number | null;
             padTop?: ('normal' | 'tight' | 'none') | null;
             padBottom?: ('normal' | 'tight' | 'none') | null;
             overlay?: ('gradient' | 'wash') | null;
@@ -758,8 +752,8 @@ export interface PagesSelect<T extends boolean = true> {
         b61Hero?:
           | T
           | {
+              layoutMode?: T;
               eyebrow?: T;
-              headingLevel?: T;
               lines?:
                 | T
                 | {
@@ -767,8 +761,9 @@ export interface PagesSelect<T extends boolean = true> {
                     emphasize?: T;
                     id?: T;
                   };
-              subheadline?: T;
+              headingLevel?: T;
               subheadlineScale?: T;
+              subheadline?: T;
               metaItems?:
                 | T
                 | {
@@ -779,6 +774,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     label?: T;
+                    variant?: T;
                     link?:
                       | T
                       | {
@@ -787,7 +783,6 @@ export interface PagesSelect<T extends boolean = true> {
                           url?: T;
                           newTab?: T;
                         };
-                    variant?: T;
                     fullWidth?: T;
                     id?: T;
                   };
@@ -802,20 +797,19 @@ export interface PagesSelect<T extends boolean = true> {
               video?: T;
               videoWebm?: T;
               poster?: T;
+              overlayStrength?: T;
               collage?:
                 | T
                 | {
                     image?: T;
                     id?: T;
                   };
-              overlayStrength?: T;
-              layoutMode?: T;
               height?: T;
               bandSize?: T;
               verticalPosition?: T;
               textAlign?: T;
-              subheadlineWidth?: T;
               columnBalance?: T;
+              subheadlineWidth?: T;
               padTop?: T;
               padBottom?: T;
               overlay?: T;

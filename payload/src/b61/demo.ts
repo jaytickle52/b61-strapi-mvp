@@ -75,7 +75,7 @@ export function demoHeroes(opts: { tagline: string; mission: string; phone?: str
     home: {
       blockType: 'b61Hero',
       eyebrow: 'Now enrolling',
-      headingLevel: 'h1',
+      headingLevel: 'auto',
       lines: taglineLines,
       subheadline: opts.mission,
       subheadlineScale: 'body',
@@ -96,7 +96,7 @@ export function demoHeroes(opts: { tagline: string; mission: string; phone?: str
     about: {
       blockType: 'b61Hero',
       eyebrow: 'About us',
-      headingLevel: 'h1',
+      headingLevel: 'auto',
       lines: [
         { text: 'A school that knows', emphasize: false },
         { text: 'every child by name', emphasize: true },
@@ -114,7 +114,7 @@ export function demoHeroes(opts: { tagline: string; mission: string; phone?: str
     visit: {
       blockType: 'b61Hero',
       eyebrow: 'Visit',
-      headingLevel: 'h1',
+      headingLevel: 'auto',
       lines: [
         { text: 'Come see it', emphasize: false },
         { text: 'for yourself', emphasize: true },

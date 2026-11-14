@@ -1,6 +1,9 @@
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
-import { LabelRow as LabelRow_ccb32425af7e0fb0a971e546d92b3113 } from '@/b61/admin/RowLabel'
-import { HeroBlockLabel as HeroBlockLabel_9f1283289c0f4e7f3e829d5259ad36a2 } from '@/b61/admin/BlockLabel'
+import { Segmented as Segmented_4a8478d6bbe78531e44a79dc8f1686a4 } from '@/b61/kit/admin/Segmented'
+import { LabelRow as LabelRow_0cc688d8d4d520fe6c0589bb23ce8cf3 } from '@/b61/kit/admin/RowLabel'
+import { StepSlider as StepSlider_f8159974f8a8e5772bb18ab914bb2e3a } from '@/b61/kit/admin/StepSlider'
+import { PanelLabel as PanelLabel_822d3fcf1e5733e64d4be91dd548423f } from '@/b61/kit/admin/PanelLabel'
+import { ElementLabel as ElementLabel_8a166f4ae5e614eee4ffba9083ef36c1 } from '@/b61/kit/admin/ElementLabel'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { LexicalDiffComponent as LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -29,8 +32,11 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 /** @type import('payload').ImportMap */
 export const importMap = {
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
-  "@/b61/admin/RowLabel#LabelRow": LabelRow_ccb32425af7e0fb0a971e546d92b3113,
-  "@/b61/admin/BlockLabel#HeroBlockLabel": HeroBlockLabel_9f1283289c0f4e7f3e829d5259ad36a2,
+  "@/b61/kit/admin/Segmented#Segmented": Segmented_4a8478d6bbe78531e44a79dc8f1686a4,
+  "@/b61/kit/admin/RowLabel#LabelRow": LabelRow_0cc688d8d4d520fe6c0589bb23ce8cf3,
+  "@/b61/kit/admin/StepSlider#StepSlider": StepSlider_f8159974f8a8e5772bb18ab914bb2e3a,
+  "@/b61/kit/admin/PanelLabel#PanelLabel": PanelLabel_822d3fcf1e5733e64d4be91dd548423f,
+  "@/b61/kit/admin/ElementLabel#ElementLabel": ElementLabel_8a166f4ae5e614eee4ffba9083ef36c1,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#LexicalDiffComponent": LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e,

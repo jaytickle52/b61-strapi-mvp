@@ -2,6 +2,7 @@ import { Fragment, type CSSProperties } from 'react'
 import type { Page } from '@/payload-types'
 import { asMedia, focusOf, imgProps, resolveLink } from '../../lib/media'
 import HeroBehavior from './HeroBehavior'
+import { resolveHeadingLevel } from '../../kit/groups'
 
 export type HeroBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Hero' }>
 
@@ -24,7 +25,7 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
   const pb = block.padBottom ?? 'normal'
   const rv = block.entrance === 'off' ? 'off' : 'on'
   const ri = rv === 'on' ? { 'data-b61-reveal-item': '' } : {}
-  const Heading = (['h1', 'h2', 'h3'].includes(block.headingLevel ?? '') ? block.headingLevel : 'h1') as 'h1' | 'h2' | 'h3'
+  const Heading = resolveHeadingLevel(block.headingLevel, index)
 
   const lines = (block.lines ?? []).filter((l) => l?.text)
   const introStyle = block.subheadlineScale ?? 'body'
