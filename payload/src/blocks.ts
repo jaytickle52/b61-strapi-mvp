@@ -1,0 +1,154 @@
+import type { Block, Field } from 'payload'
+
+// The sections an editor can add, reorder and remove on any page.
+// Each mirrors a Banner 61 design element; the website decides how it looks.
+
+const tone: Field = {
+  name: 'tone',
+  type: 'select',
+  defaultValue: 'light',
+  options: [
+    { label: 'Light', value: 'light' },
+    { label: 'Muted', value: 'muted' },
+    { label: 'School color', value: 'brand' },
+    { label: 'Dark', value: 'dark' },
+  ],
+  admin: { description: 'Background color for this section' },
+}
+
+const button = (name: string, label: string): Field => ({
+  name,
+  label,
+  type: 'group',
+  fields: [
+    { name: 'label', type: 'text' },
+    { name: 'url', type: 'text' },
+    {
+      name: 'style',
+      type: 'select',
+      defaultValue: 'primary',
+      options: ['primary', 'secondary', 'link'],
+    },
+  ],
+})
+
+export const Hero: Block = {
+  slug: 'hero',
+  labels: { singular: 'Hero', plural: 'Heroes' },
+  fields: [
+    { name: 'eyebrow', type: 'text', admin: { description: 'Small line above the heading, e.g. "Now enrolling"' } },
+    { name: 'heading', type: 'text', required: true },
+    { name: 'subheading', type: 'textarea' },
+    { name: 'image', type: 'upload', relationTo: 'media' },
+    {
+      name: 'layout',
+      type: 'select',
+      defaultValue: 'image-right',
+      options: [
+        { label: 'Image on the right', value: 'image-right' },
+        { label: 'Image as background', value: 'image-background' },
+        { label: 'Centered text', value: 'centered' },
+      ],
+    },
+    tone,
+    {
+      name: 'buttons',
+      type: 'array',
+      maxRows: 2,
+      fields: [
+        { name: 'label', type: 'text', required: true },
+        { name: 'url', type: 'text', required: true },
+        { name: 'style', type: 'select', defaultValue: 'primary', options: ['primary', 'secondary', 'link'] },
+      ],
+    },
+  ],
+}
+
+export const Split: Block = {
+  slug: 'split',
+  labels: { singular: 'Text and image', plural: 'Text and image' },
+  fields: [
+    { name: 'heading', type: 'text', required: true },
+    { name: 'body', type: 'richText' },
+    { name: 'image', type: 'upload', relationTo: 'media' },
+    { name: 'imagePosition', type: 'select', defaultValue: 'right', options: ['left', 'right'] },
+    tone,
+    button('button', 'Button'),
+  ],
+}
+
+export const CardGrid: Block = {
+  slug: 'cardGrid',
+  labels: { singular: 'Card grid', plural: 'Card grids' },
+  fields: [
+    { name: 'heading', type: 'text' },
+    { name: 'intro', type: 'textarea' },
+    {
+      name: 'source',
+      type: 'select',
+      defaultValue: 'manual',
+      options: [
+        { label: 'Cards I write here', value: 'manual' },
+        { label: 'Programs', value: 'programs' },
+        { label: 'Upcoming events', value: 'upcoming-events' },
+        { label: 'Latest news', value: 'latest-news' },
+        { label: 'Staff', value: 'staff' },
+      ],
+      admin: { description: 'Fill automatically from your programs, events, news or staff, or write cards by hand.' },
+    },
+    { name: 'limit', type: 'number', defaultValue: 3, min: 1, max: 12 },
+    { name: 'columns', type: 'select', defaultValue: 'three', options: ['two', 'three', 'four'] },
+    tone,
+    {
+      name: 'cards',
+      type: 'array',
+      admin: { condition: (_, sibling) => sibling?.source === 'manual' },
+      fields: [
+        { name: 'title', type: 'text', required: true },
+        { name: 'body', type: 'textarea' },
+        { name: 'image', type: 'upload', relationTo: 'media' },
+        { name: 'link', type: 'text' },
+      ],
+    },
+  ],
+}
+
+export const StatsBand: Block = {
+  slug: 'statsBand',
+  labels: { singular: 'Stats band', plural: 'Stats bands' },
+  fields: [
+    { name: 'heading', type: 'text' },
+    tone,
+    {
+      name: 'stats',
+      type: 'array',
+      maxRows: 6,
+      fields: [
+        { name: 'value', type: 'text', required: true },
+        { name: 'label', type: 'text', required: true },
+      ],
+    },
+  ],
+}
+
+export const CtaBand: Block = {
+  slug: 'ctaBand',
+  labels: { singular: 'Call to action', plural: 'Calls to action' },
+  fields: [
+    { name: 'heading', type: 'text', required: true },
+    { name: 'body', type: 'textarea' },
+    { ...tone, defaultValue: 'dark' } as Field,
+    button('button', 'Button'),
+  ],
+}
+
+export const Prose: Block = {
+  slug: 'prose',
+  labels: { singular: 'Text', plural: 'Text' },
+  fields: [
+    { name: 'heading', type: 'text' },
+    { name: 'body', type: 'richText' },
+  ],
+}
+
+export const sectionBlocks = [Hero, Split, CardGrid, StatsBand, CtaBand, Prose]

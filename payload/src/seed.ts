@@ -1,0 +1,205 @@
+import type { Payload } from 'payload'
+
+// Fictional demo schools, same content as the Strapi build so the two editors
+// can be compared like for like. SEED_SCHOOL picks one.
+
+type Profile = {
+  settings: Record<string, unknown>;
+  tagline: string;
+  mission: string;
+  stats: { value: string; label: string }[];
+  programs: { name: string; grades: string; summary: string }[];
+  staff: { name: string; role: string; department: string; bio: string }[];
+};
+
+const PROFILES: Record<string, Profile> = {
+  'cedar-ridge': {
+    settings: {
+      schoolName: 'Cedar Ridge Christian Academy',
+      tagline: 'Rooted in faith. Ready for life.',
+      primaryColor: '#1F3A5F',
+      secondaryColor: '#C8A24A',
+      headingFont: 'Fraunces',
+      bodyFont: 'Inter',
+      phone: '(864) 555-0142',
+      email: 'office@cedarridge.example',
+      address: '410 Cedar Ridge Road\nGreenville, SC 29601',
+    },
+    tagline: 'Rooted in faith. Ready for life.',
+    mission:
+      'Cedar Ridge partners with families to raise young people who think clearly, love deeply and serve faithfully. Small classes, caring teachers and a Christ-centered culture shape every day.',
+    stats: [
+      { value: '12:1', label: 'Student to teacher ratio' },
+      { value: 'K–12', label: 'Grades served' },
+      { value: '1987', label: 'Serving families since' },
+      { value: '96%', label: 'Families who would recommend us' },
+    ],
+    programs: [
+      { name: 'Lower School', grades: 'K–5', summary: 'Phonics, wonder and strong foundations in a warm, structured classroom.' },
+      { name: 'Middle School', grades: '6–8', summary: 'Growing independence, deeper friendships and a faith that asks real questions.' },
+      { name: 'Upper School', grades: '9–12', summary: 'College-prep academics, leadership and service that prepare students for what is next.' },
+    ],
+    staff: [
+      { name: 'Dr. Rebecca Hale', role: 'Head of School', department: 'Administration', bio: 'Rebecca has served in Christian education for twenty years.' },
+      { name: 'Marcus Lee', role: 'Director of Admissions', department: 'Admissions', bio: 'Marcus helps families find their place at Cedar Ridge.' },
+      { name: 'Anna Brooks', role: 'Lower School Principal', department: 'Lower School', bio: 'Anna loves watching young readers discover books.' },
+      { name: 'James Ortiz', role: 'Athletic Director', department: 'Athletics', bio: 'James coaches varsity soccer and leads our athletics program.' },
+    ],
+  },
+  'harbor-oaks': {
+    settings: {
+      schoolName: 'Harbor Oaks Classical School',
+      tagline: 'Truth, goodness and beauty, one day at a time.',
+      primaryColor: '#2E5E4E',
+      secondaryColor: '#D9774B',
+      headingFont: 'Playfair Display',
+      bodyFont: 'Source Sans 3',
+      phone: '(843) 555-0187',
+      email: 'hello@harboroaks.example',
+      address: '22 Live Oak Lane\nCharleston, SC 29401',
+    },
+    tagline: 'Truth, goodness and beauty, one day at a time.',
+    mission:
+      'Harbor Oaks offers a classical Christian education that cultivates wisdom and virtue. Students read great books, learn to reason well and speak with grace.',
+    stats: [
+      { value: '15', label: 'Average class size' },
+      { value: 'PK–8', label: 'Grades served' },
+      { value: '2009', label: 'Founded' },
+    ],
+    programs: [
+      { name: 'Grammar School', grades: 'PK–5', summary: 'Songs, chants and stories that build a love of learning.' },
+      { name: 'Logic School', grades: '6–8', summary: 'Reasoning, debate and the great conversation of ideas.' },
+    ],
+    staff: [
+      { name: 'Thomas Reed', role: 'Headmaster', department: 'Administration', bio: 'Thomas taught Latin for a decade before leading Harbor Oaks.' },
+      { name: 'Grace Kim', role: 'Admissions Coordinator', department: 'Admissions', bio: 'Grace gives every tour personally.' },
+    ],
+  },
+};
+
+/** A rich text value holding one paragraph, in Payload's Lexical format. */
+const p = (text: string) => ({
+  root: {
+    type: 'root', format: '' as const, indent: 0, version: 1, direction: 'ltr' as const,
+    children: [{
+      type: 'paragraph', format: '' as const, indent: 0, version: 1, direction: 'ltr' as const, textFormat: 0, textStyle: '',
+      children: [{ type: 'text', text, format: 0, style: '', mode: 'normal', detail: 0, version: 1 }],
+    }],
+  },
+})
+
+const slugify = (s: string) =>
+  s.toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+
+/** A date `days` from now at `hour`:00 in the school's own time zone (not the server's). */
+const daysFromNow = (days: number, hour = 18) => {
+  const tz = process.env.SCHOOL_TIMEZONE || 'America/New_York'
+  const target = new Date(Date.now() + days * 86400000)
+  const ymd = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(target)
+  const guess = new Date(`${ymd}T${String(hour).padStart(2, '0')}:00:00Z`)
+  const shownHour = Number(new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', hourCycle: 'h23' }).format(guess))
+  let diff = shownHour - hour
+  if (diff > 12) diff -= 24
+  if (diff < -12) diff += 24
+  return new Date(guess.getTime() - diff * 3600000).toISOString()
+}
+
+export async function seedDemoSchool(payload: Payload, key: string) {
+  const existing = await payload.find({ collection: 'pages', limit: 1, draft: true })
+  if (existing.totalDocs > 0) return // already has content; never overwrite a school's work
+
+  const profile = PROFILES[key] ?? PROFILES['cedar-ridge']
+  const name = profile.settings.schoolName as string
+  payload.logger.info(`[b61] Seeding demo content for ${name}`)
+  const published = { _status: 'published' as const }
+  const create = (collection: any, data: any) => payload.create({ collection, data: { ...data, ...published } })
+
+  await payload.updateGlobal({
+    slug: 'school-settings',
+    data: {
+      ...(profile.settings as any),
+      navigation: [
+        { label: 'About', url: '/about' },
+        { label: 'Programs', url: '/programs' },
+        { label: 'Events', url: '/events' },
+        { label: 'News', url: '/news' },
+        { label: 'Our team', url: '/staff' },
+      ],
+      headerButton: { label: 'Schedule a tour', url: '/visit' },
+      ...published,
+    },
+  })
+
+  for (const [i, prog] of profile.programs.entries()) {
+    await create('programs', { ...prog, slug: slugify(prog.name), generateSlug: false, description: p(prog.summary), sortOrder: (i + 1) * 10 })
+  }
+  for (const [i, person] of profile.staff.entries()) {
+    await create('staff', { ...person, sortOrder: (i + 1) * 10 })
+  }
+
+  const events = [
+    { title: 'Spring Open House', startsAt: daysFromNow(10), location: 'Main campus', audience: 'public',
+      summary: 'Tour classrooms, meet teachers and ask every question you have.' },
+    { title: 'Coffee with the Head of School', startsAt: daysFromNow(17, 8), location: 'Library', audience: 'public',
+      summary: 'A relaxed morning conversation for families considering our school.' },
+    { title: '3rd Grade Field Trip: Science Center', startsAt: daysFromNow(6, 9), location: 'Roper Mountain Science Center', audience: 'parents',
+      summary: 'Permission slips due Friday. Pack a lunch and wear school shirts.' },
+    { title: 'Parent-Teacher Conferences', startsAt: daysFromNow(24, 15), location: 'Classrooms', audience: 'parents',
+      summary: "Sign up for a 15-minute slot with your child's teacher." },
+  ]
+  for (const ev of events) {
+    await create('events', { ...ev, slug: slugify(ev.title), generateSlug: false, description: p(ev.summary) })
+  }
+
+  const today = new Date().toISOString()
+  const news = [
+    { title: 'Robotics team heads to state', audience: 'public',
+      summary: 'Our middle school robotics team placed second at regionals and advances to the state competition.' },
+    { title: 'New uniform supplier this spring', audience: 'parents',
+      summary: 'Uniform orders now go through our new supplier. Order by the end of the month for spring delivery.' },
+    { title: 'Admissions open for next year', audience: 'public',
+      summary: 'Applications for next school year are open. Schedule a tour to get started.' },
+  ]
+  for (const post of news) {
+    await create('news', { ...post, slug: slugify(post.title), generateSlug: false, date: today, body: p(post.summary) })
+  }
+
+  const pages = [
+    {
+      title: 'Home', slug: 'home',
+      seoDescription: `${name}: ${profile.tagline}`,
+      sections: [
+        { blockType: 'hero', eyebrow: 'Now enrolling', heading: profile.tagline,
+          subheading: profile.mission, layout: 'image-right', tone: 'brand',
+          buttons: [{ label: 'Schedule a tour', url: '/visit', style: 'primary' }, { label: 'Our programs', url: '/programs', style: 'secondary' }] },
+        { blockType: 'statsBand', heading: `${name} at a glance`, tone: 'light', stats: profile.stats },
+        { blockType: 'cardGrid', heading: 'Programs', intro: "A path for every stage of your child's growth.",
+          source: 'programs', limit: 3, columns: 'three', tone: 'muted' },
+        { blockType: 'cardGrid', heading: 'Upcoming events', source: 'upcoming-events', limit: 3, columns: 'three', tone: 'light' },
+        { blockType: 'ctaBand', heading: 'See it for yourself', body: 'The best way to know if we are the right fit is to visit.',
+          tone: 'dark', button: { label: 'Schedule a tour', url: '/visit', style: 'primary' } },
+      ],
+    },
+    {
+      title: 'About', slug: 'about',
+      seoDescription: `About ${name}`,
+      sections: [
+        { blockType: 'hero', heading: 'About us', subheading: profile.mission, layout: 'centered', tone: 'muted', buttons: [] },
+        { blockType: 'split', heading: 'Our mission', body: p(profile.mission), imagePosition: 'right', tone: 'light' },
+        { blockType: 'cardGrid', heading: 'Meet our leaders', source: 'staff', limit: 4, columns: 'four', tone: 'muted' },
+      ],
+    },
+    {
+      title: 'Visit', slug: 'visit',
+      seoDescription: `Schedule a tour of ${name}`,
+      sections: [
+        { blockType: 'hero', heading: 'Come visit', subheading: 'Tours run Tuesday through Thursday mornings. We would love to meet your family.', layout: 'centered', tone: 'brand', buttons: [] },
+        { blockType: 'prose', heading: 'How to schedule', body: p(`Call ${profile.settings.phone} or email ${profile.settings.email} and our admissions team will find a time that works for you.`) },
+        { blockType: 'cardGrid', heading: 'Upcoming events for families', source: 'upcoming-events', limit: 3, columns: 'three', tone: 'muted' },
+      ],
+    },
+  ]
+  for (const page of pages) await create('pages', { ...page, generateSlug: false })
+
+  payload.logger.info(`[b61] Demo content ready for ${name}`)
+}

@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/* Each school's colors and fonts arrive as CSS variables from its Strapi settings
+   (set on <body> in the frontend layout). Components only ever use these tokens. */
+:root {
+  --brand: #1f3a5f;
+  --accent: #c8a24a;
+  --ink: #1b1f24;
+  --ink-soft: #545b66;
+  --paper: #ffffff;
+  --paper-muted: #f5f3ee;
+  --line: #e4e0d6;
+  --font-heading: "Fraunces", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+}
+
+@theme inline {
+  --color-brand: var(--brand);
+  --color-accent: var(--accent);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-paper: var(--paper);
+  --color-paper-muted: var(--paper-muted);
+  --color-line: var(--line);
+  --font-heading: var(--font-heading);
+  --font-sans: var(--font-body);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* Section tones: an editor picks one per section. */
+.tone-light { background: var(--paper); color: var(--ink); }
+.tone-muted { background: var(--paper-muted); color: var(--ink); }
+.tone-brand { background: var(--brand); color: #fff; }
+.tone-dark { background: color-mix(in srgb, var(--brand) 35%, #0d1117); color: #fff; }
+.tone-brand .soft, .tone-dark .soft { color: rgb(255 255 255 / 0.8); }
+.soft { color: var(--ink-soft); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.8rem 1.4rem; border-radius: 999px; font-weight: 600; font-size: 0.95rem;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-primary { background: var(--accent); color: #1b1f24; }
+.btn-secondary { border: 1.5px solid currentColor; }
+.btn-link { padding-left: 0; padding-right: 0; text-decoration: underline; text-underline-offset: 4px; }
+
+.prose-blocks p { margin: 0 0 1rem; line-height: 1.7; }
+.prose-blocks h2 { font-size: 1.75rem; margin: 2rem 0 0.75rem; }
+.prose-blocks h3 { font-size: 1.35rem; margin: 1.5rem 0 0.5rem; }
+.prose-blocks ul { list-style: disc; padding-left: 1.4rem; margin-bottom: 1rem; }
+.prose-blocks ol { list-style: decimal; padding-left: 1.4rem; margin-bottom: 1rem; }
+.prose-blocks blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; font-style: italic; margin: 1.5rem 0; }
+.prose-blocks a { text-decoration: underline; text-underline-offset: 3px; }
+.prose-blocks img { border-radius: 1rem; margin: 1.5rem 0; }
+
+/* Placeholder art when a section has no photo yet. */
+.art-placeholder {
+  background:
+    radial-gradient(circle at 25% 30%, color-mix(in srgb, var(--accent) 55%, transparent) 0 18%, transparent 19%),
+    radial-gradient(circle at 75% 70%, color-mix(in srgb, #fff 18%, transparent) 0 22%, transparent 23%),
+    linear-gradient(135deg, color-mix(in srgb, var(--brand) 85%, #fff), var(--brand));
+}
