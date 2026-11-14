@@ -73,6 +73,8 @@ export interface Config {
     programs: Program;
     staff: Staff;
     media: Media;
+    'school-settings': SchoolSetting;
+    schools: School;
     users: User;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
@@ -88,6 +90,8 @@ export interface Config {
     programs: ProgramsSelect<false> | ProgramsSelect<true>;
     staff: StaffSelect<false> | StaffSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    'school-settings': SchoolSettingsSelect<false> | SchoolSettingsSelect<true>;
+    schools: SchoolsSelect<false> | SchoolsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
@@ -99,12 +103,8 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {
-    'school-settings': SchoolSetting;
-  };
-  globalsSelect: {
-    'school-settings': SchoolSettingsSelect<false> | SchoolSettingsSelect<true>;
-  };
+  globals: {};
+  globalsSelect: {};
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -145,6 +145,7 @@ export interface UserAuthOperations {
  */
 export interface Page {
   id: number;
+  school?: (number | null) | School;
   title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -3013,6 +3014,31 @@ export interface Page {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Each school is one website. Only Banner 61 admins see this list.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "schools".
+ */
+export interface School {
+  id: number;
+  name: string;
+  /**
+   * Short name used in links, e.g. cedar-ridge.
+   */
+  slug: string;
+  /**
+   * Web addresses that show this school, e.g. www.cedarridge.org. No https://.
+   */
+  domains?:
+    | {
+        domain: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Photos and files. Add alt text so screen readers can describe each image.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3020,6 +3046,7 @@ export interface Page {
  */
 export interface Media {
   id: number;
+  school?: (number | null) | School;
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -3059,6 +3086,7 @@ export interface Media {
  */
 export interface Event {
   id: number;
+  school?: (number | null) | School;
   title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -3099,6 +3127,7 @@ export interface Event {
  */
 export interface News {
   id: number;
+  school?: (number | null) | School;
   title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -3134,6 +3163,7 @@ export interface News {
  */
 export interface Program {
   id: number;
+  school?: (number | null) | School;
   name: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -3172,6 +3202,7 @@ export interface Program {
  */
 export interface Staff {
   id: number;
+  school?: (number | null) | School;
   name: string;
   role: string;
   department?: string | null;
@@ -3184,11 +3215,205 @@ export interface Staff {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Name, contact details, colors, fonts, header menu and footer for this school.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "school-settings".
+ */
+export interface SchoolSetting {
+  id: number;
+  school?: (number | null) | School;
+  schoolName: string;
+  tagline?: string | null;
+  logo?: (number | null) | Media;
+  phone?: string | null;
+  email?: string | null;
+  address?: string | null;
+  /**
+   * Hex color, e.g. #1F3A5F
+   */
+  primaryColor?: string | null;
+  secondaryColor?: string | null;
+  /**
+   * Rules, frames, accent words
+   */
+  accentColor?: string | null;
+  /**
+   * Soft background
+   */
+  paperColor?: string | null;
+  primaryDeep?: string | null;
+  secondarySoft?: string | null;
+  accentStrong?: string | null;
+  accentDeep?: string | null;
+  headingFont?: ('Fraunces' | 'Playfair Display' | 'Merriweather' | 'EB Garamond' | 'Montserrat' | 'Poppins') | null;
+  bodyFont?: ('Inter' | 'Source Sans 3' | 'Lato' | 'Open Sans' | 'EB Garamond') | null;
+  uiFont?: ('Montserrat' | 'Inter' | 'Poppins' | 'Lato' | 'Source Sans 3') | null;
+  /**
+   * The main menu. Order here is the order on the site.
+   */
+  menu?:
+    | {
+        label: string;
+        kind?: ('link' | 'dropdown' | 'mega') | null;
+        link?: {
+          type?: ('page' | 'url') | null;
+          page?: (number | null) | Page;
+          url?: string | null;
+          newTab?: boolean | null;
+        };
+        links?:
+          | {
+              label: string;
+              link?: {
+                type?: ('page' | 'url') | null;
+                page?: (number | null) | Page;
+                url?: string | null;
+                newTab?: boolean | null;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Two to four columns works best.
+         */
+        columns?:
+          | {
+              heading?: string | null;
+              links?:
+                | {
+                    label: string;
+                    link?: {
+                      type?: ('page' | 'url') | null;
+                      page?: (number | null) | Page;
+                      url?: string | null;
+                      newTab?: boolean | null;
+                    };
+                    description?: string | null;
+                    id?: string | null;
+                  }[]
+                | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * A photo card at the right of the mega menu, e.g. "Schedule a visit".
+         */
+        feature?: {
+          /**
+           * To set the focal point, click the pencil on the photo, then Edit image.
+           */
+          image?: (number | null) | Media;
+          title?: string | null;
+          text?: string | null;
+          link?: {
+            type?: ('page' | 'url') | null;
+            page?: (number | null) | Page;
+            url?: string | null;
+            newTab?: boolean | null;
+          };
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Quiet links beside the button, e.g. Parents or Give.
+   */
+  utilityLinks?:
+    | {
+        label: string;
+        link?: {
+          type?: ('page' | 'url') | null;
+          page?: (number | null) | Page;
+          url?: string | null;
+          newTab?: boolean | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  headerButton?: {
+    label?: string | null;
+    link?: {
+      type?: ('page' | 'url') | null;
+      page?: (number | null) | Page;
+      url?: string | null;
+      newTab?: boolean | null;
+    };
+  };
+  footerColumns?:
+    | {
+        heading?: string | null;
+        links?:
+          | {
+              label: string;
+              link?: {
+                type?: ('page' | 'url') | null;
+                page?: (number | null) | Page;
+                url?: string | null;
+                newTab?: boolean | null;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Taken from the School tab.
+   */
+  footerShowContact?: boolean | null;
+  social?:
+    | {
+        platform: 'facebook' | 'instagram' | 'youtube' | 'x' | 'linkedin' | 'tiktok' | 'vimeo';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional: accreditation, nondiscrimination statement or similar.
+   */
+  footerNote?: string | null;
+  /**
+   * Small links on the bottom line, e.g. Privacy.
+   */
+  legalLinks?:
+    | {
+        label: string;
+        link?: {
+          type?: ('page' | 'url') | null;
+          page?: (number | null) | Page;
+          url?: string | null;
+          newTab?: boolean | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Leave empty for "© year School name". {year} becomes the current year.
+   */
+  copyright?: string | null;
+  /**
+   * One shared password families use to open the parent feed. Leave empty to keep the feed closed.
+   */
+  parentPassword?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
   id: number;
+  name?: string | null;
+  role: 'editor' | 'admin';
+  tenants?:
+    | {
+        tenant: number | School;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -3350,6 +3575,14 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
+        relationTo: 'school-settings';
+        value: number | SchoolSetting;
+      } | null)
+    | ({
+        relationTo: 'schools';
+        value: number | School;
+      } | null)
+    | ({
         relationTo: 'users';
         value: number | User;
       } | null);
@@ -3400,6 +3633,7 @@ export interface PayloadMigration {
  * via the `definition` "pages_select".
  */
 export interface PagesSelect<T extends boolean = true> {
+  school?: T;
   title?: T;
   generateSlug?: T;
   slug?: T;
@@ -5559,6 +5793,7 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "events_select".
  */
 export interface EventsSelect<T extends boolean = true> {
+  school?: T;
   title?: T;
   generateSlug?: T;
   slug?: T;
@@ -5578,6 +5813,7 @@ export interface EventsSelect<T extends boolean = true> {
  * via the `definition` "news_select".
  */
 export interface NewsSelect<T extends boolean = true> {
+  school?: T;
   title?: T;
   generateSlug?: T;
   slug?: T;
@@ -5595,6 +5831,7 @@ export interface NewsSelect<T extends boolean = true> {
  * via the `definition` "programs_select".
  */
 export interface ProgramsSelect<T extends boolean = true> {
+  school?: T;
   name?: T;
   generateSlug?: T;
   slug?: T;
@@ -5612,6 +5849,7 @@ export interface ProgramsSelect<T extends boolean = true> {
  * via the `definition` "staff_select".
  */
 export interface StaffSelect<T extends boolean = true> {
+  school?: T;
   name?: T;
   role?: T;
   department?: T;
@@ -5628,6 +5866,7 @@ export interface StaffSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  school?: T;
   alt?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -5667,284 +5906,10 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
- */
-export interface UsersSelect<T extends boolean = true> {
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  resetPasswordRequestedAt?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-kv_select".
- */
-export interface PayloadKvSelect<T extends boolean = true> {
-  key?: T;
-  data?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-jobs_select".
- */
-export interface PayloadJobsSelect<T extends boolean = true> {
-  input?: T;
-  taskStatus?: T;
-  completedAt?: T;
-  totalTried?: T;
-  hasError?: T;
-  error?: T;
-  log?:
-    | T
-    | {
-        executedAt?: T;
-        completedAt?: T;
-        taskSlug?: T;
-        taskID?: T;
-        input?: T;
-        output?: T;
-        state?: T;
-        error?: T;
-        id?: T;
-      };
-  taskSlug?: T;
-  queue?: T;
-  waitUntil?: T;
-  processing?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-locked-documents_select".
- */
-export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
-  document?: T;
-  globalSlug?: T;
-  user?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-preferences_select".
- */
-export interface PayloadPreferencesSelect<T extends boolean = true> {
-  user?: T;
-  key?: T;
-  value?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-migrations_select".
- */
-export interface PayloadMigrationsSelect<T extends boolean = true> {
-  name?: T;
-  batch?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * Name, contact details, colors, fonts, header menu and footer for this school.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "school-settings".
- */
-export interface SchoolSetting {
-  id: number;
-  schoolName: string;
-  tagline?: string | null;
-  logo?: (number | null) | Media;
-  phone?: string | null;
-  email?: string | null;
-  address?: string | null;
-  /**
-   * Hex color, e.g. #1F3A5F
-   */
-  primaryColor?: string | null;
-  secondaryColor?: string | null;
-  /**
-   * Rules, frames, accent words
-   */
-  accentColor?: string | null;
-  /**
-   * Soft background
-   */
-  paperColor?: string | null;
-  primaryDeep?: string | null;
-  secondarySoft?: string | null;
-  accentStrong?: string | null;
-  accentDeep?: string | null;
-  headingFont?: ('Fraunces' | 'Playfair Display' | 'Merriweather' | 'EB Garamond' | 'Montserrat' | 'Poppins') | null;
-  bodyFont?: ('Inter' | 'Source Sans 3' | 'Lato' | 'Open Sans' | 'EB Garamond') | null;
-  uiFont?: ('Montserrat' | 'Inter' | 'Poppins' | 'Lato' | 'Source Sans 3') | null;
-  /**
-   * The main menu. Order here is the order on the site.
-   */
-  menu?:
-    | {
-        label: string;
-        kind?: ('link' | 'dropdown' | 'mega') | null;
-        link?: {
-          type?: ('page' | 'url') | null;
-          page?: (number | null) | Page;
-          url?: string | null;
-          newTab?: boolean | null;
-        };
-        links?:
-          | {
-              label: string;
-              link?: {
-                type?: ('page' | 'url') | null;
-                page?: (number | null) | Page;
-                url?: string | null;
-                newTab?: boolean | null;
-              };
-              id?: string | null;
-            }[]
-          | null;
-        /**
-         * Two to four columns works best.
-         */
-        columns?:
-          | {
-              heading?: string | null;
-              links?:
-                | {
-                    label: string;
-                    link?: {
-                      type?: ('page' | 'url') | null;
-                      page?: (number | null) | Page;
-                      url?: string | null;
-                      newTab?: boolean | null;
-                    };
-                    description?: string | null;
-                    id?: string | null;
-                  }[]
-                | null;
-              id?: string | null;
-            }[]
-          | null;
-        /**
-         * A photo card at the right of the mega menu, e.g. "Schedule a visit".
-         */
-        feature?: {
-          /**
-           * To set the focal point, click the pencil on the photo, then Edit image.
-           */
-          image?: (number | null) | Media;
-          title?: string | null;
-          text?: string | null;
-          link?: {
-            type?: ('page' | 'url') | null;
-            page?: (number | null) | Page;
-            url?: string | null;
-            newTab?: boolean | null;
-          };
-        };
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Quiet links beside the button, e.g. Parents or Give.
-   */
-  utilityLinks?:
-    | {
-        label: string;
-        link?: {
-          type?: ('page' | 'url') | null;
-          page?: (number | null) | Page;
-          url?: string | null;
-          newTab?: boolean | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  headerButton?: {
-    label?: string | null;
-    link?: {
-      type?: ('page' | 'url') | null;
-      page?: (number | null) | Page;
-      url?: string | null;
-      newTab?: boolean | null;
-    };
-  };
-  footerColumns?:
-    | {
-        heading?: string | null;
-        links?:
-          | {
-              label: string;
-              link?: {
-                type?: ('page' | 'url') | null;
-                page?: (number | null) | Page;
-                url?: string | null;
-                newTab?: boolean | null;
-              };
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Taken from the School tab.
-   */
-  footerShowContact?: boolean | null;
-  social?:
-    | {
-        platform: 'facebook' | 'instagram' | 'youtube' | 'x' | 'linkedin' | 'tiktok' | 'vimeo';
-        url: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Optional: accreditation, nondiscrimination statement or similar.
-   */
-  footerNote?: string | null;
-  /**
-   * Small links on the bottom line, e.g. Privacy.
-   */
-  legalLinks?:
-    | {
-        label: string;
-        link?: {
-          type?: ('page' | 'url') | null;
-          page?: (number | null) | Page;
-          url?: string | null;
-          newTab?: boolean | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Leave empty for "© year School name". {year} becomes the current year.
-   */
-  copyright?: string | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "school-settings_select".
  */
 export interface SchoolSettingsSelect<T extends boolean = true> {
+  school?: T;
   schoolName?: T;
   tagline?: T;
   logo?: T;
@@ -6098,10 +6063,128 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
         id?: T;
       };
   copyright?: T;
-  _status?: T;
+  parentPassword?: T;
   updatedAt?: T;
   createdAt?: T;
-  globalType?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "schools_select".
+ */
+export interface SchoolsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  domains?:
+    | T
+    | {
+        domain?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  tenants?:
+    | T
+    | {
+        tenant?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-kv_select".
+ */
+export interface PayloadKvSelect<T extends boolean = true> {
+  key?: T;
+  data?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs_select".
+ */
+export interface PayloadJobsSelect<T extends boolean = true> {
+  input?: T;
+  taskStatus?: T;
+  completedAt?: T;
+  totalTried?: T;
+  hasError?: T;
+  error?: T;
+  log?:
+    | T
+    | {
+        executedAt?: T;
+        completedAt?: T;
+        taskSlug?: T;
+        taskID?: T;
+        input?: T;
+        output?: T;
+        state?: T;
+        error?: T;
+        id?: T;
+      };
+  taskSlug?: T;
+  queue?: T;
+  waitUntil?: T;
+  processing?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-locked-documents_select".
+ */
+export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
+  document?: T;
+  globalSlug?: T;
+  user?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-preferences_select".
+ */
+export interface PayloadPreferencesSelect<T extends boolean = true> {
+  user?: T;
+  key?: T;
+  value?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-migrations_select".
+ */
+export interface PayloadMigrationsSelect<T extends boolean = true> {
+  name?: T;
+  batch?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

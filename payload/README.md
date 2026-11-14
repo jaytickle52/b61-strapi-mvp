@@ -5,8 +5,14 @@ Payload CMS 3 so school staff can compare the two editors side by side.
 
 **What's different from the Strapi build**
 
-- One app per school: the editor (`/admin`) and the public website run together in
-  one Next.js app. One Railway service plus Postgres; no Vercel project needed.
+- **One app, many schools.** The editor (`/admin`) and every school's public website
+  run in one Next.js app (Payload's multi-tenant plugin). Each page, event, news post,
+  program, staff member, photo and School settings record belongs to one school.
+  - Visitors get the school whose **Domains** (Schools list) match the address they used.
+    On the shared demo address, `/next/school/<slug>` picks a school.
+  - Banner 61 admins see every school (School picker at the top of the admin menu);
+    school editors only see the schools listed on their account.
+  - The first account created on a new database is an admin.
 - **Live preview beside the form, free.** Open any page, event or news post and click
   the eye icon. Edits autosave as drafts and show on the right within a second or two.
   Phone, tablet and desktop sizes are in the toolbar.
@@ -18,8 +24,9 @@ Payload CMS 3 so school staff can compare the two editors side by side.
 - Content model: pages built from sections (hero, text and image, card grid, stats
   band, call to action, text), events, news, programs, staff, school settings.
 - Parents-only events and news never appear on the public site or public API; the
-  parent feed at `/parents` shows them after the parent password.
-- One `SCHOOL_SECRET` per school; every other secret is derived from it.
+  parent feed at `/parents` shows them after that school's parent password
+  (School settings > Parents).
+- One `SCHOOL_SECRET` for the app; every other secret is derived from it.
 
 ## B61 elements
 
@@ -69,15 +76,18 @@ change, run `npm run payload migrate:create <name>` and commit the migration. Ea
 school's site applies new migrations automatically when it starts, so one push
 updates every school.
 
-## Deploy one school on Railway
+## Deploy on Railway
 
 1. New service from this repo, root directory `/payload`.
 2. Add Postgres. Variables on the service:
    - `DATABASE_URL` = `${{Postgres.DATABASE_URL}}`
    - `SCHOOL_SECRET` = `${{secret(64)}}`
-   - `SEED_DEMO=true`, `SEED_SCHOOL=cedar-ridge`, `SCHOOL_TIMEZONE=America/New_York`
-   - `PARENT_PASSWORD` (optional, turns on the parent feed)
+   - `SEED_DEMO=true` (creates the demo schools in `SEED_SCHOOLS`, default
+     `cedar-ridge,harbor-oaks`), `SCHOOL_TIMEZONE=America/New_York`
+   - `DEFAULT_SCHOOL` (optional): the school shown on an address no school claims
    - `MEDIA_DIR=/data/media`
 3. Add a volume mounted at `/data` (keeps uploaded photos across deploys).
 4. Start command: `npm start` (default). Healthcheck path: `/`.
 5. Generate a domain, open `/admin` and create the first admin account.
+6. To add a school: Schools > Create, give it its domains, then point the domains at
+   this service.

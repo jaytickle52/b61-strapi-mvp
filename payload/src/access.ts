@@ -18,3 +18,6 @@ export const publicAudienceOrSignedIn: Access = ({ req }) => {
 
 export const signedIn: Access = ({ req }) => Boolean(req.user)
 export const anyone: Access = () => true
+
+/** Banner 61 staff: every school, and the Schools and Users lists. */
+export const isAdmin: Access = ({ req }) => (req.user as any)?.role === 'admin'

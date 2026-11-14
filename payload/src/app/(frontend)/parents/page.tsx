@@ -2,18 +2,23 @@ import { createHash } from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import PageHeader from "@/components/PageHeader";
-import { formatDate, getParentFeed } from "@/lib/data";
+import { currentSchool, formatDate, getParentFeed, getParentPassword } from "@/lib/data";
 
 export const metadata = { title: "Parent feed", robots: { index: false } };
 
 const COOKIE = "parent_access";
-// Stand-in for real parent logins: one shared password per school, from PARENT_PASSWORD.
-const accessKey = () => createHash("sha256").update(`b61:${process.env.PARENT_PASSWORD ?? ""}`).digest("hex");
+// Stand-in for real parent logins: one shared password per school, set in
+// School settings > Parents. The cookie is tied to the school and its password.
+const accessKey = async () => {
+  const [school, password] = await Promise.all([currentSchool(), getParentPassword()]);
+  return createHash("sha256").update(`b61:${school?.id ?? ""}:${password ?? ""}`).digest("hex");
+};
 
 async function signIn(formData: FormData) {
   "use server";
-  if (process.env.PARENT_PASSWORD && formData.get("password") === process.env.PARENT_PASSWORD) {
-    (await cookies()).set(COOKIE, accessKey(), { httpOnly: true, sameSite: "lax", secure: true, maxAge: 60 * 60 * 24 * 30, path: "/" });
+  const password = await getParentPassword();
+  if (password && formData.get("password") === password) {
+    (await cookies()).set(COOKIE, await accessKey(), { httpOnly: true, sameSite: "lax", secure: true, maxAge: 60 * 60 * 24 * 30, path: "/" });
     redirect("/parents");
   }
   redirect("/parents?error=1");
@@ -34,7 +39,7 @@ function Badge({ audience }: { audience: string }) {
 }
 
 export default async function ParentsPage({ searchParams }: PageProps<"/parents">) {
-  const signedIn = (await cookies()).get(COOKIE)?.value === accessKey() && Boolean(process.env.PARENT_PASSWORD);
+  const signedIn = Boolean(await getParentPassword()) && (await cookies()).get(COOKIE)?.value === (await accessKey());
   const { error } = await searchParams;
 
   if (!signedIn) {

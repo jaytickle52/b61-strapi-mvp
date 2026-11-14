@@ -1,15 +1,21 @@
-import type { GlobalConfig } from 'payload'
-import { signedIn } from '../access'
+import type { CollectionConfig } from 'payload'
+import { publishedOrSignedIn, signedIn } from '../access'
+import { previewUrl } from './content'
 import { footerFields, headerFields } from '../b61/chrome/fields'
 
-export const SchoolSettings: GlobalConfig = {
+/**
+ * One per school (the multi-school plugin makes this behave like a single
+ * settings page for whichever school is selected in the admin).
+ */
+export const SchoolSettings: CollectionConfig = {
   slug: 'school-settings',
-  label: 'School settings',
+  labels: { singular: 'School settings', plural: 'School settings' },
   admin: {
+    useAsTitle: 'schoolName',
     description: 'Name, contact details, colors, fonts, header menu and footer for this school.',
-    livePreview: { url: '/next/preview?path=%2F' },
+    livePreview: { url: ({ data }) => previewUrl('/', (data as any)?.school) },
   },
-  access: { read: () => true, update: signedIn },
+  access: { read: publishedOrSignedIn, create: signedIn, update: signedIn },
   versions: { drafts: { autosave: { interval: 400 } } },
   fields: [
     {
@@ -95,6 +101,18 @@ export const SchoolSettings: GlobalConfig = {
         },
         { label: 'Header', fields: headerFields },
         { label: 'Footer', fields: footerFields },
+        {
+          label: 'Parents',
+          fields: [
+            {
+              name: 'parentPassword',
+              label: 'Parent feed password',
+              type: 'text',
+              access: { read: ({ req }) => Boolean(req.user) },
+              admin: { description: 'One shared password families use to open the parent feed. Leave empty to keep the feed closed.' },
+            },
+          ],
+        },
       ],
     },
   ],

@@ -9,7 +9,9 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Events, News, Pages, Programs, Staff } from './collections/content'
-import { SchoolSettings } from './globals/SchoolSettings'
+import { SchoolSettings } from './collections/SchoolSettings'
+import { Schools } from './collections/Schools'
+import { multiTenantPlugin } from '@payloadcms/plugin-multi-tenant'
 import { secret } from './lib/secrets'
 import { seedDemoSchool } from './seed'
 import { migrations } from './migrations'
@@ -23,12 +25,10 @@ export default buildConfig({
     importMap: { baseDir: path.resolve(dirname) },
     meta: { titleSuffix: ' · School website' },
     livePreview: {
-      collections: ['pages', 'events', 'news', 'programs', 'staff'],
-      globals: ['school-settings'],
+      collections: ['pages', 'events', 'news', 'programs', 'staff', 'school-settings'],
     },
   },
-  collections: [Pages, Events, News, Programs, Staff, Media, Users],
-  globals: [SchoolSettings],
+  collections: [Pages, Events, News, Programs, Staff, Media, SchoolSettings, Schools, Users],
   editor: lexicalEditor(),
   secret: secret('PAYLOAD_SECRET'),
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
@@ -38,11 +38,32 @@ export default buildConfig({
     prodMigrations: migrations,
   }),
   sharp,
-  plugins: [],
+  plugins: [
+    // One app, many schools. Everything a school edits carries its school;
+    // editors only see their own schools, Banner 61 admins see all of them.
+    multiTenantPlugin({
+      tenantsSlug: 'schools',
+      tenantField: { name: 'school' },
+      tenantSelectorLabel: 'School',
+      collections: {
+        pages: {},
+        events: {},
+        news: {},
+        programs: {},
+        staff: {},
+        media: {},
+        'school-settings': { isGlobal: true },
+      },
+      userHasAccessToAllTenants: (user: any) => user?.role === 'admin',
+    }),
+  ],
   onInit: async (payload) => {
     if (process.env.SEED_DEMO === 'true') {
-      await seedDemoSchool(payload, process.env.SEED_SCHOOL || 'cedar-ridge')
-      await syncElementLibrary(payload).catch((e) => payload.logger.error(`[b61] Element library: ${e.message}`))
+      const keys = (process.env.SEED_SCHOOLS || 'cedar-ridge,harbor-oaks').split(',').map((k) => k.trim()).filter(Boolean)
+      for (const key of keys) {
+        const school = await seedDemoSchool(payload, key)
+        if (school) await syncElementLibrary(payload, school).catch((e) => payload.logger.error(`[b61] Element library: ${e.message}`))
+      }
     }
   },
 })

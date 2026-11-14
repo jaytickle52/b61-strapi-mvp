@@ -1,5 +1,6 @@
 import { toBody } from './kit/body'
 import type { Payload } from 'payload'
+import type { School } from '../payload-types'
 import { cardsFrom, ensureDemoImages, statsFrom } from './demo'
 
 /*
@@ -24,12 +25,17 @@ const label = (name: string, note: string) => ({
   body: toBody([{ type: 'body', body: para(note) }], { emphasisScale: true, dividers: true }), padTop: 'normal', padBottom: 'tight', surface: 'none',
 })
 
-export async function syncElementLibrary(payload: Payload) {
-  const found = await payload.find({ collection: 'pages', where: { slug: { equals: 'elements' } }, limit: 1, depth: 0, draft: true })
+export async function syncElementLibrary(payload: Payload, school: School) {
+  const mine = { school: { equals: school.id } }
+  const found = await payload.find({ collection: 'pages', where: { and: [mine, { slug: { equals: 'elements' } }] }, limit: 1, depth: 0, draft: true })
   const page = found.docs[0]
   if (page?.seoDescription?.includes(MARK)) return
-  const settings = await payload.findGlobal({ slug: 'school-settings', depth: 0 })
-  const imgs = (await ensureDemoImages(payload, { a: settings.primaryColor || '#1F3A5F', b: settings.secondaryColor || '#C8A24A' })) as number[]
+  const settings = (await payload.find({ collection: 'school-settings', where: mine, limit: 1, depth: 0 })).docs[0]
+  const imgs = (await ensureDemoImages(
+    payload,
+    { a: settings?.primaryColor || '#1F3A5F', b: settings?.secondaryColor || '#C8A24A' },
+    school.id as number,
+  )) as number[]
   const pic = (i: number) => imgs[i % imgs.length]
   const go = (l: string) => ({ type: 'url', url: '/' + l })
 
@@ -111,6 +117,6 @@ export async function syncElementLibrary(payload: Payload) {
 
   const data = { title: 'Element library', slug: 'elements', seoDescription: `Every Banner 61 element on one page. ${MARK}`, sections, _status: 'published' as const }
   if (page) await payload.update({ collection: 'pages', id: page.id, data: data as any })
-  else await payload.create({ collection: 'pages', data: data as any })
-  payload.logger.info(`[b61] Element library page updated (v${LIBRARY_VERSION})`)
+  else await payload.create({ collection: 'pages', data: { ...data, school: school.id } as any })
+  payload.logger.info(`[b61] Element library page updated for ${school.name} (v${LIBRARY_VERSION})`)
 }

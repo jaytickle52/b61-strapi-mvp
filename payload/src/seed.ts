@@ -1,9 +1,10 @@
 import type { Payload } from 'payload'
+import type { School } from './payload-types'
 import { demoChrome } from './b61/chrome/demo'
 import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, statsFrom } from './b61/demo'
 
 // Fictional demo schools, same content as the Strapi build so the two editors
-// can be compared like for like. SEED_SCHOOL picks one.
+// can be compared like for like. SEED_SCHOOLS lists which ones to create.
 
 type Profile = {
   settings: Record<string, unknown>;
@@ -112,23 +113,28 @@ const daysFromNow = (days: number, hour = 18) => {
   return new Date(guess.getTime() - diff * 3600000).toISOString()
 }
 
-export async function seedDemoSchool(payload: Payload, key: string) {
-  const existing = await payload.find({ collection: 'pages', limit: 1, draft: true })
-  if (existing.totalDocs > 0) return // already has content; never overwrite a school's work
-
-  const profile = PROFILES[key] ?? PROFILES['cedar-ridge']
+/** Creates the demo school (if missing) and its content (if it has none). Returns the school. */
+export async function seedDemoSchool(payload: Payload, key: string): Promise<School | null> {
+  const profile = PROFILES[key]
+  if (!profile) {
+    payload.logger.warn(`[b61] No demo profile called "${key}"`)
+    return null
+  }
   const name = profile.settings.schoolName as string
+  const found = await payload.find({ collection: 'schools', where: { slug: { equals: key } }, limit: 1, depth: 0 })
+  const school: School = found.docs[0] ?? (await payload.create({ collection: 'schools', data: { name, slug: key } }))
+
+  const existing = await payload.find({ collection: 'pages', where: { school: { equals: school.id } }, limit: 1, draft: true })
+  if (existing.totalDocs > 0) return school // already has content; never overwrite a school's work
+
   payload.logger.info(`[b61] Seeding demo content for ${name}`)
   const published = { _status: 'published' as const }
-  const create = (collection: any, data: any) => payload.create({ collection, data: { ...data, ...published } })
+  const create = (collection: any, data: any) => payload.create({ collection, data: { ...data, school: school.id, ...published } })
+  const programs = profile.programs.map((p) => ({ name: p.name, slug: slugify(p.name) }))
 
-  await payload.updateGlobal({
-    slug: 'school-settings',
-    data: {
-      ...(profile.settings as any),
-      ...demoChrome({ name, programs: profile.programs.map((p) => ({ name: p.name, slug: slugify(p.name) })) }),
-      ...published,
-    },
+  const settings = await create('school-settings', {
+    ...(profile.settings as any),
+    ...demoChrome({ name, programs }),
   })
 
   for (const [i, prog] of profile.programs.entries()) {
@@ -165,13 +171,15 @@ export async function seedDemoSchool(payload: Payload, key: string) {
     await create('news', { ...post, slug: slugify(post.title), generateSlug: false, date: today, body: p(post.summary) })
   }
 
-  const imgs = await ensureDemoImages(payload, {
-    a: (profile.settings.primaryColor as string) ?? '#1F3A5F',
-    b: (profile.settings.secondaryColor as string) ?? '#C8A24A',
-  })
-  await payload.updateGlobal({
-    slug: 'school-settings',
-    data: { ...demoChrome({ name, programs: profile.programs.map((p) => ({ name: p.name, slug: slugify(p.name) })), img: imgs[0] as number }), ...published } as any,
+  const imgs = await ensureDemoImages(
+    payload,
+    { a: (profile.settings.primaryColor as string) ?? '#1F3A5F', b: (profile.settings.secondaryColor as string) ?? '#C8A24A' },
+    school.id as number,
+  )
+  await payload.update({
+    collection: 'school-settings',
+    id: settings.id,
+    data: { ...demoChrome({ name, programs, img: imgs[0] as number }), ...published } as any,
   })
   const heroes = demoHeroes({ tagline: profile.tagline, mission: profile.mission, phone: profile.settings.phone as string, imgs })
   const splits = demoSplits({
@@ -219,4 +227,5 @@ export async function seedDemoSchool(payload: Payload, key: string) {
   for (const page of pages) await create('pages', { ...page, generateSlug: false })
 
   payload.logger.info(`[b61] Demo content ready for ${name}`)
+  return school
 }

@@ -37,8 +37,14 @@ function svgArt(w: number, h: number, a: string, b: string, seed: number) {
 }
 
 /** Creates (once) four placeholder photos in the school's colours. */
-export async function ensureDemoImages(payload: Payload, colors: { a: string; b: string }, req?: PayloadRequest) {
-  const existing = await payload.find({ collection: 'media', where: { alt: { contains: DEMO_TAG } }, limit: 10, req, sort: 'createdAt' })
+export async function ensureDemoImages(payload: Payload, colors: { a: string; b: string }, school: number, req?: PayloadRequest) {
+  const existing = await payload.find({
+    collection: 'media',
+    where: { and: [{ alt: { contains: DEMO_TAG } }, { school: { equals: school } }] },
+    limit: 10,
+    req,
+    sort: 'createdAt',
+  })
   if (existing.totalDocs >= 4) return existing.docs.map((d) => d.id)
   const ids: number[] = []
   const specs = [
@@ -52,7 +58,7 @@ export async function ensureDemoImages(payload: Payload, colors: { a: string; b:
     const data = await sharp(svgArt(s.w, s.h, x, y, s.seed)).jpeg({ quality: 82 }).toBuffer()
     const doc = await payload.create({
       collection: 'media',
-      data: { alt: `Placeholder photo ${s.seed} ${DEMO_TAG}`, ...(s.focal ?? {}) },
+      data: { alt: `Placeholder photo ${s.seed} ${DEMO_TAG}`, school, ...(s.focal ?? {}) },
       file: { data, mimetype: 'image/jpeg', name: s.name, size: data.length },
       req,
     })

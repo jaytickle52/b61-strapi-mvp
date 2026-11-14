@@ -12,10 +12,13 @@ const drafts = {
 
 // Where an item appears on the website. The preview runs on the same site as
 // the admin, so these are plain relative paths.
-const previewUrl = (path: string) => `/next/preview?path=${encodeURIComponent(path)}`
+// The school travels with the link, so the preview shows the right school.
+const idOf = (v: unknown) => (v && typeof v === 'object' ? (v as { id?: unknown }).id : v)
+export const previewUrl = (path: string, school?: unknown) =>
+  `/next/preview?path=${encodeURIComponent(path)}${school ? `&school=${encodeURIComponent(String(idOf(school)))}` : ''}`
 
 const livePreview = (pathFor: (data: Record<string, unknown>) => string) => ({
-  url: ({ data }: { data: Record<string, unknown> }) => previewUrl(pathFor(data ?? {})),
+  url: ({ data }: { data: Record<string, unknown> }) => previewUrl(pathFor(data ?? {}), data?.school),
   breakpoints: [
     { label: 'Phone', name: 'phone', width: 390, height: 844 },
     { label: 'Tablet', name: 'tablet', width: 820, height: 1180 },
@@ -43,13 +46,14 @@ export const Pages: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
     livePreview: livePreview((d) => (d.slug === 'home' || !d.slug ? '/' : `/${d.slug}`)),
-    preview: (doc) => previewUrl(doc.slug === 'home' ? '/' : `/${doc.slug}`),
+    preview: (doc) => previewUrl(doc.slug === 'home' ? '/' : `/${doc.slug}`, doc.school),
   },
   access: { read: publishedOrSignedIn, ...writeAccess },
   versions: drafts,
+  indexes: [{ fields: ['school', 'slug'], unique: true }],
   fields: [
     { name: 'title', type: 'text', required: true },
-    slugField(),
+    slugField({ disableUnique: true }),
     { name: 'seoDescription', type: 'textarea', maxLength: 160, admin: { position: 'sidebar' } },
     {
       name: 'sections',
@@ -70,10 +74,11 @@ export const Events: CollectionConfig = {
   },
   access: { read: publicAudienceOrSignedIn, ...writeAccess },
   versions: drafts,
+  indexes: [{ fields: ['school', 'slug'], unique: true }],
   defaultSort: 'startsAt',
   fields: [
     { name: 'title', type: 'text', required: true },
-    slugField(),
+    slugField({ disableUnique: true }),
     {
       type: 'row',
       fields: [
@@ -99,10 +104,11 @@ export const News: CollectionConfig = {
   },
   access: { read: publicAudienceOrSignedIn, ...writeAccess },
   versions: drafts,
+  indexes: [{ fields: ['school', 'slug'], unique: true }],
   defaultSort: '-date',
   fields: [
     { name: 'title', type: 'text', required: true },
-    slugField(),
+    slugField({ disableUnique: true }),
     { name: 'date', type: 'date', required: true, admin: { position: 'sidebar' } },
     audience,
     { name: 'summary', type: 'textarea', maxLength: 200 },
@@ -120,10 +126,11 @@ export const Programs: CollectionConfig = {
   },
   access: { read: publishedOrSignedIn, ...writeAccess },
   versions: drafts,
+  indexes: [{ fields: ['school', 'slug'], unique: true }],
   defaultSort: 'sortOrder',
   fields: [
     { name: 'name', type: 'text', required: true },
-    slugField({ useAsSlug: 'name' }),
+    slugField({ useAsSlug: 'name', disableUnique: true }),
     { name: 'grades', type: 'text', admin: { description: 'e.g. K–5' } },
     { name: 'summary', type: 'textarea', maxLength: 240 },
     { name: 'description', type: 'richText' },
