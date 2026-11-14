@@ -41,7 +41,9 @@ import '@/b61/styles/kit-frontend.css'
 import '@/b61/chrome/chrome.css'
 import { b61Theme, FONT_STACKS } from '@/b61/lib/theme'
 import Reveal from '@/b61/reveal/Reveal'
-import { getSettings, isPreview } from '@/lib/data'
+import { getSettings, isPreview, siteOrigin } from '@/lib/data'
+import JsonLd from '@/seo/JsonLd'
+import { schoolSchema } from '@/seo/schema'
 import { PreviewBanner } from '@/components/SiteChrome'
 import Header from '@/b61/chrome/Header'
 import Footer from '@/b61/chrome/Footer'
@@ -52,10 +54,12 @@ import LivePreviewListener from '@/components/LivePreviewListener'
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await getSettings()
+  const [settings, origin] = await Promise.all([getSettings(), siteOrigin()])
   return {
+    metadataBase: new URL(origin),
     title: { default: settings.schoolName, template: `%s | ${settings.schoolName}` },
     description: settings.tagline ?? undefined,
+    verification: (settings as any).googleVerification ? { google: (settings as any).googleVerification } : undefined,
   }
 }
 
@@ -91,6 +95,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <link rel="stylesheet" href={fontsHref} />
       </head>
       <body className="flex min-h-full flex-col" style={theme}>
+        <JsonLd data={await schoolSchema()} />
         {preview && <PreviewBanner />}
         {preview && <LivePreviewListener />}
         <Header brand={{ name: settings.schoolName, logo: logo?.url ? { src: logo.url, width: logo.width ?? undefined, height: logo.height ?? undefined } : null }} {...resolveMenu(settings)} />

@@ -80,6 +80,8 @@ export interface Config {
     users: User;
     forms: Form;
     'form-submissions': FormSubmission;
+    redirects: Redirect;
+    search: Search;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -101,6 +103,8 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
+    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    search: SearchSelect<false> | SearchSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -160,7 +164,7 @@ export interface Page {
    */
   generateSlug?: boolean | null;
   slug: string;
-  seoDescription?: string | null;
+  libraryVersion?: number | null;
   /**
    * Add, reorder and remove sections. Open one to edit it; changes show in the live preview as you type.
    */
@@ -3122,6 +3126,18 @@ export interface Page {
           }
       )[]
     | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    /**
+     * For thank-you pages and the like. Also keeps it out of the site search.
+     */
+    noindex?: boolean | null;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -3663,6 +3679,18 @@ export interface Event {
     [k: string]: unknown;
   } | null;
   image?: (number | null) | Media;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    /**
+     * For thank-you pages and the like. Also keeps it out of the site search.
+     */
+    noindex?: boolean | null;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -3699,6 +3727,18 @@ export interface News {
     [k: string]: unknown;
   } | null;
   image?: (number | null) | Media;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    /**
+     * For thank-you pages and the like. Also keeps it out of the site search.
+     */
+    noindex?: boolean | null;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -3738,6 +3778,18 @@ export interface Program {
   } | null;
   image?: (number | null) | Media;
   sortOrder?: number | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    /**
+     * For thank-you pages and the like. Also keeps it out of the site search.
+     */
+    noindex?: boolean | null;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -3989,6 +4041,18 @@ export interface SchoolSetting {
    */
   emailFromAddress?: string | null;
   /**
+   * Shown when a page without its own image is shared on social media or in a text. 1200 × 630 works best.
+   */
+  shareImage?: (number | null) | Media;
+  /**
+   * Optional. The content="…" value from Google's HTML-tag verification.
+   */
+  googleVerification?: string | null;
+  /**
+   * For a site that is still being built. Demo and preview addresses are always hidden.
+   */
+  hideFromSearch?: boolean | null;
+  /**
    * One shared password families use to open the parent feed. Leave empty to keep the feed closed.
    */
   parentPassword?: string | null;
@@ -4058,6 +4122,81 @@ export interface FormSubmission {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Send visitors from an old address (e.g. from the WordPress site) to a page here. Used only when nothing else lives at the old address.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects".
+ */
+export interface Redirect {
+  id: number;
+  school?: (number | null) | School;
+  /**
+   * The path, or a whole old link; it is saved as a path.
+   */
+  from: string;
+  to?: {
+    type?: ('reference' | 'custom') | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'news';
+          value: number | News;
+        } | null)
+      | ({
+          relationTo: 'events';
+          value: number | Event;
+        } | null)
+      | ({
+          relationTo: 'programs';
+          value: number | Program;
+        } | null);
+    url?: string | null;
+  };
+  /**
+   * 301 = moved for good (normal). 302 = temporary.
+   */
+  type: '301' | '302';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Kept up to date automatically from pages, programs, events and news.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "search".
+ */
+export interface Search {
+  id: number;
+  school?: (number | null) | School;
+  title?: string | null;
+  priority?: number | null;
+  doc:
+    | {
+        relationTo: 'pages';
+        value: number | Page;
+      }
+    | {
+        relationTo: 'news';
+        value: number | News;
+      }
+    | {
+        relationTo: 'events';
+        value: number | Event;
+      }
+    | {
+        relationTo: 'programs';
+        value: number | Program;
+      };
+  url?: string | null;
+  summary?: string | null;
+  text?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -4228,6 +4367,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'form-submissions';
         value: number | FormSubmission;
+      } | null)
+    | ({
+        relationTo: 'redirects';
+        value: number | Redirect;
+      } | null)
+    | ({
+        relationTo: 'search';
+        value: number | Search;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -4280,7 +4427,7 @@ export interface PagesSelect<T extends boolean = true> {
   title?: T;
   generateSlug?: T;
   slug?: T;
-  seoDescription?: T;
+  libraryVersion?: T;
   sections?:
     | T
     | {
@@ -6517,6 +6664,14 @@ export interface PagesSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+        noindex?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -6537,6 +6692,14 @@ export interface EventsSelect<T extends boolean = true> {
   summary?: T;
   description?: T;
   image?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+        noindex?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -6555,6 +6718,14 @@ export interface NewsSelect<T extends boolean = true> {
   summary?: T;
   body?: T;
   image?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+        noindex?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -6573,6 +6744,14 @@ export interface ProgramsSelect<T extends boolean = true> {
   description?: T;
   image?: T;
   sortOrder?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+        noindex?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -6835,6 +7014,9 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   emailFromName?: T;
   emailReplyTo?: T;
   emailFromAddress?: T;
+  shareImage?: T;
+  googleVerification?: T;
+  hideFromSearch?: T;
   parentPassword?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -7168,6 +7350,39 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         value?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects_select".
+ */
+export interface RedirectsSelect<T extends boolean = true> {
+  school?: T;
+  from?: T;
+  to?:
+    | T
+    | {
+        type?: T;
+        reference?: T;
+        url?: T;
+      };
+  type?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "search_select".
+ */
+export interface SearchSelect<T extends boolean = true> {
+  school?: T;
+  title?: T;
+  priority?: T;
+  doc?: T;
+  url?: T;
+  summary?: T;
+  text?: T;
   updatedAt?: T;
   createdAt?: T;
 }

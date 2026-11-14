@@ -291,7 +291,7 @@ export async function ensureStandardForms(payload: Payload, school: School) {
           generateSlug: false,
           school: school.id,
           _status: 'published',
-          seoDescription: `${s.page.title} · ${school.name}`,
+          meta: { description: `${s.page.title} · ${school.name}` },
           sections: [
             {
               blockType: 'b61Form',

@@ -145,6 +145,31 @@ export const SchoolSettings: CollectionConfig = {
           ],
         },
         {
+          label: 'Search engines',
+          description: 'How this school shows up in Google and when its pages are shared.',
+          fields: [
+            {
+              name: 'shareImage',
+              label: 'Default share image',
+              type: 'upload',
+              relationTo: 'media',
+              admin: { description: 'Shown when a page without its own image is shared on social media or in a text. 1200 × 630 works best.' },
+            },
+            {
+              name: 'googleVerification',
+              label: 'Google Search Console code',
+              type: 'text',
+              admin: { description: 'Optional. The content="…" value from Google\'s HTML-tag verification.' },
+            },
+            {
+              name: 'hideFromSearch',
+              label: 'Hide this whole site from search engines',
+              type: 'checkbox',
+              admin: { description: 'For a site that is still being built. Demo and preview addresses are always hidden.' },
+            },
+          ],
+        },
+        {
           label: 'Parents',
           fields: [
             {

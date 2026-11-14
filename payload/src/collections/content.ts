@@ -55,7 +55,8 @@ export const Pages: CollectionConfig = {
   fields: [
     { name: 'title', type: 'text', required: true },
     slugField({ disableUnique: true }),
-    { name: 'seoDescription', type: 'textarea', maxLength: 160, admin: { position: 'sidebar' } },
+    // Which Element library version built this page (demo only; see b61/library.ts).
+    { name: 'libraryVersion', type: 'number', admin: { hidden: true } },
     {
       name: 'sections',
       type: 'blocks',

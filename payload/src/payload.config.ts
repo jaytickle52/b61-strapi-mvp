@@ -16,6 +16,8 @@ import { seedDemoSchools } from './seed'
 import { secret } from './lib/secrets'
 import { migrations } from './migrations'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { seoPlugins } from './seo/config'
+import { reindexSearch } from './seo/reindex'
 import { formBuilderConfig, replaceSubmissionHooks } from './forms/config'
 import { FormUploads } from './collections/FormUploads'
 import { EmailLog } from './collections/EmailLog'
@@ -75,6 +77,9 @@ export default buildConfig({
     }),
     // One app, many schools. Everything a school edits carries its school;
     // editors only see their own schools, Banner 61 admins see all of them.
+    // SEO fields, redirects from old addresses, site search (src/seo). Before
+    // the multi-school plugin, so Redirects and the Search index are per school.
+    ...seoPlugins,
     multiTenantPlugin({
       tenantsSlug: 'schools',
       tenantField: { name: 'school' },
@@ -92,12 +97,16 @@ export default buildConfig({
         'form-uploads': {},
         // Its own optional school field: Banner 61's own emails have none.
         'email-log': { customTenantField: true },
+        redirects: {},
+        search: {},
       },
       userHasAccessToAllTenants: (user: any) => user?.role === 'admin',
     }),
   ],
   onInit: async (payload) => {
     // On Vercel the demo is seeded during the build (scripts/seed.ts), not on every cold start.
-    if (process.env.SEED_DEMO === 'true' && !process.env.VERCEL) await seedDemoSchools(payload)
+    if (process.env.VERCEL) return
+    if (process.env.SEED_DEMO === 'true') await seedDemoSchools(payload)
+    await reindexSearch(payload)
   },
 })

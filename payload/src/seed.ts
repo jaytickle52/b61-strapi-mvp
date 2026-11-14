@@ -202,7 +202,7 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
   const pages = [
     {
       title: 'Home', slug: 'home',
-      seoDescription: `${name}: ${profile.tagline}`,
+      meta: { description: `${name}: ${profile.tagline}` },
       sections: [
         heroes.home,
         statsFrom({ heading: `${name} at a glance`, tone: 'light', stats: profile.stats }),
@@ -215,7 +215,7 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
     },
     {
       title: 'About', slug: 'about',
-      seoDescription: `About ${name}`,
+      meta: { description: `About ${name}` },
       sections: [
         heroes.about,
         splits.about,
@@ -224,7 +224,7 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
     },
     {
       title: 'Visit', slug: 'visit',
-      seoDescription: `Schedule a tour of ${name}`,
+      meta: { description: `Schedule a tour of ${name}` },
       sections: [
         heroes.visit,
         demoProse({ phone: profile.settings.phone as string, email: profile.settings.email as string, address: profile.settings.address as string }),

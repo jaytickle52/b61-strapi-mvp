@@ -1,19 +1,22 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import RichText from "@/components/RichText";
 import PageHeader from "@/components/PageHeader";
 import { getProgram, mediaUrl } from "@/lib/data";
+import { seoMetadata } from "@/seo/metadata";
+import { redirectOrNotFound } from "@/seo/redirect";
 
 export async function generateMetadata({ params }: PageProps<"/programs/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const program = await getProgram(slug);
-  return program ? { title: program.name, description: program.summary } : {};
+  return program
+    ? seoMetadata({ title: program.name, description: program.summary, meta: (program as any).meta, image: program.image, path: `/programs/${slug}` })
+    : {};
 }
 
 export default async function ProgramPage({ params }: PageProps<"/programs/[slug]">) {
   const { slug } = await params;
   const program = await getProgram(slug);
-  if (!program) notFound();
+  if (!program) return redirectOrNotFound(`/programs/${slug}`);
   const img = mediaUrl(program.image);
   return (
     <>

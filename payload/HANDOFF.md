@@ -63,7 +63,7 @@ plugin 1.77.1) are ported so the sites look the same; the plugin's CSS is copied
 - `package.json`: `vercel-build` = migrate → seed demo → next build.
   Create migrations with `npm run migrate:create <name>` (turns on the Blob adapter so the
   Media schema matches production).
-- Migration history was reset to one initial migration plus `blob_object_key`.
+- Migration history: initial, `blob_object_key`, `forms_email` (Thread B), `seo_search` (Thread C).
 
 ## Forms and email (Thread B)
 
@@ -84,6 +84,27 @@ plugin 1.77.1) are ported so the sites look the same; the plugin's CSS is copied
   School settings > Email, and branded password-reset emails (`collections/Users.ts`).
 - New settings: `RESEND_API_KEY`, `EMAIL_FROM_ADDRESS`, `EMAIL_FROM_NAME`, optional
   `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` (see `.env.example`).
+
+## SEO and search (Thread C)
+
+- `src/seo/config.ts`: the official SEO, Redirects and Search plugins, set up for schools.
+  Pages, Programs, Events and News get an **SEO** tab (title, description, share image,
+  "Hide this page from search engines"). The old Pages "SEO description" moved into it.
+- **School settings > Search engines:** default share image, Google verification code,
+  "Hide this whole site from search engines". Demo/preview addresses (`*.vercel.app`,
+  `*.railway.app`, localhost) and schools without a domain are always hidden, so only a
+  school's real domain is indexed.
+- `src/seo/metadata.ts` (titles, descriptions, canonical address, share cards, noindex),
+  `src/seo/schema.ts` + `JsonLd.tsx` (School on every page, Event and NewsArticle on detail pages).
+- `/sitemap.xml` and `/robots.txt` are per school (route handlers in `src/app/(frontend)/`).
+- **Redirects** (Website > Redirects, per school): old address → a page here or any link,
+  301 by default. Pasting a whole old link is fine; it is saved as a lowercase path. They
+  apply only when nothing else lives at the address (catch-all `[...path]` route and the
+  detail pages' not-found path, `src/seo/redirect.ts`).
+- **Site search** at `/search` (search icon in the header): pages, programs, events, news of
+  the current school only; parents-only and hidden pages are left out. The index updates on
+  save; `src/seo/reindex.ts` adds anything published but missing (runs in the Vercel build
+  step and on start elsewhere).
 
 ## Working rules with Jay
 

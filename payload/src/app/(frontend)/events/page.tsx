@@ -1,8 +1,9 @@
+import { seoMetadata } from "@/seo/metadata";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { formatDate, getEvents } from "@/lib/data";
 
-export const metadata = { title: "Events" };
+export const generateMetadata = () => seoMetadata({ title: "Events", path: "/events" });
 
 export default async function EventsPage() {
   const events = await getEvents();
