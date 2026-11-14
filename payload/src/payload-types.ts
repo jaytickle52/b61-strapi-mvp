@@ -73,9 +73,13 @@ export interface Config {
     programs: Program;
     staff: Staff;
     media: Media;
+    'form-uploads': FormUpload;
+    'email-log': EmailLog;
     'school-settings': SchoolSetting;
     schools: School;
     users: User;
+    forms: Form;
+    'form-submissions': FormSubmission;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -90,9 +94,13 @@ export interface Config {
     programs: ProgramsSelect<false> | ProgramsSelect<true>;
     staff: StaffSelect<false> | StaffSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    'form-uploads': FormUploadsSelect<false> | FormUploadsSelect<true>;
+    'email-log': EmailLogSelect<false> | EmailLogSelect<true>;
     'school-settings': SchoolSettingsSelect<false> | SchoolSettingsSelect<true>;
     schools: SchoolsSelect<false> | SchoolsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    forms: FormsSelect<false> | FormsSelect<true>;
+    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -2019,6 +2027,41 @@ export interface Page {
                       blockType: 'b61Cta';
                     }
                   | {
+                      /**
+                       * Questions, emails and the thank-you message are edited in Forms.
+                       */
+                      form: number | Form;
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      textAlign?: ('left' | 'center') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      /**
+                       * On a Dark or Accent surface the form always sits on a white card.
+                       */
+                      card?: ('none' | 'card') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Form';
+                    }
+                  | {
                       firstLabel?: string | null;
                       firstLink?: {
                         type?: ('page' | 'url') | null;
@@ -2812,6 +2855,41 @@ export interface Page {
                       blockType: 'b61Cta';
                     }
                   | {
+                      /**
+                       * Questions, emails and the thank-you message are edited in Forms.
+                       */
+                      form: number | Form;
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      textAlign?: ('left' | 'center') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      /**
+                       * On a Dark or Accent surface the form always sits on a white card.
+                       */
+                      card?: ('none' | 'card') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Form';
+                    }
+                  | {
                       firstLabel?: string | null;
                       firstLink?: {
                         type?: ('page' | 'url') | null;
@@ -2954,6 +3032,41 @@ export interface Page {
           }
         | {
             /**
+             * Questions, emails and the thank-you message are edited in Forms.
+             */
+            form: number | Form;
+            eyebrow?: string | null;
+            lines?:
+              | {
+                  text: string;
+                  emphasize?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            textAlign?: ('left' | 'center') | null;
+            widthStep?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            /**
+             * On a Dark or Accent surface the form always sits on a white card.
+             */
+            card?: ('none' | 'card') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Form';
+          }
+        | {
+            /**
              * To set the focal point, click the pencil on the photo, then Edit image.
              */
             image: number | Media;
@@ -3078,6 +3191,438 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * Inquiry, tour, contact and application forms. Add one to a page with the Form element.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forms".
+ */
+export interface Form {
+  id: number;
+  school?: (number | null) | School;
+  title: string;
+  fields?:
+    | (
+        | {
+            label: string;
+            /**
+             * Fills in from the label. Use it in emails as {{name}}.
+             */
+            name?: string | null;
+            defaultValue?: boolean | null;
+            /**
+             * One short line under the question.
+             */
+            help?: string | null;
+            width?: ('100' | '50' | '33') | null;
+            required?: boolean | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'checkbox';
+          }
+        | {
+            label: string;
+            /**
+             * Fills in from the label. Use it in emails as {{name}}.
+             */
+            name?: string | null;
+            /**
+             * One short line under the question.
+             */
+            help?: string | null;
+            width?: ('100' | '50' | '33') | null;
+            required?: boolean | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'country';
+          }
+        | {
+            label: string;
+            /**
+             * Fills in from the label. Use it in emails as {{name}}.
+             */
+            name?: string | null;
+            /**
+             * One short line under the question.
+             */
+            help?: string | null;
+            width?: ('100' | '50' | '33') | null;
+            required?: boolean | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'email';
+          }
+        | {
+            message?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'message';
+          }
+        | {
+            label: string;
+            /**
+             * Fills in from the label. Use it in emails as {{name}}.
+             */
+            name?: string | null;
+            defaultValue?: number | null;
+            /**
+             * One short line under the question.
+             */
+            help?: string | null;
+            width?: ('100' | '50' | '33') | null;
+            required?: boolean | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'number';
+          }
+        | {
+            label: string;
+            /**
+             * Fills in from the label. Use it in emails as {{name}}.
+             */
+            name?: string | null;
+            defaultValue?: string | null;
+            placeholder?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            /**
+             * One short line under the question.
+             */
+            help?: string | null;
+            width?: ('100' | '50' | '33') | null;
+            required?: boolean | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'select';
+          }
+        | {
+            label: string;
+            /**
+             * Fills in from the label. Use it in emails as {{name}}.
+             */
+            name?: string | null;
+            /**
+             * One short line under the question.
+             */
+            help?: string | null;
+            width?: ('100' | '50' | '33') | null;
+            required?: boolean | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'state';
+          }
+        | {
+            label: string;
+            /**
+             * Fills in from the label. Use it in emails as {{name}}.
+             */
+            name?: string | null;
+            defaultValue?: string | null;
+            /**
+             * One short line under the question.
+             */
+            help?: string | null;
+            width?: ('100' | '50' | '33') | null;
+            required?: boolean | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'text';
+          }
+        | {
+            label: string;
+            /**
+             * Fills in from the label. Use it in emails as {{name}}.
+             */
+            name?: string | null;
+            defaultValue?: string | null;
+            /**
+             * One short line under the question.
+             */
+            help?: string | null;
+            width?: ('100' | '50' | '33') | null;
+            required?: boolean | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textarea';
+          }
+        | {
+            label: string;
+            /**
+             * Fills in from the label. Use it in emails as {{name}}.
+             */
+            name?: string | null;
+            uploadCollection: 'form-uploads';
+            /**
+             * e.g. application/pdf or image/*. Empty: PDFs, images and Word files.
+             */
+            mimeTypes?:
+              | {
+                  mimeType: string;
+                  id?: string | null;
+                }[]
+              | null;
+            /**
+             * In bytes. Up to 4 MB (4194304) per form on the current hosting.
+             */
+            maxFileSize?: number | null;
+            multiple?: boolean | null;
+            /**
+             * One short line under the question.
+             */
+            help?: string | null;
+            width?: ('100' | '50' | '33') | null;
+            required?: boolean | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'upload';
+          }
+        | {
+            label: string;
+            /**
+             * Fills in from the label. Use it in emails as {{name}}.
+             */
+            name?: string | null;
+            /**
+             * One short line under the question.
+             */
+            help?: string | null;
+            width?: ('100' | '50' | '33') | null;
+            required?: boolean | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'phone';
+          }
+        | {
+            label: string;
+            /**
+             * Fills in from the label. Use it in emails as {{name}}.
+             */
+            name?: string | null;
+            defaultValue?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            /**
+             * One short line under the question.
+             */
+            help?: string | null;
+            width?: ('100' | '50' | '33') | null;
+            required?: boolean | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'radio';
+          }
+        | {
+            label: string;
+            /**
+             * Fills in from the label. Use it in emails as {{name}}.
+             */
+            name?: string | null;
+            defaultValue?: string | null;
+            /**
+             * One short line under the question.
+             */
+            help?: string | null;
+            width?: ('100' | '50' | '33') | null;
+            required?: boolean | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'date';
+          }
+        | {
+            label: string;
+            /**
+             * Fills in from the label. Use it in emails as {{name}}.
+             */
+            name?: string | null;
+            /**
+             * Shown above the signature, e.g. "I confirm the information above is accurate."
+             */
+            statement?: string | null;
+            /**
+             * One short line under the question.
+             */
+            help?: string | null;
+            width?: ('100' | '50' | '33') | null;
+            required?: boolean | null;
+            showIf?: string | null;
+            showIs?: ('equals' | 'notEquals' | 'filled' | 'empty') | null;
+            /**
+             * For a choice, its value. For a checkbox: yes or no.
+             */
+            showValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'signature';
+          }
+      )[]
+    | null;
+  submitButtonLabel?: string | null;
+  confirmationType?: ('message' | 'redirect') | null;
+  confirmationMessage?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  redirect?: {
+    type?: ('reference' | 'custom') | null;
+    reference?: {
+      relationTo: 'pages';
+      value: number | Page;
+    } | null;
+    url?: string | null;
+  };
+  /**
+   * Sent on every submission, from the school's sender. Add one to notify staff and one to confirm to the family.
+   */
+  emails?:
+    | {
+        /**
+         * Empty: the school's form notification addresses. {{email}} sends to the person who filled it in.
+         */
+        emailTo?: string | null;
+        /**
+         * {{email}} lets staff reply straight to the family.
+         */
+        replyTo?: string | null;
+        cc?: string | null;
+        bcc?: string | null;
+        subject?: string | null;
+        /**
+         * Use {{name}} for one answer and {{*:table}} for all of them. Empty: all answers as a table.
+         */
+        message?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Enter an event once: it shows on the website, calendars and the parent feed.
@@ -3214,6 +3759,46 @@ export interface Staff {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * Files sent through website forms. Open them from the submission.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-uploads".
+ */
+export interface FormUpload {
+  id: number;
+  school?: (number | null) | School;
+  prefix?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * Emails the site sent in the last 90 days. "Failed" shows the reason; "Logged" means email is not switched on yet.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-log".
+ */
+export interface EmailLog {
+  id: number;
+  subject?: string | null;
+  to?: string | null;
+  status?: ('sent' | 'failed' | 'logged') | null;
+  kind?: ('form' | 'test' | 'password' | 'other') | null;
+  detail?: string | null;
+  school?: (number | null) | School;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Name, contact details, colors, fonts, header menu and footer for this school.
@@ -3394,6 +3979,16 @@ export interface SchoolSetting {
    */
   copyright?: string | null;
   /**
+   * One or more addresses, separated by commas. Used when a form doesn't name its own. Empty: the school email.
+   */
+  formRecipients?: string | null;
+  emailFromName?: string | null;
+  emailReplyTo?: string | null;
+  /**
+   * Set by Banner 61 once the school's domain is verified for sending. Empty: the Banner 61 address, with replies going to the school.
+   */
+  emailFromAddress?: string | null;
+  /**
    * One shared password families use to open the parent feed. Leave empty to keep the feed closed.
    */
   parentPassword?: string | null;
@@ -3434,6 +4029,37 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * What families sent through the website forms. Download a form's submissions as a spreadsheet from the form.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-submissions".
+ */
+export interface FormSubmission {
+  id: number;
+  school?: (number | null) | School;
+  summary?: string | null;
+  form: number | Form;
+  submissionData?:
+    | {
+        field: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  submissionUploads?:
+    | {
+        field: string;
+        value: {
+          relationTo: 'form-uploads';
+          value: number | FormUpload;
+        }[];
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3576,6 +4202,14 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
+        relationTo: 'form-uploads';
+        value: number | FormUpload;
+      } | null)
+    | ({
+        relationTo: 'email-log';
+        value: number | EmailLog;
+      } | null)
+    | ({
         relationTo: 'school-settings';
         value: number | SchoolSetting;
       } | null)
@@ -3586,6 +4220,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'forms';
+        value: number | Form;
+      } | null)
+    | ({
+        relationTo: 'form-submissions';
+        value: number | FormSubmission;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -5024,6 +5666,36 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    b61Form?:
+                      | T
+                      | {
+                          form?: T;
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          textAlign?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          card?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     b61ButtonBar?:
                       | T
                       | {
@@ -5615,6 +6287,36 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    b61Form?:
+                      | T
+                      | {
+                          form?: T;
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          textAlign?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          card?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     b61ButtonBar?:
                       | T
                       | {
@@ -5723,6 +6425,36 @@ export interface PagesSelect<T extends boolean = true> {
               padBottom?: T;
               surface?: T;
               textPanel?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Form?:
+          | T
+          | {
+              form?: T;
+              eyebrow?: T;
+              lines?:
+                | T
+                | {
+                    text?: T;
+                    emphasize?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              textAlign?: T;
+              widthStep?: T;
+              padTop?: T;
+              padBottom?: T;
+              card?: T;
+              surface?: T;
               eyebrowRule?: T;
               entrance?: T;
               id?: T;
@@ -5908,6 +6640,40 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-uploads_select".
+ */
+export interface FormUploadsSelect<T extends boolean = true> {
+  school?: T;
+  prefix?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-log_select".
+ */
+export interface EmailLogSelect<T extends boolean = true> {
+  subject?: T;
+  to?: T;
+  status?: T;
+  kind?: T;
+  detail?: T;
+  school?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "school-settings_select".
  */
 export interface SchoolSettingsSelect<T extends boolean = true> {
@@ -6065,6 +6831,10 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
         id?: T;
       };
   copyright?: T;
+  formRecipients?: T;
+  emailFromName?: T;
+  emailReplyTo?: T;
+  emailFromAddress?: T;
   parentPassword?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -6116,6 +6886,290 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forms_select".
+ */
+export interface FormsSelect<T extends boolean = true> {
+  school?: T;
+  title?: T;
+  fields?:
+    | T
+    | {
+        checkbox?:
+          | T
+          | {
+              label?: T;
+              name?: T;
+              defaultValue?: T;
+              help?: T;
+              width?: T;
+              required?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        country?:
+          | T
+          | {
+              label?: T;
+              name?: T;
+              help?: T;
+              width?: T;
+              required?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        email?:
+          | T
+          | {
+              label?: T;
+              name?: T;
+              help?: T;
+              width?: T;
+              required?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        message?:
+          | T
+          | {
+              message?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        number?:
+          | T
+          | {
+              label?: T;
+              name?: T;
+              defaultValue?: T;
+              help?: T;
+              width?: T;
+              required?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        select?:
+          | T
+          | {
+              label?: T;
+              name?: T;
+              defaultValue?: T;
+              placeholder?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              help?: T;
+              width?: T;
+              required?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        state?:
+          | T
+          | {
+              label?: T;
+              name?: T;
+              help?: T;
+              width?: T;
+              required?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        text?:
+          | T
+          | {
+              label?: T;
+              name?: T;
+              defaultValue?: T;
+              help?: T;
+              width?: T;
+              required?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        textarea?:
+          | T
+          | {
+              label?: T;
+              name?: T;
+              defaultValue?: T;
+              help?: T;
+              width?: T;
+              required?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        upload?:
+          | T
+          | {
+              label?: T;
+              name?: T;
+              uploadCollection?: T;
+              mimeTypes?:
+                | T
+                | {
+                    mimeType?: T;
+                    id?: T;
+                  };
+              maxFileSize?: T;
+              multiple?: T;
+              help?: T;
+              width?: T;
+              required?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        phone?:
+          | T
+          | {
+              label?: T;
+              name?: T;
+              help?: T;
+              width?: T;
+              required?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        radio?:
+          | T
+          | {
+              label?: T;
+              name?: T;
+              defaultValue?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              help?: T;
+              width?: T;
+              required?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        date?:
+          | T
+          | {
+              label?: T;
+              name?: T;
+              defaultValue?: T;
+              help?: T;
+              width?: T;
+              required?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        signature?:
+          | T
+          | {
+              label?: T;
+              name?: T;
+              statement?: T;
+              help?: T;
+              width?: T;
+              required?: T;
+              showIf?: T;
+              showIs?: T;
+              showValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  submitButtonLabel?: T;
+  confirmationType?: T;
+  confirmationMessage?: T;
+  redirect?:
+    | T
+    | {
+        type?: T;
+        reference?: T;
+        url?: T;
+      };
+  emails?:
+    | T
+    | {
+        emailTo?: T;
+        replyTo?: T;
+        cc?: T;
+        bcc?: T;
+        subject?: T;
+        message?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-submissions_select".
+ */
+export interface FormSubmissionsSelect<T extends boolean = true> {
+  school?: T;
+  summary?: T;
+  form?: T;
+  submissionData?:
+    | T
+    | {
+        field?: T;
+        value?: T;
+        id?: T;
+      };
+  submissionUploads?:
+    | T
+    | {
+        field?: T;
+        value?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

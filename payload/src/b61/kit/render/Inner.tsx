@@ -11,6 +11,7 @@ import B61ButtonBar from '../../elements/buttonbar/ButtonBar'
 import B61Accordion from '../../elements/accordion/Accordion'
 import B61Pillars from '../../elements/pillars/Pillars'
 import B61Rail from '../../elements/rail/Rail'
+import B61Form from '../../elements/form/Form'
 
 export const INNER: Record<string, (p: { block: any; index?: number }) => any> = {
   b61Split: B61Split,
@@ -26,6 +27,7 @@ export const INNER: Record<string, (p: { block: any; index?: number }) => any> =
   b61Accordion: B61Accordion,
   b61Pillars: B61Pillars,
   b61Rail: B61Rail,
+  b61Form: B61Form,
 }
 
 /** Renders a container's child elements. Index 1, so Automatic headings are H2, never H1. */

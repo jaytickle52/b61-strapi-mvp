@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { publishedOrSignedIn, signedIn } from '../access'
 import { previewUrl } from './content'
 import { footerFields, headerFields } from '../b61/chrome/fields'
+import { testEmailEndpoint } from '../email/endpoints'
 
 /**
  * One per school (the multi-school plugin makes this behave like a single
@@ -16,6 +17,7 @@ export const SchoolSettings: CollectionConfig = {
     livePreview: { url: ({ data }) => previewUrl('/', (data as any)?.school) },
   },
   access: { read: publishedOrSignedIn, create: signedIn, update: signedIn },
+  endpoints: [testEmailEndpoint],
   versions: { drafts: { autosave: { interval: 400 } }, maxPerDoc: 25 },
   fields: [
     {
@@ -101,6 +103,47 @@ export const SchoolSettings: CollectionConfig = {
         },
         { label: 'Header', fields: headerFields },
         { label: 'Footer', fields: footerFields },
+        {
+          label: 'Email',
+          description: 'How emails from this website (form notifications and confirmations) are sent.',
+          fields: [
+            {
+              name: 'formRecipients',
+              label: 'Form notifications go to',
+              type: 'text',
+              admin: {
+                placeholder: 'office@school.org, admissions@school.org',
+                description: 'One or more addresses, separated by commas. Used when a form doesn\'t name its own. Empty: the school email.',
+              },
+            },
+            {
+              type: 'row',
+              fields: [
+                { name: 'emailFromName', label: 'Sender name', type: 'text', admin: { width: '50%', placeholder: 'The school name' } },
+                {
+                  name: 'emailReplyTo',
+                  label: 'Replies go to',
+                  type: 'email',
+                  admin: { width: '50%', placeholder: 'The school email' },
+                },
+              ],
+            },
+            {
+              name: 'emailFromAddress',
+              label: 'Sender address',
+              type: 'email',
+              access: { update: ({ req }) => (req.user as any)?.role === 'admin', create: ({ req }) => (req.user as any)?.role === 'admin' },
+              admin: {
+                description: 'Set by Banner 61 once the school\'s domain is verified for sending. Empty: the Banner 61 address, with replies going to the school.',
+              },
+            },
+            {
+              name: 'testEmail',
+              type: 'ui',
+              admin: { components: { Field: '@/email/TestEmailButton#TestEmailButton' } },
+            },
+          ],
+        },
         {
           label: 'Parents',
           fields: [

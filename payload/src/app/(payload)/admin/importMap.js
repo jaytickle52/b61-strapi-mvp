@@ -31,7 +31,11 @@ import { InlineCodeFeatureClient as InlineCodeFeatureClient_e70f5e05f09f93e00b99
 import { SuperscriptFeatureClient as SuperscriptFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { SubscriptFeatureClient as SubscriptFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { StrikethroughFeatureClient as StrikethroughFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { TestEmailButton as TestEmailButton_9efb266fe7741fea6a447ccc8b6dfc05 } from '@/email/TestEmailButton'
 import { WatchTenantCollection as WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a } from '@payloadcms/plugin-multi-tenant/client'
+import { FieldPicker as FieldPicker_9ea8c2d18fb87511fa1afdb6adc070a8 } from '@/forms/FieldPicker'
+import { EmailRowLabel as EmailRowLabel_5968a7d5cc5b18b8bb4f5a521219c0fd } from '@/forms/EmailRowLabel'
+import { SubmissionsLink as SubmissionsLink_c6910aaaae4c22ec3cd3bf920ceab3d4 } from '@/forms/SubmissionsLink'
 import { GlobalViewRedirect as GlobalViewRedirect_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
 import { TenantSelector as TenantSelector_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
 import { TenantSelectionProvider as TenantSelectionProvider_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
@@ -73,7 +77,11 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#SuperscriptFeatureClient": SuperscriptFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#SubscriptFeatureClient": SubscriptFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#StrikethroughFeatureClient": StrikethroughFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@/email/TestEmailButton#TestEmailButton": TestEmailButton_9efb266fe7741fea6a447ccc8b6dfc05,
   "@payloadcms/plugin-multi-tenant/client#WatchTenantCollection": WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a,
+  "@/forms/FieldPicker#FieldPicker": FieldPicker_9ea8c2d18fb87511fa1afdb6adc070a8,
+  "@/forms/EmailRowLabel#EmailRowLabel": EmailRowLabel_5968a7d5cc5b18b8bb4f5a521219c0fd,
+  "@/forms/SubmissionsLink#SubmissionsLink": SubmissionsLink_c6910aaaae4c22ec3cd3bf920ceab3d4,
   "@payloadcms/plugin-multi-tenant/rsc#GlobalViewRedirect": GlobalViewRedirect_d6d5f193a167989e2ee7d14202901e62,
   "@payloadcms/plugin-multi-tenant/rsc#TenantSelector": TenantSelector_d6d5f193a167989e2ee7d14202901e62,
   "@payloadcms/plugin-multi-tenant/rsc#TenantSelectionProvider": TenantSelectionProvider_d6d5f193a167989e2ee7d14202901e62,

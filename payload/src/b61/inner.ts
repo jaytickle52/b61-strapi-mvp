@@ -12,6 +12,7 @@ import { B61ButtonBar } from './elements/buttonbar/fields'
 import { B61Accordion } from './elements/accordion/fields'
 import { B61Pillars } from './elements/pillars/fields'
 import { B61Rail } from './elements/rail/fields'
+import { B61Form } from './elements/form/fields'
 
 /*
  * Elements that can sit INSIDE a container (a Tab, a Carousel slide, a
@@ -29,6 +30,7 @@ export const innerBlocks: Block[] = [
   B61Accordion,
   B61Pillars,
   B61Cta,
+  B61Form,
   B61ButtonBar,
   B61Divider,
 ]

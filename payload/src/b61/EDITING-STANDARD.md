@@ -95,3 +95,13 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
   check lists, plain blockquotes. Headings are H2-H4.
 - Intros and item bodies (accordion, pillars, cards) use a short editor: paragraphs,
   bold, italic, links and lists.
+
+## 11. Forms
+
+- A form's questions, emails and thank-you live in **Forms > Forms**; the **Form** element only
+  places a form on a page (heading, width, surface, card), like every other element.
+- Questions are named by their label; the technical name fills itself in.
+  Width is Full / Half / Third. "Show only when" hides a question until another answer matches,
+  and a hidden question is never required.
+- Forms always send from the school's sender (School settings > Email). Editors choose who
+  receives each email, never the From address.

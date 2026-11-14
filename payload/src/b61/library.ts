@@ -9,7 +9,7 @@ import { cardsFrom, ensureDemoImages, statsFrom } from './demo'
  * Rebuilt on start whenever LIBRARY_VERSION changes; edits made to the page
  * by hand survive until the next version bump.
  */
-const LIBRARY_VERSION = 2
+const LIBRARY_VERSION = 3
 const MARK = `[b61-library v${LIBRARY_VERSION}]`
 
 const para = (text: string) => ({
@@ -37,6 +37,9 @@ export async function syncElementLibrary(payload: Payload, school: School) {
     school.id as number,
   )) as number[]
   const pic = (i: number) => imgs[i % imgs.length]
+  const contactForm = (
+    await payload.find({ collection: 'forms', where: { and: [mine, { title: { equals: 'Contact us' } }] }, limit: 1, depth: 0, overrideAccess: true })
+  ).docs[0]?.id
   const go = (l: string) => ({ type: 'url', url: '/' + l })
 
   const sections: any[] = [
@@ -111,6 +114,12 @@ export async function syncElementLibrary(payload: Payload, school: School) {
     { blockType: 'b61FramedImage', image: pic(0), imageShape: 'fixed', imageHeight: '460px', frameColor: 'secondary', widthStep: 4 },
     label('Divider', 'A short rule or an ornament between sections.'),
     { blockType: 'b61Divider', alignment: 'center', weight: 'regular', lineColor: 'accent' },
+    ...(contactForm
+      ? [
+          label('Form', 'One of the school\u2019s forms (Forms > Forms). Questions, emails and the thank-you are edited there.'),
+          { blockType: 'b61Form', form: contactForm, eyebrow: 'Get in touch', lines: [{ text: 'Send us a message' }], surface: 'soft', card: 'card' },
+        ]
+      : []),
     label('Button Bar', 'Two large half-width links, often at the foot of a page.'),
     { blockType: 'b61ButtonBar', firstLabel: 'Schedule a visit', firstLink: go('visit'), secondLabel: 'Start an application', secondLink: go('admissions'), size: 'large' },
   ]
