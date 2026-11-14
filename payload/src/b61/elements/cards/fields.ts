@@ -39,7 +39,8 @@ const carousel: WhenRule = { field: 'arrangement', in: ['carousel'] }
 
 export const B61CardGrid = defineElement({
   slug: 'b61CardGrid',
-  name: 'B61 Card Grid',
+  name: 'Card Grid',
+  plural: 'Card Grids',
   mode: { field: 'source', labels: { manual: 'Cards', programs: 'Programs', 'upcoming-events': 'Events', 'latest-news': 'News', staff: 'Staff' } },
 
   content: [

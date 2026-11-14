@@ -2,7 +2,7 @@
 import { useRowLabel } from '@payloadcms/ui'
 
 /**
- * Names a section row after its heading: "01  B61 Hero  Cover  Rooted in faith…".
+ * Names a section row after its heading: "01  Hero  Cover  Rooted in faith…".
  * Works for any element whose heading uses the kit's heading group, and falls
  * back to a plain `heading` or `title` field for simpler blocks.
  */

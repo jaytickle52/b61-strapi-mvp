@@ -6,7 +6,8 @@ import { entranceField } from '../../kit/groups'
 const COLORS: [string, string][] = [['dark', 'Dark'], ['accent', 'Accent'], ['soft', 'Light wash'], ['plain', 'White']]
 export const B61ButtonBar = defineElement({
   slug: 'b61ButtonBar',
-  name: 'B61 Button Bar',
+  name: 'Button Bar',
+  plural: 'Button Bars',
   content: [
     panel('First button', [{ name: 'firstLabel', label: 'Label', type: 'text' }, { ...link('firstLink') }] as any),
     panel('Second button', [{ name: 'secondLabel', label: 'Label', type: 'text' }, { ...link('secondLink') }] as any),

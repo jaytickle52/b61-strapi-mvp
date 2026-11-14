@@ -9,7 +9,8 @@ import { bandHeadFields, buttonsField, entranceField, eyebrowRuleField, list, pa
  */
 export const B61StatsBand = defineElement({
   slug: 'b61StatsBand',
-  name: 'B61 Stats Band',
+  name: 'Stats Band',
+  plural: 'Stats Bands',
   content: [
     panel('Heading', bandHeadFields({ intro: true })),
     list(

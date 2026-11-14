@@ -5,7 +5,8 @@ import { bandHeadFields, entranceField, eyebrowRuleField, headingAlignField, lis
 /* B61 PILLARS (Feature Tabs), port of Banner 61 Elements' B61 Pillars (plugin 1.77.1). */
 export const B61Pillars = defineElement({
   slug: 'b61Pillars',
-  name: 'B61 Pillars',
+  name: 'Pillars',
+  plural: 'Pillars',
   mode: { field: 'tabPosition', labels: { left: 'Tabs left', right: 'Tabs right', top: 'Tabs on top' } },
   content: [
     panel('Heading', bandHeadFields({ intro: true })),

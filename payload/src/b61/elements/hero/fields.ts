@@ -31,8 +31,8 @@ const coverBg = (t: string) => (_: unknown, s: any) => s?.layoutMode !== 'band' 
 
 export const B61Hero = defineElement({
   slug: 'b61Hero',
-  name: 'B61 Hero',
-  plural: 'B61 Heroes',
+  name: 'Hero',
+  plural: 'Heroes',
   mode: { field: 'layoutMode', labels: { cover: 'Cover', band: 'Band' } },
 
   content: [

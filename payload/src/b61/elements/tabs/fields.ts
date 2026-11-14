@@ -10,7 +10,8 @@ import { innerField } from '../../inner'
  */
 export const B61Tabs = defineElement({
   slug: 'b61Tabs',
-  name: 'B61 Tabs',
+  name: 'Tabs',
+  plural: 'Tabs',
   mode: { field: 'tabPosition', labels: { top: 'Tabs on top', left: 'Tabs left', right: 'Tabs right' } },
   content: [
     panel('Heading', bandHeadFields({ intro: true })),

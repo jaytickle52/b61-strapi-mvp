@@ -6,7 +6,8 @@ import { entranceField, frameColorField, photo } from '../../kit/groups'
 const isCustom = { field: 'imageShape', in: ['custom'] }
 export const B61FramedImage = defineElement({
   slug: 'b61FramedImage',
-  name: 'B61 Framed Image',
+  name: 'Framed Image',
+  plural: 'Framed Images',
   content: [panel('Photo', [photo('image', 'Photo', { required: true })])],
   design: {
     layout: [

@@ -5,7 +5,8 @@ import { entranceField, photo } from '../../kit/groups'
 /* B61 DIVIDER, port of Banner 61 Elements' B61 Divider (plugin 1.77.1). */
 export const B61Divider = defineElement({
   slug: 'b61Divider',
-  name: 'B61 Divider',
+  name: 'Divider',
+  plural: 'Dividers',
   content: [
     panel('Divider', [
       segmented('lineStyle', 'Show', [['rule', 'A line'], ['ornament', 'An ornament image']], { default: 'rule' }),

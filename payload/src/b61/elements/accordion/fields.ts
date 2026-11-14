@@ -5,7 +5,8 @@ import { bandHeadFields, buttonsField, entranceField, eyebrowRuleField, headingA
 /* B61 ACCORDION, port of Banner 61 Elements' B61 Accordion (Sport_Accordion, plugin 1.77.1). */
 export const B61Accordion = defineElement({
   slug: 'b61Accordion',
-  name: 'B61 Accordion',
+  name: 'Accordion',
+  plural: 'Accordions',
   content: [
     panel('Heading', bandHeadFields({ intro: true })),
     list('items', 'Items', 'Item', [

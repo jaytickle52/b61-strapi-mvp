@@ -6,7 +6,8 @@ import { buttonsField, ICON_OPTIONS, list } from '../../kit/groups'
 /* B61 RAIL, port of Banner 61 Elements' B61 Rail (plugin 1.77.1): buttons and a link list for a Section's side column. */
 export const B61Rail: Block = defineElement({
   slug: 'b61Rail',
-  name: 'B61 Rail',
+  name: 'Rail',
+  plural: 'Rails',
   content: [
     buttonsField(),
     panel('Link list', [

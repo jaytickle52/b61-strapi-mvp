@@ -8,7 +8,8 @@ import { entranceField, eyebrowRuleField, paddingFields, photo, surfaceField } f
  */
 export const B61Testimonial = defineElement({
   slug: 'b61Testimonial',
-  name: 'B61 Testimonial',
+  name: 'Testimonial',
+  plural: 'Testimonials',
   content: [
     panel('Quote', [
       { name: 'eyebrow', label: 'Eyebrow', type: 'text' },

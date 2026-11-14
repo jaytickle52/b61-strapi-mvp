@@ -13,7 +13,8 @@ const notStrip: WhenRule = { all: [isGallery, { field: 'galleryLayout', in: ['gr
 
 export const B61Gallery = defineElement({
   slug: 'b61Gallery',
-  name: 'B61 Gallery',
+  name: 'Gallery',
+  plural: 'Galleries',
   mode: { field: 'galleryLayout', labels: { strip: 'Strip', grid: 'Grid', masonry: 'Masonry' } },
   content: [
     panel('Heading', bandHeadFields({ intro: true })),

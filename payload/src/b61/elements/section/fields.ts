@@ -13,13 +13,14 @@ const hasPhoto: WhenRule = { field: 'image', filled: true }
 
 export const B61Section = defineElement({
   slug: 'b61Section',
-  name: 'B61 Section',
+  name: 'Section',
+  plural: 'Sections',
   mode: { field: 'columns', labels: { full: 'Full width', 'rail-right': 'Side column right', 'rail-left': 'Side column left' } },
   content: [
     innerField('content', 'Main column', { description: 'The elements in this section, top to bottom.' }),
     innerField('side', 'Side column', {
       rail: true,
-      description: 'Usually one B61 Rail (buttons and a link list).',
+      description: 'Usually one Rail (buttons and a link list).',
       condition: (_: unknown, s: any) => s?.columns === 'rail-right' || s?.columns === 'rail-left',
     }),
     panel('Background photo', [

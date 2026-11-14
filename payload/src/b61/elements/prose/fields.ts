@@ -32,7 +32,8 @@ const above: WhenRule = { field: 'headPosition', in: ['above'] }
 
 export const B61Prose = defineElement({
   slug: 'b61Prose',
-  name: 'B61 Prose',
+  name: 'Prose',
+  plural: 'Prose',
   mode: { field: 'headPosition', labels: { above: 'Heading above', beside: 'Heading beside' } },
 
   content: [

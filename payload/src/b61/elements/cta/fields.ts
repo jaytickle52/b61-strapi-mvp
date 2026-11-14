@@ -29,8 +29,8 @@ import {
 
 export const B61Cta = defineElement({
   slug: 'b61Cta',
-  name: 'B61 CTA Band',
-  plural: 'B61 CTA Bands',
+  name: 'CTA Band',
+  plural: 'CTA Bands',
   mode: { field: 'surface', labels: { none: 'No surface', soft: 'Light wash', dark: 'Dark', accent: 'Accent' } },
 
   content: [

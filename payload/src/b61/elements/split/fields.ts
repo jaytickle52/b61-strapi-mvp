@@ -37,7 +37,8 @@ const anyImage: WhenRule = { field: 'media', in: ['photo', 'gallery'] }
 
 export const B61Split = defineElement({
   slug: 'b61Split',
-  name: 'B61 Split',
+  name: 'Split',
+  plural: 'Splits',
   mode: { field: 'imageSide', labels: { right: 'Image right', left: 'Image left' } },
 
   content: [

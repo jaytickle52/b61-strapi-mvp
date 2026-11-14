@@ -10,7 +10,8 @@ import { innerField } from '../../inner'
  */
 export const B61Carousel = defineElement({
   slug: 'b61Carousel',
-  name: 'B61 Carousel',
+  name: 'Carousel',
+  plural: 'Carousels',
   content: [
     panel('Heading', [
       ...bandHeadFields({ intro: true }),
