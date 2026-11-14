@@ -1,0 +1,172 @@
+/*
+ * B61 Form. New in the Payload build (the Breakdance sites used Fluent Forms),
+ * written with the plugin's tokens so it sits with the other elements:
+ * band padding like Prose, buttons from .b61-btn, focus ring from --b61-focus.
+ * Fields are at least 44px tall (touch target) and errors never rely on colour alone.
+ */
+.b61-form__region {
+  display: block;
+  --band-pt: var(--b61-pad-block);
+  --band-pb: var(--b61-pad-block);
+  padding: var(--band-pt) var(--b61-pad-inline) var(--band-pb);
+}
+.b61-form__region--pt-tight { --band-pt: var(--b61-pad-block-tight); }
+.b61-form__region--pt-none { --band-pt: 0; }
+.b61-form__region--pb-tight { --band-pb: var(--b61-pad-block-tight); }
+.b61-form__region--pb-none { --band-pb: 0; }
+
+.b61-form__inner {
+  margin: 0 auto;
+  max-width: min(var(--b61-form-w, var(--b61-measure-wide, 760px)), var(--b61-width, 1200px));
+}
+.b61-form.b61-talign-center .b61-form__head { text-align: center; }
+
+.b61-form__head { margin-bottom: var(--b61-space-lg); }
+.b61-form__eyebrow {
+  display: inline-block;
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-eyebrow-size);
+  font-weight: var(--b61-eyebrow-weight);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: var(--b61-eyebrow-case);
+  color: var(--b61-eyebrow-color, var(--b61-accent-text));
+  margin-bottom: var(--b61-eyebrow-space);
+}
+.b61-form__heading { margin: 0; font-size: var(--b61-text-h2); }
+.b61-form__heading-line--em { color: var(--b61-heading-accent-text); }
+.b61-form__subhead { margin: var(--b61-space-sm) 0 0; font-size: var(--b61-text-lg); color: var(--b61-muted); }
+.b61-surface--dark .b61-form__subhead,
+.b61-surface--accent .b61-form__subhead { color: inherit; opacity: 0.9; }
+
+/* The form's own text is always on a light ground (no panel, or the white card). */
+.b61-form__panel--card { color: var(--b61-on-surface); }
+
+.b61-form__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--b61-space-md) var(--b61-space-md);
+}
+.b61-form__field { flex: 1 1 100%; min-width: 0; margin: 0; padding: 0; border: 0; }
+.b61-form__field[hidden] { display: none; }
+@media (min-width: 640px) {
+  .b61-form__field--w50 { flex: 1 1 calc(50% - var(--b61-space-md)); }
+  .b61-form__field--w33 { flex: 1 1 calc(33.333% - var(--b61-space-md)); }
+}
+
+.b61-form__label {
+  display: block;
+  padding: 0;
+  margin-bottom: var(--b61-space-2xs, 4px);
+  font-family: var(--b61-font-ui);
+  font-size: var(--b61-text-sm);
+  font-weight: 600;
+}
+.b61-form__label--sub { font-weight: 500; }
+.b61-form__req { color: var(--b61-accent-text); }
+.b61-form__help { margin: 0 0 var(--b61-space-2xs, 4px); font-size: var(--b61-text-sm); color: var(--b61-muted); }
+.b61-form__field > .b61-form__help:last-child { margin: var(--b61-space-2xs, 4px) 0 0; }
+
+.b61-form input:not([type='checkbox']):not([type='radio']):not([type='hidden']),
+.b61-form select,
+.b61-form textarea {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: max(16px, var(--b61-text-body, 1rem)); /* 16px stops phones zooming in */
+  color: var(--b61-ink);
+  background: var(--b61-surface);
+  border: 1px solid var(--b61-graphite, #6b6b6b);
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+.b61-form textarea { min-height: 128px; resize: vertical; }
+.b61-form input[type='file'] { padding: 8px; background: var(--b61-surface-soft); border-style: dashed; }
+
+.b61-form input:focus-visible,
+.b61-form select:focus-visible,
+.b61-form textarea:focus-visible,
+.b61-form__pad:focus-visible,
+.b61-form__link:focus-visible,
+.b61-form__summary:focus {
+  outline: var(--b61-focus-width, 3px) solid var(--b61-focus, var(--b61-ink));
+  outline-offset: var(--b61-focus-offset, 2px);
+}
+
+.b61-form__choices { display: grid; gap: var(--b61-space-xs); }
+.b61-form__choice {
+  display: flex;
+  gap: var(--b61-space-sm);
+  align-items: flex-start;
+  min-height: 32px;
+  font-size: var(--b61-text-body);
+  cursor: pointer;
+}
+.b61-form__choice input { width: 20px; height: 20px; margin: 3px 0 0; flex: none; accent-color: var(--b61-primary); }
+
+.b61-form__field--error input:not([type='checkbox']):not([type='radio']),
+.b61-form__field--error select,
+.b61-form__field--error textarea,
+.b61-form__field--error .b61-form__pad { border-color: var(--b61-accent-text); border-width: 2px; }
+.b61-form__error {
+  margin: var(--b61-space-2xs, 4px) 0 0;
+  font-size: var(--b61-text-sm);
+  font-weight: 600;
+  color: var(--b61-accent-text);
+}
+.b61-form__error::before { content: '⚠ '; }
+
+.b61-form__summary {
+  margin-bottom: var(--b61-space-md);
+  padding: var(--b61-space-md);
+  border-left: 4px solid var(--b61-accent-text);
+  background: var(--b61-surface-soft);
+  color: var(--b61-ink);
+}
+.b61-form__summary[hidden] { display: none; }
+.b61-form__summary-title { margin: 0; font-weight: 700; }
+.b61-form__summary ul { margin: var(--b61-space-xs) 0 0; padding-left: 1.2em; }
+.b61-form__summary a { color: inherit; text-decoration: underline; }
+
+.b61-form__statement { margin: 0 0 var(--b61-space-xs); font-size: var(--b61-text-sm); }
+.b61-form__pad {
+  display: block;
+  width: 100%;
+  height: 160px;
+  background: var(--b61-surface);
+  border: 1px solid var(--b61-graphite, #6b6b6b);
+  border-radius: 6px;
+  touch-action: none;
+  cursor: crosshair;
+}
+.b61-form__pad-actions { display: flex; gap: var(--b61-space-md); margin-top: var(--b61-space-2xs, 4px); }
+.b61-form__link {
+  padding: 4px 0;
+  min-height: 32px;
+  font: inherit;
+  font-size: var(--b61-text-sm);
+  color: inherit;
+  text-decoration: underline;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.b61-form__message { font-size: var(--b61-text-body); }
+.b61-form__message > :first-child { margin-top: 0; }
+
+.b61-form__turnstile { margin-top: var(--b61-space-md); }
+.b61-form__actions { margin-top: var(--b61-space-lg); }
+.b61-form.b61-talign-center .b61-form__actions { text-align: center; }
+.b61-form__actions .b61-btn[disabled] { opacity: 0.7; cursor: progress; }
+
+.b61-form__done { padding: var(--b61-space-md) 0; font-size: var(--b61-text-lg); }
+.b61-form__done:focus { outline: none; }
+
+/* Bots fill this in; people never see it. */
+.b61-form__hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.b61-form .b61-sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}

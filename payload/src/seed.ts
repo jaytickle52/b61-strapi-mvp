@@ -1,6 +1,7 @@
 import type { Payload } from 'payload'
 import type { School } from './payload-types'
 import { syncElementLibrary } from './b61/library'
+import { ensureStandardForms } from './forms/standard'
 import { demoChrome } from './b61/chrome/demo'
 import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, statsFrom } from './b61/demo'
 
@@ -242,6 +243,7 @@ export async function seedDemoSchools(payload: Payload) {
   const keys = (process.env.SEED_SCHOOLS || 'cedar-ridge,harbor-oaks').split(',').map((k) => k.trim()).filter(Boolean)
   for (const key of keys) {
     const school = await seedDemoSchool(payload, key)
+    if (school) await ensureStandardForms(payload, school).catch((e) => payload.logger.error(`[b61] Standard forms: ${e.message}`))
     if (school) await syncElementLibrary(payload, school).catch((e) => payload.logger.error(`[b61] Element library: ${e.message}`))
   }
 }

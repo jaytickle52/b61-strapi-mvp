@@ -65,6 +65,26 @@ plugin 1.77.1) are ported so the sites look the same; the plugin's CSS is copied
   Media schema matches production).
 - Migration history was reset to one initial migration plus `blob_object_key`.
 
+## Forms and email (Thread B)
+
+- `src/forms/`: Form Builder plugin set up for schools (`config.ts`), friendlier question
+  editing with "Show only when" rules (`fields.ts`), the rules shared by browser and server
+  (`logic.ts`), the submit check (`submit.ts`: honeypot, signed time stamp, optional
+  Cloudflare Turnstile, required/format checks, files, signatures), the CSV export
+  (`export.ts`), and the four standard forms + pages (`standard.ts`: Inquire, Schedule a
+  tour, Contact, Apply), created for any school with no forms.
+- Visitors post to `/next/form` (`src/app/(frontend)/next/form/route.ts`); the API itself
+  refuses anonymous submissions. Forms, submissions and Form files are staff-only and per school.
+- Form files (`collections/FormUploads.ts`) are separate from Media, served only to signed-in
+  staff, and get long random names on Blob (Vercel Blob has no private files). 4 MB per
+  submission because Vercel caps request bodies at 4.5 MB.
+- Element: `src/b61/elements/form/` (Form.tsx server, FormClient.tsx browser, form.css).
+- `src/email/`: Resend adapter (log-only without `RESEND_API_KEY`), Email log collection (90
+  days), the school sender and branded layout (`school.ts`), the "Send test email" button in
+  School settings > Email, and branded password-reset emails (`collections/Users.ts`).
+- New settings: `RESEND_API_KEY`, `EMAIL_FROM_ADDRESS`, `EMAIL_FROM_NAME`, optional
+  `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` (see `.env.example`).
+
 ## Working rules with Jay
 
 - End work replies with a 2-line status: what was done, and the one thing needed from Jay.
@@ -84,9 +104,8 @@ plugin 1.77.1) are ported so the sites look the same; the plugin's CSS is copied
    photo or page they point to silently breaks them. Add a "where is this used" check or
    warning.
 5. **Database size:** many block tables; cap versions (`maxPerDoc`) everywhere, trim fields.
-6. **Missing for a real school:** forms (admissions inquiries; Payload form builder plugin),
-   redirects from old URLs, sitemap and SEO fields, search, an accessibility pass, email
-   (currently logs to console).
+6. **Missing for a real school:** ~~forms~~ and ~~email~~ (Thread B), redirects from old URLs,
+   sitemap and SEO fields, search, an accessibility pass.
 
 Also pending / nice to have:
 - Jay to create his admin account at b61-schools.vercel.app/admin (new database).

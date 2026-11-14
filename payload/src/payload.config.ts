@@ -15,6 +15,11 @@ import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { seedDemoSchools } from './seed'
 import { secret } from './lib/secrets'
 import { migrations } from './migrations'
+import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { formBuilderConfig, replaceSubmissionHooks } from './forms/config'
+import { FormUploads } from './collections/FormUploads'
+import { EmailLog } from './collections/EmailLog'
+import { emailAdapter } from './email/adapter'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -28,7 +33,9 @@ export default buildConfig({
       collections: ['pages', 'events', 'news', 'programs', 'staff', 'school-settings'],
     },
   },
-  collections: [Pages, Events, News, Programs, Staff, Media, SchoolSettings, Schools, Users],
+  collections: [Pages, Events, News, Programs, Staff, Media, FormUploads, EmailLog, SchoolSettings, Schools, Users],
+  // Resend when RESEND_API_KEY is set; otherwise emails are only logged (src/email).
+  email: emailAdapter,
   editor: lexicalEditor(),
   secret: secret('PAYLOAD_SECRET'),
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
@@ -50,11 +57,19 @@ export default buildConfig({
     autoRun: process.env.VERCEL ? undefined : [{ cron: '* * * * *', queue: 'default', limit: 20 }],
   },
   plugins: [
+    // Forms: inquiry, tour, contact, application (src/forms). Before the
+    // multi-tenant plugin so its collections get a school too.
+    formBuilderPlugin(formBuilderConfig),
+    replaceSubmissionHooks,
     // Photos go to Vercel Blob when its token is set (Vercel), straight from
     // the browser so large files aren't capped by the server; otherwise to disk.
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
-      collections: { media: { disablePayloadAccessControl: true } },
+      collections: {
+        media: { disablePayloadAccessControl: true },
+        // Served through Payload, so only signed-in staff can open them.
+        'form-uploads': { prefix: 'form-uploads' },
+      },
       token: process.env.BLOB_READ_WRITE_TOKEN,
       clientUploads: true,
     }),
@@ -72,6 +87,11 @@ export default buildConfig({
         staff: {},
         media: {},
         'school-settings': { isGlobal: true },
+        forms: {},
+        'form-submissions': {},
+        'form-uploads': {},
+        // Its own optional school field: Banner 61's own emails have none.
+        'email-log': { customTenantField: true },
       },
       userHasAccessToAllTenants: (user: any) => user?.role === 'admin',
     }),

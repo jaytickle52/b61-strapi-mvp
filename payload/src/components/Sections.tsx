@@ -14,6 +14,7 @@ import B61Pillars from "@/b61/elements/pillars/Pillars";
 import B61Tabs from "@/b61/elements/tabs/Tabs";
 import B61Carousel from "@/b61/elements/carousel/Carousel";
 import B61Section from "@/b61/elements/section/Section";
+import B61Form from "@/b61/elements/form/Form";
 
 // Every section is a Banner 61 element; each renders the plugin's own markup.
 const ELEMENTS: Record<string, (p: { block: any; index?: number }) => any> = {
@@ -33,6 +34,7 @@ const ELEMENTS: Record<string, (p: { block: any; index?: number }) => any> = {
   b61Tabs: B61Tabs,
   b61Carousel: B61Carousel,
   b61Section: B61Section,
+  b61Form: B61Form,
 };
 
 export default function Sections({ sections }: { sections: any[] }) {
