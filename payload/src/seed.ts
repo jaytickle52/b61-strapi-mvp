@@ -1,4 +1,5 @@
 import type { Payload } from 'payload'
+import { demoChrome } from './b61/chrome/demo'
 import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, statsFrom } from './b61/demo'
 
 // Fictional demo schools, same content as the Strapi build so the two editors
@@ -125,14 +126,7 @@ export async function seedDemoSchool(payload: Payload, key: string) {
     slug: 'school-settings',
     data: {
       ...(profile.settings as any),
-      navigation: [
-        { label: 'About', url: '/about' },
-        { label: 'Programs', url: '/programs' },
-        { label: 'Events', url: '/events' },
-        { label: 'News', url: '/news' },
-        { label: 'Our team', url: '/staff' },
-      ],
-      headerButton: { label: 'Schedule a tour', url: '/visit' },
+      ...demoChrome({ name, programs: profile.programs.map((p) => ({ name: p.name, slug: slugify(p.name) })) }),
       ...published,
     },
   })
@@ -174,6 +168,10 @@ export async function seedDemoSchool(payload: Payload, key: string) {
   const imgs = await ensureDemoImages(payload, {
     a: (profile.settings.primaryColor as string) ?? '#1F3A5F',
     b: (profile.settings.secondaryColor as string) ?? '#C8A24A',
+  })
+  await payload.updateGlobal({
+    slug: 'school-settings',
+    data: { ...demoChrome({ name, programs: profile.programs.map((p) => ({ name: p.name, slug: slugify(p.name) })), img: imgs[0] as number }), ...published } as any,
   })
   const heroes = demoHeroes({ tagline: profile.tagline, mission: profile.mission, phone: profile.settings.phone as string, imgs })
   const splits = demoSplits({

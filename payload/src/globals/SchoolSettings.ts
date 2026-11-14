@@ -1,11 +1,12 @@
 import type { GlobalConfig } from 'payload'
 import { signedIn } from '../access'
+import { footerFields, headerFields } from '../b61/chrome/fields'
 
 export const SchoolSettings: GlobalConfig = {
   slug: 'school-settings',
   label: 'School settings',
   admin: {
-    description: 'Name, contact details, colors, fonts and navigation for this school.',
+    description: 'Name, contact details, colors, fonts, header menu and footer for this school.',
     livePreview: { url: '/next/preview?path=%2F' },
   },
   access: { read: () => true, update: signedIn },
@@ -92,27 +93,8 @@ export const SchoolSettings: GlobalConfig = {
             },
           ],
         },
-        {
-          label: 'Navigation',
-          fields: [
-            {
-              name: 'navigation',
-              type: 'array',
-              fields: [
-                { name: 'label', type: 'text', required: true },
-                { name: 'url', type: 'text', required: true },
-              ],
-            },
-            {
-              name: 'headerButton',
-              type: 'group',
-              fields: [
-                { name: 'label', type: 'text' },
-                { name: 'url', type: 'text' },
-              ],
-            },
-          ],
-        },
+        { label: 'Header', fields: headerFields },
+        { label: 'Footer', fields: footerFields },
       ],
     },
   ],

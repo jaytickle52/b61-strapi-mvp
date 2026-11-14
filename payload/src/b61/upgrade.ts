@@ -1,6 +1,7 @@
 import type { Payload, PayloadRequest } from 'payload'
 import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, statsFrom } from './demo'
 import { PROFILES } from '../seed'
+import { demoChrome } from './chrome/demo'
 
 /*
  * Run once by the b61_hero migration on a site that already has content.
@@ -200,4 +201,30 @@ export async function upgradeStatsBands(
     await payload.update({ collection: 'pages', id: pageId, data: { sections, _status: 'published' }, req })
     payload.logger.info(`[b61] Converted ${blocks.length} stats band(s) to B61 Stats Band on "${page.title}"`)
   }
+}
+
+/*
+ * Run once by the b61_chrome migration. The old flat navigation and header
+ * button move into the new Header menu (as plain links); on the demo they are
+ * replaced by the demo's mega menu, dropdown and footer.
+ */
+export async function upgradeChrome(
+  payload: Payload,
+  req: PayloadRequest | undefined,
+  old: { nav: { label: string; url: string }[]; button: { label: string | null; url: string | null } },
+) {
+  const settings = await payload.findGlobal({ slug: 'school-settings', depth: 0, req })
+  const u = (url: string) => ({ type: 'url' as const, url })
+  let data: any = {
+    menu: old.nav.map((n) => ({ label: n.label, kind: 'link', link: u(n.url) })),
+    headerButton: old.button.label ? { label: old.button.label, link: u(old.button.url || '/') } : undefined,
+    utilityLinks: [{ label: 'Parents', link: u('/parents') }],
+  }
+  if (process.env.SEED_DEMO === 'true') {
+    const programs = await payload.find({ collection: 'programs', limit: 8, sort: 'sortOrder', depth: 0, req })
+    const imgs = await ensureDemoImages(payload, { a: settings.primaryColor || '#1F3A5F', b: settings.secondaryColor || '#C8A24A' }, req)
+    data = demoChrome({ name: settings.schoolName, programs: programs.docs.map((p: any) => ({ name: p.name, slug: p.slug })), img: imgs[0] as number })
+  }
+  await payload.updateGlobal({ slug: 'school-settings', data: { ...data, _status: 'published' }, req })
+  payload.logger.info('[b61] Moved navigation into the new header menu and footer')
 }

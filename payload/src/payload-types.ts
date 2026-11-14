@@ -2107,7 +2107,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * Name, contact details, colors, fonts and navigation for this school.
+ * Name, contact details, colors, fonts, header menu and footer for this school.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "school-settings".
@@ -2140,17 +2140,149 @@ export interface SchoolSetting {
   headingFont?: ('Fraunces' | 'Playfair Display' | 'Merriweather' | 'EB Garamond' | 'Montserrat' | 'Poppins') | null;
   bodyFont?: ('Inter' | 'Source Sans 3' | 'Lato' | 'Open Sans' | 'EB Garamond') | null;
   uiFont?: ('Montserrat' | 'Inter' | 'Poppins' | 'Lato' | 'Source Sans 3') | null;
-  navigation?:
+  /**
+   * The main menu. Order here is the order on the site.
+   */
+  menu?:
     | {
         label: string;
-        url: string;
+        kind?: ('link' | 'dropdown' | 'mega') | null;
+        link?: {
+          type?: ('page' | 'url') | null;
+          page?: (number | null) | Page;
+          url?: string | null;
+          newTab?: boolean | null;
+        };
+        links?:
+          | {
+              label: string;
+              link?: {
+                type?: ('page' | 'url') | null;
+                page?: (number | null) | Page;
+                url?: string | null;
+                newTab?: boolean | null;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Two to four columns works best.
+         */
+        columns?:
+          | {
+              heading?: string | null;
+              links?:
+                | {
+                    label: string;
+                    link?: {
+                      type?: ('page' | 'url') | null;
+                      page?: (number | null) | Page;
+                      url?: string | null;
+                      newTab?: boolean | null;
+                    };
+                    description?: string | null;
+                    id?: string | null;
+                  }[]
+                | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * A photo card at the right of the mega menu, e.g. "Schedule a visit".
+         */
+        feature?: {
+          /**
+           * To set the focal point, click the pencil on the photo, then Edit image.
+           */
+          image?: (number | null) | Media;
+          title?: string | null;
+          text?: string | null;
+          link?: {
+            type?: ('page' | 'url') | null;
+            page?: (number | null) | Page;
+            url?: string | null;
+            newTab?: boolean | null;
+          };
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Quiet links beside the button, e.g. Parents or Give.
+   */
+  utilityLinks?:
+    | {
+        label: string;
+        link?: {
+          type?: ('page' | 'url') | null;
+          page?: (number | null) | Page;
+          url?: string | null;
+          newTab?: boolean | null;
+        };
         id?: string | null;
       }[]
     | null;
   headerButton?: {
     label?: string | null;
-    url?: string | null;
+    link?: {
+      type?: ('page' | 'url') | null;
+      page?: (number | null) | Page;
+      url?: string | null;
+      newTab?: boolean | null;
+    };
   };
+  footerColumns?:
+    | {
+        heading?: string | null;
+        links?:
+          | {
+              label: string;
+              link?: {
+                type?: ('page' | 'url') | null;
+                page?: (number | null) | Page;
+                url?: string | null;
+                newTab?: boolean | null;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Taken from the School tab.
+   */
+  footerShowContact?: boolean | null;
+  social?:
+    | {
+        platform: 'facebook' | 'instagram' | 'youtube' | 'x' | 'linkedin' | 'tiktok' | 'vimeo';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional: accreditation, nondiscrimination statement or similar.
+   */
+  footerNote?: string | null;
+  /**
+   * Small links on the bottom line, e.g. Privacy.
+   */
+  legalLinks?:
+    | {
+        label: string;
+        link?: {
+          type?: ('page' | 'url') | null;
+          page?: (number | null) | Page;
+          url?: string | null;
+          newTab?: boolean | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Leave empty for "© year School name". {year} becomes the current year.
+   */
+  copyright?: string | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -2177,19 +2309,142 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   headingFont?: T;
   bodyFont?: T;
   uiFont?: T;
-  navigation?:
+  menu?:
     | T
     | {
         label?: T;
-        url?: T;
+        kind?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              page?: T;
+              url?: T;
+              newTab?: T;
+            };
+        links?:
+          | T
+          | {
+              label?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    page?: T;
+                    url?: T;
+                    newTab?: T;
+                  };
+              id?: T;
+            };
+        columns?:
+          | T
+          | {
+              heading?: T;
+              links?:
+                | T
+                | {
+                    label?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                          newTab?: T;
+                        };
+                    description?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+        feature?:
+          | T
+          | {
+              image?: T;
+              title?: T;
+              text?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    page?: T;
+                    url?: T;
+                    newTab?: T;
+                  };
+            };
+        id?: T;
+      };
+  utilityLinks?:
+    | T
+    | {
+        label?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              page?: T;
+              url?: T;
+              newTab?: T;
+            };
         id?: T;
       };
   headerButton?:
     | T
     | {
         label?: T;
-        url?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              page?: T;
+              url?: T;
+              newTab?: T;
+            };
       };
+  footerColumns?:
+    | T
+    | {
+        heading?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    page?: T;
+                    url?: T;
+                    newTab?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
+  footerShowContact?: T;
+  social?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  footerNote?: T;
+  legalLinks?:
+    | T
+    | {
+        label?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              page?: T;
+              url?: T;
+              newTab?: T;
+            };
+        id?: T;
+      };
+  copyright?: T;
   _status?: T;
   updatedAt?: T;
   createdAt?: T;

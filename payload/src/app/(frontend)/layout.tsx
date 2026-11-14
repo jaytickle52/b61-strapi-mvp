@@ -28,10 +28,15 @@ import '@/b61/elements/divider/divider-instance.css'
 import '@/b61/elements/buttonbar/buttonbar.css'
 import '@/b61/styles/kit-instance.css'
 import '@/b61/styles/kit-frontend.css'
+import '@/b61/chrome/chrome.css'
 import { b61Theme, FONT_STACKS } from '@/b61/lib/theme'
 import Reveal from '@/b61/reveal/Reveal'
 import { getSettings, isPreview } from '@/lib/data'
-import { PreviewBanner, SiteFooter, SiteHeader } from '@/components/SiteChrome'
+import { PreviewBanner } from '@/components/SiteChrome'
+import Header from '@/b61/chrome/Header'
+import Footer from '@/b61/chrome/Footer'
+import { resolveMenu } from '@/b61/chrome/resolve'
+import { asMedia } from '@/b61/lib/media'
 import LivePreviewListener from '@/components/LivePreviewListener'
 
 export const dynamic = 'force-dynamic'
@@ -55,6 +60,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     ...(body !== heading ? [fam(body, 'wght@400;600')] : []),
     ...(ui !== heading && ui !== body ? [fam(ui, 'wght@500;600;700')] : []),
   ]
+  const logo = asMedia(settings.logo)
   const fontsHref = `https://fonts.googleapis.com/css2?${fonts.join('&')}&display=swap`
 
   // The school's colors and fonts become CSS variables every component uses.
@@ -77,9 +83,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       <body className="flex min-h-full flex-col" style={theme}>
         {preview && <PreviewBanner />}
         {preview && <LivePreviewListener />}
-        <SiteHeader settings={settings} />
+        <Header brand={{ name: settings.schoolName, logo: logo?.url ? { src: logo.url, width: logo.width ?? undefined, height: logo.height ?? undefined } : null }} {...resolveMenu(settings)} />
         <main className="flex-1">{children}</main>
-        <SiteFooter settings={settings} />
+        <Footer s={settings} logo={logo?.url} />
         <Reveal />
       </body>
     </html>
