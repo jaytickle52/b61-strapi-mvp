@@ -1,0 +1,79 @@
+{
+  "kind": "singleType",
+  "collectionName": "school_settings",
+  "info": {
+    "singularName": "school-setting",
+    "pluralName": "school-settings",
+    "displayName": "School settings",
+    "description": "Name, contact details, colors and navigation for this school"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "schoolName": {
+      "type": "string",
+      "required": true
+    },
+    "tagline": {
+      "type": "string"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "primaryColor": {
+      "type": "string",
+      "default": "#1F3A5F",
+      "regex": "^#[0-9A-Fa-f]{6}$"
+    },
+    "secondaryColor": {
+      "type": "string",
+      "default": "#C8A24A",
+      "regex": "^#[0-9A-Fa-f]{6}$"
+    },
+    "headingFont": {
+      "type": "enumeration",
+      "enum": [
+        "Fraunces",
+        "Playfair Display",
+        "Merriweather",
+        "Montserrat",
+        "Poppins"
+      ],
+      "default": "Fraunces"
+    },
+    "bodyFont": {
+      "type": "enumeration",
+      "enum": [
+        "Inter",
+        "Source Sans 3",
+        "Lato",
+        "Open Sans"
+      ],
+      "default": "Inter"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "address": {
+      "type": "text"
+    },
+    "navigation": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.nav-link"
+    },
+    "headerButton": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.button"
+    }
+  }
+}

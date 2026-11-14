@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_sections_cta_band",
+  "info": {
+    "displayName": "Call to action",
+    "icon": "bullhorn",
+    "description": "A bold band asking visitors to take the next step"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "required": true
+    },
+    "body": {
+      "type": "text"
+    },
+    "tone": {
+      "type": "enumeration",
+      "enum": [
+        "light",
+        "muted",
+        "brand",
+        "dark"
+      ],
+      "default": "light"
+    },
+    "button": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.button"
+    }
+  }
+}

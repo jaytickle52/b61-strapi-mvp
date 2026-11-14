@@ -1,0 +1,53 @@
+{
+  "collectionName": "components_sections_hero",
+  "info": {
+    "displayName": "Hero",
+    "icon": "landscape",
+    "description": "Big opening section with heading, image and up to two buttons"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string",
+      "required": true
+    },
+    "subheading": {
+      "type": "text"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "layout": {
+      "type": "enumeration",
+      "enum": [
+        "image-right",
+        "image-background",
+        "centered"
+      ],
+      "default": "image-right"
+    },
+    "tone": {
+      "type": "enumeration",
+      "enum": [
+        "light",
+        "muted",
+        "brand",
+        "dark"
+      ],
+      "default": "light"
+    },
+    "buttons": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.button",
+      "max": 2
+    }
+  }
+}

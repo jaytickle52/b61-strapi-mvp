@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_sections_stats_band",
+  "info": {
+    "displayName": "Stats band",
+    "icon": "chartBubble",
+    "description": "A row of big numbers"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "tone": {
+      "type": "enumeration",
+      "enum": [
+        "light",
+        "muted",
+        "brand",
+        "dark"
+      ],
+      "default": "light"
+    },
+    "stats": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.stat",
+      "max": 6
+    }
+  }
+}

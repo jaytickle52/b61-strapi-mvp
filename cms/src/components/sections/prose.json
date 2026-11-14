@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_sections_prose",
+  "info": {
+    "displayName": "Text",
+    "icon": "feather",
+    "description": "Plain text content"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "body": {
+      "type": "blocks"
+    }
+  }
+}

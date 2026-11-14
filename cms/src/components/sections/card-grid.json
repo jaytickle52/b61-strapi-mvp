@@ -1,0 +1,58 @@
+{
+  "collectionName": "components_sections_card_grid",
+  "info": {
+    "displayName": "Card grid",
+    "icon": "grid",
+    "description": "Cards you write by hand, or filled automatically from programs, events, news or staff"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "intro": {
+      "type": "text"
+    },
+    "source": {
+      "type": "enumeration",
+      "enum": [
+        "manual",
+        "programs",
+        "upcoming-events",
+        "latest-news",
+        "staff"
+      ],
+      "default": "manual"
+    },
+    "limit": {
+      "type": "integer",
+      "default": 3,
+      "min": 1,
+      "max": 12
+    },
+    "columns": {
+      "type": "enumeration",
+      "enum": [
+        "two",
+        "three",
+        "four"
+      ],
+      "default": "three"
+    },
+    "tone": {
+      "type": "enumeration",
+      "enum": [
+        "light",
+        "muted",
+        "brand",
+        "dark"
+      ],
+      "default": "light"
+    },
+    "cards": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.card"
+    }
+  }
+}
