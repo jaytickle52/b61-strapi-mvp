@@ -1,0 +1,414 @@
+/* ---------------------------------------------------------------------------
+   B61 CTA BAND
+
+   Surfaces, stack rhythm (.b61-block), the button base, the text link and the
+   focus ring live in assets/components.css; what remains here is what only a
+   call-to-action band needs.
+
+   DIALS
+   Nothing below paints a colour, weight or border directly - every value is a
+   custom property the base rule reads, so a site re-skins any role by
+   redeclaring a handful of variables and never edits this file. Declared inside
+   :where() so they carry ZERO specificity: any site rule wins without
+   !important.
+
+   Declared on the REGION, not the element root: surface sets the --b61-on-bg-*
+   globals on the region, and a var() inside a custom property resolves against
+   the element the property is declared on.
+   --------------------------------------------------------------------------- */
+:where(.b61-cta__region) {
+  /* Emphasis - the single non-body line type. One treatment, not Prose's two:
+     a CTA band is a few lines long, so a second scale would be a size step with
+     nothing to be a step away from. */
+  --b61-cta-emphasis-font: var(--b61-font-body);
+  --b61-cta-emphasis-size: var(--b61-text-body);
+  --b61-cta-emphasis-leading: var(--b61-leading-body);
+  --b61-cta-emphasis-weight: 600;
+
+  /* Rhythm and rule geometry. Each was a literal inherited from the fixed-slot
+     version, and each is a decision a site might want to make. */
+  /* --b61-space-md, not Prose's 14px. The gap under a CTA eyebrow is the one
+     this element has always used, and the port is not the moment to restyle it:
+     copying Prose's value here would have tightened the seam by 10px on every
+     band on the site for no reason anyone asked for. Caught by the before/after
+     computed-style diff. */
+  --b61-cta-eyebrow-space: var(--b61-eyebrow-space);
+  /* 1.48.0: the seams were inverted - the body sat closer to the buttons
+     than to the headline it explains. Tight under the heading so the two
+     read as one statement, generous above the buttons so the ask stands on
+     its own. */
+  --b61-cta-heading-space: var(--b61-space-md);
+  --b61-cta-actions-space: var(--b61-space-xl);
+  --b61-cta-body-para-space: 1.2em;
+  --b61-cta-quote-rule-width: var(--b61-frame-width);
+  --b61-cta-quote-size: var(--b61-text-h3);
+}
+
+/* THE TWO COLOUR DIALS ARE DECLARED WHERE THEY ARE USED, not on the region.
+   Both alias a --b61-on-bg-* global, and a text panel (1.34.0) re-declares
+   those globals on a DESCENDANT of the region - so declared up there they froze
+   at the band's colours and painted a dark band's accent onto a white card.
+   The same bug Split's emphasis line had at 1.30.0 (b61_alias_scope.md). Down
+   here they resolve against whichever ground actually surrounds the line; with
+   no panel that is still the region's, so nothing without a panel moves. */
+:where(.b61-cta__emphasis) {
+  --b61-cta-emphasis-color: var(--b61-on-bg-accent, var(--b61-accent-text));
+}
+
+:where(.b61-cta__quote, .b61-cta__body blockquote) {
+  --b61-cta-quote-rule: var(--b61-on-bg-line, var(--b61-secondary));
+}
+
+.b61-cta {
+  width: 100%;
+  align-self: stretch;
+  display: block;
+}
+
+/* Surface colour and every text role live here as locals, so a surface is a
+   token set rather than a background. Each local falls back through
+   --b61-on-bg-* first: with no B61 Section above it that global is unset and the
+   standalone value applies. */
+/* The locals are declared on the panel as well as the region for the same
+   alias-scope reason as the dials above: a panel re-declares --b61-on-bg-*, so
+   the locals have to be re-computed there or they keep the band's values. */
+.b61-cta__region,
+.b61-cta__inner--panel {
+  --cta-ink: var(--b61-on-bg-ink, var(--b61-ink));
+  --cta-muted: var(--b61-on-bg-muted, var(--b61-muted));
+  --cta-accent: var(--b61-on-bg-accent, var(--b61-accent-text));
+  --cta-body: var(--cta-muted);
+}
+
+.b61-cta__region {
+  display: block;
+  --band-pt: var(--b61-pad-block);
+  --band-pb: var(--b61-pad-block);
+  padding: var(--band-pt) var(--b61-pad-inline) var(--band-pb);
+  color: var(--cta-ink);
+}
+
+/* Band spacing. Two controls rather than one, because the case that hurts is a
+   pair of same-coloured bands stacking to double padding - which needs the
+   bottom of one and the top of the next set independently. */
+.b61-cta__region--pt-tight { --band-pt: var(--b61-pad-block-tight); }
+.b61-cta__region--pt-none { --band-pt: 0; }
+.b61-cta__region--pb-tight { --band-pb: var(--b61-pad-block-tight); }
+.b61-cta__region--pb-none { --band-pb: 0; }
+
+/* SURFACES LIVE IN /assets.
+   The region emits `b61-surface--<s>` for the ground (assets/components.css)
+   and `b61-band--<s>` for the palette (assets/utilities.css).
+
+   Two things the globals cannot express stay here as element state:
+
+   1. --cta-surface is the band's OWN background, used as the label colour on
+      the inverted button. There is no global for "the colour behind me".
+
+   2. Body copy runs muted when this element stands on no band and at full ink
+      on any surface. The tempting shortcut is
+      `var(--b61-on-bg-ink, var(--cta-muted))` - let the fallback fire when no
+      band set the global.
+
+      IT DOES NOT WORK. --b61-on-bg-* are also registered as Breakdance
+      VARIABLES, so they are declared on :root and are never unset; the fallback
+      arm is dead and every band ran body at ink. Caught by a before/after
+      computed-style diff. State the condition explicitly instead. */
+.b61-cta__region.b61-surface--dark { --cta-surface: var(--b61-surface-dark); }
+.b61-cta__region.b61-surface--accent { --cta-surface: var(--b61-surface-accent); }
+
+.b61-cta__region.b61-surface--soft,
+.b61-cta__region.b61-surface--dark,
+.b61-cta__region.b61-surface--accent { --cta-body: var(--cta-ink); }
+
+/* ---------------------------------------------------------------------------
+   TEXT PANEL (1.34.0)
+
+   NOTHING HERE PAINTS. Ground, palette and shape are `b61-surface--X
+   b61-band--X b61-card`, emitted on the inner by the twig and owned by
+   assets/. A panel is always a painted ground, so body copy runs at full ink
+   on it - the rule above, restated for the panel because the panel is not the
+   region. The band's photo, if any, is the shared .b61-bg layer.
+   --------------------------------------------------------------------------- */
+.b61-cta__inner--panel {
+  --cta-body: var(--cta-ink);
+  color: var(--cta-ink);
+}
+
+/* ---------------------------------------------------------------------------
+   MEASURE AND ALIGNMENT
+
+   No Measure control, unlike Prose. A CTA band's column is a property of the
+   pattern rather than a per-instance decision, and Prose already exists for the
+   case where the column is the point.
+
+   Alignment reaches every block, not only the heading group. A centred bullet
+   list sets its own items left, because a centred list is unreadable.
+   --------------------------------------------------------------------------- */
+.b61-cta__inner {
+  max-width: var(--b61-cta-measure);
+  margin: 0 auto;
+}
+
+/* ALIGNMENT IS A SET OF DIALS (1.65.0), not a pair of classes. A class cannot
+   change per breakpoint -- only values coming through css.twig can -- so the
+   alignment classes no longer drive anything (they are still emitted as a
+   styling hook for sites that key on them, and they carry the BASE value) and
+   every rule that used to key on them now reads a custom property instead. css.twig publishes the set on the element root
+   for whichever breakpoints the author actually set; the fallbacks below are
+   this element's default, so an instance that never touched the control emits
+   nothing and renders exactly as it did. */
+.b61-cta__inner { text-align: var(--b61-align-text, center); }
+
+/* Position (1.54.0). Left starts the block on the page's CONTENT COLUMN, the
+   same left edge every other band's content has, instead of the band's padded
+   edge. 100% here is the band's content box, so the offset is half of whatever
+   the band is wider than the column, and 0 once the column fills the band. */
+.b61-cta__inner--pleft {
+  margin-left: max(0px, calc((100% - var(--b61-width)) / 2));
+  margin-right: auto;
+}
+
+.b61-cta__inner--pcenter { margin-inline: auto; }
+
+/* Centred block, left-set text (1.68.0). The column is up to
+   --b61-cta-measure wide and IS centred, but left-set copy hugs its left edge,
+   so a short heading and a 40rem body left the right third empty and the
+   block read as off-centre. Shrink the column to its copy (still capped by
+   the width setting) so the centred thing is the thing you see. */
+.b61-cta__inner--aleft.b61-cta__inner--pcenter { width: fit-content; }
+
+/* Width (1.54.0). Standard is the house CTA measure; Wide is the reading width;
+   Full is the whole content column.
+
+   1.69.1: Wide can never be NARROWER than Standard. It is --b61-width-narrow,
+   which a site sets for its own reasons (St. Mark's: 760px, under the 780px
+   standard), and "Wide" rendering narrower read as the control being broken. */
+.b61-cta__inner--wwide { max-width: max(var(--b61-cta-measure), var(--b61-cta-measure-wide)); }
+.b61-cta__inner--wfull { max-width: var(--b61-width); }
+
+/* ...and the BODY follows the width (1.69.1). Before this it kept its own
+   40rem cap at every width, so Wide and Full moved only the heading's column
+   and a short heading made the whole control look ignored. */
+.b61-cta__inner--wwide .b61-cta__body { max-width: var(--b61-cta-body-measure-wide, 100%); }
+.b61-cta__inner--wfull .b61-cta__body { max-width: var(--b61-cta-body-measure-full, 100%); }
+.b61-cta__body ul,
+.b61-cta__body ol {
+  display: var(--b61-align-list-display, inline-block);
+  text-align: var(--b61-align-list-text, left);
+}
+
+.b61-cta__inner .b61-btn-group { justify-content: var(--b61-align-justify, center); }
+
+/* ---------------------------------------------------------------------------
+   HEADING GROUP
+   --------------------------------------------------------------------------- */
+
+/* inline-block, not block: the eyebrow is centred by the inner's text-align,
+   and a full-width block would centre its TEXT while the box still spanned the
+   column - invisible here, but it breaks the moment a site gives the eyebrow a
+   background or a leading rule. */
+.b61-cta__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-eyebrow-size);
+  font-weight: var(--b61-eyebrow-weight);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: var(--b61-eyebrow-case);
+  margin: 0;
+  color: var(--cta-accent);
+}
+
+.b61-cta__heading {
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-text-h2);
+  line-height: 1.18;
+  margin: 0;
+  color: var(--cta-ink);
+}
+
+/* One heading tag, N spans. Each line is display:block so it breaks without a
+   <br>, and emphasis is a class on the line rather than a separate element -
+   which is what let the heading group drop its position control entirely. */
+.b61-cta__heading-line {
+  display: block;
+}
+
+/* Line-level emphasis and an inline <em> inside a line are the same device, so
+   they get the same treatment. Resolves through --cta-accent, which is gold on
+   the dark band and the text-safe red on light ones. */
+.b61-cta__heading-line--em,
+.b61-cta__heading em {
+  font-style: italic;
+  color: var(--cta-accent);
+}
+
+/* The "second headline" role: display face like the heading, one step down the
+   scale, weight and colour pulled back so two display lines read as a pair
+   rather than as a competition. */
+.b61-cta__subhead {
+  font-family: var(--b61-font-display);
+  font-weight: 400;
+  font-size: var(--b61-text-h3);
+  line-height: 1.25;
+  color: var(--cta-muted);
+  margin: 0;
+}
+
+.b61-cta__subhead em {
+  font-style: italic;
+  color: var(--cta-accent);
+}
+
+/* ---------------------------------------------------------------------------
+   MAIN CONTENT
+   --------------------------------------------------------------------------- */
+
+/* Body keeps its own measure, narrower than the band's column: at the full
+   --b61-cta-measure this copy wrapped to three lines where the approved design
+   wraps to four. Centring re-centres the narrower box inside the wider one. */
+.b61-cta__body {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  max-width: var(--b61-cta-body-measure);
+  margin: 0;
+  color: var(--cta-body);
+}
+
+.b61-cta__body { margin-inline: var(--b61-align-inline, auto); }
+
+.b61-cta__body > *:first-child { margin-top: 0; }
+.b61-cta__body > *:last-child { margin-bottom: 0; }
+.b61-cta__body p { margin: 0 0 var(--b61-cta-body-para-space); }
+.b61-cta__body ul,
+.b61-cta__body ol { margin: 0 0 var(--b61-cta-body-para-space); padding-left: 1.4em; }
+.b61-cta__body li { margin: 0 0 0.5em; }
+
+.b61-cta__body a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.b61-cta__body a:hover { text-decoration-thickness: 2px; }
+
+/* Emphasis - one line that is not body copy. Same device as Prose's and
+   Split's, one scale rather than two. */
+.b61-cta__emphasis {
+  font-family: var(--b61-cta-emphasis-font);
+  font-size: var(--b61-cta-emphasis-size);
+  line-height: var(--b61-cta-emphasis-leading);
+  font-weight: var(--b61-cta-emphasis-weight);
+  color: var(--b61-cta-emphasis-color);
+  margin: 0;
+}
+
+.b61-cta__emphasis em {
+  font-style: italic;
+  color: var(--cta-accent);
+}
+
+/* A pull quote typed as a block and a blockquote typed into the rich-text body
+   get the same look, so editors get one result either way. */
+.b61-cta__quote,
+.b61-cta__body blockquote {
+  margin: 0;
+  padding: var(--b61-space-2xs) 0 var(--b61-space-2xs) var(--b61-space-lg);
+  border: 0;
+  border-left: var(--b61-cta-quote-rule-width) solid var(--b61-cta-quote-rule);
+  font-family: var(--b61-font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--b61-cta-quote-size);
+  line-height: 1.4;
+  color: var(--cta-ink);
+  /* A left rule on a centred band would hang off the centred column's left
+     edge with the text floating away from it, so a quote reads left inside a
+     centred band. The rule IS the quote mark; dropping it to allow centring
+     would make the block indistinguishable from an emphasis line. */
+  text-align: left;
+}
+
+.b61-cta__quote blockquote { margin: 0; }
+
+.b61-cta__quote p,
+.b61-cta__body blockquote p {
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0;
+}
+
+.b61-cta__quote figcaption,
+.b61-cta__body blockquote cite {
+  display: block;
+  margin-top: var(--b61-space-sm);
+  font-family: var(--b61-font-ui);
+  font-style: normal;
+  font-size: var(--b61-text-label);
+  font-weight: 600;
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--cta-muted);
+}
+
+/* ---------------------------------------------------------------------------
+   STACK RHYTHM
+
+   The fixed slot ladder could hard-code its own margins because the order was
+   known. Once any role can follow any role, per-role bottom margins collide. So
+   the gap between stack items is the STACK's job (.b61-block in
+   components.css), and only the seams that need to differ are named here.
+   --------------------------------------------------------------------------- */
+/* The eyebrow has to be a BLOCK stack item, not the inline-block it was.
+
+   As an inline-block it sits in a line box, and a line box is at least as tall
+   as the strut - the inner's own 27.54px line-height. That did not matter while
+   the eyebrow carried its own 24px margin-bottom, because 19 + 24 exceeded the
+   strut and the margin box set the height. Move that gap to the heading's
+   margin-top, as the stack rhythm requires, and the eyebrow's margin box drops
+   to 19px, the strut wins, and every band silently grew 3.4px.
+
+   width:fit-content keeps the box the width of its text, so a site giving the
+   eyebrow a background or a leading rule still gets a shrink-wrapped box - and
+   because it is no longer inline, the inner's text-align cannot centre it, so
+   the centred variant re-centres it with auto margins. */
+.b61-block.b61-cta__eyebrow {
+  display: flex;
+  width: fit-content;
+}
+
+.b61-cta__eyebrow { margin-inline: var(--b61-align-inline, auto); }
+
+/* Icon list (1.73.0): a fit-content block (components.css), placed like the
+   body, so a centred CTA centres the list and each mark stays beside its text. */
+.b61-cta__inner .b61-iconlist { margin-inline: var(--b61-align-inline, auto); }
+
+.b61-cta__eyebrow + .b61-cta__heading {
+  margin-top: var(--b61-cta-eyebrow-space);
+}
+
+.b61-cta__heading + .b61-cta__subhead,
+.b61-cta__subhead + .b61-cta__subhead {
+  margin-top: var(--b61-space-sm);
+}
+
+.b61-cta__heading + .b61-block:not(.b61-cta__subhead) {
+  margin-top: var(--b61-cta-heading-space);
+}
+
+/* A pull quote is a set piece and wants air on both sides regardless of what it
+   lands between - the one block whose spacing is about the block, not the seam. */
+.b61-block + .b61-cta__quote,
+.b61-cta__quote + .b61-block {
+  margin-top: var(--b61-space-lg);
+}
+
+/* The gap above the buttons is a CTA dial (1.48.0), overriding the house
+   --b61-space-lg the button group carries everywhere else. */
+.b61-cta__inner .b61-btn-group {
+  margin-top: var(--b61-cta-actions-space);
+}

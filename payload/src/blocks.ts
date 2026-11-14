@@ -2,6 +2,7 @@ import type { Block, Field } from 'payload'
 import { B61Hero } from './b61/elements/hero/fields'
 import { B61Split } from './b61/elements/split/fields'
 import { B61Prose } from './b61/elements/prose/fields'
+import { B61Cta } from './b61/elements/cta/fields'
 
 // The sections an editor can add, reorder and remove on any page.
 // Each mirrors a Banner 61 design element; the website decides how it looks.
@@ -91,16 +92,4 @@ export const StatsBand: Block = {
   ],
 }
 
-export const CtaBand: Block = {
-  slug: 'ctaBand',
-  admin: { components: { Label: { path: '@/b61/kit/admin/ElementLabel#ElementLabel', clientProps: { name: 'Call to action' } } } },
-  labels: { singular: 'Call to action', plural: 'Calls to action' },
-  fields: [
-    { name: 'heading', type: 'text', required: true },
-    { name: 'body', type: 'textarea' },
-    { ...tone, defaultValue: 'dark' } as Field,
-    button('button', 'Button'),
-  ],
-}
-
-export const sectionBlocks = [B61Hero, B61Split, B61Prose, CardGrid, StatsBand, CtaBand]
+export const sectionBlocks = [B61Hero, B61Split, B61Prose, B61Cta, CardGrid, StatsBand]

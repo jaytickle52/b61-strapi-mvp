@@ -3,21 +3,7 @@
  * The eyebrow rule is shared: styles/kit-instance.css.
  */
 
-/* Text alignment */
-.b61-prose.b61-prose--ta-center {
-  --b61-align-text: center;
-  --b61-align-inline: auto;
-  --b61-align-justify: center;
-  --b61-align-list-display: inline-block;
-  --b61-align-list-text: left;
-}
-.b61-prose.b61-prose--ta-left {
-  --b61-align-text: left;
-  --b61-align-inline: 0;
-  --b61-align-justify: flex-start;
-  --b61-align-list-display: block;
-  --b61-align-list-text: inherit;
-}
+/* Text alignment: shared, styles/kit-instance.css (b61-talign-*). */
 
 /* Heading rule ("Site default" adds no class) */
 .b61-prose--hrule-trailing .b61-prose__heading-line:last-child { display: flex; align-items: center; }

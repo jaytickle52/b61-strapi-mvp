@@ -30,7 +30,7 @@ export default function B61Prose({ block, index = 0 }: { block: ProseBlock; inde
   const bStep = beside && block.columnBalance ? Math.min(Math.max(Math.round(block.columnBalance), 1), 7) : null
   const rootClass = [
     'b61-prose',
-    `b61-prose--ta-${align}`,
+    `b61-talign-${align}`,
     block.eyebrowRule && block.eyebrowRule !== 'site' && `b61-erule-${block.eyebrowRule}`,
     block.headingRule && block.headingRule !== 'site' && `b61-prose--hrule-${block.headingRule}`,
     mStep && 'b61-prose--mstep',

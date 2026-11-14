@@ -1,5 +1,5 @@
 import type { Payload } from 'payload'
-import { demoHeroes, demoProse, demoSplits, ensureDemoImages } from './b61/demo'
+import { demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages } from './b61/demo'
 
 // Fictional demo schools, same content as the Strapi build so the two editors
 // can be compared like for like. SEED_SCHOOL picks one.
@@ -196,8 +196,7 @@ export async function seedDemoSchool(payload: Payload, key: string) {
         { blockType: 'cardGrid', heading: 'Programs', intro: "A path for every stage of your child's growth.",
           source: 'programs', limit: 3, columns: 'three', tone: 'muted' },
         { blockType: 'cardGrid', heading: 'Upcoming events', source: 'upcoming-events', limit: 3, columns: 'three', tone: 'light' },
-        { blockType: 'ctaBand', heading: 'See it for yourself', body: 'The best way to know if we are the right fit is to visit.',
-          tone: 'dark', button: { label: 'Schedule a tour', url: '/visit', style: 'primary' } },
+        demoCta({ image: imgs[3] }),
       ],
     },
     {

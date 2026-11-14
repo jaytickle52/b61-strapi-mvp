@@ -3,6 +3,7 @@ import RichText from "@/components/RichText";
 import B61Hero from "@/b61/elements/hero/Hero";
 import B61Split from "@/b61/elements/split/Split";
 import B61Prose from "@/b61/elements/prose/Prose";
+import B61Cta from "@/b61/elements/cta/Cta";
 import {
   formatDate,
   getEvents,
@@ -123,20 +124,6 @@ function StatsBand({ s }: { s: Section }) {
   );
 }
 
-function CtaBand({ s }: { s: Section }) {
-  return (
-    <section className={`tone-${s.tone ?? "dark"} py-16 sm:py-24`}>
-      <div className={`${wrap} flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between`}>
-        <div className="max-w-2xl">
-          <h2 className="text-3xl sm:text-4xl">{s.heading}</h2>
-          {s.body && <p className="soft mt-3 text-lg">{s.body}</p>}
-        </div>
-        <Btn button={s.button} />
-      </div>
-    </section>
-  );
-}
-
 export default function Sections({ sections }: { sections: Section[] | any[] }) {
   return (
     <>
@@ -147,7 +134,7 @@ export default function Sections({ sections }: { sections: Section[] | any[] }) 
           case "b61Split": return <B61Split key={key} block={s as any} index={i} />;
           case "cardGrid": return <CardGrid key={key} s={s} />;
           case "statsBand": return <StatsBand key={key} s={s} />;
-          case "ctaBand": return <CtaBand key={key} s={s} />;
+          case "b61Cta": return <B61Cta key={key} block={s as any} index={i} />;
           case "b61Prose": return <B61Prose key={key} block={s as any} index={i} />;
           default: return null;
         }

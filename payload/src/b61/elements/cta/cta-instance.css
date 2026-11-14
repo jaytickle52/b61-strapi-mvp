@@ -1,0 +1,8 @@
+/*
+ * B61 CTA Band: per-instance rules (css.twig in the plugin). Text alignment
+ * and the eyebrow rule are shared: styles/kit-instance.css.
+ * Width step: the component sets --b61-cta-wstep inline.
+ */
+.b61-cta--wstep .b61-cta__inner { max-width: var(--b61-cta-wstep); }
+.b61-cta--wstep-narrow .b61-cta__inner .b61-cta__body { max-width: var(--b61-cta-body-measure); }
+.b61-cta--wstep-wide .b61-cta__inner .b61-cta__body { max-width: 100%; }

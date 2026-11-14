@@ -254,3 +254,36 @@ export function demoProse(opts: { heading?: string; body?: unknown; phone?: stri
     entrance: 'on',
   } as const
 }
+
+/**
+ * A B61 CTA Band. With a photo it shows the background treatment: Dark
+ * surface, shade held at 70% or more, centred text. The words carry over from
+ * an existing block when upgrading.
+ */
+export function demoCta(opts: {
+  heading?: string
+  body?: string
+  buttonLabel?: string
+  buttonUrl?: string
+  surface?: 'none' | 'soft' | 'dark' | 'accent'
+  image?: number
+}) {
+  return {
+    blockType: 'b61Cta',
+    eyebrow: 'Admissions',
+    headingLevel: 'auto',
+    lines: [{ text: opts.heading || 'See it for yourself', emphasize: false }],
+    contentBlocks: [{ type: 'body', body: para(opts.body || 'The best way to know if we are the right fit is to visit.') }],
+    buttons: [
+      { label: opts.buttonLabel || 'Schedule a tour', link: { type: 'url', url: opts.buttonUrl || '/visit' }, variant: 'primary' },
+      { label: 'Ask a question', link: { type: 'url', url: '/visit' }, variant: 'light' },
+    ],
+    ...(opts.image ? { image: opts.image, overlayStrength: 75 } : {}),
+    textAlign: 'center',
+    position: 'center',
+    surface: opts.surface ?? (opts.image ? 'dark' : 'soft'),
+    textPanel: 'none',
+    eyebrowRule: 'both',
+    entrance: 'on',
+  } as const
+}

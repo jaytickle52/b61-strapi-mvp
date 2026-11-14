@@ -461,6 +461,108 @@ export interface Page {
             blockType: 'b61Prose';
           }
         | {
+            eyebrow?: string | null;
+            lines?:
+              | {
+                  text: string;
+                  emphasize?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            /**
+             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+             */
+            contentBlocks?:
+              | {
+                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                  body?: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: any;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  } | null;
+                  text?: string | null;
+                  attribution?: string | null;
+                  icon?:
+                    | (
+                        | 'dot'
+                        | 'check'
+                        | 'email'
+                        | 'phone'
+                        | 'location'
+                        | 'calendar'
+                        | 'clock'
+                        | 'link'
+                        | 'star'
+                        | 'heart'
+                        | 'book'
+                        | 'people'
+                        | 'cross'
+                        | 'school'
+                      )
+                    | null;
+                  hasLink?: boolean | null;
+                  link?: {
+                    type?: ('page' | 'url') | null;
+                    page?: (number | null) | Page;
+                    url?: string | null;
+                    newTab?: boolean | null;
+                  };
+                  id?: string | null;
+                }[]
+              | null;
+            buttons?:
+              | {
+                  label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  link?: {
+                    type?: ('page' | 'url') | null;
+                    page?: (number | null) | Page;
+                    url?: string | null;
+                    newTab?: boolean | null;
+                  };
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            image?: (number | null) | Media;
+            /**
+             * Without a text panel the shade stays at least 70% so the words stay readable.
+             */
+            overlayStrength?: number | null;
+            textAlign?: ('left' | 'center') | null;
+            position?: ('left' | 'center') | null;
+            widthStep?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Cta';
+          }
+        | {
             heading?: string | null;
             intro?: string | null;
             /**
@@ -502,22 +604,6 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'statsBand';
-          }
-        | {
-            heading: string;
-            body?: string | null;
-            /**
-             * Background color for this section
-             */
-            tone?: ('light' | 'muted' | 'brand' | 'dark') | null;
-            button?: {
-              label?: string | null;
-              url?: string | null;
-              style?: ('primary' | 'secondary' | 'link') | null;
-            };
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'ctaBand';
           }
       )[]
     | null;
@@ -1147,6 +1233,73 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        b61Cta?:
+          | T
+          | {
+              eyebrow?: T;
+              lines?:
+                | T
+                | {
+                    text?: T;
+                    emphasize?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              contentBlocks?:
+                | T
+                | {
+                    type?: T;
+                    body?: T;
+                    text?: T;
+                    attribution?: T;
+                    icon?: T;
+                    hasLink?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                          newTab?: T;
+                        };
+                    id?: T;
+                  };
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    variant?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                          newTab?: T;
+                        };
+                    fullWidth?: T;
+                    id?: T;
+                  };
+              image?: T;
+              overlayStrength?: T;
+              textAlign?: T;
+              position?: T;
+              widthStep?: T;
+              padTop?: T;
+              padBottom?: T;
+              surface?: T;
+              textPanel?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              id?: T;
+              blockName?: T;
+            };
         cardGrid?:
           | T
           | {
@@ -1179,22 +1332,6 @@ export interface PagesSelect<T extends boolean = true> {
                     value?: T;
                     label?: T;
                     id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        ctaBand?:
-          | T
-          | {
-              heading?: T;
-              body?: T;
-              tone?: T;
-              button?:
-                | T
-                | {
-                    label?: T;
-                    url?: T;
-                    style?: T;
                   };
               id?: T;
               blockName?: T;

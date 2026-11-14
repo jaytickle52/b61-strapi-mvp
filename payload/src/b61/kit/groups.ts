@@ -84,7 +84,8 @@ export const ICON_OPTIONS: [string, string][] = [
  * pull quotes and icon rows, in any order. Consecutive icon rows render as one
  * list. Shared by Split, Prose and CTA Band.
  */
-export function contentBlocksField(o: { emphasisScale?: boolean; dividers?: boolean } = {}): ArrayField {
+export function contentBlocksField(o: { emphasisScale?: boolean; dividers?: boolean; quotePhoto?: boolean } = {}): ArrayField {
+  const quotePhoto = o.quotePhoto !== false
   const is = (t: string) => (_: unknown, s: any) => (s?.type ?? 'body') === t
   return list(
     'contentBlocks',
@@ -113,8 +114,10 @@ export function contentBlocksField(o: { emphasisScale?: boolean; dividers?: bool
         type: 'row',
         admin: { condition: is('quote') },
         fields: [
-          { name: 'attribution', label: 'Attribution', type: 'text', admin: { width: '60%' } },
-          { name: 'photo', label: 'Photo', type: 'upload', relationTo: 'media', filterOptions: onlyImages, admin: { width: '40%' } },
+          { name: 'attribution', label: 'Attribution', type: 'text', admin: { width: quotePhoto ? '60%' : '100%' } },
+          ...(quotePhoto
+            ? [{ name: 'photo', label: 'Photo', type: 'upload', relationTo: 'media', filterOptions: onlyImages, admin: { width: '40%' } } as Field]
+            : []),
         ],
       },
       {

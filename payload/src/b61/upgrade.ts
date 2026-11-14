@@ -1,5 +1,5 @@
 import type { Payload, PayloadRequest } from 'payload'
-import { demoHeroes, demoProse, demoSplits, ensureDemoImages } from './demo'
+import { demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages } from './demo'
 import { PROFILES } from '../seed'
 
 /*
@@ -112,5 +112,43 @@ export async function upgradeDemoProse(
     }
     await payload.update({ collection: 'pages', id: pageId, data: { sections, _status: 'published' }, req })
     payload.logger.info(`[b61] Converted ${blocks.length} Text block(s) to B61 Prose on "${page.title}"`)
+  }
+}
+
+/*
+ * Run once by the b61_cta migration. Each old "Call to action" block becomes a
+ * B61 CTA Band in the same place, keeping its heading, body and button. Tone
+ * maps to Surface (dark > Dark, muted > Light wash, brand > Accent, light >
+ * None). On Home it also gets a demo background photo.
+ */
+export async function upgradeDemoCta(
+  payload: Payload,
+  req: PayloadRequest | undefined,
+  old: { page: number; pos: number; heading: string | null; body: string | null; tone: string | null; label: string | null; url: string | null }[],
+) {
+  if (!old.length) return
+  const settings = await payload.findGlobal({ slug: 'school-settings', depth: 0, req })
+  const imgs = await ensureDemoImages(payload, { a: settings.primaryColor || '#1F3A5F', b: settings.secondaryColor || '#C8A24A' }, req)
+  const tone: Record<string, 'none' | 'soft' | 'dark' | 'accent'> = { dark: 'dark', muted: 'soft', brand: 'accent', light: 'none' }
+  const byPage = new Map<number, typeof old>()
+  for (const o of old) byPage.set(o.page, [...(byPage.get(o.page) ?? []), o])
+
+  for (const [pageId, blocks] of byPage) {
+    const page = await payload.findByID({ collection: 'pages', id: pageId, depth: 0, req }).catch(() => null)
+    if (!page) continue
+    const sections = [...(page.sections ?? [])]
+    for (const o of [...blocks].sort((a, b) => a.pos - b.pos)) {
+      const cta = demoCta({
+        heading: o.heading ?? undefined,
+        body: o.body ?? undefined,
+        buttonLabel: o.label ?? undefined,
+        buttonUrl: o.url ?? undefined,
+        surface: page.slug === 'home' ? 'dark' : tone[o.tone ?? 'dark'] ?? 'dark',
+        image: page.slug === 'home' ? imgs[3] : undefined,
+      })
+      sections.splice(Math.min(o.pos - 1, sections.length), 0, cta as any)
+    }
+    await payload.update({ collection: 'pages', id: pageId, data: { sections, _status: 'published' }, req })
+    payload.logger.info(`[b61] Converted ${blocks.length} Call to action block(s) to B61 CTA Band on "${page.title}"`)
   }
 }
