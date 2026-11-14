@@ -1,8 +1,9 @@
 import qs from "qs";
 import { draftMode } from "next/headers";
+import { secret } from "@/lib/secrets";
 
 const STRAPI_URL = (process.env.STRAPI_URL || "http://localhost:1337").replace(/\/$/, "");
-const TOKEN = process.env.STRAPI_API_TOKEN || "";
+const TOKEN = secret("FRONTEND_API_TOKEN", "STRAPI_API_TOKEN");
 
 export type Media = { url: string; alternativeText?: string | null; width?: number; height?: number } | null;
 export type Button = { label: string; url: string; style?: "primary" | "secondary" | "link" };

@@ -29,26 +29,24 @@ npm run build && npm run start                       # http://localhost:3000
 
 ## Environment variables
 
-**cms (each school's Strapi):**
+Each school needs **one secret**, `SCHOOL_SECRET` (a long random string), set to the same value on its Strapi and its website. Every other secret (Strapi's keys and salts, the website's read token, the preview and refresh secrets) is derived from it. Any of those can still be set explicitly to override.
 
-| Variable | Purpose |
+**cms (each school's Strapi on Railway):**
+
+| Variable | Value |
 | --- | --- |
-| `DATABASE_CLIENT` | `postgres` on Railway (`sqlite` locally) |
-| `DATABASE_URL` | Railway Postgres connection URL |
-| `APP_KEYS`, `API_TOKEN_SALT`, `ADMIN_JWT_SECRET`, `TRANSFER_TOKEN_SALT`, `JWT_SECRET`, `ENCRYPTION_KEY` | Strapi secrets; unique random values per school |
-| `FRONTEND_URL` | The school's website URL (for preview and refresh) |
-| `FRONTEND_API_TOKEN` | Long random string; the website uses it to read content |
-| `PREVIEW_SECRET` | Shared with the website's `PREVIEW_SECRET` |
-| `REVALIDATE_SECRET` | Shared with the website's `REVALIDATE_SECRET` |
+| `SCHOOL_SECRET` | Long random string; Railway can generate one |
+| `DATABASE_CLIENT` | `postgres` |
+| `DATABASE_URL` | `${{Postgres.DATABASE_URL}}` (Railway reference) |
+| `FRONTEND_URL` | The school's website URL |
 | `SEED_DEMO` / `SEED_SCHOOL` | `true` / `cedar-ridge` or `harbor-oaks` for demo content |
 
-**web (each school's website):**
+**web (each school's website on Vercel):**
 
-| Variable | Purpose |
+| Variable | Value |
 | --- | --- |
-| `STRAPI_URL` | That school's Strapi URL |
-| `STRAPI_API_TOKEN` | Same value as the school's `FRONTEND_API_TOKEN` |
-| `PREVIEW_SECRET`, `REVALIDATE_SECRET` | Same values as in cms |
+| `SCHOOL_SECRET` | Same value as that school's Strapi |
+| `STRAPI_URL` | That school's Railway URL |
 | `PARENT_PASSWORD` | Shared password for the parent feed (stand-in for real parent logins) |
 | `SCHOOL_TIMEZONE` | Optional, defaults to `America/New_York` |
 
@@ -59,7 +57,7 @@ npm run build && npm run start                       # http://localhost:3000
 3. Back in Railway, set `FRONTEND_URL` to the Vercel URL and redeploy.
 4. Open `<railway-url>/admin` and create the first admin account.
 
-**Second school:** repeat with new secrets and `SEED_SCHOOL=harbor-oaks`. Same code, different settings: that is the fleet test.
+**Second school:** repeat with a new `SCHOOL_SECRET` and `SEED_SCHOOL=harbor-oaks`. Same code, different settings: that is the fleet test.
 
 ## MVP limits (on purpose)
 

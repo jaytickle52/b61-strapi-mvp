@@ -1,19 +1,20 @@
 import type { Core } from '@strapi/strapi';
+import { secret as derived } from './secrets';
 
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Admin => ({
   auth: {
-    secret: env('ADMIN_JWT_SECRET')!,
+    secret: derived('ADMIN_JWT_SECRET'),
   },
   apiToken: {
-    salt: env('API_TOKEN_SALT')!,
+    salt: derived('API_TOKEN_SALT'),
   },
   transfer: {
     token: {
-      salt: env('TRANSFER_TOKEN_SALT')!,
+      salt: derived('TRANSFER_TOKEN_SALT'),
     },
   },
   secrets: {
-    encryptionKey: env('ENCRYPTION_KEY')!,
+    encryptionKey: derived('ENCRYPTION_KEY'),
   },
   flags: {
     nps: env.bool('FLAG_NPS', false),
@@ -27,7 +28,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Admin => 
       allowedOrigins: [env('FRONTEND_URL', '')].filter(Boolean),
       async handler(uid: string, { documentId, status }: { documentId: string; status?: string }) {
         const base = env('FRONTEND_URL', '').replace(/\/$/, '');
-        const secret = env('PREVIEW_SECRET', '');
+        const secret = derived('PREVIEW_SECRET');
         const doc: any = await strapi.documents(uid as any).findOne({ documentId, status: 'draft' as any });
         const slug = doc?.slug;
         const paths: Record<string, string | null> = {

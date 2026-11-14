@@ -1,5 +1,6 @@
 import type { Core } from '@strapi/strapi';
 import { seedDemoSchool } from './seed';
+import { secret } from '../config/secrets';
 
 // Content types whose changes should refresh the website and parent feed.
 const WATCHED_MODELS = [
@@ -16,14 +17,14 @@ let revalidateTimer: NodeJS.Timeout | null = null;
 /** Tell the frontend to refresh. Debounced so a burst of saves sends one request. */
 function scheduleRevalidate(strapi: Core.Strapi) {
   const url = process.env.FRONTEND_URL;
-  const secret = process.env.REVALIDATE_SECRET;
-  if (!url || !secret) return;
+  if (!url) return;
+  const revalidateSecret = secret('REVALIDATE_SECRET');
   if (revalidateTimer) clearTimeout(revalidateTimer);
   revalidateTimer = setTimeout(async () => {
     try {
       const res = await fetch(`${url.replace(/\/$/, '')}/api/revalidate`, {
         method: 'POST',
-        headers: { 'x-revalidate-secret': secret },
+        headers: { 'x-revalidate-secret': revalidateSecret },
       });
       strapi.log.info(`[b61] frontend revalidate -> ${res.status}`);
     } catch (err) {
@@ -38,11 +39,7 @@ function scheduleRevalidate(strapi: Core.Strapi) {
  * alone, without anyone copying a token out of the admin panel.
  */
 async function ensureFrontendToken(strapi: Core.Strapi) {
-  const key = process.env.FRONTEND_API_TOKEN;
-  if (!key) {
-    strapi.log.warn('[b61] FRONTEND_API_TOKEN not set; the website cannot read content.');
-    return;
-  }
+  const key = secret('FRONTEND_API_TOKEN');
   const tokenService = strapi.service('admin::api-token') as any;
   const hashed = tokenService.hash(key);
   const existing = await strapi.db.query('admin::api-token').findOne({ where: { name: 'Website (read-only)' } });
