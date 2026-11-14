@@ -1,7 +1,7 @@
 import { defineElement, panel } from '../../kit/element'
 import { segmented, toggle } from '../../kit/controls'
 import { bandHeadFields, entranceField, eyebrowRuleField, headingAlignField, list, paddingFields, surfaceField } from '../../kit/groups'
-import { innerField } from '../../inner'
+import { innerField, slideBlocks } from '../../inner'
 
 /*
  * B61 TABS, port of Banner 61 Elements' B61 Tabs + B61 Tab (plugin 1.77.1).
@@ -17,7 +17,7 @@ export const B61Tabs = defineElement({
     panel('Heading', bandHeadFields({ intro: true })),
     list('tabs', 'Tabs', 'Tab', [
       { name: 'label', label: 'Label', type: 'text', required: true },
-      innerField('content', 'Panel', { description: 'What shows when this tab is selected.' }),
+      innerField('content', 'Panel', { only: slideBlocks, description: 'What shows when this tab is selected.' }),
     ]),
     { ...toggle('firstItemOpen', 'First tab open'), defaultValue: true } as any,
   ],

@@ -33,12 +33,15 @@ export const innerBlocks: Block[] = [
   B61Divider,
 ]
 
-export function innerField(name: string, label: string, o: { rail?: boolean; description?: string; condition?: any } = {}): BlocksField {
+/** The short set for a slide or a tab panel. */
+export const slideBlocks: Block[] = [B61Testimonial, B61Split, B61Prose]
+
+export function innerField(name: string, label: string, o: { rail?: boolean; only?: Block[]; description?: string; condition?: any } = {}): BlocksField {
   return {
     name,
     label,
     type: 'blocks',
-    blocks: o.rail ? [B61Rail, ...innerBlocks] : innerBlocks,
+    blocks: o.only ?? (o.rail ? [B61Rail, ...innerBlocks] : innerBlocks),
     labels: { singular: 'Element', plural: 'Elements' },
     admin: { initCollapsed: true, description: o.description, condition: o.condition },
   }

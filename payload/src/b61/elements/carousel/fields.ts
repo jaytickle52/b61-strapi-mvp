@@ -1,7 +1,7 @@
 import { defineElement, panel } from '../../kit/element'
 import { dropdown, segmented, toggle } from '../../kit/controls'
 import { bandHeadFields, entranceField, eyebrowRuleField, headingAlignField, list, paddingFields, surfaceField } from '../../kit/groups'
-import { innerField } from '../../inner'
+import { innerField, slideBlocks } from '../../inner'
 
 /*
  * B61 CAROUSEL, port of Banner 61 Elements' B61 Carousel + Carousel Slide
@@ -19,7 +19,7 @@ export const B61Carousel = defineElement({
     ]),
     list('slides', 'Slides', 'Slide', [
       { name: 'label', label: 'Name for screen readers (optional)', type: 'text' },
-      innerField('content', 'Slide content'),
+      innerField('content', 'Slide content', { only: slideBlocks }),
     ]),
   ],
   design: {
