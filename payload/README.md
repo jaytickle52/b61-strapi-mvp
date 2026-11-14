@@ -41,6 +41,16 @@ section label; the shared controls (segmented buttons, step sliders, compact lin
 and field groups (heading, buttons, photo, padding, eyebrow rule, entrance) keep
 every element's form the same.
 
+All 20 plugin elements are ported: Hero, Split, Prose, Card Grid, Stats Band, Gallery,
+Testimonial, Accordion, Tabs (+ Tab), Pillars, Carousel (+ Slide), Section (+ Sidebar),
+Rail, CTA Band, Framed Image, Button Bar and Divider. The containers (Tabs, Carousel,
+Section) hold other elements as nested blocks; the set they accept is `src/b61/inner.ts`
+(no container inside a container). `/elements` is the Element library page, showing
+every element; it is rebuilt on start when `LIBRARY_VERSION` in `src/b61/library.ts` changes.
+
+The site header and footer (`src/b61/chrome/`) are edited in School settings > Header
+and Footer. Menu items are a link, a dropdown or a mega menu; phones get a slide-in menu.
+
 ## Run locally
 
 ```bash

@@ -1,0 +1,168 @@
+/*
+ * B61 Carousel (1.68.0) — the band: region, head and padding. The track,
+ * controls and status are shared with Card Grid's carousel layout and live in
+ * assets/components.css (CAROUSEL).
+ *
+ * Tokens only: colour, type, radius and spacing resolve through --b61-*.
+ */
+
+/* ---------------------------------------------------------------------------
+   DIALS — zero specificity, so a site re-skins by redeclaring.
+   --------------------------------------------------------------------------- */
+:where(.b61-car__region) {
+  --b61-car-eyebrow-space: var(--b61-space-md);
+  --b61-car-heading-space: var(--b61-space-md);
+  --b61-car-head-space: var(--b61-space-xl);
+}
+
+.b61-carousel {
+  width: 100%;
+  align-self: stretch;
+  text-align: left;
+}
+
+/* ---- Region ---------------------------------------------------------------
+   Locals read the --b61-on-bg-* globals first, so a band class on this region
+   or a painted B61 Section around it sets the palette. */
+.b61-car__region {
+  --car-ink: var(--b61-on-bg-ink, var(--b61-ink));
+  --car-muted: var(--b61-on-bg-muted, var(--b61-muted));
+  --car-accent: var(--b61-on-bg-accent, var(--b61-accent-text));
+  --car-heading-accent: var(--b61-on-bg-accent, var(--b61-heading-accent));
+  --band-pt: var(--b61-pad-block);
+  --band-pb: var(--b61-pad-block);
+  padding: var(--band-pt) var(--b61-pad-inline) var(--band-pb);
+  color: var(--car-ink);
+}
+
+.b61-car__region--pt-tight { --band-pt: var(--b61-pad-block-tight); }
+.b61-car__region--pt-none { --band-pt: 0px; }
+.b61-car__region--pb-tight { --band-pb: var(--b61-pad-block-tight); }
+.b61-car__region--pb-none { --band-pb: 0px; }
+
+.b61-car__inner {
+  max-width: var(--b61-width);
+  margin-inline: auto;
+  position: relative;
+}
+
+/* ---- Head -----------------------------------------------------------------
+   Text on the left; with Controls > Position = Top right, the controls sit on
+   the same row, aligned to the last line of the heading (the comp's layout). */
+.b61-car__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--b61-space-lg);
+  margin-bottom: var(--b61-car-head-space);
+}
+
+.b61-car__head-text {
+  min-width: 0;
+  flex: 0 1 auto;
+  max-width: var(--b61-width-narrow);
+}
+
+.b61-car__head > .b61-car__controls {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 767px) {
+  .b61-car__head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.b61-car__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-eyebrow-size);
+  font-weight: var(--b61-eyebrow-weight);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: var(--b61-eyebrow-case);
+  color: var(--car-accent);
+  margin: 0;
+}
+
+/* As a stack item the eyebrow is a block-level flex box, or it sits in a line
+   box as tall as the strut and the seam grows (the CTA port's bug). */
+.b61-block.b61-car__eyebrow {
+  display: flex;
+}
+
+.b61-car__heading {
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-text-h2);
+  line-height: 1.1;
+  color: var(--car-ink);
+  margin: 0;
+}
+
+.b61-car__heading-line {
+  display: block;
+}
+
+.b61-car__heading-line--em,
+.b61-car__heading em {
+  font-style: italic;
+  color: var(--car-heading-accent);
+}
+
+.b61-car__subhead {
+  font-family: var(--b61-font-display);
+  font-weight: 400;
+  font-size: var(--b61-text-h3);
+  line-height: 1.25;
+  color: var(--car-muted);
+  margin: 0;
+}
+
+.b61-car__intro {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  color: var(--car-muted);
+  max-width: 62ch;
+}
+
+.b61-car__intro > *:first-child { margin-top: 0; }
+.b61-car__intro > *:last-child { margin-bottom: 0; }
+.b61-car__intro p { margin: 0 0 1.2em; }
+
+.b61-car__eyebrow + .b61-car__heading { margin-top: var(--b61-car-eyebrow-space); }
+.b61-car__heading + .b61-car__subhead,
+.b61-car__subhead + .b61-car__subhead { margin-top: var(--b61-space-sm); }
+.b61-car__heading + .b61-block:not(.b61-car__subhead),
+.b61-car__subhead + .b61-car__intro { margin-top: var(--b61-car-heading-space); }
+
+/* Controls placement (below / sides / head row) is shared with Card Grid:
+   assets/components.css, CAROUSEL, keyed on .b61-car--ctl-*. */
+
+/* ---------------------------------------------------------------------------
+   SLIDES: THE CAROUSEL IS THE BAND
+   Same rule as B61 Section and B61 Tabs. A band element inside a slide would
+   double this band's padding, so the track zeroes the pad tokens; a child
+   that PAINTS its own ground (a dark Split, an accent Testimonial) gets the
+   real values back from the KEEP dials, or its copy would touch its edges.
+   Cards (.b61-card) pad from --b61-card-pad and are left alone.
+   --------------------------------------------------------------------------- */
+:where(.b61-car__region):not(:where(.b61-car__track .b61-car__region)) {
+  --b61-car-keep-block: var(--b61-section-keep-block, var(--b61-pad-block));
+  --b61-car-keep-tight: var(--b61-section-keep-tight, var(--b61-pad-block-tight));
+  --b61-car-keep-inline: var(--b61-section-keep-inline, var(--b61-pad-inline));
+}
+
+.b61-carousel .b61-car__track {
+  --b61-pad-block: 0px;
+  --b61-pad-block-tight: 0px;
+  --b61-pad-inline: 0px;
+}
+
+.b61-carousel .b61-car__track :is(.b61-surface--plain, .b61-surface--soft, .b61-surface--dark, .b61-surface--accent):not(.b61-card) {
+  --b61-pad-block: var(--b61-car-keep-block);
+  --b61-pad-block-tight: var(--b61-car-keep-tight);
+  --b61-pad-inline: var(--b61-car-keep-inline);
+}

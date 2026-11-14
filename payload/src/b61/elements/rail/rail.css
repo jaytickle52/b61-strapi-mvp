@@ -1,0 +1,154 @@
+/* ---------------------------------------------------------------------------
+   B61 RAIL — the interior-page sidebar panel.
+
+   DIALS, declared on the rail at zero specificity so a site re-skins by
+   redeclaring and never edits this file.
+
+   Guard rule 6: every gap reads a dial. Guard rule 5: text-adjacent lengths
+   are rem and box-spacing lengths are px — the stack and link gaps space COPY
+   and so are rem; the panel-to-picture gap spaces two BOXES and so is px, the
+   same call Card_Grid's grid gap made.
+   --------------------------------------------------------------------------- */
+:where(.b61-rail) {
+  /* Between the button group and the link list inside the panel. */
+  --b61-rail-stack-gap: 1.75rem;
+  /* Between the list heading and the first link. */
+  --b61-rail-label-gap: 0.75rem;
+  /* Between links. Tight, because each link already carries the shared
+     button min-height as its tap target and looks airy without help. */
+  --b61-rail-link-gap: 0.125rem;
+  /* The arrow's colour. It reads the RULE accent rather than the link's own
+     colour, because the arrow is a marker — the sibling of a rule or a bullet —
+     and on a school whose accent is gold that is exactly the reference design.
+     On a school whose accent is a red close to its link colour — St Mark's is
+     one, where the two land a shade apart — it can read as a mistake rather
+     than a decision, so it is a DIAL: point it at
+     --b61-on-bg-accent to collapse it into the link, or at --b61-on-bg-muted to
+     make it recede. */
+  --b61-rail-arrow-color: var(--b61-rule-accent, var(--b61-accent));
+  /* A chosen icon's box. em, not rem: the mark should track the link's own
+     text size, so a site that scales the panel's type scales its marks with it. */
+  --b61-rail-icon-size: 1.1em;
+  /* How far below the viewport top a sticky rail parks. A site with a fixed
+     header retunes this once rather than per page. */
+  --b61-rail-sticky-top: 24px;
+}
+
+.b61-rail {
+  display: block;
+  width: 100%;
+}
+
+.b61-rail__inner {
+  display: block;
+}
+
+/* Sticky is on the INNER, not the region: the region is the grid/flex child
+   the column laid out, and a sticky element cannot stick against its own
+   containing block. Sticking the inner lets it travel the height of whatever
+   the column gives the rail. */
+.b61-rail__inner--sticky {
+  position: sticky;
+  top: var(--b61-rail-sticky-top);
+}
+
+/* ---- Panel -----------------------------------------------------------------
+   PAINTS NOTHING ITSELF. Ground, palette and card shape all arrive as shared
+   classes from /assets — b61-surface--X, b61-band--X and b61-card. This block
+   only arranges what is inside. That is the whole point of the 1.26.0 split:
+   an element that needs a card asks for one instead of inventing it.
+   --------------------------------------------------------------------------- */
+.b61-rail__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--b61-rail-stack-gap);
+}
+
+/* The shared group centres its buttons and adds a top margin meant for the
+   foot of a band. Neither is right at the top of a rail panel, where the
+   button IS the first thing. */
+.b61-rail__actions.b61-btn-group {
+  margin-top: 0;
+  justify-content: stretch;
+}
+
+/* ---- Link list -------------------------------------------------------------
+   The heading is a micro-label in the house uppercase treatment, sharing the
+   one tracking token every uppercase label in the library uses.
+   --------------------------------------------------------------------------- */
+.b61-rail__nav {
+  display: block;
+}
+
+.b61-rail__label {
+  margin: 0 0 var(--b61-rail-label-gap);
+  font-family: var(--b61-font-ui);
+  font-size: var(--b61-text-sm);
+  font-weight: 700;
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--b61-on-bg-ink, var(--b61-ink));
+}
+
+.b61-rail__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--b61-rail-link-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.b61-rail__item {
+  display: block;
+}
+
+/* A SCOPED RETUNE of the shared .b61-link, not a new link. The shared one is
+   centred and horizontally padded because it normally sits in a button row;
+   in a vertical list it has to start at the content edge or the arrows will
+   not line up with the heading above them. Nothing is added to the shared
+   enum — see the settled note in [[b61-hero-cardgrid-migration]]. */
+.b61-rail__link {
+  justify-content: flex-start;
+  width: 100%;
+  padding-inline: 0;
+  text-decoration: none;
+  color: var(--b61-on-bg-accent, var(--b61-accent-text));
+}
+
+.b61-rail__link:hover,
+.b61-rail__link:focus-visible {
+  color: var(--b61-on-bg-accent, var(--b61-accent-text));
+  text-decoration: underline;
+}
+
+/* The arrow LEADS in a rail, unlike every other use of .b61-link where it
+   trails. It is the list's bullet, so it has to sit in the gutter; the shared
+   nudge on hover still applies because it is the same class. */
+/* EVERY mark gets the SAME BOX, whether it is the default arrow or a chosen
+   icon. Measured before this was here: an icon boxed at 17px and a bare arrow
+   glyph at 14px left their labels 3px apart, so a list mixing the two rendered
+   with a ragged text edge. Sizing the box rather than the glyph means the
+   label always starts at the same place no matter what each row chose. */
+.b61-rail__arrow {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--b61-rail-icon-size);
+  height: var(--b61-rail-icon-size);
+  color: var(--b61-rail-arrow-color);
+}
+
+/* A chosen icon arrives as raw SVG from Breakdance's picker and sets no size
+   of its own. currentColor is what lets an arbitrary icon inherit the arrow
+   colour dial and the shared hover nudge instead of bringing its own paint. */
+.b61-rail__arrow svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.b61-rail__link-text {
+  flex: 1 1 auto;
+}

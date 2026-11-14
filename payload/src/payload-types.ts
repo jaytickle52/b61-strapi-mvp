@@ -778,6 +778,3724 @@ export interface Page {
                   id?: string | null;
                 }[]
               | null;
+            intro?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            items?:
+              | {
+                  title: string;
+                  subtitle?: string | null;
+                  body?: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: any;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  } | null;
+                  id?: string | null;
+                }[]
+              | null;
+            buttons?:
+              | {
+                  label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  link?: {
+                    type?: ('page' | 'url') | null;
+                    page?: (number | null) | Page;
+                    url?: string | null;
+                    newTab?: boolean | null;
+                  };
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            headingAlign?: ('left' | 'center') | null;
+            widthStep?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            itemStyle?: ('divided' | 'boxed' | 'separated') | null;
+            iconStyle?: ('chevron' | 'plusminus') | null;
+            singleOpen?: boolean | null;
+            firstItemOpen?: boolean | null;
+            showNumbers?: boolean | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Accordion';
+          }
+        | {
+            eyebrow?: string | null;
+            lines?:
+              | {
+                  text: string;
+                  emphasize?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            intro?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            tabs?:
+              | {
+                  label: string;
+                  /**
+                   * What shows when this tab is selected.
+                   */
+                  content?:
+                    | (
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            /**
+                             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                             */
+                            contentBlocks?:
+                              | {
+                                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  text?: string | null;
+                                  attribution?: string | null;
+                                  photo?: (number | null) | Media;
+                                  icon?:
+                                    | (
+                                        | 'dot'
+                                        | 'check'
+                                        | 'email'
+                                        | 'phone'
+                                        | 'location'
+                                        | 'calendar'
+                                        | 'clock'
+                                        | 'link'
+                                        | 'star'
+                                        | 'heart'
+                                        | 'book'
+                                        | 'people'
+                                        | 'cross'
+                                        | 'school'
+                                      )
+                                    | null;
+                                  hasLink?: boolean | null;
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  scale?: ('regular' | 'display') | null;
+                                  divider?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headPosition?: ('above' | 'beside') | null;
+                            columnBalance?: number | null;
+                            textAlign?: ('left' | 'center') | null;
+                            /**
+                             * Where the text column sits in the band.
+                             */
+                            position?: ('left' | 'center') | null;
+                            measureStep?: number | null;
+                            headingWidth?: ('text' | 'full') | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            iconlistStyle?: ('standard' | 'links') | null;
+                            iconlistEdges?: boolean | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            headingRule?: ('site' | 'none' | 'trailing') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Prose';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            /**
+                             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                             */
+                            contentBlocks?:
+                              | {
+                                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  text?: string | null;
+                                  attribution?: string | null;
+                                  photo?: (number | null) | Media;
+                                  icon?:
+                                    | (
+                                        | 'dot'
+                                        | 'check'
+                                        | 'email'
+                                        | 'phone'
+                                        | 'location'
+                                        | 'calendar'
+                                        | 'clock'
+                                        | 'link'
+                                        | 'star'
+                                        | 'heart'
+                                        | 'book'
+                                        | 'people'
+                                        | 'cross'
+                                        | 'school'
+                                      )
+                                    | null;
+                                  hasLink?: boolean | null;
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            media?: ('photo' | 'gallery' | 'video') | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image?: (number | null) | Media;
+                            caption?: string | null;
+                            images?:
+                              | {
+                                  image: number | Media;
+                                  caption?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            columns?: ('1' | '2' | '3') | null;
+                            /**
+                             * YouTube or Vimeo. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                            imageSide?: ('left' | 'right') | null;
+                            verticalPosition?: ('top' | 'center') | null;
+                            stackOrder?: ('text' | 'media') | null;
+                            columnHeight?: ('fit' | 'fill') | null;
+                            overlap?: boolean | null;
+                            headingAlign?: ('left' | 'center') | null;
+                            columnBalance?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                            frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Split';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            intro?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff') | null;
+                            limit?: number | null;
+                            mediaType?: ('image' | 'icon' | 'none') | null;
+                            cards?:
+                              | {
+                                  image?: (number | null) | Media;
+                                  icon?:
+                                    | (
+                                        | 'check'
+                                        | 'email'
+                                        | 'phone'
+                                        | 'location'
+                                        | 'calendar'
+                                        | 'clock'
+                                        | 'link'
+                                        | 'star'
+                                        | 'heart'
+                                        | 'book'
+                                        | 'people'
+                                        | 'cross'
+                                        | 'school'
+                                      )
+                                    | null;
+                                  eyebrow?: string | null;
+                                  title?: string | null;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  /**
+                                   * Shows a "Read more"-style link. Leave empty to link the title.
+                                   */
+                                  linkText?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            arrangement?: ('grid' | 'carousel') | null;
+                            columns?: ('1' | '2' | '3' | '4') | null;
+                            textAlign?: ('left' | 'center') | null;
+                            advance?: ('one' | 'view') | null;
+                            peek?: ('none' | 'small' | 'medium' | 'large') | null;
+                            controlsPosition?:
+                              | ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden')
+                              | null;
+                            showCounter?: boolean | null;
+                            showProgress?: boolean | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            cardStyle?: ('plain' | 'flat' | 'bordered' | 'overlay') | null;
+                            cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
+                            imageShape?: ('fixed' | 'custom') | null;
+                            ratioW?: number | null;
+                            ratioH?: number | null;
+                            cardTextPosition?: ('top' | 'center' | 'bottom') | null;
+                            mediaRound?: boolean | null;
+                            iconSize?: ('sm' | 'md' | 'lg') | null;
+                            showNumbers?: boolean | null;
+                            ctaCase?: ('upper' | 'normal') | null;
+                            ctaSize?: ('sm' | 'md' | 'lg') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            cardSurface?: ('light' | 'soft' | 'primary') | null;
+                            cardOverlay?: ('none' | 'gradient' | 'wash') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61CardGrid';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            intro?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            stats?:
+                              | {
+                                  figure?: string | null;
+                                  label?: string | null;
+                                  note?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            columns?: ('1' | '2' | '3' | '4') | null;
+                            labelPosition?: ('below' | 'above') | null;
+                            textAlign?: ('left' | 'center') | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            itemStyle?: ('plain' | 'divided' | 'boxed' | 'inline') | null;
+                            flushEdges?: boolean | null;
+                            figureScale?: ('large' | 'medium' | 'small') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61StatsBand';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            intro?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            media?: ('photo' | 'gallery' | 'video') | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image?: (number | null) | Media;
+                            caption?: string | null;
+                            images?:
+                              | {
+                                  image: number | Media;
+                                  caption?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            scrollHint?: string | null;
+                            /**
+                             * YouTube or Vimeo. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            galleryLayout?: ('strip' | 'grid' | 'masonry') | null;
+                            /**
+                             * A strip always has its text above.
+                             */
+                            textPosition?: ('above' | 'beside') | null;
+                            headingAlign?: ('left' | 'center') | null;
+                            balanceStep?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            itemSize?: ('small' | 'medium' | 'large') | null;
+                            columns?: ('2' | '3' | '4') | null;
+                            imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Gallery';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            quote: string;
+                            attribution?: string | null;
+                            /**
+                             * A faint logo behind the quote (optional).
+                             */
+                            watermark?: (number | null) | Media;
+                            textAlign?: ('left' | 'center') | null;
+                            textStyle?: ('italic' | 'normal') | null;
+                            widthStep?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            showMark?: boolean | null;
+                            markRoom?: boolean | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Testimonial';
+                          }
+                        | {
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image: number | Media;
+                            imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide' | 'custom') | null;
+                            imageHeight?: ('360px' | '460px' | '560px' | '680px') | null;
+                            ratioW?: number | null;
+                            ratioH?: number | null;
+                            flipFrame?: boolean | null;
+                            widthStep?: number | null;
+                            frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61FramedImage';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            intro?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            items?:
+                              | {
+                                  title: string;
+                                  subtitle?: string | null;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingAlign?: ('left' | 'center') | null;
+                            widthStep?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            itemStyle?: ('divided' | 'boxed' | 'separated') | null;
+                            iconStyle?: ('chevron' | 'plusminus') | null;
+                            singleOpen?: boolean | null;
+                            firstItemOpen?: boolean | null;
+                            showNumbers?: boolean | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Accordion';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            intro?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            items?:
+                              | {
+                                  title: string;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  /**
+                                   * To set the focal point, click the pencil on the photo, then Edit image.
+                                   */
+                                  image?: (number | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            firstItemOpen?: boolean | null;
+                            tabPosition?: ('left' | 'right' | 'top') | null;
+                            tabAlign?: ('left' | 'center' | 'full') | null;
+                            headingAlign?: ('left' | 'center') | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Pillars';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            /**
+                             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                             */
+                            contentBlocks?:
+                              | {
+                                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  text?: string | null;
+                                  attribution?: string | null;
+                                  icon?:
+                                    | (
+                                        | 'dot'
+                                        | 'check'
+                                        | 'email'
+                                        | 'phone'
+                                        | 'location'
+                                        | 'calendar'
+                                        | 'clock'
+                                        | 'link'
+                                        | 'star'
+                                        | 'heart'
+                                        | 'book'
+                                        | 'people'
+                                        | 'cross'
+                                        | 'school'
+                                      )
+                                    | null;
+                                  hasLink?: boolean | null;
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image?: (number | null) | Media;
+                            /**
+                             * Without a text panel the shade stays at least 70% so the words stay readable.
+                             */
+                            overlayStrength?: number | null;
+                            textAlign?: ('left' | 'center') | null;
+                            position?: ('left' | 'center') | null;
+                            widthStep?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Cta';
+                          }
+                        | {
+                            firstLabel?: string | null;
+                            firstLink?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            secondLabel?: string | null;
+                            secondLink?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            size?: ('standard' | 'large') | null;
+                            firstColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
+                            secondColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61ButtonBar';
+                          }
+                        | {
+                            lineStyle?: ('rule' | 'ornament') | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            ornament?: (number | null) | Media;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            widthStep?: number | null;
+                            weight?: ('hairline' | 'regular' | 'heavy') | null;
+                            lineColor?: ('accent' | 'ink' | 'muted') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Divider';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            firstItemOpen?: boolean | null;
+            tabPosition?: ('top' | 'left' | 'right') | null;
+            tabAlign?: ('left' | 'center' | 'full') | null;
+            headingAlign?: ('left' | 'center') | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Tabs';
+          }
+        | {
+            eyebrow?: string | null;
+            lines?:
+              | {
+                  text: string;
+                  emphasize?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            intro?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            items?:
+              | {
+                  title: string;
+                  body?: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: any;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  } | null;
+                  /**
+                   * To set the focal point, click the pencil on the photo, then Edit image.
+                   */
+                  image?: (number | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            firstItemOpen?: boolean | null;
+            tabPosition?: ('left' | 'right' | 'top') | null;
+            tabAlign?: ('left' | 'center' | 'full') | null;
+            headingAlign?: ('left' | 'center') | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Pillars';
+          }
+        | {
+            eyebrow?: string | null;
+            lines?:
+              | {
+                  text: string;
+                  emphasize?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            intro?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            /**
+             * Used only when there is no heading.
+             */
+            label?: string | null;
+            slides?:
+              | {
+                  label?: string | null;
+                  content?:
+                    | (
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            /**
+                             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                             */
+                            contentBlocks?:
+                              | {
+                                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  text?: string | null;
+                                  attribution?: string | null;
+                                  photo?: (number | null) | Media;
+                                  icon?:
+                                    | (
+                                        | 'dot'
+                                        | 'check'
+                                        | 'email'
+                                        | 'phone'
+                                        | 'location'
+                                        | 'calendar'
+                                        | 'clock'
+                                        | 'link'
+                                        | 'star'
+                                        | 'heart'
+                                        | 'book'
+                                        | 'people'
+                                        | 'cross'
+                                        | 'school'
+                                      )
+                                    | null;
+                                  hasLink?: boolean | null;
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  scale?: ('regular' | 'display') | null;
+                                  divider?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headPosition?: ('above' | 'beside') | null;
+                            columnBalance?: number | null;
+                            textAlign?: ('left' | 'center') | null;
+                            /**
+                             * Where the text column sits in the band.
+                             */
+                            position?: ('left' | 'center') | null;
+                            measureStep?: number | null;
+                            headingWidth?: ('text' | 'full') | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            iconlistStyle?: ('standard' | 'links') | null;
+                            iconlistEdges?: boolean | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            headingRule?: ('site' | 'none' | 'trailing') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Prose';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            /**
+                             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                             */
+                            contentBlocks?:
+                              | {
+                                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  text?: string | null;
+                                  attribution?: string | null;
+                                  photo?: (number | null) | Media;
+                                  icon?:
+                                    | (
+                                        | 'dot'
+                                        | 'check'
+                                        | 'email'
+                                        | 'phone'
+                                        | 'location'
+                                        | 'calendar'
+                                        | 'clock'
+                                        | 'link'
+                                        | 'star'
+                                        | 'heart'
+                                        | 'book'
+                                        | 'people'
+                                        | 'cross'
+                                        | 'school'
+                                      )
+                                    | null;
+                                  hasLink?: boolean | null;
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            media?: ('photo' | 'gallery' | 'video') | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image?: (number | null) | Media;
+                            caption?: string | null;
+                            images?:
+                              | {
+                                  image: number | Media;
+                                  caption?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            columns?: ('1' | '2' | '3') | null;
+                            /**
+                             * YouTube or Vimeo. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                            imageSide?: ('left' | 'right') | null;
+                            verticalPosition?: ('top' | 'center') | null;
+                            stackOrder?: ('text' | 'media') | null;
+                            columnHeight?: ('fit' | 'fill') | null;
+                            overlap?: boolean | null;
+                            headingAlign?: ('left' | 'center') | null;
+                            columnBalance?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                            frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Split';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            intro?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff') | null;
+                            limit?: number | null;
+                            mediaType?: ('image' | 'icon' | 'none') | null;
+                            cards?:
+                              | {
+                                  image?: (number | null) | Media;
+                                  icon?:
+                                    | (
+                                        | 'check'
+                                        | 'email'
+                                        | 'phone'
+                                        | 'location'
+                                        | 'calendar'
+                                        | 'clock'
+                                        | 'link'
+                                        | 'star'
+                                        | 'heart'
+                                        | 'book'
+                                        | 'people'
+                                        | 'cross'
+                                        | 'school'
+                                      )
+                                    | null;
+                                  eyebrow?: string | null;
+                                  title?: string | null;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  /**
+                                   * Shows a "Read more"-style link. Leave empty to link the title.
+                                   */
+                                  linkText?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            arrangement?: ('grid' | 'carousel') | null;
+                            columns?: ('1' | '2' | '3' | '4') | null;
+                            textAlign?: ('left' | 'center') | null;
+                            advance?: ('one' | 'view') | null;
+                            peek?: ('none' | 'small' | 'medium' | 'large') | null;
+                            controlsPosition?:
+                              | ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden')
+                              | null;
+                            showCounter?: boolean | null;
+                            showProgress?: boolean | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            cardStyle?: ('plain' | 'flat' | 'bordered' | 'overlay') | null;
+                            cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
+                            imageShape?: ('fixed' | 'custom') | null;
+                            ratioW?: number | null;
+                            ratioH?: number | null;
+                            cardTextPosition?: ('top' | 'center' | 'bottom') | null;
+                            mediaRound?: boolean | null;
+                            iconSize?: ('sm' | 'md' | 'lg') | null;
+                            showNumbers?: boolean | null;
+                            ctaCase?: ('upper' | 'normal') | null;
+                            ctaSize?: ('sm' | 'md' | 'lg') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            cardSurface?: ('light' | 'soft' | 'primary') | null;
+                            cardOverlay?: ('none' | 'gradient' | 'wash') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61CardGrid';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            intro?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            stats?:
+                              | {
+                                  figure?: string | null;
+                                  label?: string | null;
+                                  note?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            columns?: ('1' | '2' | '3' | '4') | null;
+                            labelPosition?: ('below' | 'above') | null;
+                            textAlign?: ('left' | 'center') | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            itemStyle?: ('plain' | 'divided' | 'boxed' | 'inline') | null;
+                            flushEdges?: boolean | null;
+                            figureScale?: ('large' | 'medium' | 'small') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61StatsBand';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            intro?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            media?: ('photo' | 'gallery' | 'video') | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image?: (number | null) | Media;
+                            caption?: string | null;
+                            images?:
+                              | {
+                                  image: number | Media;
+                                  caption?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            scrollHint?: string | null;
+                            /**
+                             * YouTube or Vimeo. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            galleryLayout?: ('strip' | 'grid' | 'masonry') | null;
+                            /**
+                             * A strip always has its text above.
+                             */
+                            textPosition?: ('above' | 'beside') | null;
+                            headingAlign?: ('left' | 'center') | null;
+                            balanceStep?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            itemSize?: ('small' | 'medium' | 'large') | null;
+                            columns?: ('2' | '3' | '4') | null;
+                            imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Gallery';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            quote: string;
+                            attribution?: string | null;
+                            /**
+                             * A faint logo behind the quote (optional).
+                             */
+                            watermark?: (number | null) | Media;
+                            textAlign?: ('left' | 'center') | null;
+                            textStyle?: ('italic' | 'normal') | null;
+                            widthStep?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            showMark?: boolean | null;
+                            markRoom?: boolean | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Testimonial';
+                          }
+                        | {
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image: number | Media;
+                            imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide' | 'custom') | null;
+                            imageHeight?: ('360px' | '460px' | '560px' | '680px') | null;
+                            ratioW?: number | null;
+                            ratioH?: number | null;
+                            flipFrame?: boolean | null;
+                            widthStep?: number | null;
+                            frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61FramedImage';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            intro?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            items?:
+                              | {
+                                  title: string;
+                                  subtitle?: string | null;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingAlign?: ('left' | 'center') | null;
+                            widthStep?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            itemStyle?: ('divided' | 'boxed' | 'separated') | null;
+                            iconStyle?: ('chevron' | 'plusminus') | null;
+                            singleOpen?: boolean | null;
+                            firstItemOpen?: boolean | null;
+                            showNumbers?: boolean | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Accordion';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            intro?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            items?:
+                              | {
+                                  title: string;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  /**
+                                   * To set the focal point, click the pencil on the photo, then Edit image.
+                                   */
+                                  image?: (number | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            firstItemOpen?: boolean | null;
+                            tabPosition?: ('left' | 'right' | 'top') | null;
+                            tabAlign?: ('left' | 'center' | 'full') | null;
+                            headingAlign?: ('left' | 'center') | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Pillars';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            /**
+                             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                             */
+                            contentBlocks?:
+                              | {
+                                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  text?: string | null;
+                                  attribution?: string | null;
+                                  icon?:
+                                    | (
+                                        | 'dot'
+                                        | 'check'
+                                        | 'email'
+                                        | 'phone'
+                                        | 'location'
+                                        | 'calendar'
+                                        | 'clock'
+                                        | 'link'
+                                        | 'star'
+                                        | 'heart'
+                                        | 'book'
+                                        | 'people'
+                                        | 'cross'
+                                        | 'school'
+                                      )
+                                    | null;
+                                  hasLink?: boolean | null;
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  link?: {
+                                    type?: ('page' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image?: (number | null) | Media;
+                            /**
+                             * Without a text panel the shade stays at least 70% so the words stay readable.
+                             */
+                            overlayStrength?: number | null;
+                            textAlign?: ('left' | 'center') | null;
+                            position?: ('left' | 'center') | null;
+                            widthStep?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Cta';
+                          }
+                        | {
+                            firstLabel?: string | null;
+                            firstLink?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            secondLabel?: string | null;
+                            secondLink?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            size?: ('standard' | 'large') | null;
+                            firstColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
+                            secondColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61ButtonBar';
+                          }
+                        | {
+                            lineStyle?: ('rule' | 'ornament') | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            ornament?: (number | null) | Media;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            widthStep?: number | null;
+                            weight?: ('hairline' | 'regular' | 'heavy') | null;
+                            lineColor?: ('accent' | 'ink' | 'muted') | null;
+                            entrance?: ('on' | 'off') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Divider';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            perView?: ('1' | '2' | '3' | '4') | null;
+            headingAlign?: ('left' | 'center') | null;
+            advance?: ('one' | 'view') | null;
+            peek?: ('none' | 'small' | 'medium' | 'large') | null;
+            controlsPosition?:
+              ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
+            showCounter?: boolean | null;
+            showProgress?: boolean | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Carousel';
+          }
+        | {
+            /**
+             * The elements in this section, top to bottom.
+             */
+            content?:
+              | (
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      /**
+                       * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                       */
+                      contentBlocks?:
+                        | {
+                            type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            text?: string | null;
+                            attribution?: string | null;
+                            photo?: (number | null) | Media;
+                            icon?:
+                              | (
+                                  | 'dot'
+                                  | 'check'
+                                  | 'email'
+                                  | 'phone'
+                                  | 'location'
+                                  | 'calendar'
+                                  | 'clock'
+                                  | 'link'
+                                  | 'star'
+                                  | 'heart'
+                                  | 'book'
+                                  | 'people'
+                                  | 'cross'
+                                  | 'school'
+                                )
+                              | null;
+                            hasLink?: boolean | null;
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            scale?: ('regular' | 'display') | null;
+                            divider?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headPosition?: ('above' | 'beside') | null;
+                      columnBalance?: number | null;
+                      textAlign?: ('left' | 'center') | null;
+                      /**
+                       * Where the text column sits in the band.
+                       */
+                      position?: ('left' | 'center') | null;
+                      measureStep?: number | null;
+                      headingWidth?: ('text' | 'full') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      iconlistStyle?: ('standard' | 'links') | null;
+                      iconlistEdges?: boolean | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      headingRule?: ('site' | 'none' | 'trailing') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Prose';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      /**
+                       * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                       */
+                      contentBlocks?:
+                        | {
+                            type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            text?: string | null;
+                            attribution?: string | null;
+                            photo?: (number | null) | Media;
+                            icon?:
+                              | (
+                                  | 'dot'
+                                  | 'check'
+                                  | 'email'
+                                  | 'phone'
+                                  | 'location'
+                                  | 'calendar'
+                                  | 'clock'
+                                  | 'link'
+                                  | 'star'
+                                  | 'heart'
+                                  | 'book'
+                                  | 'people'
+                                  | 'cross'
+                                  | 'school'
+                                )
+                              | null;
+                            hasLink?: boolean | null;
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      media?: ('photo' | 'gallery' | 'video') | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image?: (number | null) | Media;
+                      caption?: string | null;
+                      images?:
+                        | {
+                            image: number | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      columns?: ('1' | '2' | '3') | null;
+                      /**
+                       * YouTube or Vimeo. The player loads only when someone presses play.
+                       */
+                      video?: string | null;
+                      imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                      imageSide?: ('left' | 'right') | null;
+                      verticalPosition?: ('top' | 'center') | null;
+                      stackOrder?: ('text' | 'media') | null;
+                      columnHeight?: ('fit' | 'fill') | null;
+                      overlap?: boolean | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      columnBalance?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                      frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Split';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff') | null;
+                      limit?: number | null;
+                      mediaType?: ('image' | 'icon' | 'none') | null;
+                      cards?:
+                        | {
+                            image?: (number | null) | Media;
+                            icon?:
+                              | (
+                                  | 'check'
+                                  | 'email'
+                                  | 'phone'
+                                  | 'location'
+                                  | 'calendar'
+                                  | 'clock'
+                                  | 'link'
+                                  | 'star'
+                                  | 'heart'
+                                  | 'book'
+                                  | 'people'
+                                  | 'cross'
+                                  | 'school'
+                                )
+                              | null;
+                            eyebrow?: string | null;
+                            title?: string | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            /**
+                             * Shows a "Read more"-style link. Leave empty to link the title.
+                             */
+                            linkText?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      arrangement?: ('grid' | 'carousel') | null;
+                      columns?: ('1' | '2' | '3' | '4') | null;
+                      textAlign?: ('left' | 'center') | null;
+                      advance?: ('one' | 'view') | null;
+                      peek?: ('none' | 'small' | 'medium' | 'large') | null;
+                      controlsPosition?:
+                        ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
+                      showCounter?: boolean | null;
+                      showProgress?: boolean | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      cardStyle?: ('plain' | 'flat' | 'bordered' | 'overlay') | null;
+                      cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
+                      imageShape?: ('fixed' | 'custom') | null;
+                      ratioW?: number | null;
+                      ratioH?: number | null;
+                      cardTextPosition?: ('top' | 'center' | 'bottom') | null;
+                      mediaRound?: boolean | null;
+                      iconSize?: ('sm' | 'md' | 'lg') | null;
+                      showNumbers?: boolean | null;
+                      ctaCase?: ('upper' | 'normal') | null;
+                      ctaSize?: ('sm' | 'md' | 'lg') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      cardSurface?: ('light' | 'soft' | 'primary') | null;
+                      cardOverlay?: ('none' | 'gradient' | 'wash') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61CardGrid';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      stats?:
+                        | {
+                            figure?: string | null;
+                            label?: string | null;
+                            note?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      columns?: ('1' | '2' | '3' | '4') | null;
+                      labelPosition?: ('below' | 'above') | null;
+                      textAlign?: ('left' | 'center') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      itemStyle?: ('plain' | 'divided' | 'boxed' | 'inline') | null;
+                      flushEdges?: boolean | null;
+                      figureScale?: ('large' | 'medium' | 'small') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61StatsBand';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      media?: ('photo' | 'gallery' | 'video') | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image?: (number | null) | Media;
+                      caption?: string | null;
+                      images?:
+                        | {
+                            image: number | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      scrollHint?: string | null;
+                      /**
+                       * YouTube or Vimeo. The player loads only when someone presses play.
+                       */
+                      video?: string | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      galleryLayout?: ('strip' | 'grid' | 'masonry') | null;
+                      /**
+                       * A strip always has its text above.
+                       */
+                      textPosition?: ('above' | 'beside') | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      balanceStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      itemSize?: ('small' | 'medium' | 'large') | null;
+                      columns?: ('2' | '3' | '4') | null;
+                      imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Gallery';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      quote: string;
+                      attribution?: string | null;
+                      /**
+                       * A faint logo behind the quote (optional).
+                       */
+                      watermark?: (number | null) | Media;
+                      textAlign?: ('left' | 'center') | null;
+                      textStyle?: ('italic' | 'normal') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      showMark?: boolean | null;
+                      markRoom?: boolean | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Testimonial';
+                    }
+                  | {
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image: number | Media;
+                      imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide' | 'custom') | null;
+                      imageHeight?: ('360px' | '460px' | '560px' | '680px') | null;
+                      ratioW?: number | null;
+                      ratioH?: number | null;
+                      flipFrame?: boolean | null;
+                      widthStep?: number | null;
+                      frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61FramedImage';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      items?:
+                        | {
+                            title: string;
+                            subtitle?: string | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      itemStyle?: ('divided' | 'boxed' | 'separated') | null;
+                      iconStyle?: ('chevron' | 'plusminus') | null;
+                      singleOpen?: boolean | null;
+                      firstItemOpen?: boolean | null;
+                      showNumbers?: boolean | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Accordion';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      items?:
+                        | {
+                            title: string;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image?: (number | null) | Media;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      firstItemOpen?: boolean | null;
+                      tabPosition?: ('left' | 'right' | 'top') | null;
+                      tabAlign?: ('left' | 'center' | 'full') | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Pillars';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      /**
+                       * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                       */
+                      contentBlocks?:
+                        | {
+                            type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            text?: string | null;
+                            attribution?: string | null;
+                            icon?:
+                              | (
+                                  | 'dot'
+                                  | 'check'
+                                  | 'email'
+                                  | 'phone'
+                                  | 'location'
+                                  | 'calendar'
+                                  | 'clock'
+                                  | 'link'
+                                  | 'star'
+                                  | 'heart'
+                                  | 'book'
+                                  | 'people'
+                                  | 'cross'
+                                  | 'school'
+                                )
+                              | null;
+                            hasLink?: boolean | null;
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image?: (number | null) | Media;
+                      /**
+                       * Without a text panel the shade stays at least 70% so the words stay readable.
+                       */
+                      overlayStrength?: number | null;
+                      textAlign?: ('left' | 'center') | null;
+                      position?: ('left' | 'center') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Cta';
+                    }
+                  | {
+                      firstLabel?: string | null;
+                      firstLink?: {
+                        type?: ('page' | 'url') | null;
+                        page?: (number | null) | Page;
+                        url?: string | null;
+                        newTab?: boolean | null;
+                      };
+                      secondLabel?: string | null;
+                      secondLink?: {
+                        type?: ('page' | 'url') | null;
+                        page?: (number | null) | Page;
+                        url?: string | null;
+                        newTab?: boolean | null;
+                      };
+                      size?: ('standard' | 'large') | null;
+                      firstColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
+                      secondColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61ButtonBar';
+                    }
+                  | {
+                      lineStyle?: ('rule' | 'ornament') | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      ornament?: (number | null) | Media;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      widthStep?: number | null;
+                      weight?: ('hairline' | 'regular' | 'heavy') | null;
+                      lineColor?: ('accent' | 'ink' | 'muted') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Divider';
+                    }
+                )[]
+              | null;
+            /**
+             * Usually one B61 Rail (buttons and a link list).
+             */
+            side?:
+              | (
+                  | {
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      linksLabel?: string | null;
+                      links?:
+                        | {
+                            label: string;
+                            icon?:
+                              | (
+                                  | 'arrow'
+                                  | 'check'
+                                  | 'email'
+                                  | 'phone'
+                                  | 'location'
+                                  | 'calendar'
+                                  | 'clock'
+                                  | 'link'
+                                  | 'star'
+                                  | 'heart'
+                                  | 'book'
+                                  | 'people'
+                                  | 'cross'
+                                  | 'school'
+                                )
+                              | null;
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            id?: string | null;
+                          }[]
+                        | null;
+                      actionsPosition?: ('top' | 'bottom') | null;
+                      sticky?: boolean | null;
+                      surface?: ('plain' | 'soft' | 'dark' | 'accent' | 'none') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Rail';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      /**
+                       * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                       */
+                      contentBlocks?:
+                        | {
+                            type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            text?: string | null;
+                            attribution?: string | null;
+                            photo?: (number | null) | Media;
+                            icon?:
+                              | (
+                                  | 'dot'
+                                  | 'check'
+                                  | 'email'
+                                  | 'phone'
+                                  | 'location'
+                                  | 'calendar'
+                                  | 'clock'
+                                  | 'link'
+                                  | 'star'
+                                  | 'heart'
+                                  | 'book'
+                                  | 'people'
+                                  | 'cross'
+                                  | 'school'
+                                )
+                              | null;
+                            hasLink?: boolean | null;
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            scale?: ('regular' | 'display') | null;
+                            divider?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headPosition?: ('above' | 'beside') | null;
+                      columnBalance?: number | null;
+                      textAlign?: ('left' | 'center') | null;
+                      /**
+                       * Where the text column sits in the band.
+                       */
+                      position?: ('left' | 'center') | null;
+                      measureStep?: number | null;
+                      headingWidth?: ('text' | 'full') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      iconlistStyle?: ('standard' | 'links') | null;
+                      iconlistEdges?: boolean | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      headingRule?: ('site' | 'none' | 'trailing') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Prose';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      /**
+                       * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                       */
+                      contentBlocks?:
+                        | {
+                            type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            text?: string | null;
+                            attribution?: string | null;
+                            photo?: (number | null) | Media;
+                            icon?:
+                              | (
+                                  | 'dot'
+                                  | 'check'
+                                  | 'email'
+                                  | 'phone'
+                                  | 'location'
+                                  | 'calendar'
+                                  | 'clock'
+                                  | 'link'
+                                  | 'star'
+                                  | 'heart'
+                                  | 'book'
+                                  | 'people'
+                                  | 'cross'
+                                  | 'school'
+                                )
+                              | null;
+                            hasLink?: boolean | null;
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      media?: ('photo' | 'gallery' | 'video') | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image?: (number | null) | Media;
+                      caption?: string | null;
+                      images?:
+                        | {
+                            image: number | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      columns?: ('1' | '2' | '3') | null;
+                      /**
+                       * YouTube or Vimeo. The player loads only when someone presses play.
+                       */
+                      video?: string | null;
+                      imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                      imageSide?: ('left' | 'right') | null;
+                      verticalPosition?: ('top' | 'center') | null;
+                      stackOrder?: ('text' | 'media') | null;
+                      columnHeight?: ('fit' | 'fill') | null;
+                      overlap?: boolean | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      columnBalance?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                      frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Split';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff') | null;
+                      limit?: number | null;
+                      mediaType?: ('image' | 'icon' | 'none') | null;
+                      cards?:
+                        | {
+                            image?: (number | null) | Media;
+                            icon?:
+                              | (
+                                  | 'check'
+                                  | 'email'
+                                  | 'phone'
+                                  | 'location'
+                                  | 'calendar'
+                                  | 'clock'
+                                  | 'link'
+                                  | 'star'
+                                  | 'heart'
+                                  | 'book'
+                                  | 'people'
+                                  | 'cross'
+                                  | 'school'
+                                )
+                              | null;
+                            eyebrow?: string | null;
+                            title?: string | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            /**
+                             * Shows a "Read more"-style link. Leave empty to link the title.
+                             */
+                            linkText?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      arrangement?: ('grid' | 'carousel') | null;
+                      columns?: ('1' | '2' | '3' | '4') | null;
+                      textAlign?: ('left' | 'center') | null;
+                      advance?: ('one' | 'view') | null;
+                      peek?: ('none' | 'small' | 'medium' | 'large') | null;
+                      controlsPosition?:
+                        ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
+                      showCounter?: boolean | null;
+                      showProgress?: boolean | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      cardStyle?: ('plain' | 'flat' | 'bordered' | 'overlay') | null;
+                      cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
+                      imageShape?: ('fixed' | 'custom') | null;
+                      ratioW?: number | null;
+                      ratioH?: number | null;
+                      cardTextPosition?: ('top' | 'center' | 'bottom') | null;
+                      mediaRound?: boolean | null;
+                      iconSize?: ('sm' | 'md' | 'lg') | null;
+                      showNumbers?: boolean | null;
+                      ctaCase?: ('upper' | 'normal') | null;
+                      ctaSize?: ('sm' | 'md' | 'lg') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      cardSurface?: ('light' | 'soft' | 'primary') | null;
+                      cardOverlay?: ('none' | 'gradient' | 'wash') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61CardGrid';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      stats?:
+                        | {
+                            figure?: string | null;
+                            label?: string | null;
+                            note?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      columns?: ('1' | '2' | '3' | '4') | null;
+                      labelPosition?: ('below' | 'above') | null;
+                      textAlign?: ('left' | 'center') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      itemStyle?: ('plain' | 'divided' | 'boxed' | 'inline') | null;
+                      flushEdges?: boolean | null;
+                      figureScale?: ('large' | 'medium' | 'small') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61StatsBand';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      media?: ('photo' | 'gallery' | 'video') | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image?: (number | null) | Media;
+                      caption?: string | null;
+                      images?:
+                        | {
+                            image: number | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      scrollHint?: string | null;
+                      /**
+                       * YouTube or Vimeo. The player loads only when someone presses play.
+                       */
+                      video?: string | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      galleryLayout?: ('strip' | 'grid' | 'masonry') | null;
+                      /**
+                       * A strip always has its text above.
+                       */
+                      textPosition?: ('above' | 'beside') | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      balanceStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      itemSize?: ('small' | 'medium' | 'large') | null;
+                      columns?: ('2' | '3' | '4') | null;
+                      imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Gallery';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      quote: string;
+                      attribution?: string | null;
+                      /**
+                       * A faint logo behind the quote (optional).
+                       */
+                      watermark?: (number | null) | Media;
+                      textAlign?: ('left' | 'center') | null;
+                      textStyle?: ('italic' | 'normal') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      showMark?: boolean | null;
+                      markRoom?: boolean | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Testimonial';
+                    }
+                  | {
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image: number | Media;
+                      imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide' | 'custom') | null;
+                      imageHeight?: ('360px' | '460px' | '560px' | '680px') | null;
+                      ratioW?: number | null;
+                      ratioH?: number | null;
+                      flipFrame?: boolean | null;
+                      widthStep?: number | null;
+                      frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61FramedImage';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      items?:
+                        | {
+                            title: string;
+                            subtitle?: string | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      itemStyle?: ('divided' | 'boxed' | 'separated') | null;
+                      iconStyle?: ('chevron' | 'plusminus') | null;
+                      singleOpen?: boolean | null;
+                      firstItemOpen?: boolean | null;
+                      showNumbers?: boolean | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Accordion';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      items?:
+                        | {
+                            title: string;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image?: (number | null) | Media;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      firstItemOpen?: boolean | null;
+                      tabPosition?: ('left' | 'right' | 'top') | null;
+                      tabAlign?: ('left' | 'center' | 'full') | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Pillars';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      /**
+                       * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                       */
+                      contentBlocks?:
+                        | {
+                            type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            text?: string | null;
+                            attribution?: string | null;
+                            icon?:
+                              | (
+                                  | 'dot'
+                                  | 'check'
+                                  | 'email'
+                                  | 'phone'
+                                  | 'location'
+                                  | 'calendar'
+                                  | 'clock'
+                                  | 'link'
+                                  | 'star'
+                                  | 'heart'
+                                  | 'book'
+                                  | 'people'
+                                  | 'cross'
+                                  | 'school'
+                                )
+                              | null;
+                            hasLink?: boolean | null;
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            link?: {
+                              type?: ('page' | 'url') | null;
+                              page?: (number | null) | Page;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image?: (number | null) | Media;
+                      /**
+                       * Without a text panel the shade stays at least 70% so the words stay readable.
+                       */
+                      overlayStrength?: number | null;
+                      textAlign?: ('left' | 'center') | null;
+                      position?: ('left' | 'center') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Cta';
+                    }
+                  | {
+                      firstLabel?: string | null;
+                      firstLink?: {
+                        type?: ('page' | 'url') | null;
+                        page?: (number | null) | Page;
+                        url?: string | null;
+                        newTab?: boolean | null;
+                      };
+                      secondLabel?: string | null;
+                      secondLink?: {
+                        type?: ('page' | 'url') | null;
+                        page?: (number | null) | Page;
+                        url?: string | null;
+                        newTab?: boolean | null;
+                      };
+                      size?: ('standard' | 'large') | null;
+                      firstColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
+                      secondColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61ButtonBar';
+                    }
+                  | {
+                      lineStyle?: ('rule' | 'ornament') | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      ornament?: (number | null) | Media;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      widthStep?: number | null;
+                      weight?: ('hairline' | 'regular' | 'heavy') | null;
+                      lineColor?: ('accent' | 'ink' | 'muted') | null;
+                      entrance?: ('on' | 'off') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Divider';
+                    }
+                )[]
+              | null;
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            image?: (number | null) | Media;
+            overlayStrength?: number | null;
+            columns?: ('full' | 'rail-right' | 'rail-left') | null;
+            railSticky?: boolean | null;
+            railAlign?: ('start' | 'center') | null;
+            railStack?: ('source' | 'rail-first' | 'rail-last') | null;
+            pullUp?: boolean | null;
+            railWidthStep?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            patternOn?: boolean | null;
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            patternImage?: (number | null) | Media;
+            tileSize?: number | null;
+            watermarkOn?: boolean | null;
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            watermarkImage?: (number | null) | Media;
+            watermarkSize?: number | null;
+            watermarkStrength?: number | null;
+            surface?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+            entrance?: ('on' | 'off') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Section';
+          }
+        | {
+            eyebrow?: string | null;
+            lines?:
+              | {
+                  text: string;
+                  emphasize?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
             /**
              * Body copy, emphasis lines, pull quotes and icon rows, in any order.
              */
@@ -1769,6 +5487,2680 @@ export interface PagesSelect<T extends boolean = true> {
               eyebrowRule?: T;
               showMark?: T;
               markRoom?: T;
+              entrance?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Accordion?:
+          | T
+          | {
+              eyebrow?: T;
+              lines?:
+                | T
+                | {
+                    text?: T;
+                    emphasize?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              intro?: T;
+              items?:
+                | T
+                | {
+                    title?: T;
+                    subtitle?: T;
+                    body?: T;
+                    id?: T;
+                  };
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    variant?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                          newTab?: T;
+                        };
+                    fullWidth?: T;
+                    id?: T;
+                  };
+              headingAlign?: T;
+              widthStep?: T;
+              padTop?: T;
+              padBottom?: T;
+              itemStyle?: T;
+              iconStyle?: T;
+              singleOpen?: T;
+              firstItemOpen?: T;
+              showNumbers?: T;
+              surface?: T;
+              itemSurface?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Tabs?:
+          | T
+          | {
+              eyebrow?: T;
+              lines?:
+                | T
+                | {
+                    text?: T;
+                    emphasize?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              intro?: T;
+              tabs?:
+                | T
+                | {
+                    label?: T;
+                    content?:
+                      | T
+                      | {
+                          b61Prose?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                contentBlocks?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      body?: T;
+                                      text?: T;
+                                      attribution?: T;
+                                      photo?: T;
+                                      icon?: T;
+                                      hasLink?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      scale?: T;
+                                      divider?: T;
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                headPosition?: T;
+                                columnBalance?: T;
+                                textAlign?: T;
+                                position?: T;
+                                measureStep?: T;
+                                headingWidth?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                iconlistStyle?: T;
+                                iconlistEdges?: T;
+                                surface?: T;
+                                eyebrowRule?: T;
+                                headingRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Split?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                contentBlocks?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      body?: T;
+                                      text?: T;
+                                      attribution?: T;
+                                      photo?: T;
+                                      icon?: T;
+                                      hasLink?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                media?: T;
+                                image?: T;
+                                caption?: T;
+                                images?:
+                                  | T
+                                  | {
+                                      image?: T;
+                                      caption?: T;
+                                      id?: T;
+                                    };
+                                columns?: T;
+                                video?: T;
+                                imageShape?: T;
+                                imageSide?: T;
+                                verticalPosition?: T;
+                                stackOrder?: T;
+                                columnHeight?: T;
+                                overlap?: T;
+                                headingAlign?: T;
+                                columnBalance?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                surface?: T;
+                                textPanel?: T;
+                                frameColor?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61CardGrid?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                intro?: T;
+                                source?: T;
+                                limit?: T;
+                                mediaType?: T;
+                                cards?:
+                                  | T
+                                  | {
+                                      image?: T;
+                                      icon?: T;
+                                      eyebrow?: T;
+                                      title?: T;
+                                      body?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      linkText?: T;
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                arrangement?: T;
+                                columns?: T;
+                                textAlign?: T;
+                                advance?: T;
+                                peek?: T;
+                                controlsPosition?: T;
+                                showCounter?: T;
+                                showProgress?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                cardStyle?: T;
+                                cardShape?: T;
+                                imageShape?: T;
+                                ratioW?: T;
+                                ratioH?: T;
+                                cardTextPosition?: T;
+                                mediaRound?: T;
+                                iconSize?: T;
+                                showNumbers?: T;
+                                ctaCase?: T;
+                                ctaSize?: T;
+                                surface?: T;
+                                cardSurface?: T;
+                                cardOverlay?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61StatsBand?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                intro?: T;
+                                stats?:
+                                  | T
+                                  | {
+                                      figure?: T;
+                                      label?: T;
+                                      note?: T;
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                columns?: T;
+                                labelPosition?: T;
+                                textAlign?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                itemStyle?: T;
+                                flushEdges?: T;
+                                figureScale?: T;
+                                surface?: T;
+                                itemSurface?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Gallery?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                intro?: T;
+                                media?: T;
+                                image?: T;
+                                caption?: T;
+                                images?:
+                                  | T
+                                  | {
+                                      image?: T;
+                                      caption?: T;
+                                      id?: T;
+                                    };
+                                scrollHint?: T;
+                                video?: T;
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                galleryLayout?: T;
+                                textPosition?: T;
+                                headingAlign?: T;
+                                balanceStep?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                itemSize?: T;
+                                columns?: T;
+                                imageShape?: T;
+                                surface?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Testimonial?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                quote?: T;
+                                attribution?: T;
+                                watermark?: T;
+                                textAlign?: T;
+                                textStyle?: T;
+                                widthStep?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                surface?: T;
+                                eyebrowRule?: T;
+                                showMark?: T;
+                                markRoom?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61FramedImage?:
+                            | T
+                            | {
+                                image?: T;
+                                imageShape?: T;
+                                imageHeight?: T;
+                                ratioW?: T;
+                                ratioH?: T;
+                                flipFrame?: T;
+                                widthStep?: T;
+                                frameColor?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Accordion?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                intro?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      title?: T;
+                                      subtitle?: T;
+                                      body?: T;
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                headingAlign?: T;
+                                widthStep?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                itemStyle?: T;
+                                iconStyle?: T;
+                                singleOpen?: T;
+                                firstItemOpen?: T;
+                                showNumbers?: T;
+                                surface?: T;
+                                itemSurface?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Pillars?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                intro?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      title?: T;
+                                      body?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                firstItemOpen?: T;
+                                tabPosition?: T;
+                                tabAlign?: T;
+                                headingAlign?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                surface?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Cta?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                contentBlocks?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      body?: T;
+                                      text?: T;
+                                      attribution?: T;
+                                      icon?: T;
+                                      hasLink?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                image?: T;
+                                overlayStrength?: T;
+                                textAlign?: T;
+                                position?: T;
+                                widthStep?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                surface?: T;
+                                textPanel?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61ButtonBar?:
+                            | T
+                            | {
+                                firstLabel?: T;
+                                firstLink?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                secondLabel?: T;
+                                secondLink?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                size?: T;
+                                firstColor?: T;
+                                secondColor?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Divider?:
+                            | T
+                            | {
+                                lineStyle?: T;
+                                ornament?: T;
+                                alignment?: T;
+                                widthStep?: T;
+                                weight?: T;
+                                lineColor?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                  };
+              firstItemOpen?: T;
+              tabPosition?: T;
+              tabAlign?: T;
+              headingAlign?: T;
+              padTop?: T;
+              padBottom?: T;
+              surface?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Pillars?:
+          | T
+          | {
+              eyebrow?: T;
+              lines?:
+                | T
+                | {
+                    text?: T;
+                    emphasize?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              intro?: T;
+              items?:
+                | T
+                | {
+                    title?: T;
+                    body?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              firstItemOpen?: T;
+              tabPosition?: T;
+              tabAlign?: T;
+              headingAlign?: T;
+              padTop?: T;
+              padBottom?: T;
+              surface?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Carousel?:
+          | T
+          | {
+              eyebrow?: T;
+              lines?:
+                | T
+                | {
+                    text?: T;
+                    emphasize?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              intro?: T;
+              label?: T;
+              slides?:
+                | T
+                | {
+                    label?: T;
+                    content?:
+                      | T
+                      | {
+                          b61Prose?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                contentBlocks?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      body?: T;
+                                      text?: T;
+                                      attribution?: T;
+                                      photo?: T;
+                                      icon?: T;
+                                      hasLink?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      scale?: T;
+                                      divider?: T;
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                headPosition?: T;
+                                columnBalance?: T;
+                                textAlign?: T;
+                                position?: T;
+                                measureStep?: T;
+                                headingWidth?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                iconlistStyle?: T;
+                                iconlistEdges?: T;
+                                surface?: T;
+                                eyebrowRule?: T;
+                                headingRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Split?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                contentBlocks?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      body?: T;
+                                      text?: T;
+                                      attribution?: T;
+                                      photo?: T;
+                                      icon?: T;
+                                      hasLink?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                media?: T;
+                                image?: T;
+                                caption?: T;
+                                images?:
+                                  | T
+                                  | {
+                                      image?: T;
+                                      caption?: T;
+                                      id?: T;
+                                    };
+                                columns?: T;
+                                video?: T;
+                                imageShape?: T;
+                                imageSide?: T;
+                                verticalPosition?: T;
+                                stackOrder?: T;
+                                columnHeight?: T;
+                                overlap?: T;
+                                headingAlign?: T;
+                                columnBalance?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                surface?: T;
+                                textPanel?: T;
+                                frameColor?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61CardGrid?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                intro?: T;
+                                source?: T;
+                                limit?: T;
+                                mediaType?: T;
+                                cards?:
+                                  | T
+                                  | {
+                                      image?: T;
+                                      icon?: T;
+                                      eyebrow?: T;
+                                      title?: T;
+                                      body?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      linkText?: T;
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                arrangement?: T;
+                                columns?: T;
+                                textAlign?: T;
+                                advance?: T;
+                                peek?: T;
+                                controlsPosition?: T;
+                                showCounter?: T;
+                                showProgress?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                cardStyle?: T;
+                                cardShape?: T;
+                                imageShape?: T;
+                                ratioW?: T;
+                                ratioH?: T;
+                                cardTextPosition?: T;
+                                mediaRound?: T;
+                                iconSize?: T;
+                                showNumbers?: T;
+                                ctaCase?: T;
+                                ctaSize?: T;
+                                surface?: T;
+                                cardSurface?: T;
+                                cardOverlay?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61StatsBand?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                intro?: T;
+                                stats?:
+                                  | T
+                                  | {
+                                      figure?: T;
+                                      label?: T;
+                                      note?: T;
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                columns?: T;
+                                labelPosition?: T;
+                                textAlign?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                itemStyle?: T;
+                                flushEdges?: T;
+                                figureScale?: T;
+                                surface?: T;
+                                itemSurface?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Gallery?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                intro?: T;
+                                media?: T;
+                                image?: T;
+                                caption?: T;
+                                images?:
+                                  | T
+                                  | {
+                                      image?: T;
+                                      caption?: T;
+                                      id?: T;
+                                    };
+                                scrollHint?: T;
+                                video?: T;
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                galleryLayout?: T;
+                                textPosition?: T;
+                                headingAlign?: T;
+                                balanceStep?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                itemSize?: T;
+                                columns?: T;
+                                imageShape?: T;
+                                surface?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Testimonial?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                quote?: T;
+                                attribution?: T;
+                                watermark?: T;
+                                textAlign?: T;
+                                textStyle?: T;
+                                widthStep?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                surface?: T;
+                                eyebrowRule?: T;
+                                showMark?: T;
+                                markRoom?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61FramedImage?:
+                            | T
+                            | {
+                                image?: T;
+                                imageShape?: T;
+                                imageHeight?: T;
+                                ratioW?: T;
+                                ratioH?: T;
+                                flipFrame?: T;
+                                widthStep?: T;
+                                frameColor?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Accordion?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                intro?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      title?: T;
+                                      subtitle?: T;
+                                      body?: T;
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                headingAlign?: T;
+                                widthStep?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                itemStyle?: T;
+                                iconStyle?: T;
+                                singleOpen?: T;
+                                firstItemOpen?: T;
+                                showNumbers?: T;
+                                surface?: T;
+                                itemSurface?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Pillars?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                intro?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      title?: T;
+                                      body?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                firstItemOpen?: T;
+                                tabPosition?: T;
+                                tabAlign?: T;
+                                headingAlign?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                surface?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Cta?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                contentBlocks?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      body?: T;
+                                      text?: T;
+                                      attribution?: T;
+                                      icon?: T;
+                                      hasLink?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                image?: T;
+                                overlayStrength?: T;
+                                textAlign?: T;
+                                position?: T;
+                                widthStep?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                surface?: T;
+                                textPanel?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61ButtonBar?:
+                            | T
+                            | {
+                                firstLabel?: T;
+                                firstLink?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                secondLabel?: T;
+                                secondLink?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                size?: T;
+                                firstColor?: T;
+                                secondColor?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Divider?:
+                            | T
+                            | {
+                                lineStyle?: T;
+                                ornament?: T;
+                                alignment?: T;
+                                widthStep?: T;
+                                weight?: T;
+                                lineColor?: T;
+                                entrance?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                  };
+              perView?: T;
+              headingAlign?: T;
+              advance?: T;
+              peek?: T;
+              controlsPosition?: T;
+              showCounter?: T;
+              showProgress?: T;
+              padTop?: T;
+              padBottom?: T;
+              surface?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Section?:
+          | T
+          | {
+              content?:
+                | T
+                | {
+                    b61Prose?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          contentBlocks?:
+                            | T
+                            | {
+                                type?: T;
+                                body?: T;
+                                text?: T;
+                                attribution?: T;
+                                photo?: T;
+                                icon?: T;
+                                hasLink?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                scale?: T;
+                                divider?: T;
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          headPosition?: T;
+                          columnBalance?: T;
+                          textAlign?: T;
+                          position?: T;
+                          measureStep?: T;
+                          headingWidth?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          iconlistStyle?: T;
+                          iconlistEdges?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          headingRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Split?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          contentBlocks?:
+                            | T
+                            | {
+                                type?: T;
+                                body?: T;
+                                text?: T;
+                                attribution?: T;
+                                photo?: T;
+                                icon?: T;
+                                hasLink?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          media?: T;
+                          image?: T;
+                          caption?: T;
+                          images?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                              };
+                          columns?: T;
+                          video?: T;
+                          imageShape?: T;
+                          imageSide?: T;
+                          verticalPosition?: T;
+                          stackOrder?: T;
+                          columnHeight?: T;
+                          overlap?: T;
+                          headingAlign?: T;
+                          columnBalance?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          textPanel?: T;
+                          frameColor?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61CardGrid?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          intro?: T;
+                          source?: T;
+                          limit?: T;
+                          mediaType?: T;
+                          cards?:
+                            | T
+                            | {
+                                image?: T;
+                                icon?: T;
+                                eyebrow?: T;
+                                title?: T;
+                                body?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                linkText?: T;
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          arrangement?: T;
+                          columns?: T;
+                          textAlign?: T;
+                          advance?: T;
+                          peek?: T;
+                          controlsPosition?: T;
+                          showCounter?: T;
+                          showProgress?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          cardStyle?: T;
+                          cardShape?: T;
+                          imageShape?: T;
+                          ratioW?: T;
+                          ratioH?: T;
+                          cardTextPosition?: T;
+                          mediaRound?: T;
+                          iconSize?: T;
+                          showNumbers?: T;
+                          ctaCase?: T;
+                          ctaSize?: T;
+                          surface?: T;
+                          cardSurface?: T;
+                          cardOverlay?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61StatsBand?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          intro?: T;
+                          stats?:
+                            | T
+                            | {
+                                figure?: T;
+                                label?: T;
+                                note?: T;
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          columns?: T;
+                          labelPosition?: T;
+                          textAlign?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          itemStyle?: T;
+                          flushEdges?: T;
+                          figureScale?: T;
+                          surface?: T;
+                          itemSurface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Gallery?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          intro?: T;
+                          media?: T;
+                          image?: T;
+                          caption?: T;
+                          images?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                              };
+                          scrollHint?: T;
+                          video?: T;
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          galleryLayout?: T;
+                          textPosition?: T;
+                          headingAlign?: T;
+                          balanceStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          itemSize?: T;
+                          columns?: T;
+                          imageShape?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Testimonial?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          quote?: T;
+                          attribution?: T;
+                          watermark?: T;
+                          textAlign?: T;
+                          textStyle?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          showMark?: T;
+                          markRoom?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61FramedImage?:
+                      | T
+                      | {
+                          image?: T;
+                          imageShape?: T;
+                          imageHeight?: T;
+                          ratioW?: T;
+                          ratioH?: T;
+                          flipFrame?: T;
+                          widthStep?: T;
+                          frameColor?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Accordion?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          intro?: T;
+                          items?:
+                            | T
+                            | {
+                                title?: T;
+                                subtitle?: T;
+                                body?: T;
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          headingAlign?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          itemStyle?: T;
+                          iconStyle?: T;
+                          singleOpen?: T;
+                          firstItemOpen?: T;
+                          showNumbers?: T;
+                          surface?: T;
+                          itemSurface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Pillars?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          intro?: T;
+                          items?:
+                            | T
+                            | {
+                                title?: T;
+                                body?: T;
+                                image?: T;
+                                id?: T;
+                              };
+                          firstItemOpen?: T;
+                          tabPosition?: T;
+                          tabAlign?: T;
+                          headingAlign?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Cta?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          contentBlocks?:
+                            | T
+                            | {
+                                type?: T;
+                                body?: T;
+                                text?: T;
+                                attribution?: T;
+                                icon?: T;
+                                hasLink?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          image?: T;
+                          overlayStrength?: T;
+                          textAlign?: T;
+                          position?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          textPanel?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61ButtonBar?:
+                      | T
+                      | {
+                          firstLabel?: T;
+                          firstLink?:
+                            | T
+                            | {
+                                type?: T;
+                                page?: T;
+                                url?: T;
+                                newTab?: T;
+                              };
+                          secondLabel?: T;
+                          secondLink?:
+                            | T
+                            | {
+                                type?: T;
+                                page?: T;
+                                url?: T;
+                                newTab?: T;
+                              };
+                          size?: T;
+                          firstColor?: T;
+                          secondColor?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Divider?:
+                      | T
+                      | {
+                          lineStyle?: T;
+                          ornament?: T;
+                          alignment?: T;
+                          widthStep?: T;
+                          weight?: T;
+                          lineColor?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
+              side?:
+                | T
+                | {
+                    b61Rail?:
+                      | T
+                      | {
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          linksLabel?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                icon?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                id?: T;
+                              };
+                          actionsPosition?: T;
+                          sticky?: T;
+                          surface?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Prose?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          contentBlocks?:
+                            | T
+                            | {
+                                type?: T;
+                                body?: T;
+                                text?: T;
+                                attribution?: T;
+                                photo?: T;
+                                icon?: T;
+                                hasLink?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                scale?: T;
+                                divider?: T;
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          headPosition?: T;
+                          columnBalance?: T;
+                          textAlign?: T;
+                          position?: T;
+                          measureStep?: T;
+                          headingWidth?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          iconlistStyle?: T;
+                          iconlistEdges?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          headingRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Split?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          contentBlocks?:
+                            | T
+                            | {
+                                type?: T;
+                                body?: T;
+                                text?: T;
+                                attribution?: T;
+                                photo?: T;
+                                icon?: T;
+                                hasLink?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          media?: T;
+                          image?: T;
+                          caption?: T;
+                          images?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                              };
+                          columns?: T;
+                          video?: T;
+                          imageShape?: T;
+                          imageSide?: T;
+                          verticalPosition?: T;
+                          stackOrder?: T;
+                          columnHeight?: T;
+                          overlap?: T;
+                          headingAlign?: T;
+                          columnBalance?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          textPanel?: T;
+                          frameColor?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61CardGrid?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          intro?: T;
+                          source?: T;
+                          limit?: T;
+                          mediaType?: T;
+                          cards?:
+                            | T
+                            | {
+                                image?: T;
+                                icon?: T;
+                                eyebrow?: T;
+                                title?: T;
+                                body?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                linkText?: T;
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          arrangement?: T;
+                          columns?: T;
+                          textAlign?: T;
+                          advance?: T;
+                          peek?: T;
+                          controlsPosition?: T;
+                          showCounter?: T;
+                          showProgress?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          cardStyle?: T;
+                          cardShape?: T;
+                          imageShape?: T;
+                          ratioW?: T;
+                          ratioH?: T;
+                          cardTextPosition?: T;
+                          mediaRound?: T;
+                          iconSize?: T;
+                          showNumbers?: T;
+                          ctaCase?: T;
+                          ctaSize?: T;
+                          surface?: T;
+                          cardSurface?: T;
+                          cardOverlay?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61StatsBand?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          intro?: T;
+                          stats?:
+                            | T
+                            | {
+                                figure?: T;
+                                label?: T;
+                                note?: T;
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          columns?: T;
+                          labelPosition?: T;
+                          textAlign?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          itemStyle?: T;
+                          flushEdges?: T;
+                          figureScale?: T;
+                          surface?: T;
+                          itemSurface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Gallery?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          intro?: T;
+                          media?: T;
+                          image?: T;
+                          caption?: T;
+                          images?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                              };
+                          scrollHint?: T;
+                          video?: T;
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          galleryLayout?: T;
+                          textPosition?: T;
+                          headingAlign?: T;
+                          balanceStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          itemSize?: T;
+                          columns?: T;
+                          imageShape?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Testimonial?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          quote?: T;
+                          attribution?: T;
+                          watermark?: T;
+                          textAlign?: T;
+                          textStyle?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          showMark?: T;
+                          markRoom?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61FramedImage?:
+                      | T
+                      | {
+                          image?: T;
+                          imageShape?: T;
+                          imageHeight?: T;
+                          ratioW?: T;
+                          ratioH?: T;
+                          flipFrame?: T;
+                          widthStep?: T;
+                          frameColor?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Accordion?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          intro?: T;
+                          items?:
+                            | T
+                            | {
+                                title?: T;
+                                subtitle?: T;
+                                body?: T;
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          headingAlign?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          itemStyle?: T;
+                          iconStyle?: T;
+                          singleOpen?: T;
+                          firstItemOpen?: T;
+                          showNumbers?: T;
+                          surface?: T;
+                          itemSurface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Pillars?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          intro?: T;
+                          items?:
+                            | T
+                            | {
+                                title?: T;
+                                body?: T;
+                                image?: T;
+                                id?: T;
+                              };
+                          firstItemOpen?: T;
+                          tabPosition?: T;
+                          tabAlign?: T;
+                          headingAlign?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Cta?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          contentBlocks?:
+                            | T
+                            | {
+                                type?: T;
+                                body?: T;
+                                text?: T;
+                                attribution?: T;
+                                icon?: T;
+                                hasLink?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          image?: T;
+                          overlayStrength?: T;
+                          textAlign?: T;
+                          position?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          textPanel?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61ButtonBar?:
+                      | T
+                      | {
+                          firstLabel?: T;
+                          firstLink?:
+                            | T
+                            | {
+                                type?: T;
+                                page?: T;
+                                url?: T;
+                                newTab?: T;
+                              };
+                          secondLabel?: T;
+                          secondLink?:
+                            | T
+                            | {
+                                type?: T;
+                                page?: T;
+                                url?: T;
+                                newTab?: T;
+                              };
+                          size?: T;
+                          firstColor?: T;
+                          secondColor?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Divider?:
+                      | T
+                      | {
+                          lineStyle?: T;
+                          ornament?: T;
+                          alignment?: T;
+                          widthStep?: T;
+                          weight?: T;
+                          lineColor?: T;
+                          entrance?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
+              image?: T;
+              overlayStrength?: T;
+              columns?: T;
+              railSticky?: T;
+              railAlign?: T;
+              railStack?: T;
+              pullUp?: T;
+              railWidthStep?: T;
+              padTop?: T;
+              padBottom?: T;
+              patternOn?: T;
+              patternImage?: T;
+              tileSize?: T;
+              watermarkOn?: T;
+              watermarkImage?: T;
+              watermarkSize?: T;
+              watermarkStrength?: T;
+              surface?: T;
               entrance?: T;
               id?: T;
               blockName?: T;

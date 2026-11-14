@@ -1,0 +1,247 @@
+/* ---------------------------------------------------------------------------
+   B61 SECTION (1.38.0)
+
+   The band as a container. Owns the ground (surface/band pair), the band
+   padding, the background photo (.b61-bg, components.css), the pattern and the
+   watermark (.b61-band--pattern / --watermark, utilities.css). Paints nothing
+   itself - every colour comes from those shared classes.
+   --------------------------------------------------------------------------- */
+
+/* The KEEP dials freeze the real band padding on the region, on purpose: the
+   inner zeroes the same tokens for its children (below), and a painted child
+   needs to get the real values back. An alias that freezes at declaration
+   scope is the trap in b61_alias_scope.md; here the freeze IS the feature. */
+:where(.b61-section__region) {
+  --b61-section-keep-block: var(--b61-pad-block);
+  --b61-section-keep-tight: var(--b61-pad-block-tight);
+  --b61-section-keep-inline: var(--b61-pad-inline);
+}
+
+.b61-section {
+  display: block;
+  width: 100%;
+  align-self: stretch;
+}
+
+.b61-section__region {
+  --band-pt: var(--b61-pad-block);
+  --band-pb: var(--b61-pad-block);
+  display: block;
+  padding: var(--band-pt) var(--b61-pad-inline) var(--band-pb);
+  color: var(--b61-on-bg-ink, var(--b61-ink));
+}
+
+.b61-section__region--pt-tight { --band-pt: var(--b61-pad-block-tight); }
+.b61-section__region--pt-none { --band-pt: 0px; }
+.b61-section__region--pb-tight { --band-pb: var(--b61-pad-block-tight); }
+.b61-section__region--pb-none { --band-pb: 0px; }
+
+/* ---------------------------------------------------------------------------
+   CHILDREN: THE SECTION IS THE BAND
+
+   Every B61 element pads its own region from --b61-pad-block, -tight and
+   -inline. Inside a section those would double the section's own padding and
+   indent every child by a gutter, so the inner zeroes the three tokens for
+   everything below it. A child keeps its surface, its measure and its layout;
+   it just stops acting like a band.
+
+   Except a child that PAINTS a ground of its own - a soft CTA inside a dark
+   section, a button-bar half - which would otherwise have its copy touching
+   its edges. Those get the section's real values back from the KEEP dials. A
+   card (.b61-card) pads from --b61-card-pad and is left alone.
+   --------------------------------------------------------------------------- */
+.b61-section__inner {
+  max-width: var(--b61-width);
+  margin-inline: auto;
+  --b61-pad-block: 0px;
+  --b61-pad-block-tight: 0px;
+  --b61-pad-inline: 0px;
+}
+
+.b61-section__inner :is(.b61-surface--plain, .b61-surface--soft, .b61-surface--dark, .b61-surface--accent):not(.b61-card) {
+  --b61-pad-block: var(--b61-section-keep-block);
+  --b61-pad-block-tight: var(--b61-section-keep-tight);
+  --b61-pad-inline: var(--b61-section-keep-inline);
+}
+
+/* Stacked children are separated by the section's gap.
+
+   LIVE MARKUP IS NOT BUILDER MARKUP (1.68.0). On the front end Breakdance
+   writes an inline <style> as a sibling in front of any element that has
+   display conditions (or dynamic data it styles at render time). The builder
+   never does. So every structural selector here counts only RENDERED children
+   (`of :not(style, script, template, link)`): with plain :first-child, + and
+   :only-child a Prose after a left rail picked up the stack gap on the live
+   page only, and a conditional element could even become the "rail".
+   Spelled -n+1 / -n+2, never "1 of": Breakdance's CSS minifier eats the space
+   in "1 of" ("1of"), which voids the whole rule. */
+.b61-section__inner > :nth-child(n+2 of :not(style, script, template, link)) {
+  margin-top: var(--b61-section-gap);
+}
+
+/* ---------------------------------------------------------------------------
+   COLUMNS: MAIN + RAIL (1.39.0)
+
+   The section's Columns control emits `--rail-right` or `--rail-left` on the
+   inner. WHICH child is the rail is decided here, because a parent twig cannot
+   see its children:
+     - a B61 Sidebar child (.b61-aside), if there is one - use it to stack
+       several things in the rail;
+     - otherwise the LAST child (right rail) or the FIRST child (left rail) -
+       so an Action Panel dropped straight into the section just works.
+   A lone child is never made a rail (:not(:only-child)).
+
+   THE ROW TRICK: 24 explicit auto rows plus a 1fr. Main children auto-place
+   into rows 1..n; the rail spans 1 / -1. Empty auto rows collapse to zero, and
+   when the rail is the taller column the extra height goes to the 1fr track,
+   so the main column stays packed at the top. Measured offline both ways round
+   and with the rail first or last in source. row-gap MUST stay 0 - a gap would
+   be paid on every empty track - so the stack gap is the margin above.
+   --------------------------------------------------------------------------- */
+.b61-section__inner--rail-right,
+.b61-section__inner--rail-left {
+  --b61-section-aside-w: var(--b61-aside-w);
+  display: grid;
+  grid-template-rows: repeat(24, auto) 1fr;
+  column-gap: var(--b61-section-col-gap);
+  row-gap: 0;
+}
+
+.b61-section__inner--rail-narrow { --b61-section-aside-w: var(--b61-aside-w-narrow); }
+.b61-section__inner--rail-wide { --b61-section-aside-w: var(--b61-aside-w-wide); }
+
+.b61-section__inner--rail-right {
+  grid-template-columns: minmax(0, 1fr) var(--b61-section-aside-w);
+}
+
+.b61-section__inner--rail-left {
+  grid-template-columns: var(--b61-section-aside-w) minmax(0, 1fr);
+}
+
+.b61-section__inner--rail-right > * { grid-column: 1; }
+.b61-section__inner--rail-left > * { grid-column: 2; }
+
+/* A rail layout with only one child has nothing to put in the rail, so the
+   child spans both columns rather than leaving an empty rail beside it. */
+.b61-section__inner--rail-right > :nth-child(-n+1 of :not(style, script, template, link)):nth-last-child(-n+1 of :not(style, script, template, link)),
+.b61-section__inner--rail-left > :nth-child(-n+1 of :not(style, script, template, link)):nth-last-child(-n+1 of :not(style, script, template, link)) { grid-column: 1 / -1; }
+
+/* The rail itself. Specificity is (0,4,0) and (0,2,0), both above the
+   one-class column rules just above. */
+.b61-section__inner--rail-right:not(:has(> .b61-aside)) > :nth-last-child(-n+1 of :not(style, script, template, link)):not(:nth-child(-n+1 of :not(style, script, template, link)):nth-last-child(-n+1 of :not(style, script, template, link))),
+.b61-section__inner--rail-right > .b61-aside {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  align-self: start;
+  margin-top: 0;
+}
+
+.b61-section__inner--rail-left:not(:has(> .b61-aside)) > :nth-child(-n+1 of :not(style, script, template, link)):not(:nth-child(-n+1 of :not(style, script, template, link)):nth-last-child(-n+1 of :not(style, script, template, link))),
+.b61-section__inner--rail-left > .b61-aside {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  align-self: start;
+  margin-top: 0;
+}
+
+/* The first MAIN child must not inherit the stack gap from a rail that sits
+   before it in source but beside it on screen. */
+.b61-section__inner--rail-left:not(:has(> .b61-aside)) > :nth-child(n+2 of :not(style, script, template, link)):nth-child(-n+2 of :not(style, script, template, link)),
+.b61-section__inner.b61-section__inner--rail-right > .b61-aside + *,
+.b61-section__inner.b61-section__inner--rail-left > .b61-aside + *,
+.b61-section__inner.b61-section__inner--rail-right > .b61-aside + :is(style, script, template, link) + *,
+.b61-section__inner.b61-section__inner--rail-left > .b61-aside + :is(style, script, template, link) + * {
+  margin-top: 0;
+}
+
+.b61-section__inner--rail-sticky.b61-section__inner--rail-right:not(:has(> .b61-aside)) > :nth-last-child(-n+1 of :not(style, script, template, link)):not(:nth-child(-n+1 of :not(style, script, template, link)):nth-last-child(-n+1 of :not(style, script, template, link))),
+.b61-section__inner--rail-sticky.b61-section__inner--rail-left:not(:has(> .b61-aside)) > :nth-child(-n+1 of :not(style, script, template, link)):not(:nth-child(-n+1 of :not(style, script, template, link)):nth-last-child(-n+1 of :not(style, script, template, link))),
+.b61-section__inner--rail-sticky > .b61-aside {
+  position: sticky;
+  top: var(--b61-aside-sticky-top);
+}
+
+/* RAIL CENTRED (1.76.0), opt-in. The rail spans every row of the grid, so
+   centring it in that span centres it against the main column's height. One
+   class above the rail rules, so it outranks their align-self: start. Never
+   emitted together with sticky (html.twig). */
+.b61-section__inner--rail-center.b61-section__inner--rail-right:not(:has(> .b61-aside)) > :nth-last-child(-n+1 of :not(style, script, template, link)):not(:nth-child(-n+1 of :not(style, script, template, link)):nth-last-child(-n+1 of :not(style, script, template, link))),
+.b61-section__inner--rail-center.b61-section__inner--rail-left:not(:has(> .b61-aside)) > :nth-child(-n+1 of :not(style, script, template, link)):not(:nth-child(-n+1 of :not(style, script, template, link)):nth-last-child(-n+1 of :not(style, script, template, link))),
+.b61-section__inner--rail-center > .b61-aside {
+  align-self: center;
+}
+
+/* Tablet and phone: one column, source order, the stack gap back everywhere. */
+@media (max-width: 1023px) {
+  .b61-section__inner--rail-right,
+  .b61-section__inner--rail-left {
+    display: block;
+  }
+  .b61-section__inner--rail-sticky.b61-section__inner--rail-right:not(:has(> .b61-aside)) > :nth-last-child(-n+1 of :not(style, script, template, link)):not(:nth-child(-n+1 of :not(style, script, template, link)):nth-last-child(-n+1 of :not(style, script, template, link))),
+  .b61-section__inner--rail-sticky.b61-section__inner--rail-left:not(:has(> .b61-aside)) > :nth-child(-n+1 of :not(style, script, template, link)):not(:nth-child(-n+1 of :not(style, script, template, link)):nth-last-child(-n+1 of :not(style, script, template, link))),
+  .b61-section__inner--rail-sticky > .b61-aside {
+    position: static;
+  }
+  .b61-section__inner--rail-left:not(:has(> .b61-aside)) > :nth-child(n+2 of :not(style, script, template, link)):nth-child(-n+2 of :not(style, script, template, link)),
+  .b61-section__inner.b61-section__inner--rail-right > .b61-aside + *,
+  .b61-section__inner.b61-section__inner--rail-left > .b61-aside + *,
+  .b61-section__inner.b61-section__inner--rail-right > .b61-aside + :is(style, script, template, link) + *,
+  .b61-section__inner.b61-section__inner--rail-left > .b61-aside + :is(style, script, template, link) + *,
+  .b61-section__inner.b61-section__inner--rail-right > * + .b61-aside,
+  .b61-section__inner.b61-section__inner--rail-left > * + .b61-aside,
+  .b61-section__inner--rail-right:not(:has(> .b61-aside)) > :nth-last-child(-n+1 of :not(style, script, template, link)):not(:nth-child(-n+1 of :not(style, script, template, link)):nth-last-child(-n+1 of :not(style, script, template, link))) {
+    margin-top: var(--b61-section-gap);
+  }
+}
+
+/* STACKED ORDER (1.76.0), opt-in: Side column first / last on tablet and
+   phone. Without one of these classes the inner stays display:block in page
+   order, exactly as before. With one, the stack becomes a flex column so the
+   rail can be moved with `order`, and the section gap moves from the
+   children's margin-top (which follows SOURCE order and would land on the
+   wrong edge once the rail moves) to row-gap. The !important is deliberate
+   and scoped to this opt-in: the source-order margin and rail align rules
+   above carry 4-5 level :nth-child(... of ...) selectors that a plain
+   override cannot outrank. align-self is reset because in a flex column it
+   is the horizontal axis, and the rail's `start` would shrink it. */
+@media (max-width: 1023px) {
+  .b61-section__inner.b61-section__inner--stack-rail-first,
+  .b61-section__inner.b61-section__inner--stack-rail-last {
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--b61-section-gap);
+  }
+  .b61-section__inner--stack-rail-first > *,
+  .b61-section__inner--stack-rail-last > * {
+    margin-top: 0 !important;
+    align-self: stretch !important;
+  }
+  .b61-section__inner--stack-rail-first > .b61-aside,
+  .b61-section__inner--stack-rail-first.b61-section__inner--rail-right:not(:has(> .b61-aside)) > :nth-last-child(-n+1 of :not(style, script, template, link)),
+  .b61-section__inner--stack-rail-first.b61-section__inner--rail-left:not(:has(> .b61-aside)) > :nth-child(-n+1 of :not(style, script, template, link)) {
+    order: -1;
+  }
+  .b61-section__inner--stack-rail-last > .b61-aside,
+  .b61-section__inner--stack-rail-last.b61-section__inner--rail-right:not(:has(> .b61-aside)) > :nth-last-child(-n+1 of :not(style, script, template, link)),
+  .b61-section__inner--stack-rail-last.b61-section__inner--rail-left:not(:has(> .b61-aside)) > :nth-child(-n+1 of :not(style, script, template, link)) {
+    order: 1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   PULL UP (Pattern 4)
+
+   The class rides on the ROOT (additionalClasses), because the root is the box
+   in the page flow: a negative top margin on it lifts the whole section over
+   the band above, and a z-index on it puts the section in front. The region's
+   top padding goes to zero so the section's content does the overlapping.
+   --------------------------------------------------------------------------- */
+.b61-section.b61-section--pull {
+  margin-top: calc(-1 * var(--b61-overlap-y));
+  position: relative;
+  z-index: var(--b61-overlap-z);
+}
+
+.b61-section--pull > .b61-section__region {
+  --band-pt: 0px;
+}

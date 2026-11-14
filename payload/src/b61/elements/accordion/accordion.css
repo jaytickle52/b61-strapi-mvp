@@ -1,0 +1,536 @@
+/* ---------------------------------------------------------------------------
+   DIALS
+   Declared on the REGION at zero specificity, so a site re-skins by
+   redeclaring and never edits this file.
+
+   The eyebrow values below are PRESERVED from before the 1.17.0 sweep (16px / 12px, raw literals),
+   not fresh design decisions. The shared defaults are --b61-eyebrow-space and
+   --b61-eyebrow-rule-gap in tokens.css; delete an override here and the element
+   falls back to the house value.
+   --------------------------------------------------------------------------- */
+:where(.b61-acc__region) {
+  --b61-acc-eyebrow-space: 1rem;
+  --b61-acc-eyebrow-rule-gap: 0.75rem;
+  --b61-acc-subhead-space: 0.75rem;
+  --b61-acc-actions-space: 2.5rem;
+  /* The gap BETWEEN separated items — the whole point of that item style, and
+     the thing a site is most likely to want to retune. It was a raw 14px, so
+     retuning it meant editing this file. px, not rem: this is a gap between
+     boxes, not a text-adjacent length. */
+  --b61-acc-item-gap: 14px;
+  /* The gap between the index, the title, the meta label and the icon inside
+     one toggle row. Also px — it spaces controls, not copy. */
+  --b61-acc-toggle-gap: 24px;
+}
+
+.b61-acc {
+  width: 100%;
+  align-self: stretch;
+  text-align: left;
+}
+
+/* ---- Region ---------------------------------------------------------------
+   The root is Breakdance's own tag, so the surface colour and its matching text
+   colours live here. Surfaces ship as contrast-checked pairs: the background
+   and every text role move together. Same model as Card Grid. */
+.b61-acc__region {
+  /* ink, muted and accent read the band globals — every per-surface value this
+     element set for them matched the band's. --acc-rule does not: soft has no
+     override here, so globalising it would change soft's rendering. */
+  --acc-ink: var(--b61-on-bg-ink, var(--b61-ink));
+  --acc-muted: var(--b61-on-bg-muted, var(--b61-muted));
+  --acc-accent: var(--b61-on-bg-accent, var(--b61-accent-text));
+  --acc-rule: var(--b61-accent);
+  --acc-line: var(--b61-border);
+  --acc-item-bg: transparent;
+  --acc-focus: var(--b61-focus);
+  --acc-pad-x: 4px;
+  --band-pt: var(--b61-pad-block);
+  --band-pb: var(--b61-pad-block);
+  padding: var(--band-pt) var(--b61-pad-inline) var(--band-pb);
+  color: var(--acc-ink);
+}
+
+/* Band spacing. Two controls rather than one, because the case that hurts is a
+   pair of same-coloured bands stacking to double padding — which needs the
+   bottom of one and the top of the next set independently. Values come from
+   tokens.css so a B61 Section can later consume the same two. */
+/* Width drives the head and the list from one local, because the defect this
+   fixes is precisely the two disagreeing: at the full band the panel copy ran
+   ~110 characters per line while the header above it spanned the same width and
+   looked fine. Narrowing only the panel read as truncation, which is why the
+   80ch cap was removed rather than kept. */
+.b61-acc__region--wfull { --acc-measure: none; }
+.b61-acc__region--wstandard { --acc-measure: var(--b61-width); }
+.b61-acc__region--wnarrow { --acc-measure: var(--b61-width-narrow); }
+
+.b61-acc__region--pt-tight { --band-pt: var(--b61-pad-block-tight); }
+.b61-acc__region--pt-none { --band-pt: 0; }
+.b61-acc__region--pb-tight { --band-pb: var(--b61-pad-block-tight); }
+.b61-acc__region--pb-none { --band-pb: 0; }
+
+/* SURFACES LIVE IN /assets — ground from `b61-surface--<s>`, palette from
+   `b61-band--<s>`. Ink and accent matched the band on all three surfaces and are
+   gone. What stays: the hairline between items (tuned per band, not "text on
+   this band"), the focus ring, the rule colour, and a muted step measured for
+   item copy rather than band copy. */
+.b61-acc__region.b61-surface--soft {
+  --acc-line: rgb(var(--b61-scrim-rgb) / 0.28);
+}
+.b61-acc__region.b61-surface--dark {
+  --acc-muted: rgb(var(--b61-light-scrim-rgb) / 0.88);
+  --acc-rule: var(--b61-on-dark-accent);
+  --acc-line: rgb(var(--b61-light-scrim-rgb) / 0.24);
+  --acc-focus: var(--b61-focus-on-dark);
+}
+.b61-acc__region.b61-surface--accent {
+  --acc-rule: var(--b61-palette-paper);
+  --acc-line: rgb(var(--b61-light-scrim-rgb) / 0.3);
+  --acc-focus: var(--b61-focus-on-dark);
+}
+
+/* ---- Section head -------------------------------------------------------- */
+.b61-acc__head {
+  max-width: var(--acc-measure, var(--b61-width));
+  margin: 0 auto 40px;
+}
+
+.b61-acc__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--b61-acc-eyebrow-rule-gap);
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-eyebrow-size);
+  font-weight: var(--b61-eyebrow-weight);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: var(--b61-eyebrow-case);
+  color: var(--acc-accent);
+  margin: 0 0 var(--b61-acc-eyebrow-space);
+}
+
+.b61-acc__eyebrow::before {
+  content: "";
+  width: var(--b61-eyebrow-rule-width, 32px);
+  height: var(--b61-eyebrow-rule-thickness);
+  background: var(--acc-rule);
+  display: var(--b61-eyebrow-rule);
+}
+
+.b61-acc__heading {
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-text-h2);
+  line-height: 1.18;
+  color: var(--acc-ink);
+  margin: 0;
+}
+
+/* One heading tag, N spans. Each line is display:block so it breaks without a
+   <br>, which is what makes emphasis a per-line CLASS rather than a per-line
+   element — and what let the heading group drop its placement control. */
+.b61-acc__heading-line {
+  display: block;
+}
+
+/* An emphasised heading LINE and an <em> inside the heading are the same
+   device — the italic accent word. The toggle is the control an editor gets
+   now; the inline <em> is what they typed into the old single Heading field,
+   and it keeps working so no existing band changes. */
+.b61-acc__heading-line--em,
+.b61-acc__heading em {
+  font-style: italic;
+  color: var(--acc-accent);
+}
+
+/* The "second headline" role: display face like the heading, one step down the
+   scale, weight and colour pulled back so two display lines read as a pair
+   rather than as a competition. Distinct from the intro below, which is body
+   copy — that is why both exist. */
+.b61-acc__subhead {
+  font-family: var(--b61-font-display);
+  font-weight: 400;
+  font-size: var(--b61-text-h3);
+  line-height: 1.25;
+  color: var(--acc-muted);
+  margin: var(--b61-acc-subhead-space) 0 0;
+}
+
+.b61-acc__subhead em {
+  font-style: italic;
+  color: var(--acc-accent);
+}
+
+.b61-acc__intro {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  color: var(--acc-muted);
+  margin: 1.125rem 0 0;
+  max-width: 68ch;
+}
+
+/* HEADING ALIGNMENT (1.74.0). css.twig sets the --b61-align-* dials on
+   __head only when Heading alignment is set; the fallbacks are the existing
+   left-set default. The items and buttons are not in __head and keep theirs. */
+.b61-acc__head { text-align: var(--b61-align-text, left); }
+.b61-acc__intro { margin-inline: var(--b61-align-inline, 0); }
+.b61-acc__eyebrow::before { display: var(--b61-align-eyebrow-rule, var(--b61-eyebrow-rule)); }
+
+/* ---- Actions --------------------------------------------------------------
+   New in 1.24.0. The GROUP is the shared .b61-btn-group; this element supplies
+   the gap above it and the CONTENT COLUMN.
+
+   The column is `--acc-measure`, NOT `--b61-width`, because the Width control
+   changes it and both .b61-acc__head and .b61-acc__list follow it. Hard-coding
+   --b61-width here would line the buttons up with the head at Standard and
+   leave them hanging outside it at Narrow — the same defect the card grid and
+   the stats band each had, in a third variation. */
+.b61-acc__actions {
+  max-width: var(--acc-measure, var(--b61-width));
+  margin: var(--b61-acc-actions-space) auto 0;
+}
+
+/* ---- List and items ------------------------------------------------------ */
+.b61-acc__list {
+  max-width: var(--acc-measure, var(--b61-width));
+  margin: 0 auto;
+}
+
+/* The item header is a real heading so the accordion appears in the document
+   outline; the heading carries no visual styling of its own. */
+.b61-acc__itemhead {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.b61-acc__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--b61-acc-toggle-gap);
+  width: 100%;
+  padding: 30px var(--acc-pad-x);
+  margin: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.b61-acc__idx {
+  flex: 0 0 auto;
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--b61-eyebrow-tracking);
+  color: var(--acc-accent);
+}
+
+.b61-acc__title {
+  flex: 1 1 0;
+  margin: 0;
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-text-h3);
+  line-height: 1.24;
+  color: var(--acc-ink);
+}
+
+.b61-acc__tag {
+  flex: 0 0 auto;
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-label);
+  font-weight: 700;
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--acc-muted);
+}
+
+.b61-acc__icon {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--acc-line);
+  border-radius: var(--b61-radius-pill);
+  color: var(--acc-ink);
+}
+
+.b61-acc__icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.b61-acc__toggle:hover .b61-acc__title,
+.b61-acc__toggle:hover .b61-acc__icon {
+  color: var(--acc-rule);
+}
+
+.b61-acc__toggle:hover .b61-acc__icon {
+  border-color: var(--acc-rule);
+}
+
+.b61-acc__toggle:focus-visible {
+  outline: 3px solid var(--acc-focus);
+  outline-offset: -3px;
+}
+
+/* ---- Item styles ---------------------------------------------------------- */
+.b61-acc__region--style-divided .b61-acc__list {
+  border-top: 1px solid var(--acc-line);
+}
+
+.b61-acc__region--style-divided .b61-acc__item {
+  border-bottom: 1px solid var(--acc-line);
+}
+
+/* Boxed and separated give each item its own surface. The item style sets the
+   structure; the item surface sets the colours, on the item itself — so the two
+   never have to be written as a six-by-two matrix of compound selectors. */
+.b61-acc__region--style-boxed .b61-acc__item,
+.b61-acc__region--style-separated .b61-acc__item {
+  --acc-pad-x: 24px;
+  background: var(--acc-item-bg);
+  border: 1px solid var(--acc-line);
+  color: var(--acc-ink);
+}
+
+/* ---- Item surfaces --------------------------------------------------------
+   Applied only when the item style is boxed or separated — a divided item has
+   no surface of its own and always takes the band's colours. Each is the same
+   contrast-checked pair used for the band of the same name, so an item can sit
+   on any band: dark items on a light page, light items on a dark page. */
+.b61-acc__item--surf-card {
+  --acc-item-bg: var(--b61-white);
+  --acc-ink: var(--b61-ink);
+  --acc-muted: var(--b61-muted);
+  --acc-accent: var(--b61-accent-text);
+  --acc-rule: var(--b61-accent);
+  --acc-line: var(--b61-border);
+  --acc-focus: var(--b61-focus);
+}
+
+.b61-acc__item--surf-light {
+  --acc-item-bg: var(--b61-surface);
+  --acc-ink: var(--b61-ink);
+  --acc-muted: var(--b61-muted);
+  --acc-accent: var(--b61-accent-text);
+  --acc-rule: var(--b61-accent);
+  --acc-line: var(--b61-border);
+  --acc-focus: var(--b61-focus);
+}
+
+.b61-acc__item--surf-soft {
+  --acc-item-bg: var(--b61-surface-soft);
+  --acc-ink: var(--b61-on-surface-soft);
+  --acc-muted: var(--b61-on-surface-soft);
+  --acc-accent: var(--b61-accent-text-on-soft);
+  --acc-rule: var(--b61-accent-text-on-soft);
+  --acc-line: rgb(var(--b61-scrim-rgb) / 0.28);
+  --acc-focus: var(--b61-focus);
+}
+
+.b61-acc__item--surf-dark {
+  --acc-item-bg: var(--b61-surface-dark);
+  --acc-ink: var(--b61-on-surface-dark);
+  --acc-muted: rgb(var(--b61-light-scrim-rgb) / 0.88);
+  --acc-accent: var(--b61-on-dark-accent);
+  --acc-rule: var(--b61-on-dark-accent);
+  --acc-line: rgb(var(--b61-light-scrim-rgb) / 0.24);
+  --acc-focus: var(--b61-focus-on-dark);
+}
+
+.b61-acc__item--surf-accent {
+  --acc-item-bg: var(--b61-surface-accent);
+  --acc-ink: var(--b61-on-surface-accent);
+  --acc-muted: rgb(var(--b61-light-scrim-rgb) / 0.92);
+  --acc-accent: var(--b61-palette-paper);
+  --acc-rule: var(--b61-palette-paper);
+  --acc-line: rgb(var(--b61-light-scrim-rgb) / 0.3);
+  --acc-focus: var(--b61-focus-on-dark);
+}
+
+/* Outline declares nothing: the item keeps the band's locals and shows only its
+   border, so it reads as a box drawn on the surface rather than a box on it. */
+.b61-acc__item--surf-outline {
+  --acc-item-bg: transparent;
+}
+
+.b61-acc__region--style-boxed .b61-acc__item + .b61-acc__item {
+  margin-top: -1px;
+}
+
+.b61-acc__region--style-boxed .b61-acc__item:first-child {
+  border-radius: var(--b61-radius) var(--b61-radius) 0 0;
+}
+
+.b61-acc__region--style-boxed .b61-acc__item:last-child {
+  border-radius: 0 0 var(--b61-radius) var(--b61-radius);
+}
+
+.b61-acc__region--style-separated .b61-acc__list {
+  display: grid;
+  gap: var(--b61-acc-item-gap);
+}
+
+.b61-acc__region--style-separated .b61-acc__item {
+  border-radius: var(--b61-radius);
+}
+
+/* ---- Panel ---------------------------------------------------------------- */
+.b61-acc__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  /* A folded row is still in the DOM, so without this every link inside a
+     closed answer stayed in the tab order and a screen reader read closed
+     answers aloud (fixed 1.41.0). It flips AFTER the fold on closing, and at
+     once on opening - see Motion below. */
+  visibility: hidden;
+}
+
+.b61-acc__panel-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.b61-acc__panel-body {
+  padding: 0 var(--acc-pad-x) 40px;
+  /* No reading measure here. An 80ch cap stopped the copy roughly two thirds of
+     the way across a full-width item while the header row ran edge to edge, so
+     it read as truncation rather than as a measure. The panel now fills the
+     item; control line length by narrowing the element, not the panel. */
+}
+
+.b61-acc__region--style-boxed .b61-acc__panel-body,
+.b61-acc__region--style-separated .b61-acc__panel-body {
+  padding-bottom: 30px;
+}
+
+.b61-acc__item.is-open .b61-acc__panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+/* The copy arrives rather than being uncovered: it sits faded and a few px
+   high while folded, and settles as the row opens. */
+.b61-acc__panel-body {
+  opacity: 0;
+  translate: 0 calc(-1 * var(--b61-disclose-shift));
+}
+
+.b61-acc__item.is-open .b61-acc__panel-body {
+  opacity: 1;
+  translate: none;
+}
+
+.b61-acc__item.is-open .b61-acc__icon {
+  color: var(--acc-rule);
+  border-color: var(--acc-rule);
+}
+
+/* Only the chevron flips. The plus keeps its bar and loses its stem. */
+.b61-acc__region--icon-chevron .b61-acc__item.is-open .b61-acc__icon {
+  transform: rotate(180deg);
+}
+
+.b61-acc__icon-v {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.b61-acc__item.is-open .b61-acc__icon-v {
+  transform: scaleY(0);
+}
+
+.b61-acc.is-ready .b61-acc__panel {
+  transition: grid-template-rows var(--b61-motion-slow) var(--b61-motion-disclose-ease), visibility 0s linear var(--b61-motion-slow);
+}
+
+.b61-acc.is-ready .b61-acc__item.is-open .b61-acc__panel {
+  transition: grid-template-rows var(--b61-motion-slow) var(--b61-motion-disclose-ease), visibility 0s;
+}
+
+/* Closing: the copy fades out quickly, ahead of the fold. */
+.b61-acc.is-ready .b61-acc__panel-body {
+  transition: opacity var(--b61-motion-quick) var(--b61-motion-ease), translate var(--b61-motion-quick) var(--b61-motion-ease);
+}
+
+/* Opening: a beat behind the row, over the row's own duration. */
+.b61-acc.is-ready .b61-acc__item.is-open .b61-acc__panel-body {
+  transition: opacity var(--b61-motion-slow) var(--b61-motion-ease) var(--b61-motion-disclose-delay), translate var(--b61-motion-slow) var(--b61-motion-disclose-ease) var(--b61-motion-disclose-delay);
+}
+
+.b61-acc.is-ready .b61-acc__icon {
+  transition: transform var(--b61-motion-slow) var(--b61-motion-ease), color var(--b61-ease), border-color var(--b61-ease);
+}
+
+.b61-acc.is-ready .b61-acc__icon-v {
+  transition: transform var(--b61-motion-base) var(--b61-motion-ease);
+}
+
+.b61-acc.is-ready .b61-acc__title {
+  transition: color var(--b61-ease);
+}
+
+/* ---- Panel copy ----------------------------------------------------------- */
+.b61-acc__panel .breakdance-rich-text-styles {
+  font-family: var(--b61-font-body);
+  color: var(--acc-ink);
+}
+
+.b61-acc__panel .breakdance-rich-text-styles p {
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  margin: 0 0 10px;
+}
+
+.b61-acc__panel .breakdance-rich-text-styles > p:first-child {
+  font-size: var(--b61-text-body);
+  margin-bottom: 20px;
+}
+
+.b61-acc__panel .breakdance-rich-text-styles ul {
+  margin: 0 0 10px;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.b61-acc__panel .breakdance-rich-text-styles li {
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  margin: 0 0 10px 20px;
+  list-style: disc outside;
+  display: list-item;
+}
+
+.b61-acc__panel .breakdance-rich-text-styles ul ul {
+  margin-top: 10px;
+}
+
+.b61-acc__panel .breakdance-rich-text-styles ul ul li {
+  list-style: circle outside;
+}
+
+.b61-acc__panel .breakdance-rich-text-styles a:focus-visible {
+  outline: 3px solid var(--acc-focus);
+  outline-offset: 2px;
+}
+
+/* ---- Accessibility floor (principle 14) ----------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .b61-acc.is-ready .b61-acc__panel,
+  .b61-acc.is-ready .b61-acc__item.is-open .b61-acc__panel,
+  .b61-acc.is-ready .b61-acc__panel-body,
+  .b61-acc.is-ready .b61-acc__item.is-open .b61-acc__panel-body,
+  .b61-acc.is-ready .b61-acc__icon,
+  .b61-acc.is-ready .b61-acc__icon-v,
+  .b61-acc.is-ready .b61-acc__title {
+    transition: none;
+  }
+}

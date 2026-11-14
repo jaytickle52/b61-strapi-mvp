@@ -7,7 +7,7 @@ import { cardsFrom, ensureDemoImages, statsFrom } from './demo'
  * Rebuilt on start whenever LIBRARY_VERSION changes; edits made to the page
  * by hand survive until the next version bump.
  */
-const LIBRARY_VERSION = 1
+const LIBRARY_VERSION = 2
 const MARK = `[b61-library v${LIBRARY_VERSION}]`
 
 const para = (text: string) => ({
@@ -56,6 +56,47 @@ export async function syncElementLibrary(payload: Payload) {
     {
       blockType: 'b61Gallery', lines: [{ text: 'The same photos as a grid' }], headingLevel: 'h3', media: 'gallery', galleryLayout: 'grid', columns: '3',
       imageShape: 'landscape', surface: 'soft', images: [0, 1, 2, 3, 2, 0].map((i) => ({ image: pic(i) })),
+    },
+    label('Accordion', 'Questions and answers, or any list that opens one item at a time.'),
+    {
+      blockType: 'b61Accordion', eyebrow: 'Admissions', lines: [{ text: 'Common questions' }], itemStyle: 'divided',
+      items: [
+        { title: 'When can we visit?', subtitle: 'Tours', body: para('Tours run most weekday mornings during the school year. Book a time on the Visit page.') },
+        { title: 'Is there tuition assistance?', subtitle: 'Tuition', body: para('Yes. About a third of our families receive need-based aid. Apply when you apply for admission.') },
+        { title: 'Do you offer before and after care?', subtitle: 'Daily life', body: para('Care opens at 7:15 and runs until 5:30 for students in every grade.') },
+      ],
+    },
+    label('Tabs', 'Each tab shows its own elements. Here, a Prose and a Split.'),
+    {
+      blockType: 'b61Tabs', lines: [{ text: 'A path for every stage' }], tabPosition: 'top', surface: 'soft',
+      tabs: [
+        { label: 'Grammar School', content: [{ blockType: 'b61Prose', headingLevel: 'h3', lines: [{ text: 'Wonder and memory' }], contentBlocks: [{ type: 'body', body: para('Songs, chants and stories build a store of knowledge and a love of learning.') }], padTop: 'none', padBottom: 'none' }] },
+        { label: 'Logic School', content: [{ blockType: 'b61Split', headingLevel: 'h3', lines: [{ text: 'Asking why' }], media: 'photo', image: pic(2), contentBlocks: [{ type: 'body', body: para('Students learn to reason, argue fairly and follow an idea to its source.') }], padTop: 'none', padBottom: 'none' }] },
+      ],
+    },
+    label('Pillars', 'Feature tabs with a photo for each.'),
+    {
+      blockType: 'b61Pillars', lines: [{ text: 'What makes us different' }], tabPosition: 'left',
+      items: [
+        { title: 'Known by name', body: para('Small classes mean every teacher knows every child.'), image: pic(0) },
+        { title: 'Great books', body: para('Students read whole books, not excerpts, from the first grade on.'), image: pic(2) },
+        { title: 'Faith and reason', body: para('We teach that faith and learning belong together.'), image: pic(3) },
+      ],
+    },
+    label('Carousel', 'Slides of any element. Here, testimonials.'),
+    {
+      blockType: 'b61Carousel', lines: [{ text: 'What families say' }], perView: '1', controlsPosition: 'top-right',
+      slides: [
+        { content: [{ blockType: 'b61Testimonial', quote: 'The teachers know our kids better than we expected anyone could.', attribution: 'Parent of a 2nd grader', padTop: 'tight', padBottom: 'tight' }] },
+        { content: [{ blockType: 'b61Testimonial', quote: 'My son reads for fun now. That alone was worth it.', attribution: 'Parent of a 6th grader', padTop: 'tight', padBottom: 'tight' }] },
+        { content: [{ blockType: 'b61Testimonial', quote: 'It feels like a family, and the academics are serious.', attribution: 'Parent of two', padTop: 'tight', padBottom: 'tight' }] },
+      ],
+    },
+    label('Section', 'A band that holds other elements, here with a side column holding a Rail.'),
+    {
+      blockType: 'b61Section', columns: 'rail-right', surface: 'soft',
+      content: [{ blockType: 'b61Prose', lines: [{ text: 'Admissions at a glance' }], contentBlocks: [{ type: 'body', body: para('Applications open each fall for the following year. Most families visit, apply, and then spend a morning in class with us.') }], padTop: 'none', padBottom: 'none' }],
+      side: [{ blockType: 'b61Rail', buttons: [{ label: 'Apply now', variant: 'primary', link: go('admissions'), fullWidth: true }], linksLabel: 'Keep exploring', links: [{ label: 'Tuition', link: go('tuition') }, { label: 'Visit', link: go('visit') }] }],
     },
     label('Card Grid', 'Hand-written cards, or filled from Programs, Events, News or Staff.'),
     cardsFrom({ heading: 'Programs', source: 'programs', limit: 3, columns: 'three', tone: 'light' }),

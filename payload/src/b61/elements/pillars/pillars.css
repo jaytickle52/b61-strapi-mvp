@@ -1,0 +1,724 @@
+/*
+ * Pillars — "Our Four Pillars". A vertical TAB set, not an accordion: one
+ * pillar is always the current one, its description sits open beneath its
+ * title, and the photo beside the list changes with it. Markup follows the
+ * WAI-ARIA tabs pattern with automatic activation (arrow keys move focus AND
+ * select). Tokens only: colour, type, radius and spacing all resolve through
+ * --b61-*; the handful of new roles fall back to existing tokens and are listed
+ * in the build log for promotion.
+ */
+/* ---------------------------------------------------------------------------
+   DIALS
+   Declared on the REGION at zero specificity, so a site re-skins by
+   redeclaring and never edits this file.
+
+   The eyebrow values below are PRESERVED from before the 1.17.0 sweep (already the shared value),
+   not fresh design decisions. The shared defaults are --b61-eyebrow-space and
+   --b61-eyebrow-rule-gap in tokens.css; delete an override here and the element
+   falls back to the house value.
+   --------------------------------------------------------------------------- */
+:where(.b61-pillars__region) {
+  --b61-pillars-eyebrow-space: var(--b61-space-md);
+  --b61-pillars-eyebrow-rule-gap: var(--b61-space-sm);
+
+  /* The head's seam. --b61-space-md because that is what the intro's own
+     margin-top was before the port; preserved, not redesigned. */
+  --b61-pillars-heading-space: var(--b61-space-md);
+}
+
+.b61-pillars {
+  width: 100%;
+  align-self: stretch;
+  text-align: left;
+}
+
+/* ---- Region ---------------------------------------------------------------
+   The root is Breakdance's own tag, so the surface and its text partners live
+   here. Locals read the --b61-on-bg-* globals first: with a .b61-band--* class
+   above (a native Section), the band's palette wins; with none, the element's
+   own contrast-checked pair applies. Same model as CTA Band and Stats Band. */
+.b61-pillars__region {
+  --pil-ink: var(--b61-on-bg-ink, var(--b61-ink));
+  --pil-muted: var(--b61-on-bg-muted, var(--b61-muted));
+  --pil-accent: var(--b61-on-bg-accent, var(--b61-accent-text));
+  --pil-rule: var(--b61-on-bg-line, var(--b61-accent));
+  --pil-heading-accent: var(--b61-on-bg-accent, var(--b61-heading-accent));
+  --pil-line: var(--b61-border);
+  --pil-focus: var(--b61-focus);
+  --band-pt: var(--b61-pad-block);
+  --band-pb: var(--b61-pad-block);
+  padding: var(--band-pt) var(--b61-pad-inline) var(--band-pb);
+  color: var(--pil-ink);
+}
+
+.b61-pillars__region--pt-tight { --band-pt: var(--b61-pad-block-tight); }
+.b61-pillars__region--pt-none { --band-pt: 0; }
+.b61-pillars__region--pb-tight { --band-pb: var(--b61-pad-block-tight); }
+.b61-pillars__region--pb-none { --band-pb: 0; }
+
+/* SURFACES LIVE IN /assets — the region emits `b61-surface--<s>` for the ground
+   and `b61-band--<s>` for the palette, and the --pil-* base locals read the
+   --b61-on-bg-* globals those set. Ink, accent and rule are therefore gone from
+   here; what remains is only what Pillars does DIFFERENTLY from the house band. */
+
+/* Pillars keeps --b61-muted on soft rather than the band's --b61-on-soft-muted.
+   Deliberate: inactive pillar titles are large (24px+), so slate clears the 3:1
+   large-text floor at 6.31:1, and the accent still steps to its text-safe value.
+   Delete this and the titles get quieter than they were measured to be. */
+.b61-pillars__region.b61-surface--soft {
+  --pil-muted: var(--b61-muted);
+  --pil-heading-accent: var(--b61-accent-text-on-soft);
+}
+
+/* Dark-only state with no global equivalent: a hairline tuned to this element,
+   its focus ring, and the house rule that photo frames go gold on dark bands. */
+.b61-pillars__region.b61-surface--dark {
+  --pil-heading-accent: var(--b61-on-dark-accent);
+  --pil-line: rgb(var(--b61-light-scrim-rgb) / 0.28);
+  --pil-focus: var(--b61-focus-on-dark);
+  --b61-frame-color: var(--b61-frame-color-alt);
+}
+
+/* ---- Head (centred) ------------------------------------------------------ */
+.b61-pillars__head {
+  max-width: var(--b61-width-narrow);
+  margin: 0 auto var(--b61-space-2xl);
+  /* Heading alignment (1.74.0) sets the --b61-align-* dials here per
+     breakpoint (css.twig); unset, the head stays centred. */
+  text-align: var(--b61-align-text, center);
+}
+
+.b61-pillars__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--b61-pillars-eyebrow-rule-gap);
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-eyebrow-size);
+  font-weight: var(--b61-eyebrow-weight);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: var(--b61-eyebrow-case);
+  color: var(--pil-accent);
+  margin: 0;
+}
+
+.b61-pillars__heading {
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-pillars-heading-size, var(--b61-text-h2));
+  line-height: 1.1;
+  color: var(--pil-ink);
+  margin: 0;
+}
+
+.b61-pillars__heading em {
+  font-style: italic;
+  color: var(--pil-heading-accent);
+}
+
+/* The gap ABOVE this is the stack's job now (see the seam rules at the foot of
+   this file), so the block carries no margin of its own. `ch` is legitimate
+   here, unlike on a wrapper: this element sets its own font-size, so ch
+   resolves against the type it is actually measuring. */
+.b61-pillars__intro {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  color: var(--pil-muted);
+  margin: 0;
+  margin-inline: var(--b61-align-inline, auto);
+  max-width: 62ch;
+}
+
+.b61-pillars__intro > *:first-child { margin-top: 0; }
+.b61-pillars__intro > *:last-child { margin-bottom: 0; }
+.b61-pillars__intro p { margin: 0 0 1.2em; }
+.b61-pillars__intro a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------------------------------------------------------------------------
+   THE HEAD'S TEXT STACK
+   --------------------------------------------------------------------------- */
+
+/* One heading tag, N spans. Emphasis is a class on the line, which is what let
+   the heading group drop any ordering control. */
+.b61-pillars__heading-line {
+  display: block;
+}
+
+.b61-pillars__heading-line--em {
+  font-style: italic;
+  color: var(--pil-heading-accent);
+}
+
+.b61-pillars__subhead {
+  font-family: var(--b61-font-display);
+  font-weight: 400;
+  font-size: var(--b61-text-h3);
+  line-height: 1.25;
+  color: var(--pil-muted);
+  margin: 0;
+}
+
+.b61-pillars__subhead em {
+  font-style: italic;
+  color: var(--pil-heading-accent);
+}
+
+/* ---------------------------------------------------------------------------
+   STACK RHYTHM
+   Once any role can follow any role, per-role bottom margins collide, so the
+   gap between items is the STACK's job (.b61-block in components.css) and only
+   the seams that differ are named here.
+   --------------------------------------------------------------------------- */
+
+/* The eyebrow is inline-flex for its leading rule. As a stack item it must
+   become a block, or it sits in a line box at least as tall as the strut and
+   the seam silently grows — the bug the CTA port turned up. The head is
+   centred, and text-align cannot reach a non-inline box, so it re-centres with
+   auto margins. */
+.b61-block.b61-pillars__eyebrow {
+  display: flex;
+  width: fit-content;
+  margin-inline: var(--b61-align-inline, auto);
+}
+
+.b61-pillars__eyebrow + .b61-pillars__heading {
+  margin-top: var(--b61-pillars-eyebrow-space);
+}
+
+.b61-pillars__heading + .b61-pillars__subhead,
+.b61-pillars__subhead + .b61-pillars__subhead {
+  margin-top: var(--b61-space-sm);
+}
+
+.b61-pillars__heading + .b61-block:not(.b61-pillars__subhead) {
+  margin-top: var(--b61-pillars-heading-space);
+}
+
+/* ---- Layout ---------------------------------------------------------------
+   THREE regions now — tabs, panels, media — placed by name rather than by
+   source order, so the same markup serves a left rail, a right rail and a
+   horizontal bar without reordering the DOM. Named areas rather than `order`
+   because `order` moves boxes without moving the reading sequence, and the
+   reading sequence is the thing a keyboard and a screen reader follow.
+   --------------------------------------------------------------------------- */
+.b61-pillars__layout {
+  display: grid;
+  gap: var(--b61-space-2xl);
+  align-items: start;
+  max-width: var(--b61-width);
+  margin: 0 auto;
+  grid-template-columns: minmax(0, 35fr) minmax(0, 65fr);
+  grid-template-areas:
+    "tabs   media"
+    "panels media";
+}
+
+.b61-pillars__tabs   { grid-area: tabs; }
+.b61-pillars__panels {
+  grid-area: panels;
+  /* ONE CELL (1.41.0). The panels used to stack one under another, so a
+     switch folded the old panel while the new one opened BELOW it: the new copy
+     slid up the page as the old row collapsed. Sharing a cell, the incoming copy
+     appears where the outgoing copy was, the cell's height eases between the
+     two, and the text cross-fades like the photos beside it. */
+  display: grid;
+}
+.b61-pillars__media  { grid-area: media; }
+
+.b61-pillars__region--tabs-right .b61-pillars__layout {
+  grid-template-columns: minmax(0, 65fr) minmax(0, 35fr);
+  grid-template-areas:
+    "media tabs"
+    "media panels";
+}
+
+/* Tabs across the top: one row of buttons, then the panel and the photo
+   side by side beneath it. The tablist switches to aria-orientation
+   horizontal in the template, which is what tells the arrow keys to run
+   left/right instead of up/down. */
+.b61-pillars__region--tabs-top .b61-pillars__layout {
+  grid-template-columns: minmax(0, 55fr) minmax(0, 45fr);
+  grid-template-areas:
+    "tabs   tabs"
+    "panels media";
+  gap: var(--b61-space-xl) var(--b61-space-2xl);
+}
+
+.b61-pillars__region--tabs-top .b61-pillars__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--b61-space-xl);
+  border-top: 0;
+  border-bottom: 1px solid var(--pil-line);
+}
+
+.b61-pillars__region--tabs-top .b61-pillars__tab {
+  /* width:auto is what actually makes the row a row: the vertical variants set
+     width:100%, and a full-width flex item wraps to its own line every time. */
+  width: auto;
+  border-bottom: 0;
+  padding-inline: 0;
+}
+
+/* ---- Tabs ---------------------------------------------------------------- */
+.b61-pillars__tabs {
+  border-top: 1px solid var(--pil-line);
+}
+
+/* The heading is there for the outline; the button carries the styling. */
+.b61-pillars__tabhead {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.b61-pillars__tab {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: var(--b61-space-lg) var(--b61-space-xs);
+  background: none;
+  /* `border: 0` then a single edge — the order matters. The rename that split
+     this rule in two left the separator in a stub ABOVE it, where this reset
+     silently wiped it and every tab lost its rule. */
+  border: 0;
+  border-bottom: 1px solid var(--pil-line);
+  cursor: pointer;
+  text-align: left;
+  color: var(--pil-muted);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Italic display face, inactive in the muted step, active in ink. Inactive
+   titles are 26px+ so the muted colour only needs the 3:1 large-text floor;
+   it clears 4.5:1 on every surface anyway. */
+.b61-pillars__title {
+  display: block;
+  font-family: var(--b61-font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--b61-pillars-title-size, var(--b61-text-h3));
+  line-height: 1.2;
+  color: inherit;
+}
+
+.b61-pillars__tab:hover {
+  color: var(--pil-ink);
+}
+
+.b61-pillars__tab.is-active,
+.b61-pillars__tab[aria-selected="true"] {
+  color: var(--pil-ink);
+}
+
+.b61-pillars__tab:focus-visible {
+  outline: var(--b61-focus-width) solid var(--pil-focus);
+  outline-offset: calc(-1 * var(--b61-focus-width));
+}
+
+/* ---- Panels ---------------------------------------------------------------
+   Height animates through grid rows (0fr -> 1fr). The panel stays in the
+   layout at all times: no `hidden` attribute, no display:none. That is the
+   whole fix — the old mechanism removed `hidden` in one frame and added
+   .is-open two frames later, so the open state depended on requestAnimationFrame
+   callbacks actually running. In a throttled or background tab they do not run
+   at all, which left the panel un-hidden but still at 0fr with nothing to
+   re-trigger it: every panel closed. Opening is now one synchronous class
+   toggle with no frame race.
+
+   A closed panel collapses to a zero row AND ends at visibility:hidden, so its
+   text is not announced and nothing inside it is focusable; JS also marks it
+   `inert` where the browser supports that. */
+.b61-pillars__panel {
+  grid-area: 1 / 1;
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+}
+
+.b61-pillars__panel.is-open {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+/* overflow:hidden and min-height:0 are what let the 0fr end actually collapse:
+   without them the row keeps the content's min-content height. */
+.b61-pillars__panel-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.b61-pillars__panel .b61-pillars__panel-body {
+  opacity: 0;
+  translate: 0 var(--b61-disclose-shift);
+}
+
+.b61-pillars__panel.is-open .b61-pillars__panel-body {
+  opacity: 1;
+  translate: none;
+}
+
+.b61-pillars__panel-body {
+  padding: 0 var(--b61-space-xs) var(--b61-space-lg);
+  font-family: var(--b61-font-body);
+  color: var(--pil-ink);
+}
+
+.b61-pillars__panel-body p {
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  margin: 0 0 var(--b61-space-sm);
+}
+
+.b61-pillars__panel-body p:last-child {
+  margin-bottom: 0;
+}
+
+.b61-pillars__panel-body a {
+  color: var(--pil-accent);
+}
+
+.b61-pillars__panel-body a:focus-visible {
+  outline: var(--b61-focus-width) solid var(--pil-focus);
+  outline-offset: 2px;
+}
+
+/* ---- Media pane -----------------------------------------------------------
+   Every figure occupies the same cell; the active one is opaque. The frame is
+   the Framed Image technique: offset padding, a bordered ::before, and media
+   pulled back over the frame by the same offset — exactly as Framed Image and
+   Split draw it, so the photo overhangs the frame's bottom-right by
+   --b61-frame-offset and by nothing else. Under 767px the figure keeps a
+   right margin of that offset, because the gutter there is too tight to
+   absorb the overhang. */
+.b61-pillars__media {
+  display: grid;
+  grid-template-areas: "stack";
+  /*
+   * The ratio belongs to the PANE, not to each figure. All four figures share
+   * one grid cell, so the cell takes the height of the tallest of them; when
+   * each figure carried its own aspect-ratio box, a shorter photo left its
+   * frame (which traces the stretched figure) standing taller and wider than
+   * the image inside it. Sizing the pane once and letting every figure fill it
+   * makes the frame hug its photo, in every tab, the way Split and Framed
+   * Image already do.
+   */
+  aspect-ratio: var(--b61-pillars-media-ratio, 4 / 3);
+}
+
+/* The figure IS the frame, and it is the same frame as .b61-fimg__frame and
+   .b61-split__frame: display:grid, offset padding on the top/left, a bordered
+   ::before on the padding box, and the media pulled back over the frame by the
+   same offset on the right/bottom. It is a grid item here (all four figures
+   share one cell), which is why the display:grid had been left off — but the
+   reference implementations set it, and matching them exactly is what keeps
+   the offset reading identically in Pillars and in Split on the same page. */
+.b61-pillars__figure {
+  grid-area: stack;
+  display: grid;
+  position: relative;
+  margin: 0;
+  padding: var(--b61-frame-offset) 0 0 var(--b61-frame-offset);
+  isolation: isolate;
+  min-height: 0;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.b61-pillars__figure.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.b61-pillars__figure::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--b61-frame-width) solid var(--b61-frame-color, var(--b61-primary));
+  /* Above the media: the frame is a plain border drawn ON the image edge,
+     not a box behind it. */
+  z-index: 2;
+  pointer-events: none;
+}
+
+.b61-pillars__figure-media {
+  position: relative;
+  z-index: 1;
+  margin: 0 calc(-1 * var(--b61-frame-offset)) calc(-1 * var(--b61-frame-offset)) 0;
+  min-height: 0;
+  overflow: hidden;
+  background-color: var(--b61-surface);
+}
+
+.b61-pillars__figure-media > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---- Motion (only once JS has taken over) -------------------------------- */
+.b61-pillars.is-ready .b61-pillars__panel {
+  transition: grid-template-rows var(--b61-motion-slow) var(--b61-motion-disclose-ease), visibility 0s linear var(--b61-motion-slow);
+}
+
+/* Outgoing copy fades quickly; incoming copy arrives a beat later. */
+.b61-pillars.is-ready .b61-pillars__panel-body {
+  transition: opacity var(--b61-motion-quick) var(--b61-motion-ease), translate var(--b61-motion-quick) var(--b61-motion-ease);
+}
+
+.b61-pillars.is-ready .b61-pillars__panel.is-open .b61-pillars__panel-body {
+  transition: opacity var(--b61-motion-slow) var(--b61-motion-ease) var(--b61-motion-disclose-delay), translate var(--b61-motion-slow) var(--b61-motion-disclose-ease) var(--b61-motion-disclose-delay);
+}
+
+/* Opening: visibility flips immediately so the text is readable while the row
+   grows. Closing: it flips only after the row has finished collapsing. */
+.b61-pillars.is-ready .b61-pillars__panel.is-open {
+  transition: grid-template-rows var(--b61-motion-slow) var(--b61-motion-disclose-ease), visibility 0s;
+}
+
+.b61-pillars.is-ready .b61-pillars__tab {
+  transition: color var(--b61-ease);
+}
+
+.b61-pillars.is-ready .b61-pillars__figure {
+  transition: opacity var(--b61-motion-slow) var(--b61-motion-ease), visibility 0s linear var(--b61-motion-slow);
+}
+
+.b61-pillars.is-ready .b61-pillars__figure.is-active {
+  transition: opacity var(--b61-motion-slow) var(--b61-motion-ease), visibility 0s;
+}
+
+/* ---- Responsive ---------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .b61-pillars__layout {
+    gap: var(--b61-space-xl);
+  }
+}
+
+/* Under 767px the two columns become one list: each pillar's photo appears
+   directly beneath its description. Single DOM — the tab list and the media
+   pane dissolve (display: contents) so tabs and figures are siblings in one
+   grid, and `order` interleaves them by the --b61-pillar-i each carries.
+   Only the active figure renders, so nothing is stacked or duplicated. */
+@media (max-width: 767px) {
+  .b61-pillars__head {
+    margin-bottom: var(--b61-space-xl);
+  }
+
+  /* One column, in READING ORDER: the tab list, then the open panel, then its
+     photo. The old rule interleaved tab/panel/figure with `order` so each
+     pillar read as its own accordion row — which was right while this was an
+     accordion, and is wrong now that it is a tablist. A tablist's tab order is
+     every tab, then the panel; making the eye follow a different sequence from
+     the keyboard is the mismatch this restructure exists to remove. */
+  .b61-pillars__layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "tabs"
+      "panels"
+      "media";
+    gap: var(--b61-space-lg);
+  }
+
+  .b61-pillars__region--tabs-right .b61-pillars__layout,
+  .b61-pillars__region--tabs-top .b61-pillars__layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "tabs"
+      "panels"
+      "media";
+  }
+
+  /* The horizontal bar becomes a scrollable strip rather than wrapping to
+     three ragged rows on a phone. */
+  .b61-pillars__region--tabs-top .b61-pillars__tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .b61-pillars__region--tabs-top .b61-pillars__tab {
+    white-space: nowrap;
+  }
+
+  .b61-pillars__tab:first-of-type {
+    border-top: 1px solid var(--pil-line);
+  }
+
+  .b61-pillars__region--tabs-top .b61-pillars__tab:first-of-type {
+    border-top: 0;
+  }
+
+  .b61-pillars__figure {
+    grid-area: auto;
+    display: none;
+  }
+
+  .b61-pillars__figure.is-active {
+    display: grid;
+    margin: 0 var(--b61-frame-offset) var(--b61-space-xl) 0;
+  }
+}
+
+/* ---- Accessibility floor (principle 14) ---------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .b61-pillars.is-ready .b61-pillars__panel,
+  .b61-pillars.is-ready .b61-pillars__panel.is-open,
+  .b61-pillars.is-ready .b61-pillars__panel-body,
+  .b61-pillars.is-ready .b61-pillars__panel.is-open .b61-pillars__panel-body,
+  .b61-pillars.is-ready .b61-pillars__tab,
+  .b61-pillars.is-ready .b61-pillars__figure,
+  .b61-pillars.is-ready .b61-pillars__figure.is-active {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   PANEL BENEATH ITS TAB (1.45.1) — left and right rails only.
+   1.45.0 moved the panels out of the tablist for ARIA conformance, which put
+   every description in one cell BELOW the whole list. On a vertical rail that
+   reads wrong: the copy belongs under the pillar you chose. The DOM stays
+   exactly as 1.45.0 built it (tablist owns only tabs); the tabs and panels
+   wrappers become SUBGRIDS over the same column, and each tab / panel takes a
+   row by --b61-pillar-row (2i-1 / 2i) emitted by the template. So the eye
+   sees tab, its panel, next tab — while the tablist stays conformant.
+   Closed panels collapse to 0fr, so their rows take no height. The trailing
+   1fr row absorbs the media pane's extra height so the tabs never spread.
+   --------------------------------------------------------------------------- */
+.b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__layout {
+  grid-template-areas: none;
+  grid-template-rows: repeat(var(--b61-pillars-rows, 8), auto) 1fr;
+  row-gap: 0;
+}
+
+.b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__tabs,
+.b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__panels {
+  grid-area: auto;
+  grid-column: 1;
+  grid-row: 1 / -2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: subgrid;
+  row-gap: 0;
+}
+
+/* The two subgrids overlap in the same cells, and the panels wrapper comes
+   later in the DOM, so it sat ON TOP of the tabs and swallowed every click
+   (1.49.0 fix). The wrapper lets pointers through; each panel takes them back
+   so links in the copy still work. */
+.b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__panels {
+  pointer-events: none;
+}
+
+.b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__panel {
+  pointer-events: auto;
+}
+
+.b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__tab,
+.b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__panel {
+  grid-column: 1;
+  grid-row: var(--b61-pillar-row, auto);
+}
+
+.b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__media {
+  grid-area: auto;
+  grid-column: 2;
+  grid-row: 1 / -1;
+}
+
+.b61-pillars__region--tabs-right .b61-pillars__tabs,
+.b61-pillars__region--tabs-right .b61-pillars__panels { grid-column: 2; }
+.b61-pillars__region--tabs-right .b61-pillars__media { grid-column: 1; }
+
+/* The rule under the active title moves to the foot of its open description,
+   so a pillar reads as one unit: title, copy, then the line. */
+.b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__tab.is-active {
+  border-bottom-color: transparent;
+}
+
+.b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__panel.is-open {
+  border-bottom: 1px solid var(--pil-line);
+}
+
+/* Phone: one column. Tab, its panel, next tab… and the active photo last. */
+@media (max-width: 767px) {
+  .b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(var(--b61-pillars-rows, 8), auto) auto;
+  }
+
+  .b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__tabs,
+  .b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__panels {
+    grid-column: 1;
+  }
+
+  .b61-pillars__region:not(.b61-pillars__region--tabs-top) .b61-pillars__media {
+    grid-column: 1;
+    grid-row: -2 / -1;
+    margin-top: var(--b61-space-lg);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   TOP BAR ALIGNMENT (1.47.0) — Left (default), Center, Full width.
+   Full width shares the row equally and centres each label; the bar's own
+   bottom rule still runs the whole width, so the row reads as one unit.
+   --------------------------------------------------------------------------- */
+.b61-pillars__region--tabs-top.b61-pillars__region--align-center .b61-pillars__tabs {
+  justify-content: center;
+}
+
+.b61-pillars__region--tabs-top.b61-pillars__region--align-full .b61-pillars__tabs {
+  flex-wrap: nowrap;
+  gap: 0;
+}
+
+.b61-pillars__region--tabs-top.b61-pillars__region--align-center .b61-pillars__tab,
+.b61-pillars__region--tabs-top.b61-pillars__region--align-full .b61-pillars__tab {
+  text-align: center;
+}
+
+.b61-pillars__region--tabs-top.b61-pillars__region--align-full .b61-pillars__tab {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-inline: var(--b61-space-xs);
+}
+
+/* Phones: a full-width row of four long labels cannot fit, so it falls back
+   to the scrolling strip every top bar uses there. */
+@media (max-width: 767px) {
+  .b61-pillars__region--tabs-top.b61-pillars__region--align-full .b61-pillars__tab {
+    flex: 0 0 auto;
+  }
+  .b61-pillars__region--tabs-top.b61-pillars__region--align-center .b61-pillars__tabs {
+    justify-content: flex-start;
+  }
+  .b61-pillars__region--tabs-top.b61-pillars__region--align-center .b61-pillars__tab:first-child {
+    margin-inline-start: auto;
+  }
+  .b61-pillars__region--tabs-top.b61-pillars__region--align-center .b61-pillars__tab:last-child {
+    margin-inline-end: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .b61-pillars__region--tabs-top.b61-pillars__region--align-full .b61-pillars__tabs {
+    gap: 0 var(--b61-space-xl);
+  }
+  .b61-pillars__region--tabs-top.b61-pillars__region--align-full .b61-pillars__tab {
+    padding-inline: 0;
+  }
+}
+
+/* PHOTO RADIUS (1.53.0). The frame and the photo share --b61-radius-media,
+   the same value cards read (see tokens.css), so a card grid and a framed
+   photo on one page always have the same corners. 0 on a square site. */
+.b61-pillars__figure::before {
+  border-radius: var(--b61-radius-media);
+}
+
+.b61-pillars__figure-media {
+  border-radius: var(--b61-radius-media);
+}

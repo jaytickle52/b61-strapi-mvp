@@ -77,3 +77,9 @@
 /* Plain alignment dials (Testimonial, Divider): b61-palign-<choice>. */
 .b61-palign-center { --b61-align-text: center; --b61-align-inline: auto; --b61-align-justify: center; }
 .b61-palign-left { --b61-align-text: left; --b61-align-inline: 0; --b61-align-justify: flex-start; }
+
+/* Heading width with alignment (Tabs, Pillars, Carousel css.twig): b61-headw-<choice>. */
+.b61-headw-center { max-width: var(--b61-width-narrow); }
+.b61-headw-center > :is(.b61-tabs__heading, .b61-tabs__subhead, .b61-pillars__heading, .b61-pillars__subhead, .b61-car__heading, .b61-car__subhead) { max-width: none; }
+.b61-headw-left { max-width: var(--b61-width); }
+.b61-headw-left > :is(.b61-tabs__heading, .b61-tabs__subhead, .b61-pillars__heading, .b61-pillars__subhead, .b61-car__heading, .b61-car__subhead) { max-width: var(--b61-width-narrow); }

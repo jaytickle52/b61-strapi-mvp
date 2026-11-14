@@ -70,3 +70,18 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
   Regrouping controls later needs no migration.
 - Stored values match the Breakdance plugin wherever they exist, so content can
   move between the two.
+
+## 8. Containers
+
+- Tabs, Carousel and Section hold other elements. Each tab, slide or column is a row
+  whose content is a list of elements, added with the same block picker as a page.
+- Only one level of nesting: a container offers the elements in `src/b61/inner.ts`,
+  which leaves containers out. A Section's side column also offers the B61 Rail.
+- Inside a container, Automatic heading level means H2 (never H1).
+
+## 9. Header and footer
+
+- Edited in School settings, using the same kit controls (lists, compact links, photos).
+- A menu item's first choice is what it opens: a page, a dropdown or a mega menu.
+  Only that kind's fields show.
+- Phones get the same items as a slide-in menu. There is nothing to set up for it.

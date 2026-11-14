@@ -212,6 +212,8 @@ export function BandHead({
   headingId,
   ri,
   wrap = true,
+  headClass = '',
+  itemClass = '',
 }: {
   block: { eyebrow?: string | null; lines?: Line[] | null; subheads?: { id?: string | null; text?: string | null }[] | null; intro?: unknown }
   prefix: string
@@ -219,31 +221,36 @@ export function BandHead({
   headingId: string
   ri: RevealAttr
   wrap?: boolean
+  /** Extra classes on the head wrapper (e.g. an alignment dial). */
+  headClass?: string
+  /** Extra classes on each child (Tabs, Pillars, Carousel add "b61-block"). */
+  itemClass?: string
 }) {
+  const x = itemClass ? ` ${itemClass}` : ''
   const lines = (block.lines ?? []).filter((l) => l?.text)
   const subs = (block.subheads ?? []).filter((s) => s?.text)
   if (!block.eyebrow && !lines.length && !subs.length && !block.intro) return null
   const inner = (
     <>
       {block.eyebrow && (
-        <span className={`${prefix}__eyebrow`} {...ri}>
+        <span className={`${prefix}__eyebrow${x}`} {...ri}>
           {block.eyebrow}
         </span>
       )}
-      <HeadingLines as={as} id={headingId} className={`${prefix}__heading`} lineClass={`${prefix}__heading-line`} lines={lines} ri={ri} />
+      <HeadingLines as={as} id={headingId} className={`${prefix}__heading${x}`} lineClass={`${prefix}__heading-line`} lines={lines} ri={ri} />
       {subs.map((s, i) => (
-        <p key={s.id ?? i} className={`${prefix}__subhead`} {...ri}>
+        <p key={s.id ?? i} className={`${prefix}__subhead${x}`} {...ri}>
           {s.text}
         </p>
       ))}
       {Boolean(block.intro) && (
-        <div className={`${prefix}__intro breakdance-rich-text-styles`} {...ri}>
+        <div className={`${prefix}__intro${x} breakdance-rich-text-styles`} {...ri}>
           <RichText data={block.intro as SerializedEditorState} disableContainer />
         </div>
       )}
     </>
   )
-  return wrap ? <div className={`${prefix}__head`}>{inner}</div> : inner
+  return wrap ? <div className={`${prefix}__head${headClass ? ` ${headClass}` : ''}`}>{inner}</div> : inner
 }
 
 /** Shared class helpers for a band's root: eyebrow rule. */

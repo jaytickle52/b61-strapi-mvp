@@ -1,0 +1,28 @@
+/*
+ * B61 Carousel Slide — a flex item of the carousel track. Its width comes from
+ * the track (Carousel/default.css); it only makes its content fill the slide
+ * height so a row of slides reads as one row of equal boxes.
+ */
+.b61-slide {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.b61-slide__content {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* A single band inside a slide fills its height, so painted slides line up. */
+.b61-slide__content > :nth-child(-n+1 of :not(style, script, template, link)):nth-last-child(-n+1 of :not(style, script, template, link)) {
+  flex: 1 1 auto;
+}
+
+/* Several elements in one slide are separated like the children of a
+   B61 Section. */
+.b61-slide__content > :nth-child(n+2 of :not(style, script, template, link)) {
+  margin-top: var(--b61-section-gap);
+}

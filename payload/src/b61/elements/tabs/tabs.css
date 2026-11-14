@@ -1,0 +1,485 @@
+/*
+ * B61 Tabs — the CONTAINER tab set. The band owns a head and a bar of labels;
+ * each B61 Tab child owns a panel that can hold anything the builder offers,
+ * a B61 Split included. Its fixed-content sibling is B61 Feature Tabs, which
+ * types title/description/photo into a repeater and needs no assembly.
+ *
+ * Tokens only: colour, type, radius and spacing resolve through --b61-*.
+ * The tab bar's own styling is deliberately identical to Feature Tabs, so the
+ * two read as one component in two shapes rather than two components.
+ */
+
+/* ---------------------------------------------------------------------------
+   DIALS
+   Declared on the REGION at zero specificity, so a site re-skins by
+   redeclaring and never edits this file. Values are the Feature Tabs values,
+   carried across rather than redesigned.
+   --------------------------------------------------------------------------- */
+:where(.b61-tabs__region) {
+  --b61-tabs-eyebrow-space: var(--b61-space-md);
+  --b61-tabs-eyebrow-rule-gap: var(--b61-space-sm);
+  --b61-tabs-heading-space: var(--b61-space-md);
+}
+
+.b61-tabs {
+  width: 100%;
+  align-self: stretch;
+  text-align: left;
+}
+
+/* ---- Region ---------------------------------------------------------------
+   The root is Breakdance's own tag, so the surface and its text partners live
+   here. Locals read the --b61-on-bg-* globals first: with a .b61-band--* class
+   above (a native Section), the band's palette wins; with none, the element's
+   own contrast-checked pair applies. Same model as Feature Tabs and CTA Band. */
+.b61-tabs__region {
+  --tab-ink: var(--b61-on-bg-ink, var(--b61-ink));
+  --tab-muted: var(--b61-on-bg-muted, var(--b61-muted));
+  --tab-accent: var(--b61-on-bg-accent, var(--b61-accent-text));
+  --tab-heading-accent: var(--b61-on-bg-accent, var(--b61-heading-accent));
+  --tab-line: var(--b61-border);
+  --tab-focus: var(--b61-focus);
+  --band-pt: var(--b61-pad-block);
+  --band-pb: var(--b61-pad-block);
+  padding: var(--band-pt) var(--b61-pad-inline) var(--band-pb);
+  color: var(--tab-ink);
+}
+
+.b61-tabs__region--pt-tight { --band-pt: var(--b61-pad-block-tight); }
+.b61-tabs__region--pt-none { --band-pt: 0; }
+.b61-tabs__region--pb-tight { --band-pb: var(--b61-pad-block-tight); }
+.b61-tabs__region--pb-none { --band-pb: 0; }
+
+/* Inactive tab titles are large (24px+), so the muted step only needs the 3:1
+   large-text floor; keeping --b61-muted on soft matches Feature Tabs exactly. */
+.b61-tabs__region.b61-surface--soft {
+  --tab-muted: var(--b61-muted);
+  --tab-heading-accent: var(--b61-accent-text-on-soft);
+}
+
+.b61-tabs__region.b61-surface--dark {
+  --tab-heading-accent: var(--b61-on-dark-accent);
+  --tab-line: rgb(var(--b61-light-scrim-rgb) / 0.28);
+  --tab-focus: var(--b61-focus-on-dark);
+  --b61-frame-color: var(--b61-frame-color-alt);
+}
+
+/* ---- Head (centred) ------------------------------------------------------ */
+.b61-tabs__head {
+  max-width: var(--b61-width-narrow);
+  margin: 0 auto var(--b61-space-2xl);
+  /* Heading alignment (1.74.0) sets the --b61-align-* dials here per
+     breakpoint (css.twig); unset, the head stays centred. */
+  text-align: var(--b61-align-text, center);
+}
+
+.b61-tabs__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--b61-tabs-eyebrow-rule-gap);
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-eyebrow-size);
+  font-weight: var(--b61-eyebrow-weight);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: var(--b61-eyebrow-case);
+  color: var(--tab-accent);
+  margin: 0;
+}
+
+.b61-tabs__heading {
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-tabs-heading-size, var(--b61-text-h2));
+  line-height: 1.1;
+  color: var(--tab-ink);
+  margin: 0;
+}
+
+.b61-tabs__heading em {
+  font-style: italic;
+  color: var(--tab-heading-accent);
+}
+
+.b61-tabs__intro {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  color: var(--tab-muted);
+  margin: 0;
+  margin-inline: var(--b61-align-inline, auto);
+  max-width: 62ch;
+}
+
+.b61-tabs__intro > *:first-child { margin-top: 0; }
+.b61-tabs__intro > *:last-child { margin-bottom: 0; }
+.b61-tabs__intro p { margin: 0 0 1.2em; }
+.b61-tabs__intro a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------------------------------------------------------------------------
+   THE HEAD'S TEXT STACK
+   --------------------------------------------------------------------------- */
+.b61-tabs__heading-line {
+  display: block;
+}
+
+.b61-tabs__heading-line--em {
+  font-style: italic;
+  color: var(--tab-heading-accent);
+}
+
+.b61-tabs__subhead {
+  font-family: var(--b61-font-display);
+  font-weight: 400;
+  font-size: var(--b61-text-h3);
+  line-height: 1.25;
+  color: var(--tab-muted);
+  margin: 0;
+}
+
+.b61-tabs__subhead em {
+  font-style: italic;
+  color: var(--tab-heading-accent);
+}
+
+/* The eyebrow is inline-flex for its leading rule. As a stack item it must
+   become a block, or it sits in a line box at least as tall as the strut and
+   the seam silently grows — the bug the CTA port turned up. */
+.b61-block.b61-tabs__eyebrow {
+  display: flex;
+  width: fit-content;
+  margin-inline: var(--b61-align-inline, auto);
+}
+
+.b61-tabs__eyebrow + .b61-tabs__heading {
+  margin-top: var(--b61-tabs-eyebrow-space);
+}
+
+.b61-tabs__heading + .b61-tabs__subhead,
+.b61-tabs__subhead + .b61-tabs__subhead {
+  margin-top: var(--b61-space-sm);
+}
+
+.b61-tabs__heading + .b61-block:not(.b61-tabs__subhead) {
+  margin-top: var(--b61-tabs-heading-space);
+}
+
+/* ---- Layout ---------------------------------------------------------------
+   TWO regions — the bar and the panels — placed by name rather than by source
+   order, so one DOM serves a top bar, a left rail and a right rail without
+   reordering anything. Named areas rather than `order`, because `order` moves
+   boxes without moving the reading sequence, and the reading sequence is what
+   a keyboard and a screen reader follow.
+
+   There is no media column here. In Feature Tabs the photo is a fixed role and
+   needs a cell of its own; here the panel holds whatever the builder put in it,
+   so the photo (if there is one) is inside a Split in the panel.
+   --------------------------------------------------------------------------- */
+.b61-tabs__layout {
+  display: grid;
+  gap: var(--b61-space-xl);
+  align-items: start;
+  max-width: var(--b61-width);
+  margin: 0 auto;
+  grid-template-areas:
+    "tabs"
+    "panels";
+}
+
+.b61-tabs__tablist { grid-area: tabs; }
+.b61-tabs__panels  { grid-area: panels; min-width: 0; }
+
+/* ---- Panels: THE TAB SET IS THE BAND (1.43.0) -----------------------------
+   The same rule as B61 Section. Every B61 element pads its own region from
+   --b61-pad-block, -tight and -inline; inside a panel that doubles the tab
+   set's own padding and indents the content by a gutter. So the panels zero
+   those tokens and a child stops acting like a band.
+
+   Except a child whose ground DIFFERS from the tab set's (a dark Split in a
+   white tab set) - that one gets the real values back from the KEEP dials,
+   or its copy would touch its own edges. A child on the SAME ground blends
+   in with no padding, and "None" is the same ground as anything. Cards
+   (.b61-card) pad from --b61-card-pad and are left alone.
+
+   The same-ground test reads the tab set's own surface; a tab set on None
+   reads the B61 Section it sits in, and on a bare page counts as Plain.
+   It is scoped to the panel's own children (root > region), so a white
+   element inside a dark Split inside a white tab set keeps its padding.
+
+   The KEEP dials freeze at the region (the alias freeze, used on purpose as
+   in Section). Inside a B61 Section the region's own tokens are already
+   zeroed, so the section's frozen values are read first. A nested tab set
+   inherits the outer set's dials rather than freezing zeros. */
+:where(.b61-tabs__region):not(:where(.b61-tabs__panels .b61-tabs__region)) {
+  --b61-tabs-keep-block: var(--b61-section-keep-block, var(--b61-pad-block));
+  --b61-tabs-keep-tight: var(--b61-section-keep-tight, var(--b61-pad-block-tight));
+  --b61-tabs-keep-inline: var(--b61-section-keep-inline, var(--b61-pad-inline));
+}
+
+.b61-tabs__panels {
+  --b61-pad-block: 0px;
+  --b61-pad-block-tight: 0px;
+  --b61-pad-inline: 0px;
+}
+
+.b61-tabs__panels :is(.b61-surface--plain, .b61-surface--soft, .b61-surface--dark, .b61-surface--accent):not(.b61-card) {
+  --b61-pad-block: var(--b61-tabs-keep-block);
+  --b61-pad-block-tight: var(--b61-tabs-keep-tight);
+  --b61-pad-inline: var(--b61-tabs-keep-inline);
+}
+
+/* Same ground as the tab set: blend. */
+.b61-tabs__region.b61-surface--plain .b61-pane__content > * > .b61-surface--plain:not(.b61-card),
+.b61-tabs__region.b61-surface--soft .b61-pane__content > * > .b61-surface--soft:not(.b61-card),
+.b61-tabs__region.b61-surface--dark .b61-pane__content > * > .b61-surface--dark:not(.b61-card),
+.b61-tabs__region.b61-surface--accent .b61-pane__content > * > .b61-surface--accent:not(.b61-card),
+.b61-tabs__region.b61-surface--none .b61-pane__content > * > .b61-surface--plain:not(.b61-card),
+.b61-section__region.b61-surface--soft .b61-tabs__region.b61-surface--none .b61-pane__content > * > .b61-surface--soft:not(.b61-card),
+.b61-section__region.b61-surface--dark .b61-tabs__region.b61-surface--none .b61-pane__content > * > .b61-surface--dark:not(.b61-card),
+.b61-section__region.b61-surface--accent .b61-tabs__region.b61-surface--none .b61-pane__content > * > .b61-surface--accent:not(.b61-card) {
+  --b61-pad-block: 0px;
+  --b61-pad-block-tight: 0px;
+  --b61-pad-inline: 0px;
+}
+
+/* A None tab set in a painted Section is NOT on white, so a Plain child there
+   differs and gets its padding back (beats the None-counts-as-Plain line). */
+.b61-section__region:is(.b61-surface--soft, .b61-surface--dark, .b61-surface--accent) .b61-tabs__region.b61-surface--none .b61-pane__content > * > .b61-surface--plain:not(.b61-card) {
+  --b61-pad-block: var(--b61-tabs-keep-block);
+  --b61-pad-block-tight: var(--b61-tabs-keep-tight);
+  --b61-pad-inline: var(--b61-tabs-keep-inline);
+}
+
+/* Several elements in one panel are separated by the section gap, as in a
+   B61 Section. */
+.b61-pane__content > * + * {
+  margin-top: var(--b61-section-gap);
+}
+
+.b61-tabs__region--tabs-left .b61-tabs__layout {
+  grid-template-columns: minmax(0, 30fr) minmax(0, 70fr);
+  gap: var(--b61-space-2xl);
+  grid-template-areas: "tabs panels";
+}
+
+.b61-tabs__region--tabs-right .b61-tabs__layout {
+  grid-template-columns: minmax(0, 70fr) minmax(0, 30fr);
+  gap: var(--b61-space-2xl);
+  grid-template-areas: "panels tabs";
+}
+
+/* ---- The bar --------------------------------------------------------------
+   Vertical by default: a rule above the list and one under each button, which
+   is what makes a rail read as a list of choices rather than a stack of
+   buttons. The top variant undoes each of those assumptions explicitly — the
+   duplicate-rule bug in Feature Tabs 1.20.1 came from leaving one of them
+   implicit. */
+/* THE BAR IS HIDDEN UNTIL THE SCRIPT OWNS IT.
+
+   Without JS every panel is open under its own heading, so a row of buttons
+   above them is both inert and a duplicate of the headings it sits over. The
+   script reveals it at the same moment it installs the roles and closes the
+   panels — one flip, no state in between where the bar claims more than it can
+   do. It runs inline, immediately after this markup, so there is no flash.
+
+   The half-built case (labels typed, no panels yet) marks ready anyway, or an
+   editor would be typing into something invisible. */
+.b61-tabs__tablist {
+  display: none;
+  border-top: 1px solid var(--tab-line);
+}
+
+.b61-tabs.is-ready .b61-tabs__tablist {
+  display: block;
+}
+
+.b61-tabs__tab {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: var(--b61-space-lg) var(--b61-space-xs);
+  background: none;
+  /* `border: 0` then a single edge — in that order. */
+  border: 0;
+  border-bottom: 1px solid var(--tab-line);
+  cursor: pointer;
+  text-align: left;
+  color: var(--tab-muted);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.b61-tabs__title {
+  display: block;
+  font-family: var(--b61-font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--b61-tabs-title-size, var(--b61-text-h3));
+  line-height: 1.2;
+  color: inherit;
+}
+
+.b61-tabs__tab:hover {
+  color: var(--tab-ink);
+}
+
+.b61-tabs__tab.is-active,
+.b61-tabs__tab[aria-selected="true"] {
+  color: var(--tab-ink);
+}
+
+.b61-tabs__tab:focus-visible {
+  outline: var(--b61-focus-width) solid var(--tab-focus);
+  outline-offset: calc(-1 * var(--b61-focus-width));
+}
+
+/* Top bar: a wrapping row. width:auto is what actually makes the row a row —
+   a full-width flex item wraps to its own line every time. */
+.b61-tabs.is-ready .b61-tabs__region--tabs-top .b61-tabs__tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--b61-space-xl);
+  border-top: 0;
+  border-bottom: 1px solid var(--tab-line);
+}
+
+.b61-tabs__region--tabs-top .b61-tabs__tab {
+  width: auto;
+  border-bottom: 0;
+  padding-inline: 0;
+}
+
+/* ---- Panels ---------------------------------------------------------------
+   A closed panel is display:none, NOT the collapsing 0fr grid row Feature Tabs
+   uses. That element's panels hold one paragraph; these hold whole bands, and
+   animating the height of an arbitrary subtree is both a large reflow and a
+   reliable way to break anything inside that measures itself. The trade is
+   that opening does not animate, which at this size is the right trade.
+
+   Everything is visible until the script has paired the bar with the panels
+   (.is-ready). Without JS that is the permanent state: every panel open, in
+   order, each under its own heading — which is what a crawler indexes and what
+   a keyboard walks. The bar is left visible in that state rather than hidden,
+   matching how Breakdance's own tabs degrade.
+
+   --unpaired is a panel with no label row above it. It stays open for the same
+   reason: a mismatch should show content, never swallow it. */
+.b61-tabs.is-ready .b61-pane {
+  display: none;
+}
+
+.b61-tabs.is-ready .b61-pane.is-open,
+.b61-tabs.is-ready .b61-pane--unpaired {
+  display: block;
+}
+
+.b61-tabs.is-ready .b61-pane:focus-visible {
+  outline: var(--b61-focus-width) solid var(--tab-focus);
+  outline-offset: 2px;
+}
+
+/* ---- Motion (only once JS has taken over) -------------------------------- */
+.b61-tabs.is-ready .b61-tabs__tab {
+  transition: color var(--b61-ease);
+}
+
+/* THE SWITCH (1.41.0). Panels stay display:none/block (see Panels: animating
+   the height of a whole band is the wrong trade), but the incoming panel no
+   longer just appears: it fades up from --b61-disclose-shift. Showing an
+   element restarts its animation, so this needs no script beyond the class
+   that says a reader has actually switched - without it, the panel that ships
+   open would fade in on every page load. The outgoing panel leaves at once,
+   which keeps two bands from ever overlapping. */
+@keyframes b61-pane-in {
+  from {
+    opacity: 0;
+    translate: 0 var(--b61-disclose-shift);
+  }
+  to {
+    opacity: 1;
+    translate: none;
+  }
+}
+
+.b61-tabs.is-switched .b61-pane.is-open {
+  animation: b61-pane-in var(--b61-motion-slow) var(--b61-motion-disclose-ease) both;
+}
+
+/* ---- Responsive -----------------------------------------------------------
+   Under 1023px the rails collapse to a top bar. A 30% column of italic display
+   type at that width is a column of two-word lines, and the panel beside it is
+   too narrow for the kind of content this element exists to hold. */
+@media (max-width: 1023px) {
+  .b61-tabs__region--tabs-left .b61-tabs__layout,
+  .b61-tabs__region--tabs-right .b61-tabs__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--b61-space-xl);
+    grid-template-areas:
+      "tabs"
+      "panels";
+  }
+
+  .b61-tabs.is-ready .b61-tabs__region--tabs-left .b61-tabs__tablist,
+  .b61-tabs.is-ready .b61-tabs__region--tabs-right .b61-tabs__tablist {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--b61-space-xl);
+    border-top: 0;
+    border-bottom: 1px solid var(--tab-line);
+  }
+
+  .b61-tabs__region--tabs-left .b61-tabs__tab,
+  .b61-tabs__region--tabs-right .b61-tabs__tab {
+    width: auto;
+    border-bottom: 0;
+    padding-inline: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .b61-tabs.is-ready .b61-tabs__tab {
+    transition: none;
+  }
+
+  .b61-tabs.is-switched .b61-pane.is-open {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   TOP BAR ALIGNMENT (1.47.0) — Left (default), Center, Full width.
+   Full width shares the row equally and centres each label; the bar's own
+   bottom rule still runs the whole width, so the row reads as one unit.
+   --------------------------------------------------------------------------- */
+.b61-tabs.is-ready .b61-tabs__region--tabs-top.b61-tabs__region--align-center .b61-tabs__tablist {
+  justify-content: center;
+}
+
+.b61-tabs.is-ready .b61-tabs__region--tabs-top.b61-tabs__region--align-full .b61-tabs__tablist {
+  flex-wrap: nowrap;
+  gap: 0;
+}
+
+.b61-tabs__region--tabs-top.b61-tabs__region--align-center .b61-tabs__tab,
+.b61-tabs__region--tabs-top.b61-tabs__region--align-full .b61-tabs__tab {
+  text-align: center;
+}
+
+.b61-tabs__region--tabs-top.b61-tabs__region--align-full .b61-tabs__tab {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-inline: var(--b61-space-xs);
+}
+
+/* Phones: a full-width row of long labels cannot fit, so it wraps like the
+   default bar, keeping its centred labels. Center already wraps centred. */
+@media (max-width: 767px) {
+  .b61-tabs.is-ready .b61-tabs__region--tabs-top.b61-tabs__region--align-full .b61-tabs__tablist {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 var(--b61-space-xl);
+  }
+  .b61-tabs__region--tabs-top.b61-tabs__region--align-full .b61-tabs__tab {
+    flex: 0 0 auto;
+    padding-inline: 0;
+  }
+}

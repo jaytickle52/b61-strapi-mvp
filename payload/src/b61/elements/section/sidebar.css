@@ -1,0 +1,15 @@
+/* ---------------------------------------------------------------------------
+   B61 SIDEBAR (1.38.0)
+
+   Almost everything about the sidebar lives in the SECTION's stylesheet,
+   because the layout is the parent's grid (elements/Section/default.css). This
+   file only stacks the sidebar's own children.
+   --------------------------------------------------------------------------- */
+.b61-aside {
+  display: block;
+  min-width: 0;
+}
+
+.b61-aside > :nth-child(n+2 of :not(style, script, template, link)) {
+  margin-top: var(--b61-section-gap);
+}

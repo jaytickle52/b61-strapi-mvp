@@ -1,0 +1,39 @@
+/*
+ * B61 Tab — one panel of a B61 Tabs set. It owns almost nothing: the label it
+ * carries is a fallback heading for the no-JS state, and everything else in the
+ * panel is whatever the builder put inside it.
+ *
+ * The class prefix is b61-pane, not b61-tab, on purpose. `.b61-tab__x` and
+ * `.b61-tabs__x` differ by one character in the middle of a selector, which is
+ * a maintenance trap in a file this size; the divergence between class name and
+ * element name is already normal here (CtaBand renders b61-cta, Feature Tabs
+ * renders b61-pillars).
+ */
+.b61-pane {
+  min-width: 0;
+}
+
+/* The fallback heading. Present and styled for the state where no script has
+   run — the script hides it the moment the tab bar takes over the label, so
+   the title is never announced twice. */
+.b61-pane__label {
+  font-family: var(--b61-font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--b61-text-h3);
+  line-height: 1.2;
+  color: var(--b61-on-bg-ink, var(--b61-ink));
+  margin: 0 0 var(--b61-space-md);
+}
+
+.b61-pane__content {
+  min-width: 0;
+}
+
+/* Panels that follow one another with no script to separate them need a seam,
+   or the whole set reads as one undifferentiated run of content. Only in that
+   state: once the script is ready exactly one panel is displayed, so no
+   adjacent pair exists to match. */
+.b61-pane + .b61-pane {
+  margin-top: var(--b61-space-2xl);
+}
