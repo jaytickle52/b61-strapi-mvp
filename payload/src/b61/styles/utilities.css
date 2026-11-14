@@ -1,0 +1,396 @@
+/*
+ * Banner 61 — utility classes
+ *
+ * The GUI surface for house-style treatments. Every class here works by setting
+ * or reading a custom property, which means it can be dropped on ANY ancestor —
+ * a native Breakdance Section's CSS Classes field, a Selector, or one of our own
+ * __region wrappers — and it cascades into every B61 block inside, because
+ * custom properties inherit.
+ *
+ * Nothing here is a control. These are decisions a builder makes once per site
+ * or once per band, not something a school's office manager should meet in a
+ * panel.
+ */
+
+/* ---- Frame treatment -------------------------------------------------------
+   Split and Framed Image both read --b61-frame-offset and --b61-frame-width, so
+   these vary the frame anywhere in the tree without touching either element. */
+.b61-frame--none { --b61-frame-width: 0; --b61-frame-offset: 0; }
+.b61-frame--thin { --b61-frame-width: 2px; --b61-frame-offset: 10px; }
+.b61-frame--standard { --b61-frame-width: 4px; --b61-frame-offset: 14px; }
+.b61-frame--bold { --b61-frame-width: 6px; --b61-frame-offset: 20px; }
+
+/* ---- Surface contract ------------------------------------------------------
+   A B61 block rendered bare inside a native Section has no way to learn what it
+   is sitting on. These set the --b61-on-bg-* globals that every element's own
+   locals already fall back through, so a block inherits the band's palette
+   without any element referencing any other element.
+
+   With no band class above it the globals stay unset and each element's
+   standalone value applies — which is today's rendering, unchanged. */
+/* Soft is the light-tinted band, and the only light ground an element offers.
+   `light` used to be a second option here, but it painted --b61-surface, which
+   on a school whose page ground IS --b61-surface made it indistinguishable from
+   no band at all: two options, one appearance. Soft owns the light ground now
+   and is labelled "Light wash" in every element's panel.
+
+   --b61-on-bg-ink was --b61-on-surface-soft, the SAME value as -muted, so a
+   soft band had no ink/muted distinction and headings rendered in body grey.
+   Every other band here keeps the two apart; soft was the outlier, and it read
+   as a slip rather than a decision. Headings on existing soft bands go darker
+   as a result. */
+/* Plain is the DEFAULT light palette, stated rather than implied. Every other
+   band class exists because it departs from the page's own colours; this one
+   exists because "no band class" is not the same thing as "the light palette".
+   Absence declares nothing, so it inherits -- which is correct for a
+   transparent ground (surface: none) and WRONG for anything that paints a light
+   ground of its own inside a dark ancestor. A card is exactly that case.
+
+   The rule this encodes: anything that paints a ground must also declare the
+   palette that goes with it. See bin/check-surface-pairing.sh. */
+
+/* ---- The action palette -------------------------------------------------
+   BUTTON COLOURS AND THE FOCUS RING ARE PALETTE, so they live here with the
+   rest of the palette rather than on the .b61-surface--* class that paints the
+   ground. They used to sit on the surface, and that was the bug: a white card
+   inside a dark band emits `b61-surface--plain b61-band--plain`, which reset
+   the TEXT colours and nothing else, so the dark band's INVERTED primary button
+   -- a white fill, correct on the band -- kept applying inside the white card
+   and measured 1.00:1 against it. The label stayed readable, which is why it
+   read as floating text rather than as a broken button.
+
+   Declared here, the nearest band class wins with no descendant selectors and
+   no special-casing, because a painted ground always emits its band class too
+   (guard rule 7). Guard rule 8 now also requires every band to declare the SAME
+   set: a palette is complete or it is not a palette.
+   ------------------------------------------------------------------------- */
+
+.b61-band--plain {
+  --b61-on-bg-ink: var(--b61-on-surface);
+  --b61-on-bg-muted: var(--b61-muted);
+  --b61-on-bg-accent: var(--b61-accent-text);
+  --b61-on-bg-line: var(--b61-accent-text);
+  --b61-rule-accent: var(--b61-accent);
+  --b61-rule-ink: var(--b61-ink);
+  --b61-rule-muted: var(--b61-muted);
+  --b61-btn-bg: var(--b61-btn-primary-fill);
+  --b61-btn-text: var(--b61-white);
+  --b61-btn-bg-hover: var(--b61-btn-primary-fill-hover);
+  --b61-btn-text-hover: var(--b61-white);
+  --b61-btn-outline-color: var(--b61-primary);
+  --b61-btn-secondary-hover-scrim: rgb(var(--b61-scrim-rgb) / 0.06);
+  --b61-btn-light-border: var(--b61-primary);
+  --b61-focus: var(--b61-palette-primary);
+}
+
+/* Soft was the one INCOMPLETE palette: it declared the four --b61-on-bg-*
+   and stopped, so a soft card inside a dark band inherited the dark band's
+   rules and its buttons. Guard rule 8 exists because this was found by
+   writing the rule, not by reading the file. */
+.b61-band--soft {
+  --b61-on-bg-ink: var(--b61-on-surface-soft);
+  --b61-on-bg-muted: var(--b61-on-soft-muted);
+  --b61-on-bg-accent: var(--b61-accent-text-on-soft);
+  --b61-on-bg-line: var(--b61-accent-text-on-soft);
+  --b61-rule-accent: var(--b61-accent);
+  --b61-rule-ink: var(--b61-on-surface-soft);
+  --b61-rule-muted: var(--b61-on-soft-muted);
+  --b61-btn-bg: var(--b61-btn-primary-fill);
+  --b61-btn-text: var(--b61-white);
+  --b61-btn-bg-hover: var(--b61-btn-primary-fill-hover);
+  --b61-btn-text-hover: var(--b61-white);
+  --b61-btn-outline-color: var(--b61-primary);
+  --b61-btn-secondary-hover-scrim: rgb(var(--b61-scrim-rgb) / 0.06);
+  --b61-btn-light-border: var(--b61-primary);
+  --b61-focus: var(--b61-palette-primary);
+}
+
+.b61-band--dark {
+  --b61-on-bg-ink: var(--b61-on-surface-dark);
+  --b61-on-bg-muted: var(--b61-on-dark-muted);
+  --b61-on-bg-accent: var(--b61-on-dark-accent);
+  --b61-on-bg-line: var(--b61-on-dark-accent);
+  --b61-rule-accent: var(--b61-on-dark-accent);
+  --b61-rule-ink: var(--b61-on-surface-dark);
+  --b61-rule-muted: var(--b61-on-dark-muted);
+  /* Primary INVERTS on a dark ground: the fill takes the band's text colour and
+     the label takes the band's ground, so primary still reads louder than a
+     secondary beside it. Moved here from .b61-surface--dark; the values are
+     unchanged. */
+  --b61-btn-bg: var(--b61-btn-primary-fill-on-dark);
+  --b61-btn-text: var(--b61-btn-primary-label-on-dark);
+  --b61-btn-bg-hover: var(--b61-btn-primary-fill-hover-on-dark);
+  --b61-btn-text-hover: var(--b61-btn-primary-label-hover-on-dark);
+  --b61-btn-outline-color: var(--b61-btn-outline-color-on-dark);
+  /* The outline's hover deepens with a LIGHT scrim here: on a dark ground the
+     outline is near-white, and a dark scrim would read as a hole. */
+  --b61-btn-secondary-hover-scrim: rgb(var(--b61-light-scrim-rgb) / 0.12);
+  /* A light pill on a dark band needs no border, so it borders in its own
+     fill -- which is what the old `:where(.b61-btn)` fallback produced. */
+  --b61-btn-light-border: var(--b61-surface);
+  --b61-focus: var(--b61-focus-on-dark);
+}
+
+.b61-band--accent {
+  --b61-on-bg-ink: var(--b61-on-surface-accent);
+  --b61-on-bg-muted: rgb(var(--b61-light-scrim-rgb) / 0.92);
+  --b61-on-bg-accent: var(--b61-palette-paper);
+  --b61-on-bg-line: var(--b61-palette-paper);
+  --b61-rule-accent: var(--b61-palette-paper);
+  --b61-rule-ink: var(--b61-on-surface-accent);
+  --b61-rule-muted: rgb(var(--b61-light-scrim-rgb) / 0.92);
+  --b61-btn-bg: var(--b61-on-surface-accent);
+  --b61-btn-text: var(--b61-surface-accent);
+  --b61-btn-bg-hover: var(--b61-surface-soft);
+  --b61-btn-text-hover: var(--b61-surface-accent);
+  --b61-btn-outline-color: var(--b61-btn-outline-color-on-dark);
+  --b61-btn-secondary-hover-scrim: rgb(var(--b61-light-scrim-rgb) / 0.12);
+  --b61-btn-light-border: var(--b61-surface);
+  --b61-focus: var(--b61-focus-on-dark);
+}
+
+/* ---- Copy on a photograph (1.34.0) ------------------------------------------
+   A band carrying a background photo with no card puts its copy on the photo,
+   under a scrim of its own surface colour. The band's accent was measured
+   against the FLAT surface; thinned over a bright pixel it collapses - the
+   dark band's eyebrow measured 1.91:1 at 70% shading over white. So on a photo
+   the accent-coloured roles take the band's ink, which is what Hero's photo
+   schemes already do. Not a palette of its own (guard rule 8 does not apply):
+   it re-points three names at a colour the band already declared, on the SAME
+   element, so the var() resolves against that band and nothing freezes.
+   A card inside re-declares all of them, so its own accent comes back. */
+.b61-on-photo {
+  --b61-on-bg-accent: var(--b61-on-bg-ink);
+  --b61-on-bg-line: var(--b61-on-bg-ink);
+  --b61-rule-accent: var(--b61-on-bg-ink);
+}
+
+/* ---- Watermark and pattern -------------------------------------------------
+   TWO NAMES, ONE RULE SET (1.38.0). `.b61-band--*` is the class an editor
+   types on a Breakdance Section. `.b61-deco-*` is what ELEMENTS emit (B61
+   Section first). They are split because a site can carry its own legacy
+   Breakdance selector under the band name: St. Mark's has a global
+   `.b61-band--watermark` that paints the crest on the band itself at full
+   opacity, centred, 82% tall - harmless while its --b61-watermark was
+   `none`, and a full-strength crest in the middle of the band the moment a
+   B61 Section supplied an image. An element cannot be at the mercy of a
+   site's selector list, so it emits a name no site has used.
+   Both are decorative layers on a band. Three things make them work:
+
+   1. `isolation: isolate` makes the band a stacking context, so the layer's
+      negative z-index cannot escape behind the band's own background.
+   2. `z-index: -1` puts it above that background and below every piece of
+      in-flow content — declared, not inferred from source order, because this
+      library has already been bitten once by a composited layer reordering
+      itself.
+   3. `inset: 0` means the layer can never overflow the band, so no
+      `overflow: hidden` is needed and nothing else gets clipped.
+
+   Pseudo-elements rather than <img>, so they are out of the accessibility tree
+   by construction rather than by remembering aria-hidden. */
+.b61-band--watermark,
+.b61-band--pattern,
+.b61-deco-watermark,
+.b61-deco-pattern {
+  position: relative;
+  isolation: isolate;
+}
+
+.b61-band--pattern::before,
+.b61-band--watermark::after,
+.b61-deco-pattern::before,
+.b61-deco-watermark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.b61-band--pattern::before,
+.b61-deco-pattern::before {
+  background-image: var(--b61-pattern);
+  background-size: var(--b61-pattern-size);
+  opacity: var(--b61-pattern-opacity);
+}
+
+.b61-band--watermark::after,
+.b61-deco-watermark::after {
+  background-image: var(--b61-watermark);
+  background-repeat: no-repeat;
+  /* Position, size and strength read dials so an element can set them per
+     instance (B61 Section's Watermark options, 1.39.0). Every fallback is the
+     value this rule had before, so a band typed by hand is unchanged. */
+  background-position: var(--b61-watermark-pos, right 4% center);
+  background-size: var(--b61-watermark-size, min(34%, 460px) auto);
+  opacity: var(--b61-watermark-opacity);
+}
+
+/* A dark or accent ground swallows a faint mark, so the default strength steps
+   up there (the tuned values in tokens.css). An instance's own strength is set
+   inline and wins over both. */
+.b61-deco-watermark.b61-surface--dark,
+.b61-deco-watermark.b61-surface--accent {
+  --b61-watermark-opacity: var(--b61-watermark-opacity-on-dark);
+}
+
+/* Placement variants for the watermark, since a crest in the corner and a crest
+   behind the centre of a quote are different jobs. */
+.b61-band--watermark-left::after,
+.b61-deco-watermark--left::after { background-position: left 4% center; }
+.b61-band--watermark-center::after,
+.b61-deco-watermark--center::after { background-position: center center; }
+
+@media (max-width: 767px) {
+  .b61-band--watermark::after,
+  .b61-deco-watermark::after { background-size: var(--b61-watermark-size-sm, min(60%, 320px) auto); }
+}
+
+/* The decorative layers carry no information, so they go entirely when a reader
+   has asked for less. Pattern stays: it does not move, and removing it would
+   change layout contrast rather than motion. */
+@media (prefers-reduced-motion: reduce) {
+  .b61-band--watermark::after,
+  .b61-deco-watermark::after { transition: none; }
+}
+
+/* ---- Reduced motion, site-wide ----------------------------------------------
+   Breakdance selectors cannot carry a prefers-reduced-motion query, so the one
+   place it can live is here. Durations go to near-zero rather than `none` so
+   transitionend/animationend listeners still fire. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---- Full-bleed bands ------------------------------------------------------
+   The pale gutter down each side of a coloured band is not ours. Breakdance's
+   own Section emits `.section-container` with horizontal padding — 20px per side
+   on this install — and our region sits inside it, so a surface can never reach
+   the viewport edge no matter what the element does.
+
+   The padding belongs to the Section, so the fix does too: put this class on the
+   SECTION (Settings -> CSS Classes), not on a B61 element. Zeroing the parent's
+   padding is exact at any value, where negative-margin break-out tricks have to
+   guess it.
+
+   Measured: region 1672px inside a 1712px container before, 1712px after. */
+.b61-bleed > .section-container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+
+/* ---------------------------------------------------------------------------
+   Rich-text wrappers
+   These fields are authored in a WYSIWYG, so their value arrives as one or
+   more <p> blocks. Each wrapper is therefore a <div>, not a <p>: a <p> inside
+   a <p> is invalid, and the browser silently closes the outer one — which
+   left the class stranded on an empty element and every paragraph of copy
+   rendering unstyled. The wrapper carries the type; the paragraphs inside it
+   carry only the rhythm between them.
+   --------------------------------------------------------------------------- */
+.b61-cta__body > p,
+.b61-cards__intro > p,
+.b61-gallery__intro > p,
+.b61-pillars__intro > p,
+.b61-acc__intro > p,
+.b61-stats__intro > p,
+.b61-hero__subhead > p {
+  margin: 0 0 var(--b61-space-md);
+  font: inherit;
+  color: inherit;
+}
+.b61-cta__body > p:last-child,
+.b61-cards__intro > p:last-child,
+.b61-gallery__intro > p:last-child,
+.b61-pillars__intro > p:last-child,
+.b61-acc__intro > p:last-child,
+.b61-stats__intro > p:last-child,
+.b61-hero__subhead > p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* Print. Nothing is waiting for a scroll on paper: every part prints. */
+@media print {
+  [data-b61-reveal-item] {
+    animation: none !important;
+    opacity: 1 !important;
+    translate: none !important;
+  }
+}
+
+/* An opt-out class, kept from the scroll-driven rise it outlived: anything
+   inside .b61-no-rise never hides and never moves, whatever its switch says. */
+.b61-no-rise [data-b61-reveal-item],
+[data-b61-reveal-item].b61-no-rise {
+  animation: none !important;
+  opacity: 1 !important;
+  translate: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   ENTRANCE REVEAL (1.40.0) - every band element, one shared player
+   ---------------------------------------------------------------------------
+   An element with Design > Appearance > Entrance animation ON marks its parts
+   data-b61-reveal-item, in the order it wants them to arrive (heading lines,
+   intro, each card, buttons). assets/reveal.js plays each part ONCE, on a
+   timer, as it scrolls into view; parts arriving together are staggered.
+
+   It REPLACED a scroll-driven rise (animation-timeline: view()) that ran on
+   every element root until 1.40.0. That one reversed when the reader scrolled
+   back up, froze half-risen when they stopped, ignored animation-delay (so a
+   "staggered" grid arrived as one slab), and held `transform: none` after it
+   finished, which beat :hover and killed the card lift. Do not bring it back.
+
+   THE SAFETY RULES
+   - Nothing is hidden until the SCRIPT has run and put .b61-reveal-ready on
+     <html>. No script, no hiding: a failed or blocked script shows the page.
+   - The script skips the builder canvas (an iframe), readers who asked for
+     reduced motion, and any site with --b61-rise-enabled: 0.
+   - Anything already on screen when the page loads is shown, never animated.
+     A hero at the top of the page is therefore never animated; one further
+     down animates like any band (Entrance animation, 1.74.0).
+   - It animates `translate`, not `transform`, so a card's hover lift (which
+     IS a transform) is never overridden.
+   - A B61 Section set to Off vetoes everything inside it (reveal.js).
+   -------------------------------------------------------------------------- */
+@keyframes b61-reveal {
+  from {
+    opacity: 0;
+    translate: 0 var(--b61-rise-shift);
+  }
+  to {
+    opacity: 1;
+    translate: none;
+  }
+}
+
+/* The per-item delay. reveal.js sets it inline, which beats this; declared
+   here so a part with no inline value has a real one. */
+[data-b61-reveal-item] {
+  --b61-reveal-delay: 0s;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .b61-reveal-ready [data-b61-reveal-item]:not(.b61-in) {
+    opacity: 0;
+  }
+
+  .b61-reveal-ready [data-b61-reveal-item].b61-in--anim {
+    animation: b61-reveal var(--b61-motion-rise) var(--b61-rise-ease) both;
+    animation-delay: var(--b61-reveal-delay);
+  }
+
+  /* A card is a bigger object than a line of copy; it travels less. */
+  .b61-cards__card[data-b61-reveal-item] {
+    --b61-rise-shift: var(--b61-rise-shift-card);
+  }
+}

@@ -21,6 +21,19 @@ Payload CMS 3 so school staff can compare the two editors side by side.
   parent feed at `/parents` shows them after the parent password.
 - One `SCHOOL_SECRET` per school; every other secret is derived from it.
 
+## B61 elements
+
+`src/b61/` holds ports of Banner 61 Elements (the Breakdance plugin). The first is the
+**B61 Hero** (from plugin 1.77.1): same controls, same Content / Design tabs, same
+markup and class names, and the plugin's own stylesheets copied in unchanged
+(`src/b61/styles`, `src/b61/elements/hero/hero.css`).
+
+- `fields.ts` defines the controls; `Hero.tsx` is `html.twig`; `hero-instance.css`
+  replaces `css.twig`; `HeroBehavior.tsx` is `behavior.js`; `reveal/` is `reveal.js`,
+  re-run after each page change.
+- The school's B61 palette and fonts come from School settings > Look.
+- School staff see both the Content and Design tabs.
+
 ## Run locally
 
 ```bash

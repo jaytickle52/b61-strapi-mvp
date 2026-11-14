@@ -1,0 +1,913 @@
+/*
+ * B61 Hero — two layouts on one element.
+ *
+ *   cover  full-bleed image / slideshow / video behind a scrim, copy anchored
+ *          to a corner (the home page hero).
+ *   band   a solid surface, copy left and a framed photo collage right (the
+ *          inner-page hero). No media layer, no scrim; the Surface control is
+ *          the scheme.
+ *
+ * Local tokens (all --b61-hero-*) are declared inline as fallbacks so the
+ * element renders with no site-level definition; promote them to tokens.css
+ * when a second element needs the same value:
+ *   --b61-hero-accent-on-dark   italic <em> accent words on dark schemes (white)
+ *   --b61-hero-band-min         band minimum height (520px, set in css.twig)
+ *   --b61-hero-band-gap         column gap in band layout
+ *   --b61-hero-collage-gap      gap between collage frames
+ *   --b61-hero-title-size       cover h1 size
+ *   --b61-hero-band-title-size  band h1 size
+ *   --b61-hero-subhead-size     subhead size
+ *   --b61-hero-pad-top / -bottom  cover inner padding
+ */
+/* ---------------------------------------------------------------------------
+   DIALS
+   Declared on the REGION at zero specificity, so a site re-skins by
+   redeclaring and never edits this file.
+
+   The eyebrow values below are PRESERVED from before the 1.17.0 sweep (a hero eyebrow sits above a display headline),
+   not fresh design decisions. The shared defaults are --b61-eyebrow-space and
+   --b61-eyebrow-rule-gap in tokens.css; delete an override here and the element
+   falls back to the house value.
+   --------------------------------------------------------------------------- */
+:where(.b61-hero) {
+  --b61-hero-eyebrow-space: var(--b61-space-lg);
+  --b61-hero-eyebrow-rule-gap: var(--b61-space-sm);
+}
+
+.b61-hero {
+  width: 100%;
+  align-self: stretch;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(460px, 78vh, 760px);
+  padding: 0;
+  isolation: isolate;
+  background: var(--b61-surface-dark);
+}
+
+.b61-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.b61-hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Focal point (1.36.0). --b61-photo-focus is set inline per hero from the Photo
+     popout; unset, it falls to the site-wide --b61-bg-position (center), which
+     is exactly the browser default, so an existing hero does not move. */
+  object-position: var(--b61-photo-focus, var(--b61-bg-position));
+  display: block;
+}
+
+/* ---- Background: video ----
+   The poster is painted on the wrapper (inline background-image) as well as on
+   the <video>, so the image shows before metadata arrives, if autoplay is
+   refused, and when the video is removed for reduced motion. */
+.b61-hero__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- Background: slideshow (CSS crossfade, no JS) ---- */
+.b61-hero__bg--slideshow {
+  background: var(--b61-surface-dark);
+}
+
+.b61-hero__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  animation-name: b61-hero-fade;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+
+@keyframes b61-hero-fade {
+  0%   { opacity: 0; }
+  6%   { opacity: 1; }
+  30%  { opacity: 1; }
+  36%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .b61-hero__slide {
+    animation: none;
+  }
+  .b61-hero__slide:first-child {
+    opacity: 1;
+  }
+  /* Reveal the poster (set as a background-image on the bg wrapper) rather
+     than leaving a flat colour behind. */
+  .b61-hero__video {
+    display: none;
+  }
+  .b61-hero__bg--video {
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+/* ---- Pause control (1.44.0) ----
+   WCAG 2.2.2: a video or slideshow that loops next to the copy needs a way to
+   stop it. A 44px round button in the corner, above the scrim and the copy's
+   layer, below the edge rule. Ships `hidden`; behavior.js shows it. Paused =
+   aria-pressed="true" on the button and .is-paused on the bg layer. */
+.b61-hero__motion {
+  position: absolute;
+  right: var(--b61-space-md);
+  bottom: var(--b61-space-md);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgb(var(--b61-light-scrim-rgb) / 0.6);
+  border-radius: 50%;
+  background: rgb(var(--b61-scrim-rgb) / 0.72);
+  color: rgb(var(--b61-light-scrim-rgb));
+  cursor: pointer;
+}
+
+/* Right-aligned copy puts its buttons in the bottom-right corner, so the
+   control takes the opposite one. */
+.b61-hero__motion--left {
+  right: auto;
+  left: var(--b61-space-md);
+}
+
+.b61-hero__motion[hidden] {
+  display: none;
+}
+
+.b61-hero__motion:hover {
+  background: rgb(var(--b61-scrim-rgb) / 0.9);
+}
+
+.b61-hero__motion:focus-visible {
+  outline: var(--b61-focus-width) solid var(--b61-focus-on-dark, var(--b61-focus));
+  outline-offset: var(--b61-focus-offset);
+}
+
+/* Pause: two bars. Play (when paused): a triangle. Drawn in currentColor. */
+.b61-hero__motion-icon {
+  width: 12px;
+  height: 14px;
+  border-left: 4px solid currentColor;
+  border-right: 4px solid currentColor;
+}
+
+.b61-hero__motion[aria-pressed="true"] .b61-hero__motion-icon {
+  width: 0;
+  height: 0;
+  margin-left: 4px;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 13px solid currentColor;
+  border-right: 0;
+}
+
+.b61-hero__bg.is-paused .b61-hero__slide {
+  animation-play-state: paused;
+}
+
+/* ---- Overlays ---- */
+.b61-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgb(var(--b61-scrim-rgb) / 0.12) 0%, rgb(var(--b61-scrim-rgb) / 0.20) 42%, rgb(var(--b61-scrim-rgb) / 0.80) 100%),
+    linear-gradient(90deg, rgb(var(--b61-scrim-rgb) / 0.58) 0%, rgb(var(--b61-scrim-rgb) / 0.12) 58%, rgb(var(--b61-scrim-rgb) / 0) 100%);
+}
+
+/* ---- Shade: the gradient follows the text -------------------------------
+ * One ellipse anchored at the text block's own corner, so the shade flows out
+ * from wherever the copy sits. Anchored bottom-left it pools in that corner;
+ * anchored bottom-centre the same ellipse reads as a bottom-up gradient.
+ * The anchor comes from the vertical position and text alignment, set as
+ * custom properties by the modifier classes below.
+ *
+ * A faint flat floor sits under it so a busy photo never leaves the text
+ * unsupported at the far edge.
+ *
+ * The stops carry the shade further up the copy than they used to. The eyebrow
+ * is the topmost line of the text block, and the old ramp had already fallen to
+ * roughly half strength by the time it reached it — white measured about 3.5:1
+ * over a bright photo there, under the 4.5:1 floor. The ramp now holds ~0.75
+ * effective alpha at that height (about 5.4:1 for white over a white frame,
+ * the worst case) and still clears to nothing at the far edge, so the photo is
+ * no more veiled at the top of the frame than before.
+ */
+.b61-hero__scrim--gradient,
+.b61-hero__scrim--shade,
+.b61-hero__scrim--photo,
+.b61-hero__scrim--scrim {
+  background:
+    radial-gradient(
+      ellipse var(--hero-shade-w, 150%) var(--hero-shade-h, 130%)
+      at var(--hero-shade-x, 0%) var(--hero-shade-y, 100%),
+      rgb(var(--b61-scrim-rgb) / 0.90) 0%,
+      rgb(var(--b61-scrim-rgb) / 0.82) 30%,
+      rgb(var(--b61-scrim-rgb) / 0.62) 52%,
+      rgb(var(--b61-scrim-rgb) / 0.24) 76%,
+      rgb(var(--b61-scrim-rgb) / 0) 100%
+    ),
+    linear-gradient(rgb(var(--b61-scrim-rgb) / 0.14), rgb(var(--b61-scrim-rgb) / 0.14));
+}
+
+/* Vertical anchor, from the vertical position control. */
+.b61-hero__scrim--at-vtop    { --hero-shade-y: 0%; }
+.b61-hero__scrim--at-vcenter { --hero-shade-y: 50%; }
+.b61-hero__scrim--at-vbottom { --hero-shade-y: 100%; }
+
+/* Horizontal anchor. Centre and right widen the ellipse so the shade reads as
+   a band rather than a corner pool. */
+/* The pooled shade follows the copy, so it reads the same dials (1.65.0). */
+.b61-hero__scrim {
+  --hero-shade-x: var(--b61-align-shade-x, 0%);
+  --hero-shade-w: var(--b61-align-shade-w, 150%);
+}
+
+/* Centred vertically, the ellipse needs less height or it washes the whole frame. */
+.b61-hero__scrim--at-vcenter { --hero-shade-h: 105%; }
+
+.b61-hero__scrim--dark {
+  background: rgb(var(--b61-scrim-rgb) / 0.55);
+}
+
+.b61-hero__scrim--light {
+  background: rgb(var(--b61-light-scrim-rgb) / 0.62);
+}
+
+.b61-hero__scrim--primary,
+.b61-hero__scrim--navy {
+  background: var(--b61-primary);
+  opacity: 0.82;
+}
+
+.b61-hero__scrim--secondary,
+.b61-hero__scrim--sky {
+  background: var(--b61-secondary);
+  opacity: 0.88;
+}
+
+.b61-hero__scrim--brand {
+  background: var(--b61-primary);
+  opacity: 0.72;
+}
+
+/* ---- Inner: vertical position + text alignment ---- */
+.b61-hero__inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--b61-width);
+  margin: 0 auto;
+  padding: var(--b61-hero-pad-top, var(--b61-space-2xl)) var(--b61-pad-inline) var(--b61-hero-pad-bottom, calc(var(--b61-space-2xl) + var(--b61-space-lg)));
+  color: var(--b61-white);
+}
+
+/* Band padding, on the same normal/tight/none triplet as every other band.
+   Hero already had --b61-hero-pad-top / -bottom as dials; these controls just
+   put them in the panel. `normal` deliberately sets NOTHING, so the element
+   keeps its own asymmetric default — a bottom-aligned hero needs more air
+   under the headline than over it, and a symmetric triplet would flatten a
+   proportion the comp depends on. */
+.b61-hero__inner--pt-tight { --b61-hero-pad-top: var(--b61-pad-block-tight); }
+.b61-hero__inner--pt-none  { --b61-hero-pad-top: 0; }
+.b61-hero__inner--pb-tight { --b61-hero-pad-bottom: var(--b61-pad-block-tight); }
+.b61-hero__inner--pb-none  { --b61-hero-pad-bottom: 0; }
+
+.b61-hero__inner--vbottom { align-self: flex-end; }
+.b61-hero__inner--vcenter { align-self: center; }
+.b61-hero__inner--vtop    { align-self: flex-start; }
+
+/* ALIGNMENT IS A SET OF DIALS (1.65.0), not a pair of classes. A class cannot
+   change per breakpoint -- only values coming through css.twig can -- so the
+   alignment classes no longer drive anything (they are still emitted as a
+   styling hook for sites that key on them, and they carry the BASE value) and
+   every rule that used to key on them now reads a custom property instead. css.twig publishes the set on the element root
+   for whichever breakpoints the author actually set; the fallbacks below are
+   this element's default, so an instance that never touched the control emits
+   nothing and renders exactly as it did. */
+.b61-hero__inner { text-align: var(--b61-align-text, left); }
+
+.b61-hero__inner--tcenter .b61-hero__title,
+.b61-hero__inner--tcenter .b61-hero__subhead {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.b61-hero__inner--tcenter .b61-hero__actions { justify-content: center; }
+
+/* A rule leading a centred eyebrow reads as broken symmetry — drop it. */
+.b61-hero__inner--tcenter .b61-hero__eyebrow-rule { display: none; }
+
+/* ---- Colour schemes -------------------------------------------------
+ * Each scheme sets the overlay and the text colours together, so no
+ * combination reachable from the panel can fail contrast (principle 16).
+ * The inner declares the colours; children inherit them via `color: inherit`
+ * — see the note on .b61-hero__title.
+ *
+ * --hero-accent is the colour of <em> accent words (see .b61-hero__title em).
+ * On dark and photo schemes the house accent red cannot be trusted over a
+ * photo, so accent words stay white and read through the italic alone; on
+ * light schemes they take the site's heading accent.
+ */
+.b61-hero__inner--on-gradient,
+.b61-hero__inner--on-shade,
+.b61-hero__inner--on-photo,
+.b61-hero__inner--on-scrim,
+.b61-hero__inner--on-dark,
+.b61-hero__inner--on-primary,
+.b61-hero__inner--on-navy,
+.b61-hero__inner--on-none {
+  color: var(--b61-white);
+  --hero-on: var(--b61-white);
+  --hero-on-inverse: var(--b61-ink);
+  --hero-eyebrow: var(--b61-hero-eyebrow-on-dark, var(--b61-on-dark-accent));
+  --hero-eyebrow-rule: var(--b61-on-dark-accent);
+  --hero-subhead: var(--b61-white);
+  --hero-subhead-muted: var(--b61-mist);
+  --hero-accent: var(--b61-hero-accent-on-dark, var(--b61-white));
+  --hero-focus: var(--b61-focus-on-dark);
+  /* These scheme blocks ARE a band declaration under private names, so they
+     publish the shared globals too. Without this a .b61-link dropped into a hero
+     falls back to --b61-ink and vanishes against a photo. */
+  --b61-on-bg-ink: var(--b61-white);
+  --b61-on-bg-muted: var(--b61-mist);
+  --b61-on-bg-accent: var(--b61-hero-eyebrow-on-dark, var(--b61-on-dark-accent));
+  --b61-focus: var(--b61-focus-on-dark);
+  --b61-btn-outline-color: var(--b61-btn-outline-color-on-dark);
+  --b61-btn-secondary-hover-scrim: rgb(var(--b61-light-scrim-rgb) / 0.12);
+  --b61-btn-light-border: var(--b61-surface);
+}
+
+/* The FILL dials, and only for the schemes whose ground really is the flat dark
+   surface. The list above deliberately mixes two grounds: gradient/shade/photo/
+   scrim put the copy over a photograph, while dark/primary/navy/none paint the
+   band itself. That distinction does not matter for text — white reads on both —
+   but it decides a filled button.
+   On the flat ground a --primary button was ground-on-ground: navy fill on a
+   navy band, 1:1, invisible. It has to invert there, the same way .b61-band--dark
+   inverts it (values copied from utilities.css so the two stay one decision).
+   Over a photograph it must NOT: the fill sits on the picture, not on the band,
+   so it keeps its brand colour — which is exactly what the comps draw, a solid
+   primary pill beside a light one. Inverting there turned both buttons into
+   near-identical light pills and lost the pair's hierarchy. */
+.b61-hero__inner--on-dark,
+.b61-hero__inner--on-primary,
+.b61-hero__inner--on-navy,
+.b61-hero__inner--on-none {
+  --b61-btn-bg: var(--b61-btn-primary-fill-on-dark);
+  --b61-btn-text: var(--b61-btn-primary-label-on-dark);
+  --b61-btn-bg-hover: var(--b61-btn-primary-fill-hover-on-dark);
+  --b61-btn-text-hover: var(--b61-btn-primary-label-hover-on-dark);
+}
+
+.b61-hero__inner--on-light,
+.b61-hero__inner--on-secondary,
+.b61-hero__inner--on-sky {
+  color: var(--b61-ink);
+  --hero-on: var(--b61-ink);
+  --hero-on-inverse: var(--b61-white);
+  --hero-eyebrow: var(--b61-accent-text);
+  --hero-eyebrow-rule: var(--b61-eyebrow-rule-color);
+  --hero-subhead: var(--b61-muted);
+  --hero-accent: var(--b61-heading-accent);
+  --hero-focus: var(--b61-focus);
+  --b61-on-bg-ink: var(--b61-ink);
+  --b61-on-bg-muted: var(--b61-muted);
+  --b61-on-bg-accent: var(--b61-accent-text);
+  /* No --b61-focus here on purpose: the light scheme wants exactly the :root
+     value, and `--b61-focus: var(--b61-focus)` is a self-reference — a cycle,
+     which CSS resolves to nothing, silently leaving the focus ring unpainted. */
+}
+
+/* On the gold (secondary) surface the eyebrow reads in ink, not red: red on
+   gold is only 1.9:1. */
+.b61-hero__inner--on-secondary,
+.b61-hero__inner--on-sky {
+  --hero-eyebrow: var(--b61-on-secondary);
+  --hero-eyebrow-rule: var(--b61-on-secondary);
+  --hero-subhead: var(--b61-on-secondary);
+  --hero-accent: var(--b61-on-secondary);
+}
+
+/* Rule and words are two flex items on one line, each in its own track: the
+   rule cannot ride over the text, whatever the copy length. The rule was a
+   ::before before this; a real element is what makes "exactly one rule" a fact
+   of the markup rather than of the cascade. */
+/* Cover mode paints the scrim over a PHOTOGRAPH, and no tinted text can be
+   guaranteed to measure against one: the accent gold lands near 1.6:1 over a
+   bright frame even with the scrim on top, where the on-dark text colour
+   (white) clears 4.5:1 once the scrim below reaches the eyebrow. So on every
+   photo-backed scheme the eyebrow takes the on-dark TEXT colour and the rule
+   keeps the accent — the mockup's thin gold rule beside white tracked caps.
+   Band mode is a solid surface and keeps the accent on both, where it measures
+   (gold on the navy surface is 4.79:1). Two classes, so this wins over the
+   single-class scheme block above regardless of source order. */
+.b61-hero__inner--cover.b61-hero__inner--on-gradient,
+.b61-hero__inner--cover.b61-hero__inner--on-shade,
+.b61-hero__inner--cover.b61-hero__inner--on-photo,
+.b61-hero__inner--cover.b61-hero__inner--on-scrim,
+.b61-hero__inner--cover.b61-hero__inner--on-none,
+.b61-hero__inner--cover.b61-hero__inner--on-dark,
+.b61-hero__inner--cover.b61-hero__inner--on-primary,
+.b61-hero__inner--cover.b61-hero__inner--on-navy {
+  --hero-eyebrow: var(--b61-on-primary);
+  --hero-eyebrow-rule: var(--b61-on-dark-accent);
+}
+
+.b61-hero__eyebrow {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--b61-space-sm);
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-eyebrow-size);
+  font-weight: var(--b61-eyebrow-weight);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: var(--b61-eyebrow-case);
+  color: var(--hero-eyebrow, var(--b61-on-primary));
+  margin: 0 0 var(--b61-hero-eyebrow-space);
+}
+
+.b61-hero__eyebrow-rule {
+  flex: 0 0 auto;
+  display: var(--b61-eyebrow-rule);
+  width: var(--b61-eyebrow-rule-width, 40px);
+  height: var(--b61-eyebrow-rule-thickness);
+  background: var(--hero-eyebrow-rule, var(--b61-eyebrow-rule-color, var(--b61-accent)));
+}
+
+.b61-hero__eyebrow-text {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.b61-hero__title {
+  color: inherit;
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-hero-title-size, var(--b61-text-h1));
+  line-height: 1.06;
+  letter-spacing: var(--b61-tracking-display, -0.01em);
+  margin: 0 0 var(--b61-space-lg);
+  max-width: 20ch;
+  text-shadow: 0 2px 24px rgb(var(--b61-scrim-rgb) / 0.28);
+}
+
+.b61-hero__subhead {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-hero-subhead-size, clamp(var(--b61-text-body), 1.8vw, var(--b61-text-h3)));
+  line-height: var(--b61-hero-subhead-leading);
+  font-weight: var(--b61-hero-subhead-weight);
+  margin: 0 0 var(--b61-space-xl);
+  max-width: var(--b61-hero-subhead-measure);
+  color: var(--hero-subhead, var(--b61-white));
+}
+
+/* META LINE (1.77.0). A subheadline style: short facts in the UI face, small
+   tracked caps, separated by short rules, in the subhead's colour. Stacks on
+   phones, where the rules would only wrap into odd places. */
+.b61-hero__meta {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: var(--b61-align-justify, flex-start);
+  gap: var(--b61-space-xs) 0;
+  margin: 0 0 var(--b61-space-xl);
+  padding: 0;
+  font-family: var(--b61-font-ui);
+  font-size: var(--b61-hero-meta-size);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: var(--b61-hero-meta-tracking);
+  text-transform: uppercase;
+  color: var(--hero-subhead, var(--b61-white));
+}
+
+.b61-hero__meta-item {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+}
+
+.b61-hero__meta-item + .b61-hero__meta-item::before {
+  content: "";
+  display: inline-block;
+  flex: none;
+  width: var(--b61-hero-meta-rule-width);
+  height: 1px;
+  margin-inline: var(--b61-space-sm);
+  background: currentColor;
+  opacity: 0.6;
+}
+
+@media (max-width: 479px) {
+  .b61-hero__meta {
+    flex-direction: column;
+    align-items: var(--b61-align-justify, flex-start);
+  }
+  .b61-hero__meta-item + .b61-hero__meta-item::before { display: none; }
+}
+
+/* ---- Accent words --------------------------------------------------------
+ * Convention: an emphasised heading LINE, and an <em> inside any B61 heading,
+ * are the same device — italic, in the scheme's accent colour. The line-level
+ * toggle is the control an editor gets now; the inline <em> is what they typed
+ * into the old single Heading field, and it keeps working so no existing hero
+ * changes.
+ *
+ * `.b61-hero__title em` used to be GROUPED WITH .b61-hero__subhead--display
+ * below — a selector-list accident, not a decision. It gave an accent word in
+ * an <h1> the subhead's display SIZE and a 40ch max-width, and never gave it
+ * the italic or the colour the comment right above it promised. Both of the
+ * things it was supposed to do are here now, and it is out of that list. */
+.b61-hero__title-line--em,
+.b61-hero__title em {
+  font-style: italic;
+  color: var(--hero-accent, var(--b61-heading-accent));
+}
+
+/* One heading tag, N spans. Each line is display:block so it breaks without a
+   <br>, which is what makes emphasis a per-line CLASS rather than a per-line
+   element. */
+.b61-hero__title-line {
+  display: block;
+}
+
+/* Display subhead: the serif standfirst an inner-page band hero opens with.
+   Only the OPENING paragraph takes the display face — anything after it is
+   continuation copy and stays in the body face, which is how the comp reads.
+   The wrapper itself carries the display type for the plain-text case (no
+   <p> at all); the reset below hands the body face back to the rest. */
+.b61-hero__subhead--display {
+  font-family: var(--b61-font-display);
+  font-size: var(--b61-hero-subhead-display-size, var(--b61-text-lede-lg));
+  max-width: 40ch;
+}
+
+/* Width (1.70.0). Compound selectors so they beat the display scale's own
+   40ch above whichever order a site's CSS lands in. Regular writes no class. */
+.b61-hero__subhead.b61-hero__subhead--wnarrow { max-width: var(--b61-hero-subhead-measure-narrow); }
+.b61-hero__subhead.b61-hero__subhead--wwide { max-width: var(--b61-hero-subhead-measure-wide); }
+.b61-hero__subhead--display > p {
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-body);
+  line-height: 1.7;
+  color: var(--hero-subhead-muted, inherit);
+}
+.b61-hero__subhead--display > p:first-child {
+  line-height: 1.45;
+  color: inherit;
+}
+.b61-hero__subhead--display > p:first-child {
+  font-family: var(--b61-font-display);
+  font-size: var(--b61-hero-subhead-display-size, var(--b61-text-lede-lg));
+}
+
+.b61-hero__subhead em {
+  font-style: italic;
+  font-weight: inherit;
+  color: var(--hero-accent, var(--b61-heading-accent));
+}
+
+.b61-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--b61-space-md) var(--b61-space-lg);
+}
+
+/* ---- Buttons ---------------------------------------------------------------
+ * Pills in the UI face. Every state restates `color`: Breakdance's global
+ * `a:hover` rule outranks a single-class selector, so relying on inheritance
+ * or on the rest state would let the site stylesheet recolour the label. */
+/* HERO USES .b61-btn. The base rule that sat here restated it declaration for
+   declaration, and its `light` variant was the shared --light under another
+   name. Both are gone.
+
+   What survives is the pair a HERO needs and a band does not. A hero sits on a
+   photograph, where the shared secondary's scrim-wash hover is far too quiet to
+   read — so these two invert on hover instead, and they take their colours from
+   the scheme (--hero-on / --hero-on-inverse) rather than from the band tokens,
+   because "the text colour on this photo" is what a hero knows and a band
+   does not.
+
+   They are DIAL SETTERS, not paint: each declares --b61-btn-* and lets .b61-btn
+   read them, which is the house pattern. Nothing here repaints a property. */
+
+/* Secondary INSIDE a hero inverts on hover instead of washing.
+   
+   This is the old .b61-hero__btn--outline, moved onto the shared variant. The
+   shared secondary's scrim-wash hover is far too quiet to read over a
+   photograph, so here it fills solid — and it takes its colours from the
+   scheme (--hero-on / --hero-on-inverse) rather than from the band tokens,
+   because "the text colour on this photo" is what a hero knows and a band
+   does not.
+
+   DIAL SETTERS, not paint: this declares --b61-btn-* and lets .b61-btn read
+   them, which is the house pattern. Two classes, so it beats the single-class
+   .b61-btn--secondary block in components.css regardless of source order.
+
+   The old .b61-hero__btn--solid is gone rather than moved. Solid was "filled
+   with the scheme's text colour, label in the ground" — which is what the
+   shared .b61-btn--light already is on a dark or photo-backed hero, so the
+   migration maps it there. Nothing on St. Mark's used it (checked across all
+   sixteen pages), so nothing moves. */
+.b61-hero__inner .b61-btn--secondary {
+  --b61-btn-bg: transparent;
+  --b61-btn-text: var(--hero-on, var(--b61-white));
+  --b61-btn-border: color-mix(in srgb, var(--hero-on, var(--b61-white)) var(--b61-btn-outline-strength-on-dark), transparent);
+  --b61-btn-bg-hover: var(--hero-on, var(--b61-white));
+  --b61-btn-border-hover: var(--hero-on, var(--b61-white));
+  --b61-btn-text-hover: var(--hero-on-inverse, var(--b61-ink));
+}
+
+
+/* Hero's link WAS its own thing — no underline, its own size and tracking, and a
+   colour that shifted to the eyebrow accent on hover. It is .b61-link now, like
+   every other element's (Jay, 2026-09-09): a hero link and a CTA link were the
+   same control wearing two different faces. The arrow, its nudge and its
+   reduced-motion opt-out all come from assets/components.css, and the scheme
+   blocks above publish --b61-on-bg-ink so it colours correctly on a photo. */
+
+.b61-hero__edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  z-index: 3;
+  background: var(--b61-edge);
+}
+
+/* ---- Band layout -----------------------------------------------------------
+ * The inner stretches to the whole hero and paints the surface; the grid inside
+ * it carries the measure. Text ~45% / media ~55%, vertically centred.
+ * The root's own min-height comes from css.twig (--b61-hero-band-min). */
+.b61-hero__inner--band {
+  max-width: none;
+  margin: 0;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  /* Reads the same dials as the cover-mode inner, so the padding controls
+     work in BOTH modes. 1.56.0: band mode's `normal` now resolves to
+     --b61-pad-block, like the nine other bands. It used to fall through to
+     --b61-pad-block-tight, which made Normal and Tight the same value and
+     left a Section pull-up (--b61-overlap-y, up to 88px) over-pulling a band
+     hero at every width. Cover mode keeps its own asymmetric default above. */
+  padding: var(--b61-hero-pad-top, var(--b61-pad-block)) var(--b61-pad-inline)
+           var(--b61-hero-pad-bottom, var(--b61-pad-block));
+}
+
+.b61-hero__band--primary   { background: var(--b61-hero-band-bg-dark, var(--b61-surface-dark)); }
+.b61-hero__band--light     { background: var(--b61-surface); }
+.b61-hero__band--secondary { background: var(--b61-secondary); }
+
+.b61-hero__grid {
+  width: 100%;
+  max-width: var(--b61-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, var(--b61-hero-band-text, 45fr)) minmax(0, var(--b61-hero-band-media, 55fr));
+  gap: var(--b61-hero-band-gap, var(--b61-space-2xl));
+  align-items: var(--b61-hero-band-align);
+}
+
+.b61-hero__grid--text-only {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.b61-hero__text {
+  min-width: 0;
+}
+
+/* A solid surface needs no shadow, and the band title runs a step smaller. */
+.b61-hero__inner--band .b61-hero__title {
+  font-size: var(--b61-hero-band-title-size, var(--b61-text-h1));
+  text-shadow: none;
+  margin-bottom: var(--b61-space-md);
+}
+
+/* A compact band carries less vertical room, so its title takes its own
+   size rather than inheriting the standard band's. */
+.b61-hero__inner--band-compact .b61-hero__title {
+  font-size: var(--b61-hero-band-title-size-compact, var(--b61-hero-band-title-size, var(--b61-text-h1)));
+  line-height: 1.08;
+}
+
+.b61-hero__inner--band .b61-hero__subhead {
+  margin-bottom: var(--b61-space-lg);
+}
+
+.b61-hero__inner--band .b61-hero__actions {
+  margin-top: var(--b61-space-xs);
+}
+
+/* ---- Collage --------------------------------------------------------------
+ * Frames use the Framed Image technique: the frame box is offset up-left by
+ * --b61-frame-offset and draws its border with ::before; the media hangs
+ * down-right by the same offset. Each figure reserves that offset as padding
+ * so the frames sit in the grid on equal gaps. */
+.b61-hero__collage {
+  min-width: 0;
+  display: grid;
+  gap: var(--b61-hero-collage-gap, var(--b61-space-lg));
+  align-items: stretch;
+}
+
+.b61-hero__collage--n1 { grid-template-columns: minmax(0, 1fr); }
+.b61-hero__collage--n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.b61-hero__collage--n3 {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  grid-template-rows: auto auto;
+}
+
+.b61-hero__fig {
+  margin: 0;
+  min-width: 0;
+  padding: 0 var(--b61-frame-offset) var(--b61-frame-offset) 0;
+  display: grid;
+}
+
+.b61-hero__fig-frame {
+  display: grid;
+  position: relative;
+  padding: var(--b61-frame-offset) 0 0 var(--b61-frame-offset);
+  isolation: isolate;
+}
+
+.b61-hero__fig-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--b61-frame-width) solid var(--b61-frame-color, var(--b61-primary));
+  /* Above the media: the frame is a plain border drawn ON the image edge,
+     not a box behind it. */
+  z-index: 2;
+  pointer-events: none;
+}
+
+.b61-hero__fig-media {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  overflow: hidden;
+  margin: 0 calc(-1 * var(--b61-frame-offset)) calc(-1 * var(--b61-frame-offset)) 0;
+  background-color: var(--b61-surface);
+  aspect-ratio: var(--b61-hero-media-ratio, 4 / 3);
+}
+
+.b61-hero__fig-media > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Per-image focal point (1.64.0), set inline on the figure from the
+     collage row's own picker. Same custom property Split, Section, CTA and
+     cover-mode Hero already publish. */
+  object-position: var(--b61-photo-focus, center);
+}
+
+/* Two up: a pair of portraits. */
+.b61-hero__collage--n2 .b61-hero__fig-media { aspect-ratio: 3 / 4; }
+
+/* Three up: the first image is the tall portrait, spanning both rows. Its
+   height comes from the two landscapes beside it, so its <img> is taken out
+   of flow — it must not contribute to row sizing. */
+.b61-hero__collage--n3 .b61-hero__fig:first-child {
+  grid-row: 1 / span 2;
+}
+
+.b61-hero__collage--n3 .b61-hero__fig:first-child .b61-hero__fig-frame {
+  height: 100%;
+}
+
+.b61-hero__collage--n3 .b61-hero__fig:first-child .b61-hero__fig-media {
+  aspect-ratio: auto;
+  height: auto;
+}
+
+.b61-hero__collage--n3 .b61-hero__fig:first-child .b61-hero__fig-media > img {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---- Responsive ------------------------------------------------------------ */
+@media (max-width: 1119px) {
+  .b61-hero__grid {
+    gap: var(--b61-space-xl);
+  }
+}
+
+@media (max-width: 1023px) {
+  .b61-hero__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--b61-space-xl);
+  }
+  .b61-hero__collage {
+    gap: var(--b61-space-md);
+  }
+}
+
+@media (max-width: 767px) {
+  .b61-hero {
+    min-height: clamp(420px, 70vh, 560px);
+  }
+
+  .b61-hero__inner {
+    padding: var(--b61-space-2xl) var(--b61-pad-inline) var(--b61-space-2xl);
+  }
+
+  .b61-hero__title {
+    max-width: 100%;
+  }
+
+  /* Band: text first, then the collage, on the section's own rhythm. */
+  .b61-hero__inner--band {
+    /* Reads the same dials as the cover-mode inner, so the padding controls
+     work in BOTH modes. 1.56.0: band mode's `normal` now resolves to
+     --b61-pad-block, like the nine other bands. It used to fall through to
+     --b61-pad-block-tight, which made Normal and Tight the same value and
+     left a Section pull-up (--b61-overlap-y, up to 88px) over-pulling a band
+     hero at every width. Cover mode keeps its own asymmetric default above. */
+  padding: var(--b61-hero-pad-top, var(--b61-pad-block)) var(--b61-pad-inline)
+           var(--b61-hero-pad-bottom, var(--b61-pad-block));
+  }
+
+  .b61-hero__grid,
+  .b61-hero__grid--text-only {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--b61-space-xl);
+  }
+
+  /* THE PHOTO LANDS ON THE COPY'S EDGE (1.64.0). The frame technique insets
+     the media by --b61-frame-offset on the left while the frame line stays on
+     the column edge, so once the band stacks, the collage sat up to 20px
+     inside the text above it. The offset is depth a phone has no room for.
+     Zeroed HERE rather than with .b61-frame--none, which also zeroes
+     --b61-frame-width and takes the frame away with it: at offset 0 the frame
+     is still drawn, as a hairline on the image edge. */
+  .b61-hero__collage {
+    --b61-frame-offset: 0px;
+  }
+}
+
+@media (max-width: 479px) {
+  /* The three-up rebuilds as a stack: the portrait becomes a wide image on
+     top, the two landscapes sit side by side beneath it. */
+  .b61-hero__collage--n3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+  }
+  .b61-hero__collage--n3 .b61-hero__fig:first-child {
+    grid-row: 1;
+    grid-column: 1 / -1;
+  }
+  .b61-hero__collage--n3 .b61-hero__fig:first-child .b61-hero__fig-frame {
+    height: auto;
+  }
+  .b61-hero__collage--n3 .b61-hero__fig:first-child .b61-hero__fig-media {
+    aspect-ratio: 16 / 10;
+  }
+  .b61-hero__collage--n3 .b61-hero__fig:first-child .b61-hero__fig-media > img {
+    position: static;
+  }
+}
+
+/* FIRST-SCREEN OFFSET (1.49.0). behavior.js overwrites this inline with the
+   hero's measured distance from the top of the document; until it runs, the
+   site's static --b61-header-height stands in. */
+:where(.b61-hero) {
+  --b61-hero-offset: var(--b61-header-height);
+}
+
+/* PHOTO RADIUS (1.53.0). The frame and the photo share --b61-radius-media,
+   the same value cards read (see tokens.css), so a card grid and a framed
+   photo on one page always have the same corners. 0 on a square site. */
+.b61-hero__fig-frame::before {
+  border-radius: var(--b61-radius-media);
+}
+
+.b61-hero__fig-media {
+  border-radius: var(--b61-radius-media);
+}

@@ -1,0 +1,77 @@
+/*
+ * B61 Hero: per-instance rules.
+ *
+ * In Breakdance these came from css.twig, rendered once per breakpoint for
+ * each hero. Here each choice is a modifier class (or an inline custom
+ * property for the step sliders) and the responsive steps live in plain
+ * media queries, so there is no per-breakpoint template to keep in step.
+ * Two classes each, so they win over the single-class base in hero.css.
+ */
+
+/* ---- Height (cover) and band minimums; no media = no minimum ---- */
+.b61-hero.b61-hero--no-media { min-height: 0; }
+.b61-hero.b61-hero--band.b61-hero--no-media { align-items: stretch; }
+
+.b61-hero.b61-hero--band-standard { min-height: var(--b61-hero-band-min, 520px); align-items: stretch; }
+.b61-hero.b61-hero--band-compact { min-height: var(--b61-hero-band-min-compact, 480px); align-items: stretch; }
+
+.b61-hero.b61-hero--h-short { min-height: clamp(240px, 34vh, 380px); }
+.b61-hero.b61-hero--h-medium { min-height: clamp(360px, 56vh, 560px); }
+.b61-hero.b61-hero--h-tall { min-height: clamp(480px, 76vh, 860px); }
+/* Full = "fills the first screen": behavior subtracts the distance from the
+   top of the page (header, announcement bar) via --b61-hero-offset. */
+.b61-hero.b61-hero--h-full {
+  min-height: calc(100vh - var(--b61-hero-offset, var(--b61-header-height, 0px)));
+  min-height: calc(100svh - var(--b61-hero-offset, var(--b61-header-height, 0px)));
+}
+
+@media (max-width: 767px) {
+  .b61-hero.b61-hero--band-standard,
+  .b61-hero.b61-hero--band-compact { min-height: 0; }
+  .b61-hero.b61-hero--h-short { min-height: clamp(200px, 28vh, 300px); }
+  .b61-hero.b61-hero--h-medium { min-height: clamp(320px, 48vh, 440px); }
+  .b61-hero.b61-hero--h-tall { min-height: clamp(400px, 66vh, 620px); }
+}
+
+/* ---- Alignment dials (read by hero.css) ---- */
+.b61-hero.b61-hero--ta-center {
+  --b61-align-text: center;
+  --b61-align-inline: auto;
+  --b61-align-justify: center;
+  --b61-align-shade-x: 50%;
+  --b61-align-shade-w: 190%;
+}
+.b61-hero.b61-hero--ta-left {
+  --b61-align-text: left;
+  --b61-align-inline: 0;
+  --b61-align-justify: flex-start;
+  --b61-align-shade-x: 0%;
+  --b61-align-shade-w: 150%;
+}
+
+/* ---- Eyebrow rule ("Site default" adds no class, so site tokens decide) ---- */
+.b61-hero--rule-none .b61-hero__eyebrow-rule,
+.b61-hero--rule-trailing .b61-hero__eyebrow-rule { display: none; }
+.b61-hero--rule-leading .b61-hero__eyebrow-rule,
+.b61-hero--rule-both .b61-hero__eyebrow-rule { display: block; }
+
+.b61-hero--rule-none .b61-hero__eyebrow::after,
+.b61-hero--rule-leading .b61-hero__eyebrow::after { display: none; }
+
+.b61-hero--rule-trailing .b61-hero__eyebrow { width: 100%; }
+.b61-hero--rule-trailing .b61-hero__eyebrow::after {
+  display: flex;
+  flex: 1 1 var(--b61-rule-trail-min);
+}
+.b61-hero--rule-both .b61-hero__eyebrow::after {
+  display: block;
+  flex: 0 0 auto;
+  width: var(--b61-eyebrow-rule-width, 40px);
+  height: var(--b61-eyebrow-rule-thickness);
+  margin-inline-start: 0;
+  background: var(--hero-eyebrow-rule, var(--b61-eyebrow-rule-color, var(--b61-accent)));
+}
+
+/* ---- Step sliders: the component sets --b61-hero-istep / --b61-hero-bstep ---- */
+.b61-hero.b61-hero--istep .b61-hero__subhead.b61-hero__subhead { max-width: var(--b61-hero-istep); }
+.b61-hero.b61-hero--bstep { --b61-hero-band-text: var(--b61-hero-bstep); --b61-hero-band-media: 1fr; }

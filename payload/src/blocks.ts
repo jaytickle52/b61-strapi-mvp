@@ -1,4 +1,5 @@
 import type { Block, Field } from 'payload'
+import { B61Hero } from './b61/elements/hero/fields'
 
 // The sections an editor can add, reorder and remove on any page.
 // Each mirrors a Banner 61 design element; the website decides how it looks.
@@ -31,38 +32,6 @@ const button = (name: string, label: string): Field => ({
     },
   ],
 })
-
-export const Hero: Block = {
-  slug: 'hero',
-  labels: { singular: 'Hero', plural: 'Heroes' },
-  fields: [
-    { name: 'eyebrow', type: 'text', admin: { description: 'Small line above the heading, e.g. "Now enrolling"' } },
-    { name: 'heading', type: 'text', required: true },
-    { name: 'subheading', type: 'textarea' },
-    { name: 'image', type: 'upload', relationTo: 'media' },
-    {
-      name: 'layout',
-      type: 'select',
-      defaultValue: 'image-right',
-      options: [
-        { label: 'Image on the right', value: 'image-right' },
-        { label: 'Image as background', value: 'image-background' },
-        { label: 'Centered text', value: 'centered' },
-      ],
-    },
-    tone,
-    {
-      name: 'buttons',
-      type: 'array',
-      maxRows: 2,
-      fields: [
-        { name: 'label', type: 'text', required: true },
-        { name: 'url', type: 'text', required: true },
-        { name: 'style', type: 'select', defaultValue: 'primary', options: ['primary', 'secondary', 'link'] },
-      ],
-    },
-  ],
-}
 
 export const Split: Block = {
   slug: 'split',
@@ -151,4 +120,4 @@ export const Prose: Block = {
   ],
 }
 
-export const sectionBlocks = [Hero, Split, CardGrid, StatsBand, CtaBand, Prose]
+export const sectionBlocks = [B61Hero, Split, CardGrid, StatsBand, CtaBand, Prose]

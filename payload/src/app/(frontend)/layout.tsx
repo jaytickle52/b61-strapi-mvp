@@ -1,6 +1,14 @@
 import type { Metadata } from 'next'
 import type { CSSProperties, ReactNode } from 'react'
 import './styles.css'
+import '@/b61/styles/site-raw.css'
+import '@/b61/styles/tokens.css'
+import '@/b61/styles/utilities.css'
+import '@/b61/styles/components.css'
+import '@/b61/elements/hero/hero.css'
+import '@/b61/elements/hero/hero-instance.css'
+import { b61Theme, FONT_STACKS } from '@/b61/lib/theme'
+import Reveal from '@/b61/reveal/Reveal'
 import { getSettings, isPreview } from '@/lib/data'
 import { PreviewBanner, SiteFooter, SiteHeader } from '@/components/SiteChrome'
 import LivePreviewListener from '@/components/LivePreviewListener'
@@ -15,23 +23,18 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-const FONT_STACKS: Record<string, string> = {
-  Fraunces: '"Fraunces", Georgia, serif',
-  'Playfair Display': '"Playfair Display", Georgia, serif',
-  Merriweather: '"Merriweather", Georgia, serif',
-  Montserrat: '"Montserrat", system-ui, sans-serif',
-  Poppins: '"Poppins", system-ui, sans-serif',
-  Inter: '"Inter", system-ui, sans-serif',
-  'Source Sans 3': '"Source Sans 3", system-ui, sans-serif',
-  Lato: '"Lato", system-ui, sans-serif',
-  'Open Sans': '"Open Sans", system-ui, sans-serif',
-}
-
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const [settings, preview] = await Promise.all([getSettings(), isPreview()])
   const heading = settings.headingFont ?? 'Fraunces'
   const body = settings.bodyFont ?? 'Inter'
-  const fontsHref = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(heading)}:wght@400;600&family=${encodeURIComponent(body)}:wght@400;600&display=swap`
+  const ui = settings.uiFont ?? 'Montserrat'
+  const fam = (f: string, axes: string) => `family=${encodeURIComponent(f)}:${axes}`
+  const fonts = [
+    fam(heading, 'ital,wght@0,400;0,600;0,700;1,400;1,600'),
+    ...(body !== heading ? [fam(body, 'wght@400;600')] : []),
+    ...(ui !== heading && ui !== body ? [fam(ui, 'wght@500;600;700')] : []),
+  ]
+  const fontsHref = `https://fonts.googleapis.com/css2?${fonts.join('&')}&display=swap`
 
   // The school's colors and fonts become CSS variables every component uses.
   const theme = {
@@ -42,7 +45,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   } as CSSProperties
 
   return (
-    <html lang="en" className="h-full antialiased">
+    // The B61 palette goes on <html>: tokens.css derives its role tokens on
+    // :root, so the raw values have to be set there to flow through.
+    <html lang="en" className="h-full antialiased" style={b61Theme(settings)}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
@@ -54,6 +59,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <SiteHeader settings={settings} />
         <main className="flex-1">{children}</main>
         <SiteFooter settings={settings} />
+        <Reveal />
       </body>
     </html>
   )

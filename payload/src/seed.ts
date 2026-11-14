@@ -1,4 +1,5 @@
 import type { Payload } from 'payload'
+import { demoHeroes, ensureDemoImages } from './b61/demo'
 
 // Fictional demo schools, same content as the Strapi build so the two editors
 // can be compared like for like. SEED_SCHOOL picks one.
@@ -12,13 +13,16 @@ type Profile = {
   staff: { name: string; role: string; department: string; bio: string }[];
 };
 
-const PROFILES: Record<string, Profile> = {
+export const PROFILES: Record<string, Profile> = {
   'cedar-ridge': {
     settings: {
       schoolName: 'Cedar Ridge Christian Academy',
       tagline: 'Rooted in faith. Ready for life.',
       primaryColor: '#1F3A5F',
       secondaryColor: '#C8A24A',
+      accentColor: '#B23A2E',
+      paperColor: '#F7F3EC',
+      uiFont: 'Montserrat',
       headingFont: 'Fraunces',
       bodyFont: 'Inter',
       phone: '(864) 555-0142',
@@ -52,6 +56,9 @@ const PROFILES: Record<string, Profile> = {
       tagline: 'Truth, goodness and beauty, one day at a time.',
       primaryColor: '#2E5E4E',
       secondaryColor: '#D9774B',
+      accentColor: '#8C2F39',
+      paperColor: '#F5F1E8',
+      uiFont: 'Lato',
       headingFont: 'Playfair Display',
       bodyFont: 'Source Sans 3',
       phone: '(843) 555-0187',
@@ -164,14 +171,18 @@ export async function seedDemoSchool(payload: Payload, key: string) {
     await create('news', { ...post, slug: slugify(post.title), generateSlug: false, date: today, body: p(post.summary) })
   }
 
+  const imgs = await ensureDemoImages(payload, {
+    a: (profile.settings.primaryColor as string) ?? '#1F3A5F',
+    b: (profile.settings.secondaryColor as string) ?? '#C8A24A',
+  })
+  const heroes = demoHeroes({ tagline: profile.tagline, mission: profile.mission, phone: profile.settings.phone as string, imgs })
+
   const pages = [
     {
       title: 'Home', slug: 'home',
       seoDescription: `${name}: ${profile.tagline}`,
       sections: [
-        { blockType: 'hero', eyebrow: 'Now enrolling', heading: profile.tagline,
-          subheading: profile.mission, layout: 'image-right', tone: 'brand',
-          buttons: [{ label: 'Schedule a tour', url: '/visit', style: 'primary' }, { label: 'Our programs', url: '/programs', style: 'secondary' }] },
+        heroes.home,
         { blockType: 'statsBand', heading: `${name} at a glance`, tone: 'light', stats: profile.stats },
         { blockType: 'cardGrid', heading: 'Programs', intro: "A path for every stage of your child's growth.",
           source: 'programs', limit: 3, columns: 'three', tone: 'muted' },
@@ -184,7 +195,7 @@ export async function seedDemoSchool(payload: Payload, key: string) {
       title: 'About', slug: 'about',
       seoDescription: `About ${name}`,
       sections: [
-        { blockType: 'hero', heading: 'About us', subheading: profile.mission, layout: 'centered', tone: 'muted', buttons: [] },
+        heroes.about,
         { blockType: 'split', heading: 'Our mission', body: p(profile.mission), imagePosition: 'right', tone: 'light' },
         { blockType: 'cardGrid', heading: 'Meet our leaders', source: 'staff', limit: 4, columns: 'four', tone: 'muted' },
       ],
@@ -193,7 +204,7 @@ export async function seedDemoSchool(payload: Payload, key: string) {
       title: 'Visit', slug: 'visit',
       seoDescription: `Schedule a tour of ${name}`,
       sections: [
-        { blockType: 'hero', heading: 'Come visit', subheading: 'Tours run Tuesday through Thursday mornings. We would love to meet your family.', layout: 'centered', tone: 'brand', buttons: [] },
+        heroes.visit,
         { blockType: 'prose', heading: 'How to schedule', body: p(`Call ${profile.settings.phone} or email ${profile.settings.email} and our admissions team will find a time that works for you.`) },
         { blockType: 'cardGrid', heading: 'Upcoming events for families', source: 'upcoming-events', limit: 3, columns: 'three', tone: 'muted' },
       ],

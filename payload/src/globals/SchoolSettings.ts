@@ -38,17 +38,55 @@ export const SchoolSettings: GlobalConfig = {
             {
               type: 'row',
               fields: [
+                { name: 'accentColor', type: 'text', defaultValue: '#B23A2E', admin: { description: 'Rules, frames, accent words' } },
+                { name: 'paperColor', type: 'text', defaultValue: '#F7F3EC', admin: { description: 'Soft background' } },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Color shades',
+              admin: {
+                initCollapsed: true,
+                description: 'Leave empty to work them out from the colors above. Set them when a brand guide specifies them.',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'primaryDeep', type: 'text', admin: { placeholder: 'Darker primary' } },
+                    { name: 'secondarySoft', type: 'text', admin: { placeholder: 'Lighter secondary' } },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'accentStrong', type: 'text', admin: { placeholder: 'Accent for small text' } },
+                    { name: 'accentDeep', type: 'text', admin: { placeholder: 'Darker accent' } },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'row',
+              fields: [
                 {
                   name: 'headingFont',
                   type: 'select',
                   defaultValue: 'Fraunces',
-                  options: ['Fraunces', 'Playfair Display', 'Merriweather', 'Montserrat', 'Poppins'],
+                  options: ['Fraunces', 'Playfair Display', 'Merriweather', 'EB Garamond', 'Montserrat', 'Poppins'],
                 },
                 {
                   name: 'bodyFont',
                   type: 'select',
                   defaultValue: 'Inter',
-                  options: ['Inter', 'Source Sans 3', 'Lato', 'Open Sans'],
+                  options: ['Inter', 'Source Sans 3', 'Lato', 'Open Sans', 'EB Garamond'],
+                },
+                {
+                  name: 'uiFont',
+                  label: 'Buttons and labels font',
+                  type: 'select',
+                  defaultValue: 'Montserrat',
+                  options: ['Montserrat', 'Inter', 'Poppins', 'Lato', 'Source Sans 3'],
                 },
               ],
             },

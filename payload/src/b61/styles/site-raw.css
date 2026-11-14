@@ -1,0 +1,20 @@
+/*
+ * Raw B61 tokens that a Breakdance site registers as global variables and that
+ * school settings do not cover yet (neutrals, shape, widths). Colours and fonts
+ * are set per school from School settings, on <body>, by the frontend layout.
+ */
+:root {
+  --b61-white: #ffffff;
+  --b61-black: #111111;
+  --b61-graphite: #33363b;
+  --b61-mist: #e3e7ec;
+  --b61-hairline: #e4dfd5;
+  --b61-radius: 14px;
+  --b61-radius-sm: 8px;
+  --b61-radius-pill: 999px;
+  --b61-frame-width: 4px;
+  --b61-frame-offset: 14px;
+  --b61-eyebrow-rule-width: 40px;
+  --b61-width: 1200px;
+  --b61-width-narrow: 760px;
+}

@@ -1,0 +1,1071 @@
+/*
+ * Banner 61 — design tokens
+ *
+ * The per-site token layer (principle 09). Elements never hardcode a colour, a
+ * font or a radius; they reference these. To rebrand a site, change the raw
+ * values — no element CSS changes.
+ *
+ * SOURCE OF TRUTH — read before editing:
+ *   The RAW values (palette, font stacks, shape dials) are NOT defined in this
+ *   file. They are Breakdance global variables (Breakdance > Settings >
+ *   Variables) which emit on :root with exactly these names:
+ *     --b61-palette-primary   --b61-palette-primary-deep
+ *     --b61-palette-secondary --b61-palette-secondary-soft
+ *     --b61-palette-accent    --b61-palette-accent-strong --b61-palette-accent-deep
+ *     --b61-palette-paper     --b61-white --b61-black --b61-graphite
+ *     --b61-mist --b61-hairline
+ *     --b61-font-display --b61-font-body --b61-font-ui
+ *     --b61-radius --b61-radius-sm --b61-radius-pill --b61-frame-width
+ *     --b61-frame-offset --b61-eyebrow-rule-width --b61-width --b61-width-narrow
+ *   So the GUI pickers show them, and there is ONE definition of each value.
+ *   This file holds only the ROLE / derived tokens that reference them.
+ *   If this plugin is moved to a site without those variables registered,
+ *   re-register them first (or add a :root block of raw values here).
+ *
+ * PALETTE SLOTS ARE NAMED BY JOB, NOT HUE (1.44.0). Until 1.43 the raw colours
+ * carried the first client's hue names (navy, gold, cream, red), which read as
+ * nonsense on every other school: St. Mark's "gold" held red. The slots now
+ * mirror the role tokens they feed — primary, secondary, accent — plus paper
+ * (the soft ground). The neutrals (white, black, graphite, mist, hairline)
+ * describe values, not brands, and keep their names.
+ *
+ * Colour tokens ship as contrast-checked pairs (principle 16). A surface token
+ * always has an -on partner, and no pairing exposed in a panel can fail AA.
+ * Ratios noted below were measured with the WCAG 2.1 formula on 2026-09-03
+ * against the Potomac palette (where "navy" = palette-primary, "gold" =
+ * palette-secondary, "cream" = palette-paper, "red" = palette-accent);
+ * re-measure if you change a raw value.
+ */
+
+/* ---------------------------------------------------------------------------
+   LEGACY PALETTE BRIDGE (1.44.0) — delete in 2.0.0.
+
+   A site set up before 1.44 registers the OLD names (--b61-navy, --b61-gold,
+   --b61-cream, --b61-red ...). Each new slot falls back to its old name here,
+   so upgrading changes nothing on such a site. A site that registers the new
+   name wins: Breakdance's registered variables are declared on :root after
+   this file and override it (proven, see stmarks_broken_variables).
+
+   A site that registers NEITHER gets no value — exactly as before 1.44. Once
+   every site registers the new names, this block and the old names in the
+   guard's legacy= list go.
+   --------------------------------------------------------------------------- */
+:root {
+  --b61-palette-primary: var(--b61-navy);
+  --b61-palette-primary-deep: var(--b61-navy-deep);
+  --b61-palette-secondary: var(--b61-gold);
+  --b61-palette-secondary-soft: var(--b61-gold-soft);
+  --b61-palette-accent: var(--b61-red);
+  --b61-palette-accent-strong: var(--b61-red-strong);
+  --b61-palette-accent-deep: var(--b61-red-deep);
+  --b61-palette-paper: var(--b61-cream);
+}
+
+:root {
+  /* ---- Typography ----
+     Display + body are both EB Garamond (headings carry italic accent words in
+     red, see --b61-heading-accent). --b61-font-ui is Montserrat, for nav,
+     buttons, eyebrows and stat labels — never for running text. */
+
+  /* Legacy aliases — the five original elements reference these names. */
+  --font-display: var(--b61-font-display);
+  --font-body: var(--b61-font-body);
+  --font-ui: var(--b61-font-ui);
+
+  /*
+   * #e4432d (red) carries white / sits on white at only 4.09:1 and on cream at
+   * 3.89:1 — fine for large text (24px+, or 19px+ bold) and for non-text UI at
+   * 3:1, but short of the 4.5:1 body-text floor. So the bright red is the
+   * *accent* (rules, frames, italic heading words, large numerals) and
+   * --b61-palette-accent-strong is the red that carries small text and button labels.
+   * Black is not a brand colour: ink is navy everywhere.
+   */
+
+  /* ---- Text ---- */
+  /*
+   * Ink is BLACK, not navy. Sampled from the approved v2 mockup: headings,
+   * body copy and pillar titles all render #030405, and the muted step is
+   * #4d4d4c. Navy is a SURFACE colour on this site — the stats band, the
+   * program cards, the inner-page hero band, the footer, the buttons — and
+   * never the colour of letters on a light background. This matches the
+   * client's own words: black is "less as a brand color and more of just the
+   * colour of the letters."
+   */
+  --b61-ink: var(--b61-black);           /* 20.4:1 on white, 19.4:1 on cream, 16.5:1 on gold-soft */
+  --b61-muted: var(--b61-graphite);      /*  8.2:1 on white,  7.8:1 on cream,  6.6:1 on gold-soft */
+  --b61-accent: var(--b61-palette-accent);          /* large text and non-text UI only: 4.09:1 white, 3.89:1 cream */
+  --b61-accent-text: var(--b61-palette-accent-strong); /* 6.05:1 on white, 5.76:1 on cream */
+  /* The soft surface is gold-soft; red-strong still clears AA on it (4.91:1),
+     so the on-soft step is the same token rather than a darker one. */
+  --b61-accent-text-on-soft: var(--b61-palette-accent-strong); /* 4.91:1 on gold-soft */
+
+  /* Italic <em> accent words inside headings. Headings are large, so the
+     bright red is allowed; small headings (h5/h6, card titles) use the
+     text-safe step. Element agents consume these. */
+  --b61-heading-accent: var(--b61-accent);
+  --b61-heading-accent-text: var(--b61-accent-text);
+
+  /*
+   * Role tokens. Components reference these, never a colour name — so a site
+   * with a green palette still has a working "Primary" scheme.
+   */
+  /* Every LIGHT surface carries black ink. Navy is a surface, never letters on
+     a light background — the same rule the ink token follows. */
+  --b61-primary: var(--b61-palette-primary);
+  --b61-on-primary: var(--b61-white);       /* 10.82:1 */
+  --b61-secondary: var(--b61-palette-secondary);
+  --b61-on-secondary: var(--b61-ink);       /* 12.8:1 on gold */
+
+  /* ---- Surfaces, each with its text partner ---- */
+  --b61-surface: var(--b61-white);
+  --b61-on-surface: var(--b61-ink);             /* 20.5:1 */
+
+  --b61-surface-soft: var(--b61-palette-paper);
+  --b61-on-surface-soft: var(--b61-ink);        /* 19.5:1 */
+  /* The muted companion on a soft ground. Soft was the only band with a single
+     on-colour: dark has --b61-on-surface-dark + --b61-on-dark-muted, accent has
+     its own pair, and soft had one token doing both jobs — so a soft band had
+     no ink/muted hierarchy at all and headings sat at body strength. A site with
+     a genuinely mid-tone soft surface (the old gold-soft, where --b61-muted only
+     reached 3.82:1) retunes this dial rather than losing the distinction. */
+  --b61-on-soft-muted: var(--b61-muted);        /* 7.8:1 on cream */
+
+  /* Mid surface = gold-soft (pale gold tint), chosen over a navy variant so
+     the light/soft/mid ladder stays warm and readable with navy ink. */
+  --b61-surface-mid: var(--b61-palette-secondary-soft);
+  --b61-on-surface-mid: var(--b61-ink);         /* 16.7:1 */
+
+  --b61-surface-dark: var(--b61-primary);
+  --b61-on-surface-dark: var(--b61-on-primary); /* 10.82:1 */
+
+  --b61-surface-accent: var(--b61-palette-accent-strong);
+  --b61-on-surface-accent: var(--b61-white);    /*  6.05:1 */
+
+  /* ---- Buttons (mockup buttons are pills) ---- */
+  --b61-btn-bg: var(--b61-primary);
+  --b61-btn-text: var(--b61-white);             /* 10.82:1 */
+  --b61-btn-bg-hover: var(--b61-palette-primary-deep);     /* 14.32:1 */
+  --b61-btn-outline-color: var(--b61-primary);  /* outline variant on light surfaces */
+  --b61-btn-gap: var(--b61-space-sm);           /* between buttons in a group */
+  /* THE HOVER EFFECT, in two layers.
+
+     --b61-btn-hover-transform is the whole effect: a school that wants a grow
+     instead of a rise sets `scale(1.03)`, one that wants nothing to move sets
+     `none`, and the colour change still happens either way — a button always
+     responds to the pointer.
+
+     --b61-btn-hover-lift is the convenience dial for the common case, since
+     "rise by N" is what most sites want to adjust. Setting it to 0 flattens the
+     default effect without anyone having to know transform syntax.
+
+     Both were a hardcoded -1px inside components.css, which made even "don't
+     move our buttons" a code edit. */
+  --b61-btn-hover-lift: -1px;
+  --b61-btn-hover-transform: translateY(var(--b61-btn-hover-lift));
+  /* REGISTERED AS BREAKDANCE VARIABLES on sites that want them in the GUI, along
+     with --b61-btn-min-height and --b61-link-tracking. A registered variable is
+     declared on :root by Breakdance and therefore WINS over this file, so the
+     values here are the fallback for a site that has not registered them. Keep
+     the two in step when changing a default. */
+
+  /* Elevation slots, empty by default. A site that wants a shadow-on-hover
+     effect sets the hover one and it animates, because box-shadow is already in
+     the transition list. */
+  --b61-btn-shadow: none;
+  --b61-btn-hover-shadow: var(--b61-btn-shadow);
+  /* The comfortable touch target, shared by buttons AND text links. It used to
+     be declared inside :where(.b61-btn) in components.css, where .b61-link could
+     not see it — so promoting the link to a shared class silently dropped its
+     min-height to auto. An a11y floor belongs where everything that needs it can
+     reach it. Larger is fine; smaller is a bug. */
+  --b61-btn-min-height: 44px;
+  /* Text links track slightly wider than body copy but far tighter than a
+     button label, which is set for small-caps-ish UI text. */
+  --b61-link-tracking: 0.02em;
+  --b61-btn-outline-color-on-dark: var(--b61-white);
+  --b61-btn-font: var(--b61-font-ui);
+  --b61-radius-btn: var(--b61-radius-pill);
+  /* Button interior. One dial for every element's button, so a site cannot
+     end up with a 73px hero button beside a 54px split button. Deliberately
+     NOT the generic space scale: --b61-space-xl also drives card interiors,
+     and a card's padding and a button's padding do not move together. */
+  --b61-btn-pad-y: 0.9375rem;
+  --b61-btn-pad-x: 2rem;
+  --b61-btn-weight: 600;
+  /* Button type. Its own step, not --b61-text-sm: a button's label and a
+     caption are different jobs and a comp routinely sizes them apart. Both
+     default to what they were, so no site moves until it sets them. */
+  --b61-btn-size: var(--b61-text-sm);
+  --b61-btn-tracking: var(--b61-tracking-ui);
+  --b61-btn-leading: 1.55;
+
+  /* ---- Lines and edges ---- */
+  --b61-border: var(--b61-hairline);
+  --b61-border-strong: var(--b61-palette-primary);
+  --b61-edge: linear-gradient(90deg, var(--b61-palette-accent) 0%, var(--b61-palette-accent) 45%, var(--b61-palette-secondary) 100%);
+
+  /* ---- Scrims (space-separated channels so rgb(... / a) works) ----
+     CSS cannot split a hex variable into channels, so these two triplets are
+     the channel form of --b61-palette-primary and --b61-palette-paper. Keep them in step. */
+  --b61-scrim-rgb: 12 65 96;
+  --b61-light-scrim-rgb: 252 249 244;
+
+  /* ---- On-dark support ---- */
+  --b61-on-dark-accent: var(--b61-palette-secondary);        /* 4.79:1 on navy, 6.34:1 on navy-deep */
+  --b61-on-dark-muted: var(--b61-mist);         /* 6.23:1 on navy, 8.24:1 on navy-deep */
+
+  /*
+   * ---- Rule colors ----
+   * Divider is the one element with no surface of its own: it sits on whatever
+   * band it is dropped into, so it cannot derive its color the way the other
+   * ten do. Its colors resolve through these tokens instead of straight from
+   * --b61-ink / --b61-muted, so any container can retune the rules inside it —
+   * a Breakdance section class, a Selector, or the .b61-band--* utilities
+   * in utilities.css, which set them alongside the --b61-on-bg-* family.
+   * House rule: eyebrow rules are red on light bands and gold on dark bands
+   * (.b61-band--dark switches --b61-rule-accent to --b61-on-dark-accent).
+   */
+  --b61-rule-accent: var(--b61-accent);
+  --b61-rule-ink: var(--b61-ink);
+  --b61-rule-muted: var(--b61-muted);
+
+  /*
+   * The rule beside an eyebrow is a house style, not a per-page decision.
+   * Its width is the Breakdance variable --b61-eyebrow-rule-width (Shape);
+   * set it to 0 to switch it off across a whole site.
+   */
+  --b61-eyebrow-rule-color: var(--b61-accent);
+  --b61-eyebrow-font: var(--b61-font-ui);
+  /* EYEBROW DIALS (1.53.0). Every element's eyebrow reads these, so one
+     change restyles every eyebrow on the site. Before this, size, weight,
+     case and the rule's thickness were typed into each element, and three
+     elements set the eyebrow in the BODY font instead of --b61-eyebrow-font.
+       --b61-eyebrow-rule:            inline-block = show the leading line,
+                                      none = hide it everywhere
+       --b61-eyebrow-rule-thickness:  line weight
+       --b61-eyebrow-rule-width       line length (Breakdance Shape variable)
+       --b61-eyebrow-rule-color       line colour (above)
+       --b61-eyebrow-case:            uppercase | none
+     Size, weight, font and --b61-eyebrow-tracking set the type. */
+  --b61-eyebrow-size: var(--b61-text-label);
+  --b61-eyebrow-weight: 700;
+  --b61-eyebrow-case: uppercase;
+  --b61-eyebrow-rule: inline-block;
+  --b61-eyebrow-rule-thickness: 2px;
+
+  /* THE GAP UNDER AN EYEBROW, and the gap between its leading rule and its
+     text. Both were scattered as raw literals across ten elements before
+     1.17.0 — six different values below the eyebrow (12px, 16px, 18px, 24px,
+     40px and 14px) and three between rule and text — for one typographic
+     device, exactly like the tracking that guard rule 4 now prevents.
+
+     An element may still override its own dial where its eyebrow genuinely
+     differs; what it may not do is state a bare number and drift. Each
+     override below is a value PRESERVED from before the sweep, not a design
+     decision — converging them is a separate, deliberate call. */
+  --b61-eyebrow-space: var(--b61-space-md);
+  --b61-eyebrow-rule-gap: var(--b61-space-sm);
+  /* THE UPPERCASE MICRO-LABEL TRACKING — not only eyebrows, despite the name.
+     Every small, tracked-out, uppercase label reads from this: section eyebrows,
+     pull-quote attributions, signature names, stat labels, card numbers,
+     accordion indices and tags. They are one typographic device, so they turn on
+     one dial.
+
+     They did not used to. Seven elements hardcoded 0.16em, 0.18em or 0.1em while
+     four used this token, which put four different trackings for one role on the
+     same page — and St. Mark's retunes this to 0.2em, so the hardcoded ones
+     drifted further the moment the site was tuned. bin/check-css-tokens.sh now
+     fails on any letter-spacing literal, so it cannot happen again.
+
+     NOTE: a second variable, --b61-tracking-eyebrow, is registered on St. Mark's
+     and read by NOTHING. Editing it in the GUI changes nothing. This is the one
+     to edit. */
+  --b61-eyebrow-tracking: 0.14em;
+
+  /*
+   * ---- Measure and rhythm ----
+   * The content column (--b61-width / --b61-width-narrow, Breakdance "Shape")
+   * and the section padding, in one place. A B61 Section consumes these same
+   * tokens rather than introducing a second set.
+   */
+  --b61-pad-block: clamp(60px, 8vw, 108px);
+  --b61-pad-block-tight: clamp(28px, 4vw, 48px);
+  --b61-pad-inline: clamp(20px, 5vw, 40px);
+
+  /*
+   * ---- Treatments ----
+   * House style, not per-page content. Frame width/offset are the Breakdance
+   * variables --b61-frame-width (2px) / --b61-frame-offset (0px): the client
+   * chose THIN RED frames on photos, replacing the mockup's gold. Gold stays
+   * available as the -alt colour. Width 0 removes frames everywhere.
+   *
+   * The frame is a PLAIN BORDER on the image edge. It used to be an offset
+   * picture-frame — the border box shifted up-left and the photo hanging
+   * down-right past it — which the approved design does not have. Every
+   * frame's ::before now paints above the media (z-index 2), so the offset is
+   * a real dial rather than the thing holding the effect together: 0 is a
+   * border flush to the image, and any positive value insets the photo inside
+   * the border to give a matted look. Set it once in Breakdance > Settings >
+   * Variables > Shape and every framed photo on the site follows.
+   */
+  --b61-frame-color: var(--b61-palette-accent);
+  --b61-frame-color-alt: var(--b61-palette-secondary);
+
+  /*
+   * ---- Overlap ----
+   * How far a layered box reaches into the one beside or above it, and how it
+   * stacks when it does. ONE vocabulary, declared here rather than inside the
+   * first element that needs it, because the pattern turns up in four places --
+   * a card over a photo, a card on a photographic band, a panel breaking a band
+   * edge, and a whole section pulled up over the one above it. Four elements
+   * each inventing their own offset is how a house pattern stops reading as one
+   * decision.
+   *
+   * px, and it sits with band padding and shape rather than with the
+   * type-relative family: an overlap is a box reaching across a layout, not a
+   * length that should grow when a reader turns their text size up. Guard rule
+   * 5's list of text-adjacent names deliberately does not cover it.
+   *
+   * -x is a horizontal reach, and it is a clamp so it cannot eat a narrow
+   * column on a laptop the way a flat 64px would.
+   * -z exists so a raised box's stacking is DECLARED rather than inherited from
+   * source order. This library has been bitten once already by a composited
+   * layer reordering itself -- see the watermark note in utilities.css.
+   */
+  --b61-overlap-x: clamp(24px, 4vw, 64px);
+  --b61-overlap-z: 1;
+  /* Pattern 4 (1.38.0): how far a B61 Section set to "Pull up" reaches over
+     the band above it. px, with the rest of the overlap family. */
+  /* Stays under --b61-pad-block at every width, so a band above on `normal`
+     always has room. ONE BAND PADS BELOW THAT and is the one to watch
+     (Testimonial was a second until 1.63.0, when its Normal became
+     --b61-pad-block): Hero in COVER mode pads its bottom with space-2xl + space-lg = 88px flat,
+     which ties this clamp's cap — clearance reaches exactly 0 at viewports
+     over ~1467px. Hero band mode was a third until 1.56.0. A site can retune
+     this by registering --b61-overlap-y as a Breakdance variable. */
+  --b61-overlap-y: clamp(40px, 6vw, 88px);
+
+  /* 1.58.0 — the MINIMUM GAP a band keeps under a pulled-up Section, and the
+     air left above the pull. Two bands pad below --b61-overlap-y (see the note
+     above); rather than inflate them everywhere, assets/components.css raises
+     only the ones actually followed by a pull. px: this spaces boxes, not text. */
+  --b61-overlap-clear-gap: 24px;
+  --b61-overlap-clear: calc(var(--b61-overlap-y) + var(--b61-overlap-clear-gap));
+
+  /*
+   * Where a band's background photograph is anchored when object-fit crops it.
+   * One site-wide value: the crop is a property of how a school shoots its
+   * photos, not a per-band decision (1.34.0, assets/components.css).
+   */
+  --b61-bg-position: center;
+
+  /*
+   * B61 SECTION + B61 SIDEBAR (1.38.0). The section is the band; these are its
+   * rhythm. Gap between stacked children, gap between main and sidebar, the
+   * three sidebar widths and the sticky offset. Widths are rem: a sidebar is a
+   * column of reading text and should grow with the reader's type size.
+   */
+  --b61-section-gap: var(--b61-space-xl);
+  --b61-section-col-gap: clamp(32px, 4vw, 64px);
+  --b61-aside-w: 22rem;
+  --b61-aside-w-narrow: 18rem;
+  --b61-aside-w-wide: 26rem;
+  --b61-aside-sticky-top: 24px;
+
+  /*
+   * A watermark is one image per school, not a per-instance upload, so it is a
+   * variable holding a URL rather than a media field on eleven elements.
+   * --b61-pattern ships as a subtle dot grid so the utility works with no asset.
+   *
+   * The opacities are capped deliberately, and there is less headroom than it
+   * looks. Every contrast pairing in this library was measured against a FLAT
+   * band; texture behind text can pull a 5:1 pairing under 4.5 without looking
+   * obviously wrong.
+   *
+   * Measured ceilings, worst case across all four bands, text sitting directly
+   * on the darkest point of the texture:
+   *
+   *   pattern            0.09   (ships at 0.06)
+   *   pale watermark     0.09   (ships at 0.08 — thin)
+   *   dark watermark     0.11
+   *
+   * The accent band is the binding constraint in every case: muted text on
+   * --b61-surface-accent. Do NOT raise these to make a watermark "read better"
+   * without re-measuring — 0.10 already fails.
+   */
+  --b61-watermark: none; /* attachment 83, root-relative so it survives a domain move */
+  --b61-watermark-opacity: 0.08;
+  --b61-watermark-opacity-on-dark: 0.11; /* the tuned dark value above; default on dark/accent grounds (1.39.0) */
+  --b61-pattern: radial-gradient(currentColor 1px, transparent 1px);
+  --b61-pattern-size: 22px 22px;
+  --b61-pattern-opacity: 0.06;
+
+  /* ---- Shape ----
+     --b61-radius (6px), --b61-radius-sm (2px) and --b61-radius-pill (999px)
+     are Breakdance variables (Shape). Buttons take --b61-radius-btn above. */
+
+  /* ROLE RADII (1.53.0). Cards (anything with its own surface: card grid
+     cards, .b61-card panels, boxed stats) and photos (every framed image,
+     collage, gallery tile) read these, not --b61-radius directly. Both
+     default to the site's one Shape radius, so cards and photos always match
+     out of the box: set Shape radius to 0 for a square site, 6px for soft.
+     Split them only on purpose, e.g. --b61-radius-media: 0px for square
+     photos inside rounded cards. */
+  --b61-radius-card: var(--b61-radius);
+  --b61-radius-media: var(--b61-radius);
+
+  /* ---- Spacing and UI type scale ----
+     A short scale so site-level classes (buttons, eyebrows, nav) never carry a
+     raw px value. Section rhythm stays on --b61-pad-*.
+
+     REM, NOT PX — and the test for which to use is a single question: what
+     should this value do when a reader raises their browser's default font
+     size? Not zoom, which scales px too; the font-size setting is the only
+     thing that tells the two apart.
+
+     The type scale is already rem throughout, so type grows. A length that
+     sits WITH text and does not grow alongside it silently compresses the
+     design for exactly the readers who asked for it larger — the gaps between
+     blocks close up, and a reading column that stays put gives MORE characters
+     per line, which is the precise failure a measure exists to prevent.
+
+     So: the space scale, the measures, the per-element seam dials and button
+     padding are rem. Tap targets (44px, stated in CSS px by WCAG), focus
+     hairlines, radii, frame widths, band padding, motion nudges and graphics
+     stay px, because none of them should grow with type — section padding tied
+     to font size gives a large-text reader vast empty bands and more scrolling.
+
+     `ch` is NOT the unit for a measure here. It resolves against the element's
+     own computed font size, so a ch cap on a wrapper inheriting ~16px while the
+     body renders at 19-20px came out about two-thirds of the characters it
+     named. That is recorded in Prose's CSS where it bit. rem is root-relative
+     and has no such surprise.
+
+     Guard rule 5 enforces the rem side of this. NOTE: a site that registers
+     these as Breakdance variables OVERRIDES tokens.css entirely (the registered
+     variable is declared on :root and wins), so converting here fixes only the
+     sites that have not registered them — St. Mark's needed its own Space and
+     Shape variables rewritten to match. */
+  /* LINE BREAKING (1.51.0). `wrap` = the browser default, i.e. off. The
+     B61 Toolkit "Balanced headlines" and "Paragraph orphan control" features
+     flip these to `balance` / `pretty` site-wide, so each can be switched off
+     from WP admin if it misbehaves. A site without the Toolkit can set them
+     here directly. */
+  --b61-wrap-heading: wrap;
+  --b61-wrap-body: wrap;
+  /* Subheadlines (1.70.0): one to four lines read as ONE statement, so they
+     BALANCE by default -- a stranded "a week." under two full lines reads as
+     a mistake. Unlike the two above this is ON in the kit itself, because it
+     only ever touches short lines. The Hero's display subhead is exempt: it
+     is an opening paragraph, and balancing a paragraph narrows the whole
+     block. Set to `pretty` or `wrap` to switch it off site-wide. */
+  --b61-wrap-subhead: balance;
+  /* Height of the site header above a Full hero, used only until the hero
+     measures itself (1.49.0). 0 = unknown; a site can set its real value. */
+  --b61-header-height: 0px;
+  --b61-space-2xs: 0.25rem;
+  --b61-space-xs: 0.5rem;
+  --b61-space-sm: 0.75rem;
+  --b61-space-md: 1rem;
+  --b61-space-lg: 1.5rem;
+  --b61-space-xl: 2.5rem;
+  --b61-space-2xl: 4rem;
+  --b61-text-xs: 0.75rem;   /* eyebrows, stat labels */
+  --b61-text-sm: 0.875rem;  /* buttons, nav */
+  --b61-text-md: 1rem;
+  --b61-text-lg: 1.125rem;
+
+  /*
+   * Body copy. Paragraph text in Prose, Split, Card Grid, Gallery and the
+   * accordion panels was hardcoded at 16-17px in each element — five places to
+   * change and no way to retune the site's reading size from one dial. It is a
+   * token now, and it is the size long-form pages are set in.
+   */
+  /*
+   * TYPE SCALE — client-specified, in rem so it honours the reader's own font
+   * size. Each heading clamps between a mobile floor and the specified desktop
+   * size; the vw term is the fluid middle, so there is no breakpoint step.
+   *   H1   40 -> 72px      H2   30 -> 44px      H3   24 -> 30px
+   *   body 18 -> 20px      label 12px (fixed)
+   * These are Breakdance variables (collection "Type"), editable in the GUI.
+   * Element CSS must reference these, never a literal size.
+   */
+  /*
+   * These five MIRROR the Breakdance "Type" collection, which emits the same
+   * names on :root from uploads/breakdance/css/variables.css — a stylesheet
+   * that loads AFTER this file, so the GUI value always wins and editing the
+   * scale in Breakdance > Settings > Variables still works. The mirror exists
+   * for two reasons: the plugin renders correctly on a site where those
+   * variables have not been registered yet, and bin/check-css-tokens.sh can
+   * prove every --b61-* an element references resolves to something. Keep the
+   * two in step, the way --b61-scrim-rgb is kept in step with --b61-palette-primary.
+   */
+  --b61-text-h1: clamp(2.5rem, 1.5rem + 3.6vw, 4.5rem);    /* 40 -> 72px */
+  --b61-text-h2: clamp(1.875rem, 1.35rem + 1.7vw, 2.75rem);/* 30 -> 44px */
+  --b61-text-h3: clamp(1.5rem, 1.2rem + 1vw, 1.875rem);    /* 24 -> 30px */
+  /* Standfirst. The serif opening paragraph an inner-page hero uses when its
+     subhead is set to Display; one step under h3. */
+  --b61-text-lede-lg: clamp(1.1875rem, 1.0rem + 0.62vw, 1.5625rem); /* 19 -> 25px */
+  --b61-text-body: clamp(1.125rem, 1.05rem + 0.25vw, 1.25rem); /* 18 -> 20px */
+  --b61-text-label: 0.75rem;                               /* 12px, fixed */
+
+  /* Weight and tracking belong to the display FACE, not to this library. EB
+     Garamond needs 700 and -0.01em to hold a headline; Newsreader holds one at
+     400 and -0.02em and looks clumsy at 700. Shipping one face's answer as a
+     literal is the same mistake as shipping its type sizes, so both are dials.
+     Registered as --b61-text-display-weight / -tracking on the site that needs
+     to move them; the fallback keeps every existing site rendering as-is. */
+  --b61-weight-display: var(--b61-text-display-weight, 700);
+  --b61-tracking-display: var(--b61-text-display-tracking, -0.01em);
+
+  /*
+   * Body copy leads at 1.5. Measured off the approved mockup at 1.49; the
+   * build shipped 1.75, which is a full extra line every six. Headings keep
+   * their own tighter leading, set per element.
+   */
+  --b61-leading-body: 1.5;
+  --b61-tracking-ui: 0.06em;  /* Montserrat buttons / nav */
+  --b61-logo-size: 120px;     /* header badge, desktop */
+  --b61-logo-size-sm: 84px;   /* header badge, phone */
+  --b61-logo-overhang: 48px;  /* how far the badge tab drops below the header bar */
+  /* ---- Motion ----
+     Four durations, by job, because the elements had drifted to nine different
+     literals for the same three kinds of move. A state flip is quick, a small
+     movement is base, a disclosure is slow, and a photograph zooming wants to
+     be slower than anything a cursor does. --b61-ease is the quick pair, kept
+     as one value because most transitions want exactly that. */
+  --b61-motion-quick: 180ms;
+  --b61-motion-base: 250ms;
+  --b61-motion-slow: 350ms;
+  --b61-motion-image: 450ms;
+  /* An entrance (1.40.0): slower than any hover, because nothing is waiting
+     on it and a quick one reads as a flicker. */
+  --b61-motion-rise: 700ms;
+  /* A DISCLOSURE (1.41.0): an accordion row or a tab panel opening. The row
+     moves on the standard decelerate curve, so it leaves rest briskly and
+     settles instead of floating the way plain `ease` does over a tall panel;
+     the copy inside fades in a beat behind the row and drops --b61-disclose-shift
+     into place, so an opening reads as content arriving, not as a crop being
+     widened. Closing is quicker: the copy fades first, then the row folds. */
+  --b61-motion-disclose-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --b61-motion-disclose-delay: 60ms;
+  --b61-disclose-shift: 6px;
+  --b61-motion-ease: ease;
+  --b61-ease: var(--b61-motion-quick) var(--b61-motion-ease);
+  /* How far a thing moves on hover. One lift, one nudge, one zoom, so a card
+     and a button do not disagree about what "raises slightly" means. */
+  --b61-lift: -2px;
+  --b61-nudge: 4px;
+  --b61-zoom: 1.04;
+
+  /* ---- Entrance motion (1.40.0) ----
+     Every band element has Design > Appearance > Entrance animation (On by
+     default). assets/reveal.js plays each part ONCE as it scrolls into view:
+     it rises --b61-rise-shift (--b61-rise-shift-card for a card) over
+     --b61-motion-rise with --b61-rise-ease, and parts arriving together are
+     staggered by --b61-rise-stagger, capped at --b61-rise-stagger-max steps.
+     A stat figure counts up over --b61-motion-count.
+
+     THE SITE SWITCH: register --b61-rise-enabled as 0 and nothing reveals or
+     counts, whatever each element's switch says. Read once, by the script. */
+  --b61-rise-shift: 20px;
+  --b61-rise-ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --b61-rise-stagger: 70ms;
+  --b61-rise-stagger-max: 6;
+  --b61-rise-shift-card: 12px;
+  --b61-motion-count: 1400ms;
+  --b61-rise-enabled: 1;
+
+  /* ---- Elevation ----
+     The elevated card's two shadows were literal rgba() black in the element,
+     which is the same per-site decision hardcoded into shared code that rule 1
+     of bin/check-css-tokens.sh exists to stop (it catches hex, not rgba, so it
+     let these through). Stated as a channel triplet plus two ready-made
+     shadows, so a site with a warm palette can tint its own elevation. */
+  --b61-shadow-rgb: 0 0 0;
+  --b61-shadow-sm: 0 1px 2px rgb(var(--b61-shadow-rgb) / 0.04);
+  --b61-shadow-lg: 0 14px 34px rgb(var(--b61-shadow-rgb) / 0.09);
+
+  /* ---- Card ----
+     The card SHAPE's two dials (see .b61-card in components.css). Padding is a
+     dial rather than a literal for the same reason every gap became one in
+     1.24.1: a rail card and a programme card want different interiors, and a
+     site should retune that without editing shared code. Shadow defaults to
+     none so a card is flat until a site asks otherwise — --b61-shadow-sm and
+     --b61-shadow-lg above are the ready-made values to point it at. */
+  --b61-card-pad: var(--b61-space-lg);
+  --b61-card-shadow: none;
+
+  /* ---- Focus ---- */
+  --b61-focus: var(--b61-palette-primary);
+  --b61-focus-on-dark: var(--b61-palette-secondary);
+  --b61-focus-width: 3px;
+  --b61-focus-offset: 3px;
+
+  /* ---- Component tokens ----
+     Per-element dials, promoted here from element-local fallbacks so there is
+     ONE definition of each. Elements still read them as var(--b61-x, fallback)
+     with the same value, so the fallback is a safety net, never the source.
+     Retune a component site-wide here; retune it on one band via a class. */
+
+  /* Hero */
+  --b61-hero-accent-on-dark: var(--b61-white);
+  --b61-hero-band-min: 520px;
+  --b61-hero-band-gap: var(--b61-space-2xl);
+  --b61-hero-collage-gap: var(--b61-space-lg);
+  /* Both hero titles are the page's H1, so they take the H1 step outright.
+     The dial stays a token so one school can run a smaller hero than the
+     scale without touching the scale everyone else's headings use. */
+  --b61-hero-title-size: var(--b61-text-h1);
+  --b61-hero-band-title-size: var(--b61-text-h1);
+  /* The hero subhead is a lede: bigger than body, smaller than H3. Stated as
+     a clamp BETWEEN two scale steps rather than a literal pair of pixels, so
+     it moves when the scale moves. */
+  --b61-hero-subhead-size: clamp(var(--b61-text-body), 1.8vw, var(--b61-text-h3));
+  --b61-hero-pad-top: var(--b61-space-2xl);
+  --b61-hero-pad-bottom: calc(var(--b61-space-2xl) + var(--b61-space-lg));
+
+  /* Split */
+  --b61-split-quote-size: var(--b61-text-h3);
+  --b61-split-quote-rule: var(--b61-secondary);
+  --b61-split-quote-rule-width: var(--b61-frame-width);
+
+  /* Prose — the Emphasis block at Display scale (the statement line).
+     The measure tokens on .b61-prose__inner are in px; this one is in `ch`
+     because it must resolve at the LINE's own size, not the inner's. Measured
+     at the inner (~16px body) a 58ch cap gave the statement ~31 characters per
+     line, since it is set in display face at up to 30px. 60ch at its own size
+     reads at ~65 characters per line, and it is capped by the content column
+     (--b61-width) so it can never outgrow it. */
+  --b61-prose-emphasis-display-size: var(--b61-text-h3);
+  --b61-prose-emphasis-display-measure: 60ch;
+  /* Split lead-in step, a shade above body copy. */
+  --b61-split-lead-size: calc(var(--b61-text-body) * 1.15);
+
+  /*
+   * Prose measures. These were `ch` caps set on .b61-prose__inner, but `ch`
+   * resolves against the INNER's computed font-size — the inherited ~16px —
+   * while the prose body is set in EB Garamond at 19-20px. So "68ch" rendered
+   * at roughly 544px, about two-thirds of the characters per line it named,
+   * and long-form pages (a letter, a statement of faith) read as a thin ribbon
+   * down the middle of an 1180px column.
+   *
+   * Stated in px instead: predictable, and immune to the unit trap. Capped by
+   * --b61-width, the page's content column — NOT by --b61-width-narrow, which
+   * is a site's reading column and therefore the same order of magnitude as
+   * these values. Capping them with it clamped Regular and Wide to an identical
+   * 760px on St. Mark's and left the control almost inert.
+   * Turn these three dials to retune every Prose block on the site.
+   */
+  --b61-measure-narrow: 45rem;
+  --b61-measure-regular: 51.25rem;
+  --b61-measure-wide: 56.25rem;
+
+  /* Testimonial
+     Measured off the approved mockup: the pull quote is the H2 step (~44px on
+     desktop, measured 46), set tight at 1.12 and semibold italic — not the
+     lighter, looser, smaller quote the build shipped.
+
+     The two gaps around it are stated as multiples of the quote's own glyph
+     height, which is how they were measured, so they stay in proportion at
+     every viewport instead of drifting as the clamp moves:
+       above the quote (the region's top padding)  1.62x  (build: 4.40x)
+       below the quote, before the attribution     0.39x  (build: ~1.0x)
+     The band's padding is no longer a quote-specific token (1.63.0): the
+     0.37x --b61-quote-pad-block made Normal tighter than Tight. Normal and
+     Tight now read --b61-pad-block / --b61-pad-block-tight like every band. */
+  --b61-quote-size: var(--b61-text-h2);
+  --b61-quote-leading: 1.12;
+  --b61-quote-weight: 600;
+  --b61-quote-cite-gap: calc(var(--b61-quote-size) * 0.39);
+  /* The opening curly quote is decorative, so it is sized off the display
+     step rather than given a fixed 92px that never moved on a phone. */
+  --b61-quote-mark-size: calc(var(--b61-text-h1) * 1.28);
+  /* Space the "Room above quotation mark" toggle adds (1.77.0): enough for
+     the glyph's overshoot above its 0.6 line box in common display faces. */
+  --b61-quote-mark-room: calc(var(--b61-quote-mark-size) * 0.3);
+
+  /* Hero meta line (1.77.0): type size and the short rule between items. */
+  --b61-hero-meta-size: var(--b61-text-label);
+  --b61-hero-meta-rule-width: 24px;
+  /* Its own tracking (1.77.1), not the eyebrow's: a hero often zeroes
+     --b61-eyebrow-tracking for a display-face eyebrow. */
+  --b61-hero-meta-tracking: 0.14em;
+
+  /* Stats Band
+     The three figure steps were literal clamps inside the element; they are
+     dials, so they live here, each pinned to a scale step. */
+  --b61-stats-heading-size: var(--b61-text-h2);
+  --b61-stats-intro-size: var(--b61-text-body);
+  --b61-stats-label-size: var(--b61-text-label);
+  --b61-stats-figure-large: var(--b61-text-h1);
+  --b61-stats-figure-medium: var(--b61-text-h2);
+  --b61-stats-figure-small: var(--b61-text-h3);
+
+  /* Card Grid */
+  --b61-cards-flat-pad: var(--b61-space-xl);
+  /* Icon size steps (1.74.0): the Icon size control picks one; a site retunes
+     a step by registering the variable. Small is the 40px icons have always had. */
+  --b61-cards-icon-sm: 40px;
+  --b61-cards-icon-md: 56px;
+  --b61-cards-icon-lg: 72px;
+  /* Hover line on a linked card's title and CTA (1.74.0). "none" drops it for
+     a site; plain and overlay cards then rely on the cursor and focus ring. */
+  --b61-cards-link-hover-line: underline;
+
+  /* Tabs (the container pair). Same two dials as Feature Tabs and the same
+     values: the two elements are one component in two shapes, and a site that
+     retunes one expects the other to follow. */
+  --b61-tabs-heading-size: var(--b61-text-h2);
+  --b61-tabs-title-size: var(--b61-text-h3);
+
+  /* Pillars */
+  --b61-pillars-heading-size: var(--b61-text-h2);
+  --b61-pillars-title-size: var(--b61-text-h3);
+  --b61-pillars-media-ratio: 4 / 3;
+  /* Hero figure panel. A site whose comp uses a squarer or portrait panel
+     overrides this; the collage variants below set their own. */
+  --b61-hero-media-ratio: 4 / 3;
+  /* Band heroes. The home band is the tall one; inner pages take the compact
+     value. Both are single dials so a site retunes them once. */
+  --b61-hero-band-min-compact: 480px;
+  --b61-hero-subhead-display-size: var(--b61-text-lede-lg);
+  /* Compact band hero: the title runs a step under the standard band's. */
+  --b61-hero-band-title-size-compact: var(--b61-hero-band-title-size, var(--b61-text-h1));
+  /* Hero eyebrow on a dark band. Defaults to the accent; a comp that sets
+     the eyebrow in plain white overrides this rather than the accent itself,
+     which is still what the rule beside it uses. */
+  --b61-hero-eyebrow-on-dark: var(--b61-on-dark-accent);
+  /* The dark band a hero sits on. Separate from --b61-surface-dark because a
+     comp routinely runs its hero one stop deeper than its other dark bands. */
+  --b61-hero-band-bg-dark: var(--b61-surface-dark);
+
+  /* CTA Band
+     The two gaps were measured off the mockup in BODY LINES — the unit the
+     rhythm is actually built on — so they are stated that way here and follow
+     the body size and its leading rather than being re-tuned by hand:
+       heading -> body   1.15 lines
+       body -> buttons   0.76 lines
+
+     The measure is two tokens, not one. --b61-cta-measure is the band's inner
+     column (heading and buttons); --b61-cta-body-measure is narrower, because
+     the build's body ran the full 780px and wrapped to three lines where the
+     mockup wraps to four. 640px at the body step is roughly 62 characters a
+     line, inside the 45-75 reading band. */
+  --b61-cta-measure: 48.75rem;
+  --b61-cta-measure-wide: var(--b61-width-narrow); /* CTA Width: Wide (1.54.0) */
+  --b61-cta-body-measure: 40rem;
+  /* The body measure FOLLOWS the Width control (1.69.1). It used to stay at
+     40rem whatever the width, so Wide and Full widened an invisible column and
+     the copy -- the part anyone sees -- did not move. Wide and Full now let
+     the body fill the column they chose; a site that wants a reading cap on
+     either sets these. */
+  --b61-cta-body-measure-wide: 100%;
+  --b61-cta-body-measure-full: 100%;
+  --b61-cta-heading-gap: calc(var(--b61-text-body) * var(--b61-leading-body) * 1.15);
+  --b61-cta-body-gap: calc(var(--b61-text-body) * var(--b61-leading-body) * 0.76);
+
+  /* Divider — center-out scroll reveal
+     ------------------------------------------------------------------
+     MECHANISM. The divider is CLIPPED, never scaled. clip-path pulls the
+     left and right insets in to 50% each, collapsing the box to a
+     zero-width sliver at dead centre, and animates them back to 0 — so the
+     artwork is UNCOVERED outward from the middle at its true size.
+     transform: scaleX() would stretch the laurel instead of revealing it,
+     and the graphic is mirror-symmetric about its centre diamond, so a
+     centre-out wipe reads as the two halves growing apart. Clipping does
+     not affect layout: the divider reserves its full width from first
+     paint, so nothing on the page shifts as it draws.
+
+     DRIVE. A CSS scroll-driven animation on `animation-timeline: view()`.
+     Progress IS scroll position — scrub back and forth, not a fire-once
+     trigger. The two tokens below are the animation-range, stated on the
+     element's own view-progress timeline:
+
+       cover 0%    the divider's top edge is level with the BOTTOM of the
+                   viewport — it is just entering. 0% revealed.
+       cover 70%   the `cover` range runs from "top edge at viewport
+                   bottom" to "bottom edge past viewport top", a travel of
+                   (viewport height + element height). The divider is a
+                   ~20px rule, so element height is negligible and cover p%
+                   puts its top edge at (100 - p)% down the viewport.
+                   70% therefore lands it 30% from the top — "full width by
+                   roughly a third of the way up the page". Raise the
+                   number to finish later (higher up), lower it to finish
+                   sooner (further down).
+
+     Retuning either endpoint retunes every divider on the site. */
+  --b61-divider-reveal-start: cover 0%;
+  --b61-divider-reveal-end: cover 70%;
+
+  /* The collapsed and fully-drawn states.
+     This is a MASK, not a clip. A clip-path cuts a hard edge; the client asked
+     for the leading edges to be soft as the rule spreads. The mask is a
+     horizontal gradient that fades in and out over --b61-divider-reveal-feather
+     at each end, and the animation grows that gradient outward from the centre.
+     Because the soft stops are part of the mask image, they travel with the
+     leading edges the whole way instead of sitting still at the rule's ends.
+
+     The 'to' size overshoots 100% so the feather itself clears the ends of the
+     rule at full reveal — at exactly 100% the last of the fade would still be
+     sitting on the outermost few pixels and the tips would read dimmer than the
+     middle. Feather is the softness dial: raise it for a longer, hazier edge,
+     drop it toward 0 for the old hard wipe. */
+  --b61-divider-reveal-feather: 12%;
+  --b61-divider-reveal-mask: linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--b61-divider-reveal-feather),
+      #000 calc(100% - var(--b61-divider-reveal-feather)),
+      transparent 100%);
+  /* ---- Icon list (1.62.0) ----
+     Rows of mark + text, available as a content block in Prose, Split and the
+     CTA Band. The mark is an editor-chosen icon or - unset, which is the
+     default - a plain dot drawn from these dials.
+
+     The default dot is NOT a stored library glyph, on purpose. Nothing is
+     written into the page, so a site can retune the default mark later without
+     touching a single row of content; and a drawn dot takes the band's text
+     colour, which a stored SVG could not. The brand mark stays a deliberate
+     per-row choice, never the assumed default.
+
+     The two lengths derive from the body size so the mark tracks the type
+     scale a school sets, rather than holding a pixel size chosen here. */
+  --b61-iconlist-gap: var(--b61-space-sm);              /* mark -> text */
+  --b61-iconlist-row-gap: var(--b61-space-xs);          /* row -> row */
+  --b61-iconlist-mark-size: calc(var(--b61-text-body) * 1.2);
+  --b61-iconlist-dot-size: calc(var(--b61-text-body) * 0.4);
+  --b61-iconlist-mark-top: 0.125rem;                    /* optical: centres the mark on the first line */
+  /* Every row keeps the same minimum height, linked or not. Measured on a real
+     page first: a linked row came out 52px against a plain row's 26px, because
+     the shared text link carries the kit's 44px tap target - so a contact list
+     that mixed the two had a visibly uneven rhythm. The ROW owns that height
+     now and the link fills it.
+
+     ONE LINE OF BODY COPY, CALCULATED - not the 44px tap target, which read as
+     padding down the whole list (Jay, during 1.62.0 review). Derived the way the CTA's gaps
+     are, so it tracks whatever type scale a school sets instead of holding a
+     pixel size chosen here, and --b61-iconlist-row-gap is left to own the
+     rhythm between rows, as the block stack does everywhere else.
+
+     The trade, stated: a linked row's target is the full width of the list and
+     about 26px tall - over WCAG 2.5.8's 24px minimum, under the 44px the
+     buttons keep. A site that wants the bigger target sets this token to
+     var(--b61-btn-min-height); a site that wants rows tighter still lowers the
+     multiplier. Both are one variable on the site, no code change. */
+  --b61-iconlist-row-min: calc(var(--b61-text-body) * var(--b61-leading-body));
+  /* Link list style (1.77.0): row padding and the hairline between rows. */
+  --b61-iconlist-links-pad: var(--b61-space-sm);
+  /* A STRENGTH, not a colour: a colour token resolved here on :root would
+     keep the light-ground ink on a dark band. The rule mixes currentColor. */
+  --b61-iconlist-links-line-strength: var(--b61-rule-trail-strength, 14%);
+
+  /* ---- Rich-text list marker (1.62.0) ----
+     `none` keeps the browser's own bullet, so a site that never sets this
+     renders exactly as it did before the token existed. A school that wants
+     its brand mark as the bullet sets this to url(...) - supply the SVG at the
+     size it should draw, because a list-style-image renders at its intrinsic
+     size and does not follow the text colour. For a mark that must match the
+     copy colour, use an Icon row instead. */
+  --b61-list-marker: none;
+
+  /* ---- Gallery ----
+   * The masonry row track and the default span an item takes before the
+   * script measures it. The track is a layout grain, not type: keep it small
+   * enough that a photo's height rounds to it without a visible gap, and large
+   * enough that the row count stays cheap. The span is only a pre-script
+   * placeholder — the script overwrites it per item on the first frame. */
+  /* Masonry's row grain. 1px, not 8px: an item's span rounds UP to a whole
+     number of rows, so the grain is the WORST-CASE error in every vertical
+     gap. At 8px — with a 20px row gap making each row cost 28px — stacked
+     photos sat 20 to 46px apart while the columns beside them were a crisp
+     20px. A 1px grain makes the rounding invisible. See Gallery's masonry
+     block for the maths. */
+  --b61-gal-row: 1px;
+  --b61-span: 24;
+
+  /* The gutter between the text column and the media column when a Gallery is
+   * set to "beside". It follows the section rhythm rather than the tighter
+   * gap used between photos. */
+  --b61-gal-textgap: var(--b61-space-2xl);
+
+  --b61-divider-reveal-size-from: 0% 100%;
+  --b61-divider-reveal-size-to: 130% 100%;
+
+  /* COMP-FIDELITY DIALS (1.67.0). Every default below is the value the
+     elements already rendered, so an untouched site is unchanged. Each one
+     exists because a comp (St. Mark's, 2026-09-23) drew something the
+     library could only reach with a site stylesheet.
+
+     Trailing hairlines. A comp's "label ——————" and "Heading ———" rule runs
+     from the text to the column edge. Switch with a DISPLAY value:
+       --b61-eyebrow-rule-trail   none | flex   (every eyebrow)
+       --b61-eyebrow-rule-trail-width  auto | 100%  (100% lets the rule reach
+                                               the column edge; set with trail)
+       --b61-heading-rule-trail   none | flex   (Prose heading, last line;
+       --b61-heading-rule-trail-line  block | flex   set both together)
+     The hairline is the band's own ink thinned to --b61-rule-trail-strength,
+     mixed where it is USED, so it follows light and dark bands without an
+     alias (see the alias-scope note). */
+  --b61-eyebrow-rule-trail: none;
+  --b61-eyebrow-rule-trail-width: auto;
+  --b61-heading-rule-trail: none;
+  --b61-heading-rule-trail-line: block;
+  --b61-rule-trail-strength: 14%;
+  --b61-rule-trail-strength-flank: 60%;
+  --b61-rule-trail-thickness: 1px;
+  --b61-rule-trail-min: 2rem;
+  --b61-rule-trail-gap: var(--b61-space-md);
+
+  /* Emphasis rule position (Prose). Above is the 1.47.0 look; a comp that
+     puts a short accent rule BETWEEN the lede and the body turns above off
+     and below on. Below also draws under the display scale, which has no
+     rule above. Values are display values: block | none. */
+  --b61-prose-emphasis-rule-above: block;
+  --b61-prose-emphasis-rule-below: none;
+  --b61-prose-emphasis-rule-below-gap: var(--b61-space-lg);
+
+  /* Prose. Heading size read --b61-text-h2 directly, so a Prose used as an
+     inner-page title band (h1, head beside body) could not take a title's
+     size; the beside ratio and the heading column's vertical alignment were
+     :where() literals a :root variable could not reach. Per-instance values
+     go through the element's Override Variables. */
+  --b61-prose-heading-size: var(--b61-text-h2);
+  --b61-prose-head-ratio: 0.72fr;
+
+  /* STEP SCALES (1.71.0) -----------------------------------------------------
+     The width sliders pick a STOP on one of these scales, never a raw value.
+     A stop means the same thing in every element that uses the scale, and a
+     school retunes a stop here -- or in Breakdance > Variables -- and every
+     block set to it follows. Stops that equal an old button value are noted,
+     so a site's Narrow / Regular / Wide keep their meaning. Keep each scale
+     increasing: a slider that jumps backwards reads as broken. */
+
+  /* Column balance: the TEXT column's share against the other column's 1fr
+     (photo, heading, collage). 4 = even. Prose beside, Split, Gallery beside,
+     Hero band. */
+  --b61-balance-1: 0.5fr;    /* other column twice as wide (Split: old Wide image) */
+  --b61-balance-2: 0.67fr;
+  --b61-balance-3: 0.83fr;   /* ~ the Hero band's old 45 : 55 */
+  --b61-balance-4: 1fr;      /* even */
+  --b61-balance-5: 1.2fr;
+  --b61-balance-6: 1.5fr;
+  --b61-balance-7: 2fr;      /* text twice as wide (Split: old Wide text) */
+
+  /* Reading width (Prose Text width). 3 / 4 / 5 = old Narrow / Regular / Wide;
+     7 = the whole content column. Capped by --b61-width in the element. */
+  --b61-measure-step-1: 36rem;
+  --b61-measure-step-2: 40.5rem;
+  --b61-measure-step-3: var(--b61-measure-narrow);
+  --b61-measure-step-4: var(--b61-measure-regular);
+  --b61-measure-step-5: var(--b61-measure-wide);
+  --b61-measure-step-6: 62.5rem;
+  --b61-measure-step-7: var(--b61-width);
+
+  /* Hero supporting line, in characters at its own size (so it scales with
+     the type). 2 / 4 / 6 = the 1.70 Narrow / Regular / Wide. */
+  --b61-subhead-step-1: 28ch;
+  --b61-subhead-step-2: var(--b61-hero-subhead-measure-narrow);
+  --b61-subhead-step-3: 38ch;
+  --b61-subhead-step-4: var(--b61-hero-subhead-measure);
+  --b61-subhead-step-5: 47ch;
+  --b61-subhead-step-6: var(--b61-hero-subhead-measure-wide);
+  --b61-subhead-step-7: 60ch;
+
+  /* Box width (Testimonial, Accordion, Framed Image, CTA Band). 3 = CTA's old
+     Standard, 4 = Narrow (never below 3), 6 = Standard (the content column),
+     7 = Full, edge to edge of the band. */
+  --b61-box-1: 30rem;
+  --b61-box-2: 40rem;
+  --b61-box-3: 48.75rem;
+  --b61-box-4: max(48.75rem, var(--b61-width-narrow));
+  --b61-box-5: calc((max(48.75rem, var(--b61-width-narrow)) + var(--b61-width)) / 2);
+  --b61-box-6: var(--b61-width);
+  --b61-box-7: none;
+
+  /* Rule length (Divider). 2 / 4 / 6 / 7 = old Narrow / Medium / Wide / Full. */
+  --b61-rule-len-1: 60px;
+  --b61-rule-len-2: 120px;
+  --b61-rule-len-3: 240px;
+  --b61-rule-len-4: 360px;
+  --b61-rule-len-5: 600px;
+  --b61-rule-len-6: var(--b61-width);
+  --b61-rule-len-7: 100%;
+
+  /* Section rail. 2 / 4 / 6 = old Narrow / Standard / Wide. */
+  --b61-rail-1: 15rem;
+  --b61-rail-2: var(--b61-aside-w-narrow);
+  --b61-rail-3: 20rem;
+  --b61-rail-4: var(--b61-aside-w);
+  --b61-rail-5: 24rem;
+  --b61-rail-6: var(--b61-aside-w-wide);
+  --b61-rail-7: 30rem;
+  --b61-prose-beside-align: start;
+
+  /* Band hero: how the text column sits against the photo. Band mode ignores
+     the Vertical position control (its stored default is "bottom" on every
+     hero, so honouring it would move every existing band hero); this dial is
+     the band-mode equivalent. center | end | start. */
+  --b61-hero-band-align: center;
+
+  /* Hero subhead type. Weight, leading and measure were literals. */
+  --b61-hero-subhead-weight: 400;
+  --b61-hero-subhead-leading: 1.45;
+  --b61-hero-subhead-measure: 42ch;
+  --b61-hero-subhead-measure-narrow: 34ch; /* Supporting line Width: Narrow (1.70.0) */
+  --b61-hero-subhead-measure-wide: 52ch;   /* Supporting line Width: Wide (1.70.0) */
+
+  /* Split heading size. Split read --b61-text-h2 directly, so a site whose
+     split titles sit a step below its section titles had no way to say so. */
+  --b61-split-heading-size: var(--b61-text-h2);
+
+  /* Buttons. --b61-btn-stroke is the border weight of every B61 button.
+     The primary FILL on light/soft bands and the inverted fill on dark bands
+     were palette literals; a school whose primary button is its accent on
+     every ground sets these. Outline strength thins a secondary button's
+     border (not its label) toward transparent. */
+  --b61-btn-stroke: 2px;
+  --b61-btn-primary-fill: var(--b61-primary);
+  --b61-btn-primary-fill-hover: var(--b61-palette-primary-deep);
+  --b61-btn-primary-fill-on-dark: var(--b61-on-surface-dark);
+  --b61-btn-primary-label-on-dark: var(--b61-surface-dark);
+  --b61-btn-primary-fill-hover-on-dark: var(--b61-surface-soft);
+  --b61-btn-primary-label-hover-on-dark: var(--b61-surface-dark);
+  --b61-btn-outline-strength: 100%;
+  --b61-btn-outline-strength-on-dark: 100%;
+
+  /* Stats label and dividers. Case, weight and tracking were literals; the
+     label read in ink with no way to take the band's muted colour; dividers
+     read the band's LINE colour (the accent on dark). Muted and ink mixes are
+     percentages: 0% = today. */
+  --b61-stats-label-case: uppercase;
+  --b61-stats-label-weight: 600;
+  --b61-stats-label-tracking: var(--b61-eyebrow-tracking);
+  --b61-stats-label-muted: 0%;
+  --b61-stats-divider-ink: 0%;
+  --b61-stats-divider-strength: 100%;
+
+  /* CAROUSEL (1.68.0) — the shared engine used by B61 Carousel and Card
+     Grid's carousel layout. How the arrows LOOK is a site decision made here
+     once; where they SIT is the element's Controls > Position. Colours are
+     not here: the buttons take the band's own primary-button pair
+     (--b61-btn-bg / --b61-btn-text), declared on the region in
+     components.css, so they read on light, soft, dark and accent bands with
+     no alias frozen at :root. */
+  --b61-car-gap: var(--b61-space-md);
+  --b61-car-btn-box: 52px;
+  --b61-car-btn-radius: var(--b61-radius-btn);
+  --b61-car-btn-gap: var(--b61-space-xs);
+  --b61-car-btn-stroke: var(--b61-btn-stroke);
+  --b61-car-controls-space: var(--b61-space-lg);
+  --b61-car-progress-width: 17.5rem;
+  --b61-car-progress-thickness: 3px;
+  --b61-car-count-font: var(--b61-font-ui);
+  --b61-car-count-size: var(--b61-text-label);
+  --b61-car-count-tracking: var(--b61-eyebrow-tracking);
+  --b61-car-sides-offset: var(--b61-space-sm);
+  --b61-car-sides-ring: 2px;
+  --b61-car-peek-small: 0.15;
+  --b61-car-peek-medium: 0.3;
+  --b61-car-peek-large: 0.45;
+}

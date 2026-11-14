@@ -158,29 +158,89 @@ export interface Page {
   sections?:
     | (
         | {
-            /**
-             * Small line above the heading, e.g. "Now enrolling"
-             */
             eyebrow?: string | null;
-            heading: string;
-            subheading?: string | null;
-            image?: (number | null) | Media;
-            layout?: ('image-right' | 'image-background' | 'centered') | null;
-            /**
-             * Background color for this section
-             */
-            tone?: ('light' | 'muted' | 'brand' | 'dark') | null;
-            buttons?:
+            headingLevel?: ('h1' | 'h2' | 'h3') | null;
+            lines?:
               | {
-                  label: string;
-                  url: string;
-                  style?: ('primary' | 'secondary' | 'link') | null;
+                  text: string;
+                  emphasize?: boolean | null;
                   id?: string | null;
                 }[]
               | null;
+            subheadline?: string | null;
+            subheadlineScale?: ('display' | 'body' | 'meta') | null;
+            /**
+             * Short facts in small caps, e.g. "Grades PK-8", "Est. 1951".
+             */
+            metaItems?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            buttons?:
+              | {
+                  label: string;
+                  link?: {
+                    type?: ('page' | 'url') | null;
+                    page?: (number | null) | Page;
+                    url?: string | null;
+                    newTab?: boolean | null;
+                  };
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            backgroundType?: ('image' | 'slideshow' | 'video') | null;
+            /**
+             * Set the focal point on the photo itself (Media).
+             */
+            image?: (number | null) | Media;
+            slides?:
+              | {
+                  image: number | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            video?: (number | null) | Media;
+            videoWebm?: (number | null) | Media;
+            /**
+             * Shows while the video loads, if autoplay is blocked, and for visitors who turn off motion.
+             */
+            poster?: (number | null) | Media;
+            /**
+             * 1 to 3 images beside the text.
+             */
+            collage?:
+              | {
+                  image: number | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            overlayStrength?: number | null;
+            layoutMode?: ('cover' | 'band') | null;
+            height?: ('short' | 'medium' | 'tall' | 'full') | null;
+            bandSize?: ('compact' | 'standard') | null;
+            verticalPosition?: ('top' | 'center' | 'bottom') | null;
+            textAlign?: ('left' | 'center') | null;
+            /**
+             * 1 to 7
+             */
+            subheadlineWidth?: number | null;
+            /**
+             * 1 to 7
+             */
+            columnBalance?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            overlay?: ('gradient' | 'wash') | null;
+            surface?: ('light' | 'primary' | 'secondary') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
             id?: string | null;
             blockName?: string | null;
-            blockType: 'hero';
+            blockType: 'b61Hero';
           }
         | {
             heading: string;
@@ -695,23 +755,73 @@ export interface PagesSelect<T extends boolean = true> {
   sections?:
     | T
     | {
-        hero?:
+        b61Hero?:
           | T
           | {
               eyebrow?: T;
-              heading?: T;
-              subheading?: T;
-              image?: T;
-              layout?: T;
-              tone?: T;
+              headingLevel?: T;
+              lines?:
+                | T
+                | {
+                    text?: T;
+                    emphasize?: T;
+                    id?: T;
+                  };
+              subheadline?: T;
+              subheadlineScale?: T;
+              metaItems?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
               buttons?:
                 | T
                 | {
                     label?: T;
-                    url?: T;
-                    style?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                          newTab?: T;
+                        };
+                    variant?: T;
+                    fullWidth?: T;
                     id?: T;
                   };
+              backgroundType?: T;
+              image?: T;
+              slides?:
+                | T
+                | {
+                    image?: T;
+                    id?: T;
+                  };
+              video?: T;
+              videoWebm?: T;
+              poster?: T;
+              collage?:
+                | T
+                | {
+                    image?: T;
+                    id?: T;
+                  };
+              overlayStrength?: T;
+              layoutMode?: T;
+              height?: T;
+              bandSize?: T;
+              verticalPosition?: T;
+              textAlign?: T;
+              subheadlineWidth?: T;
+              columnBalance?: T;
+              padTop?: T;
+              padBottom?: T;
+              overlay?: T;
+              surface?: T;
+              eyebrowRule?: T;
+              entrance?: T;
               id?: T;
               blockName?: T;
             };
@@ -1022,8 +1132,21 @@ export interface SchoolSetting {
    */
   primaryColor?: string | null;
   secondaryColor?: string | null;
-  headingFont?: ('Fraunces' | 'Playfair Display' | 'Merriweather' | 'Montserrat' | 'Poppins') | null;
-  bodyFont?: ('Inter' | 'Source Sans 3' | 'Lato' | 'Open Sans') | null;
+  /**
+   * Rules, frames, accent words
+   */
+  accentColor?: string | null;
+  /**
+   * Soft background
+   */
+  paperColor?: string | null;
+  primaryDeep?: string | null;
+  secondarySoft?: string | null;
+  accentStrong?: string | null;
+  accentDeep?: string | null;
+  headingFont?: ('Fraunces' | 'Playfair Display' | 'Merriweather' | 'EB Garamond' | 'Montserrat' | 'Poppins') | null;
+  bodyFont?: ('Inter' | 'Source Sans 3' | 'Lato' | 'Open Sans' | 'EB Garamond') | null;
+  uiFont?: ('Montserrat' | 'Inter' | 'Poppins' | 'Lato' | 'Source Sans 3') | null;
   navigation?:
     | {
         label: string;
@@ -1052,8 +1175,15 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   address?: T;
   primaryColor?: T;
   secondaryColor?: T;
+  accentColor?: T;
+  paperColor?: T;
+  primaryDeep?: T;
+  secondarySoft?: T;
+  accentStrong?: T;
+  accentDeep?: T;
   headingFont?: T;
   bodyFont?: T;
+  uiFont?: T;
   navigation?:
     | T
     | {

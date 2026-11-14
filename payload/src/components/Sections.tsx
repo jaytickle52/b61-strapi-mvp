@@ -1,5 +1,6 @@
 import Link from "next/link";
 import RichText from "@/components/RichText";
+import B61Hero from "@/b61/elements/hero/Hero";
 import {
   formatDate,
   getEvents,
@@ -33,47 +34,6 @@ function Picture({ media, className = "", label, size = "card" }: { media?: numb
 }
 
 const wrap = "mx-auto w-full max-w-6xl px-5 sm:px-8";
-
-function Hero({ s }: { s: Section }) {
-  const buttons = (s.buttons ?? []) as Button[];
-  const text = (
-    <>
-      {s.eyebrow && <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-accent">{s.eyebrow}</p>}
-      <h1 className="text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">{s.heading}</h1>
-      {s.subheading && <p className="soft mt-5 max-w-xl text-lg leading-relaxed">{s.subheading}</p>}
-      {buttons.length > 0 && (
-        <div className="mt-8 flex flex-wrap gap-3">
-          {buttons.map((b, i) => <Btn key={i} button={b} />)}
-        </div>
-      )}
-    </>
-  );
-
-  if (s.layout === "centered") {
-    return (
-      <section className={`tone-${s.tone ?? "light"} py-20 sm:py-28`}>
-        <div className={`${wrap} flex flex-col items-center text-center [&_p]:mx-auto`}>{text}</div>
-      </section>
-    );
-  }
-  if (s.layout === "image-background") {
-    return (
-      <section className="relative isolate overflow-hidden py-28 text-white sm:py-40">
-        <div className="absolute inset-0 -z-10"><Picture media={s.image} size="hero" /></div>
-        <div className="absolute inset-0 -z-10 bg-black/45" />
-        <div className={`${wrap} [&_.soft]:text-white/85`}>{text}</div>
-      </section>
-    );
-  }
-  return (
-    <section className={`tone-${s.tone ?? "light"} py-16 sm:py-24`}>
-      <div className={`${wrap} grid items-center gap-10 lg:grid-cols-2`}>
-        <div>{text}</div>
-        <div className="aspect-[4/3] overflow-hidden rounded-3xl shadow-xl"><Picture media={s.image} /></div>
-      </div>
-    </section>
-  );
-}
 
 function Split({ s }: { s: Section }) {
   const imageLeft = s.imagePosition === "left";
@@ -209,7 +169,7 @@ export default function Sections({ sections }: { sections: Section[] | any[] }) 
       {sections.map((s, i) => {
         const key = s.id ?? `${s.blockType}-${i}`;
         switch (s.blockType) {
-          case "hero": return <Hero key={key} s={s} />;
+          case "b61Hero": return <B61Hero key={key} block={s as any} index={i} />;
           case "split": return <Split key={key} s={s} />;
           case "cardGrid": return <CardGrid key={key} s={s} />;
           case "statsBand": return <StatsBand key={key} s={s} />;

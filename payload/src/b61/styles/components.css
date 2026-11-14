@@ -1,0 +1,999 @@
+/*
+ * Banner 61 — shared component layer
+ * ---------------------------------------------------------------------------
+ * Cross-element rules that were proven inside one element and then lifted, so
+ * the second element inherits them instead of copying them. Nothing here is
+ * specific to a single block; anything that is belongs in that element's
+ * default.css.
+ *
+ * WHY THIS FILE EXISTS, AND ITS ONE RISK
+ * One definition means one place to retune — and one place to break everything
+ * at once. Keep it to genuinely shared concerns. The cautionary tale is
+ * --b61-space-xl, which fed card padding AND button padding AND section rhythm:
+ * a single sensible-looking change produced three unrelated client complaints.
+ *
+ * DELIVERY
+ * assets/*.css is enqueued directly, so edits here appear immediately. An
+ * element's default.css is COMPILED into uploads/breakdance/css/post-<id>-
+ * defaults.css and stays invisible until that cache is cleared. The trade is
+ * payload: this file loads on every page, an element's CSS only on pages that
+ * use it — another reason to keep this file small.
+ */
+
+/* ---------------------------------------------------------------------------
+   SURFACES
+
+   utilities.css already owns the .b61-band--* classes, which set the
+   --b61-on-bg-* globals and DELIBERATELY paint no background (a band utility
+   sits on a native Section that may already have one).
+
+   So these are the other half, and only the other half: the background. An
+   element that paints its own ground emits both — `b61-band--dark` for the
+   palette, `b61-surface--dark` for the ground. No pairing is duplicated, and a
+   band utility on a parent Section keeps behaving exactly as it does today.
+   --------------------------------------------------------------------------- */
+.b61-surface--none { background: transparent; }
+.b61-surface--plain { background: var(--b61-surface); }
+.b61-surface--soft { background: var(--b61-surface-soft); }
+.b61-surface--dark { background: var(--b61-surface-dark); }
+.b61-surface--accent { background: var(--b61-surface-accent); }
+
+/* THE BUTTON DIALS AND THE FOCUS RING USED TO LIVE HERE, on the surface. They
+   are palette, so they moved to the .b61-band--* classes in utilities.css --
+   see the note there. A surface paints a ground and declares nothing else. */
+
+/* ---------------------------------------------------------------------------
+   CARD
+
+   A card is a SHAPE, not a surface: radius, hairline and padding. It carries no
+   colour of its own, so it composes with whichever surface/band pair it is
+   given -- `b61-surface--plain b61-band--plain b61-card` is the white card, and
+   the same shape on `--soft` or `--dark` needs no new class.
+
+   Kept separate from the surfaces above so the pairing guard stays a clean
+   one-to-one: every .b61-surface--X has exactly one .b61-band--X. A shape with
+   no background does not enter that check.
+   --------------------------------------------------------------------------- */
+.b61-card {
+  padding: var(--b61-card-pad);
+  border: 1px solid var(--b61-border);
+  border-radius: var(--b61-radius-card);
+  box-shadow: var(--b61-card-shadow);
+}
+
+/* ---------------------------------------------------------------------------
+   BAND BACKGROUND (1.34.0)
+
+   A photograph behind a band. Lifted out of Hero's __bg / __scrim so any
+   element can carry one; CTA_Band is the first consumer. Hero still runs its
+   own copy -- its scrim is tied to its scheme system and moving it is a
+   migration with nothing to gain until Hero needs something new.
+
+   THE HOST emits `b61-has-bg` beside its surface/band pair. isolation makes it
+   a stacking context, so the layer's z-index:-1 paints ABOVE the host's own
+   background and BELOW its content -- no content selector needs a z-index,
+   which is what keeps a band with no photo byte-identical.
+
+   THE SCRIM IS THE SURFACE, thinned. It is coloured by the host's surface, so
+   the palette the host already declares (b61-band--X) is the palette that was
+   measured against it; there is no second set of text colours for "on a photo".
+   The child combinators are deliberate: a descendant selector keyed on a
+   surface is the shape that broke buttons in cards at 1.31.0. `>` reaches only
+   the host's own layer, never a nested band's. Opacity is per instance, inline.
+   --------------------------------------------------------------------------- */
+.b61-has-bg {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.b61-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.b61-bg__media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* --b61-photo-focus is the per-instance focal point, set inline from the
+     Appearance > Photo popout; the same name in Hero and Split. */
+  object-position: var(--b61-photo-focus, var(--b61-bg-position));
+  display: block;
+}
+
+.b61-bg__scrim {
+  position: absolute;
+  inset: 0;
+}
+
+.b61-surface--plain > .b61-bg > .b61-bg__scrim { background: var(--b61-surface); }
+.b61-surface--soft > .b61-bg > .b61-bg__scrim { background: var(--b61-surface-soft); }
+.b61-surface--dark > .b61-bg > .b61-bg__scrim { background: var(--b61-surface-dark); }
+.b61-surface--accent > .b61-bg > .b61-bg__scrim { background: var(--b61-surface-accent); }
+
+/* ---------------------------------------------------------------------------
+   STACK RHYTHM
+
+   Content blocks carry NO bottom margin of their own; the stack owns every gap.
+   That is what makes a drag-ordered stack safe: any block can follow any block
+   without two roles' margins colliding or cancelling.
+   --------------------------------------------------------------------------- */
+:where(.b61-block) {
+  --b61-block-gap: var(--b61-space-md);
+}
+
+.b61-block {
+  margin-block: 0;
+}
+
+.b61-block + .b61-block {
+  margin-top: var(--b61-block-gap);
+}
+
+/* ---------------------------------------------------------------------------
+   ICON LIST (1.62.0)
+
+   Rows of mark + text: contact details, what a programme includes, admissions
+   steps. Shared here because Prose, Split and the CTA Band all render it from
+   the same content-block repeater, and a list that looked different in each
+   would be three lists.
+
+   ONE ROW PER BLOCK, grouped into a single <ul> by the template when rows sit
+   next to each other. Breakdance has no nested repeater anywhere in its own
+   elements, and a control schema it cannot decode does not degrade - it stops
+   the whole builder loading. So the list is composed the way the rest of the
+   stack already works: blocks in dragged order.
+
+   THE MARK IS A BOX, NOT A GLYPH. Chosen icon or default dot, both centred in
+   the same square, so the text column starts in the same place either way and a
+   list with an icon on one row and a dot on the next still lines up.
+
+   Colour comes from the band's accent partner, so a row on a dark or accent
+   ground recolours with everything else rather than staying the light-ground
+   colour - the failure this layer exists to prevent.
+   --------------------------------------------------------------------------- */
+.b61-iconlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--b61-iconlist-row-gap);
+  /* SHRINK-WRAPPED, ROWS LEFT-SET (1.73.0). The list is as wide as its
+     longest row, so an element can centre the LIST as a block. The rows stay
+     left-set inside it: centring each row pushed the marks out to the column
+     edge, away from their text (St. Mark's Employment, Jay), and centring the
+     rows individually would zigzag the marks down the page. Each element
+     places the block with its own alignment dial - see Prose and CTA Band. */
+  width: fit-content;
+  max-width: 100%;
+  text-align: left;
+  /* Type and colour are set HERE, not inherited. Measured, not assumed: the
+     region sets no colour in this kit - every block declares its own - so a
+     list that inherited would have rendered black copy on a dark band. Body
+     copy's exact treatment, so a row reads as the copy it sits among. */
+  font-family: var(--b61-font-body);
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  color: var(--b61-on-bg-ink, var(--b61-ink));
+}
+
+.b61-iconlist__row {
+  display: grid;
+  grid-template-columns: var(--b61-iconlist-mark-size) minmax(0, 1fr);
+  gap: var(--b61-iconlist-gap);
+  align-items: start;
+  min-height: var(--b61-iconlist-row-min);
+}
+
+/* THE ROW'S LINK IS NOT .b61-link. That class is the kit's button-style text
+   link - UI face, button size, centred, its own padding - which is right for
+   "Read more" and wrong for an email address sitting in a list of facts. A row
+   reads as the copy around it and simply happens to be linked, so it inherits
+   the list's type and colour and takes only an underline.
+
+   The row owns the tap height (see --b61-iconlist-row-min) and the anchor
+   stretches to fill it, so the target stays the full size the rest of the kit
+   promises while a linked row and a plain row keep the same rhythm.
+   Top-aligned, so a label that wraps to two lines starts level with its mark. */
+.b61-iconlist__link {
+  display: flex;
+  align-items: flex-start;
+  min-height: var(--b61-iconlist-row-min);
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  border-radius: var(--b61-radius-btn);
+}
+
+.b61-iconlist__link:hover,
+.b61-iconlist__link:focus-visible {
+  color: var(--b61-on-bg-accent, var(--b61-accent-text));
+  text-decoration-thickness: 2px;
+}
+
+.b61-iconlist__link:focus-visible {
+  outline: var(--b61-focus-width) solid var(--b61-focus, var(--b61-ink));
+  outline-offset: var(--b61-focus-offset);
+}
+
+.b61-iconlist__mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--b61-iconlist-mark-size);
+  height: var(--b61-iconlist-mark-size);
+  margin-top: var(--b61-iconlist-mark-top);
+  color: var(--b61-on-bg-accent, var(--b61-accent-text));
+  flex: none;
+}
+
+/* The editor's icon fills the box and inherits its colour. Same treatment the
+   card grid gives a chosen icon, so one icon looks the same in both places. */
+.b61-iconlist__mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+/* OUTLINE ICONS KEEP THEIR OUTLINE (1.73.0). The fill above is right for a
+   solid glyph (Font Awesome, the built-in set) and wrong for an uploaded
+   outline icon: CSS outranks the svg's own fill="none", so the whole shape
+   filled in solid (St. Mark's Early Childhood, Jay). An svg that says it has
+   no fill keeps none, and its strokes take the same colour a solid icon
+   would, so an outline icon still follows the band. */
+.b61-iconlist__mark svg[fill="none"] { fill: none; }
+.b61-iconlist__mark svg [stroke]:not([stroke="none"]) { stroke: currentColor; }
+
+/* THE DEFAULT MARK. No icon chosen - and nothing stored - so the dot is drawn
+   here. That is what keeps the brand mark a deliberate per-row move rather than
+   the assumed default, and it lets a site retune the default later without
+   touching a single row of saved content. */
+.b61-iconlist__mark--dot::before {
+  content: "";
+  width: var(--b61-iconlist-dot-size);
+  height: var(--b61-iconlist-dot-size);
+  border-radius: var(--b61-radius-pill);
+  background: currentColor;
+}
+
+.b61-iconlist__text {
+  min-width: 0;
+}
+
+/* LINK LIST (1.77.0), opt-in per element (Prose: Icon list style). Rows run
+   the full column, split by hairlines; a linked row is one big target (the
+   link's ::after covers the row) with an arrow on the right. Rows without an
+   icon drop the default dot: with the rules and arrows it was one marker too
+   many. A chosen icon stays. */
+.b61-iconlist.b61-iconlist--links {
+  width: 100%;
+  gap: 0;
+}
+
+.b61-iconlist--links .b61-iconlist__row {
+  position: relative;
+  grid-template-columns: var(--b61-iconlist-mark-size) minmax(0, 1fr) auto;
+  align-items: center;
+  padding-block: var(--b61-iconlist-links-pad);
+}
+
+.b61-iconlist--links .b61-iconlist__row + .b61-iconlist__row {
+  border-top: 1px solid color-mix(in srgb, currentColor var(--b61-iconlist-links-line-strength), transparent);
+}
+
+/* Lines above and below (1.77.1, opt-in): the same hairline closes the list. */
+.b61-iconlist--links.b61-iconlist--edges {
+  border-block: 1px solid color-mix(in srgb, currentColor var(--b61-iconlist-links-line-strength), transparent);
+}
+
+.b61-iconlist--links .b61-iconlist__row:has(.b61-iconlist__mark--dot) {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.b61-iconlist--links .b61-iconlist__mark--dot {
+  display: none;
+}
+
+.b61-iconlist--links .b61-iconlist__mark {
+  margin-top: 0;
+}
+
+.b61-iconlist--links .b61-iconlist__link {
+  align-items: center;
+  text-decoration: none;
+}
+
+.b61-iconlist--links .b61-iconlist__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.b61-iconlist__arrow {
+  color: var(--b61-on-bg-accent, var(--b61-accent-text));
+  transition: transform var(--b61-ease);
+}
+
+.b61-iconlist--links .b61-iconlist__row--linked:hover .b61-iconlist__link,
+.b61-iconlist--links .b61-iconlist__row--linked:focus-within .b61-iconlist__link {
+  color: var(--b61-on-bg-accent, var(--b61-accent-text));
+}
+
+.b61-iconlist--links .b61-iconlist__row--linked:hover .b61-iconlist__arrow,
+.b61-iconlist--links .b61-iconlist__row--linked:focus-within .b61-iconlist__arrow {
+  transform: translateX(var(--b61-nudge));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .b61-iconlist__arrow { transition: none; }
+  .b61-iconlist--links .b61-iconlist__row--linked:hover .b61-iconlist__arrow,
+  .b61-iconlist--links .b61-iconlist__row--linked:focus-within .b61-iconlist__arrow { transform: none; }
+}
+
+/* ---------------------------------------------------------------------------
+   BUTTONS
+
+   Dials are declared on .b61-btn itself — a DESCENDANT of the region that sets
+   --b61-on-bg-* and the surface overrides above. That direction matters: a
+   var() inside a custom property resolves against the element the property is
+   declared on, so dials on an ancestor cannot see a descendant's globals.
+
+   :where() keeps the defaults at zero specificity, so a site rule as ordinary
+   as `.b61-btn--secondary { --b61-btn-bg: <value> }` wins without !important.
+   --------------------------------------------------------------------------- */
+:where(.b61-btn) {
+  --b61-btn-border: var(--b61-btn-bg);
+  --b61-btn-border-width: var(--b61-btn-stroke);
+  --b61-btn-border-hover: var(--b61-btn-bg-hover);
+  --b61-btn-text-hover: var(--b61-btn-text);
+}
+
+.b61-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* An accessibility floor, not a taste setting. Larger is fine; smaller is a
+     bug, because it stops being a comfortable touch target. */
+  min-height: var(--b61-btn-min-height);
+  /* Only shows when a button carries a second child, e.g. an arrow glyph. */
+  gap: var(--b61-space-xs);
+  padding: var(--b61-btn-pad-y) var(--b61-btn-pad-x);
+  background: var(--b61-btn-bg);
+  color: var(--b61-btn-text);
+  font-family: var(--b61-btn-font, var(--b61-font-ui));
+  font-size: var(--b61-btn-size);
+  line-height: var(--b61-btn-leading, 1.55);
+  font-weight: var(--b61-btn-weight);
+  letter-spacing: var(--b61-btn-tracking);
+  text-decoration: none;
+  border: var(--b61-btn-border-width) solid var(--b61-btn-border);
+  border-radius: var(--b61-radius-btn);
+  box-shadow: var(--b61-btn-shadow);
+  /* Every property a hover dial can touch is listed, so whichever effect a site
+     chooses animates rather than snapping. Listing them costs nothing when the
+     value never changes. */
+  transition:
+    background-color var(--b61-ease),
+    border-color var(--b61-ease),
+    color var(--b61-ease),
+    box-shadow var(--b61-ease),
+    transform var(--b61-ease);
+}
+
+.b61-btn:hover {
+  background: var(--b61-btn-bg-hover);
+  border-color: var(--b61-btn-border-hover);
+  color: var(--b61-btn-text-hover);
+  box-shadow: var(--b61-btn-hover-shadow);
+  transform: var(--b61-btn-hover-transform);
+}
+
+/* Primary needs no overrides — the dials already are primary. Kept as a
+   documented hook so a site can target the pair symmetrically. */
+.b61-btn--primary { /* inherits the dials as declared */ }
+
+/* Secondary sets dials and nothing else, so "outline" is only what the defaults
+   happen to be. --b61-btn-outline-color is an existing site token that already
+   flips on dark grounds above.
+
+   Its hover deepens the outline with a scrim rather than filling with the
+   outline colour: a fill would need a contrasting label, and on a dark ground
+   the outline is near-white, so a white fill with a white label would vanish. */
+.b61-btn--secondary {
+  --b61-btn-bg: transparent;
+  --b61-btn-text: var(--b61-btn-outline-color);
+  --b61-btn-border: color-mix(in srgb, var(--b61-btn-outline-color) var(--b61-btn-outline-strength), transparent);
+  /* The scrim is a DIAL the band declares, not a descendant selector keyed on
+     the surface. `.b61-surface--dark .b61-btn--secondary` matched any secondary
+     ANYWHERE below a dark band -- including one inside a white card, where the
+     light scrim is wrong. The fallback covers a button under no band class at
+     all. */
+  --b61-btn-bg-hover: var(--b61-btn-secondary-hover-scrim, rgb(var(--b61-scrim-rgb) / 0.06));
+  --b61-btn-border-hover: var(--b61-btn-outline-color);
+  --b61-btn-text-hover: var(--b61-btn-outline-color);
+}
+
+/* A solid pill in the page's own ground colour. The third variant, and the one
+   the shared layer was missing: on a dark or accent band an outlined secondary
+   can read as too quiet next to an inverted primary, and this gives a second
+   loud option. Declared after the surface blocks so its dials win over them.
+
+   On a light ground a ground-coloured pill would be invisible, so it borrows the
+   outline colour for its border — which is exactly what CTA_Band's bespoke
+   version did. */
+.b61-btn--light {
+  --b61-btn-bg: var(--b61-surface);
+  --b61-btn-text: var(--b61-on-surface);
+  --b61-btn-bg-hover: var(--b61-surface-soft);
+  --b61-btn-text-hover: var(--b61-on-surface-soft);
+  /* On a light ground a ground-coloured pill would be invisible, so it borrows
+     the outline colour for its border; on a dark or accent ground it borders in
+     its own fill. Which of those applies is the BAND's decision, so the band
+     declares it. The fallback is the no-band case. */
+  --b61-btn-border: var(--b61-btn-light-border, var(--b61-btn-outline-color));
+}
+
+/* ---------------------------------------------------------------------------
+   TEXT LINK
+
+   The third action shape, beside primary and secondary: an underlined label with
+   an arrow that nudges on hover. Not a button — no fill, no border, no pill — so
+   it does not belong to .b61-btn, but it was copy-pasted identically into
+   CTA_Band and Stats_Band and is shared here.
+
+   Hero has a link of its own that is NOT this: no underline, its own size and
+   tracking, coloured for a photo scrim. Only the ARROW is common to all three,
+   so the arrow is a separate class any link can carry.
+   --------------------------------------------------------------------------- */
+.b61-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--b61-space-xs);
+  min-height: var(--b61-btn-min-height);
+  padding: var(--b61-space-sm) var(--b61-space-2xs);
+  background: transparent;
+  border: 0;
+  color: var(--b61-on-bg-ink, var(--b61-ink));
+  /* No fill and no border, but the radius still shapes the focus ring. */
+  border-radius: var(--b61-radius-btn);
+  font-family: var(--b61-btn-font, var(--b61-font-ui));
+  font-size: var(--b61-btn-size);
+  line-height: var(--b61-btn-leading, 1.55);
+  font-weight: var(--b61-btn-weight);
+  letter-spacing: var(--b61-link-tracking, 0.02em);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.b61-link:hover,
+.b61-link:focus-visible {
+  color: var(--b61-on-bg-ink, var(--b61-ink));
+  text-decoration-thickness: 2px;
+}
+
+.b61-link:focus-visible {
+  outline: var(--b61-focus-width) solid var(--b61-focus, var(--b61-ink));
+  outline-offset: var(--b61-focus-offset);
+}
+
+/* Carried by the glyph itself, so any link can use it — including Hero's, which
+   shares nothing else with .b61-link. */
+.b61-link-arrow {
+  transition: transform var(--b61-ease);
+}
+
+.b61-link:hover .b61-link-arrow {
+  transform: translateX(var(--b61-nudge));
+}
+
+/* Full width, set per button from its Style popout. A block button fills the
+   content column, which is what a narrow column (a sidebar rail) needs and what
+   a wide band almost never does — so it is per-button, not a band-level dial.
+   The group is already a flex row, so the button also has to be allowed to grow
+   past its content: flex-basis 100% makes it take the whole line and pushes any
+   sibling button onto the next one, which is the correct reading of "full". */
+.b61-btn--block {
+  width: 100%;
+  flex-basis: 100%;
+}
+
+/* A group rather than a single anchor, because the count is 0..n. The container
+   owns the gap above, so an element with no buttons contributes no trailing
+   space — which a per-button margin-top could not do. Breakdance's repeater has
+   no maximum-rows option, so a third button is never blocked; it wraps. */
+.b61-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--b61-btn-gap);
+  margin-top: var(--b61-space-lg);
+}
+
+/* ---------------------------------------------------------------------------
+   ACCESSIBILITY FLOOR
+   --b61-focus, --b61-focus-width and --b61-focus-offset are existing site
+   tokens; CTA_Band, Card_Grid and Hero already use them. The Split branch
+   hardcoded its ring instead, which is what this layer ends.
+   --------------------------------------------------------------------------- */
+.b61-btn:focus-visible {
+  outline: var(--b61-focus-width) solid var(--b61-focus, var(--b61-ink));
+  outline-offset: var(--b61-focus-offset);
+}
+
+/* Reduced motion neutralises the MOVEMENT, not the response. Killing the colour
+   change too would leave a button that does not react to the pointer at all,
+   which reads as broken rather than as calm. Overriding the dial rather than the
+   declaration means a site's custom transform is neutralised as well. */
+@media (prefers-reduced-motion: reduce) {
+  :where(.b61-btn) {
+    --b61-btn-hover-transform: none;
+  }
+  .b61-btn {
+    transition: background-color var(--b61-ease), border-color var(--b61-ease), color var(--b61-ease);
+  }
+  .b61-link-arrow {
+    transition: none;
+  }
+  .b61-link:hover .b61-link-arrow {
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   LINE BREAKING (1.51.0)
+   Headline-like text balances its lines (no one-word last line, no ragged
+   long/short pair); running text only avoids a lone last word. Both read a
+   token that defaults to `wrap` (off) — see tokens.css. :where() keeps the
+   specificity at zero so any element or site rule can override.
+   --------------------------------------------------------------------------- */
+:where(h1, h2, h3, h4, h5, h6, blockquote, figcaption,
+       [class*="b61-"][class*="__subhead"],
+       [class*="b61-"][class*="__emphasis"],
+       [class*="b61-"][class*="__eyebrow"],
+       [class*="b61-"][class*="__title"]) {
+  text-wrap: var(--b61-wrap-heading);
+}
+
+:where(p, li) {
+  text-wrap: var(--b61-wrap-body);
+}
+
+/* ---------------------------------------------------------------------------
+   LIST MARKER (1.62.0)
+
+   The bullet in ordinary body copy, as a site value. `--b61-list-marker`
+   ships as `none`, which is the initial value of the property, so a site that
+   never sets it renders byte-identical to before this rule existed.
+
+   A school that wants its brand mark as the bullet points the token at an SVG.
+   Two things follow from list-style-image and are worth knowing before you
+   promise it: the image draws at its own intrinsic size, so supply it at the
+   size it should appear; and it does not take the text colour, so it stays the
+   same on a dark band. A mark that must recolour belongs in an Icon row.
+
+   :where() keeps this at zero specificity - a site rule overrides it without
+   reaching for !important.
+   --------------------------------------------------------------------------- */
+:where(.b61-block ul) {
+  list-style-image: var(--b61-list-marker);
+}
+
+/* ---------------------------------------------------------------------------
+   RICH-TEXT LISTS (1.64.0)
+
+   A list typed into a rich-text field had no indent in seven of the nine
+   elements that render one: only Prose and CTA Band set padding-left on their
+   own bodies, so a bullet list in a card, a pillar, a tab or an accordion
+   panel sat flush with its paragraphs and stopped reading as a list. The same
+   gap silently broke the brand bullet above, which only ever reached
+   `.b61-block` -- a class those bodies do not carry.
+
+   Scoped to the B61 roots rather than to `.breakdance-rich-text-styles`
+   alone: that class belongs to Breakdance, and a kit stylesheet has no
+   business restyling lists inside a stock element. Add a root here when a new
+   element renders rich text.
+
+   NOT solved by giving those bodies `.b61-block`: that class also carries the
+   stack rhythm (`.b61-block + .b61-block`), which would have opened a gap
+   between every card title and its copy.
+
+   1.4em, matching Prose and CTA Band -- em so the indent tracks the type size
+   rather than sitting at a fixed distance as the scale moves.
+   --------------------------------------------------------------------------- */
+:where(.b61-cards, .b61-gallery, .b61-pillars, .b61-split, .b61-stats, .b61-tabs, .b61-acc)
+  .breakdance-rich-text-styles :where(ul, ol) {
+  padding-left: 1.4em;
+}
+
+:where(.b61-cards, .b61-gallery, .b61-pillars, .b61-split, .b61-stats, .b61-tabs, .b61-acc)
+  .breakdance-rich-text-styles ul {
+  list-style-image: var(--b61-list-marker);
+}
+
+
+/* ---------------------------------------------------------------------------
+   TYPESETTING FLOOR (1.64.0)
+
+   A one-word last line is a defect, not a preference, so this is house style
+   and not a per-instance switch -- nobody has ever opened a band and asked for
+   an orphan.
+
+   The two properties are not interchangeable. `balance` evens the line lengths
+   of a short display block and is the right answer for a headline, but the
+   engines cap it at a handful of lines and it costs a layout pass per line, so
+   it is kept off body copy. `pretty` is the paragraph rule: it leaves the last
+   line alone until it would strand a single word.
+
+   Unsupported engines ignore both and render exactly as before, so there is no
+   fallback to write. :where() keeps it at zero specificity.
+   --------------------------------------------------------------------------- */
+:where(h1, h2, h3, h4, h5, h6)[class*="b61-"],
+:where(.b61-hero__title, .b61-cards__title, .b61-cta__heading, .b61-prose__heading,
+       .b61-pillars__heading, .b61-stats__heading, .b61-gallery__heading,
+       .b61-split__heading, .b61-acc__heading, .b61-tabs__heading,
+       .b61-quote__text) {
+  text-wrap: balance;
+}
+
+:where(.b61-cards__body, .b61-cards__intro, .b61-cta__body, .b61-prose__body,
+       .b61-pillars__intro, .b61-split__body,
+       .b61-stats__intro, .b61-gallery__intro, .b61-tabs__intro,
+       .b61-acc__panel, .b61-hero__subhead--display) {
+  text-wrap: pretty;
+}
+
+/* SUBHEADLINES BALANCE (1.70.0). Every element's second-headline line, found
+   by the kit's own naming rather than a list that goes stale when an element
+   is added. Declared AFTER the heading rule above, which also matches
+   __subhead, so at equal (zero) specificity this one wins. The Hero's
+   display subhead is a paragraph and stays `pretty` (list above).
+
+   A rich-text subhead wraps its words in <p>, and `:where(p, li)` sets the
+   body wrap on that <p> directly -- so the balance on the wrapper would never
+   reach the text. The child rule hands it back. */
+:where([class*="b61-"][class*="__subhead"]:not(.b61-hero__subhead--display)) {
+  text-wrap: var(--b61-wrap-subhead, balance);
+}
+:where([class*="b61-"][class*="__subhead"]:not(.b61-hero__subhead--display)) > :where(p) {
+  text-wrap: inherit;
+}
+
+
+/* ---------------------------------------------------------------------------
+   MINIMUM GAP ABOVE A PULLED-UP SECTION (1.58.0)
+
+   `--b61-overlap-y` promises to stay under `--b61-pad-block`, so the nine bands
+   that pad from that token always have room. TWO do not, and this is the only
+   place that matters:
+
+     Hero COVER mode  bottom = space-2xl + space-lg = 88px flat, which TIES the
+                      clamp's 88px cap — clearance reaches exactly 0 above
+                      ~1467px. Deliberate asymmetry the comps depend on.
+     Testimonial      was the second, at 0.37x, until 1.63.0 gave its Normal
+                      --b61-pad-block. The rule below stays: it still catches
+                      a quote set to Tight above a pull-up, and max() is a
+                      no-op wherever there is already room.
+
+   Raising either one unconditionally would move every hero and every quote on
+   every page to fix a situation almost none of them are in. So the correction
+   lives in the RELATIONSHIP instead: `:has(+ .b61-section--pull)` fires only
+   where a pull-up actually follows, and `max()` means a band that already has
+   room is untouched — the floor can only ever raise, never lower.
+
+   This is the one place a B61 element's padding is decided by its neighbour.
+   It earns the exception because the pull-up IS a relationship; every other
+   band still pads its own region ([[b61-element-framework]]).
+
+   `--pb-none` is excluded on purpose: None is an explicit instruction, and an
+   overlap pattern built on it is someone asking for the overlap.
+   --------------------------------------------------------------------------- */
+.b61-quote:has(+ .b61-section--pull)
+  > .b61-quote__region:not(.b61-quote__region--pb-none) {
+  padding-bottom: max(var(--band-pb), var(--b61-overlap-clear));
+}
+
+.b61-hero:has(+ .b61-section--pull)
+  .b61-hero__inner--cover:not(.b61-hero__inner--pb-none) {
+  padding-bottom: max(
+    var(--b61-hero-pad-bottom, calc(var(--b61-space-2xl) + var(--b61-space-lg))),
+    var(--b61-overlap-clear)
+  );
+}
+
+.b61-hero:has(+ .b61-section--pull)
+  .b61-hero__inner--band:not(.b61-hero__inner--pb-none) {
+  padding-bottom: max(
+    var(--b61-hero-pad-bottom, var(--b61-pad-block)),
+    var(--b61-overlap-clear)
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   TRAILING EYEBROW RULE (1.67.0)
+
+   A hairline from the end of an eyebrow to the column edge. Off by default
+   (--b61-eyebrow-rule-trail: none). Every eyebrow is a flex or inline-flex
+   box, so the rule is a flex item that takes the remaining width; the eyebrow
+   itself widens to the column only when --b61-eyebrow-rule-trail-width says
+   so. The colour is mixed HERE, on the pseudo-element, from the band ink the
+   eyebrow already inherits, so a dark band gets a light hairline with no
+   alias frozen further up the tree. The per-band "Eyebrow rule" control
+   (css.twig in each element, 1.67.0) writes real rules over these; this
+   block is the SITE DEFAULT that "Site default" leaves in charge.
+   --------------------------------------------------------------------------- */
+:is(.b61-split__eyebrow, .b61-gallery__eyebrow, .b61-cards__eyebrow, .b61-acc__eyebrow,
+    .b61-stats__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-hero__eyebrow,
+    .b61-pillars__eyebrow, .b61-tabs__eyebrow, .b61-quote__eyebrow, .b61-car__eyebrow) {
+  width: var(--b61-eyebrow-rule-trail-width);
+  max-width: 100%;
+  column-gap: var(--b61-rule-trail-gap);
+}
+:is(.b61-split__eyebrow, .b61-gallery__eyebrow, .b61-cards__eyebrow, .b61-acc__eyebrow,
+    .b61-stats__eyebrow, .b61-prose__eyebrow, .b61-cta__eyebrow, .b61-hero__eyebrow,
+    .b61-pillars__eyebrow, .b61-tabs__eyebrow, .b61-quote__eyebrow, .b61-car__eyebrow)::after {
+  content: "";
+  display: var(--b61-eyebrow-rule-trail);
+  flex: 1 1 var(--b61-rule-trail-min);
+  height: var(--b61-rule-trail-thickness);
+  background: color-mix(in srgb, var(--b61-on-bg-ink, var(--b61-ink)) var(--b61-rule-trail-strength), transparent);
+}
+
+/* ---------------------------------------------------------------------------
+   CAROUSEL (1.68.0) — the part every carousel shares: B61 Carousel and Card
+   Grid's carousel layout. The element owns its band (region, head, padding);
+   this owns the track, the controls and the screen-reader status.
+
+   THE TRACK IS A NATIVE SCROLLER. Slides are flex items sized from the
+   visible count and the peek; scroll-snap lands them. No script is needed
+   to lay it out or to move it by touch, trackpad or keyboard -- the script
+   adds buttons, a counter, a bar and slide labels on top.
+
+   Slide width, with v slides visible and a peek of p (a share of a slide):
+     (track - (v - 1 + [p>0]) gaps) / (v + p)
+   --car-v resolves: the author's value for this breakpoint (css.twig), else
+   the automatic drop (below), else the base value set inline on the track.
+   --------------------------------------------------------------------------- */
+.b61-car__track {
+  --car-v: var(--b61-car-pv-at, var(--car-pv-auto, var(--b61-car-pv, 1)));
+  --car-p: 0;
+  --car-pg: 0;
+  position: relative;
+  display: flex;
+  gap: var(--b61-car-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  padding-bottom: 2px;
+}
+
+.b61-car__track--peek-small  { --car-p: var(--b61-car-peek-small);  --car-pg: 1; }
+.b61-car__track--peek-medium { --car-p: var(--b61-car-peek-medium); --car-pg: 1; }
+.b61-car__track--peek-large  { --car-p: var(--b61-car-peek-large);  --car-pg: 1; }
+
+.b61-car__track > * {
+  flex: 0 0 calc((100% - (var(--car-v) - 1 + var(--car-pg)) * var(--b61-car-gap)) / (var(--car-v) + var(--car-p)));
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+/* Automatic drops, overridden by any breakpoint the author sets (css.twig
+   declares --b61-car-pv-at, which --car-v reads first). */
+@media (max-width: 1023px) {
+  .b61-car__track--pv3,
+  .b61-car__track--pv4 { --car-pv-auto: 2; }
+}
+@media (max-width: 767px) {
+  .b61-car__track { --car-pv-auto: 1; }
+}
+
+/* ---- Controls placement, shared (keyed on .b61-car--ctl-* on the region) --
+   Head row: a heading block and the controls on one line, controls aligned to
+   the heading's last line (Controls > Position = Top right). */
+.b61-car__headrow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--b61-space-lg);
+}
+
+.b61-car__headrow > :first-child {
+  min-width: 0;
+  flex: 0 1 auto;
+}
+
+.b61-car__headrow > .b61-car__controls {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 767px) {
+  .b61-car__headrow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  /* 1.70.0: once the row is a COLUMN, flex-basis sizes HEIGHT. A site that
+     gives the heading block a width via flex-basis (St. Mark's: 40rem) got a
+     40rem-tall heading on phones. Reset it for the stacked row. */
+  .b61-car__headrow > :first-child {
+    flex-basis: auto;
+    max-width: 100%;
+  }
+}
+
+/* ---- Controls below the track ---------------------------------------------*/
+.b61-car__viewport + .b61-car__controls,
+.b61-car__viewport + .b61-car__controls--meta {
+  margin-top: var(--b61-car-controls-space);
+}
+
+.b61-car--ctl-bottom-left .b61-car__viewport + .b61-car__controls { justify-content: flex-start; }
+.b61-car--ctl-bottom-center .b61-car__viewport + .b61-car__controls,
+.b61-car--ctl-sides .b61-car__viewport + .b61-car__controls--meta { justify-content: center; }
+.b61-car--ctl-bottom-right .b61-car__viewport + .b61-car__controls { justify-content: flex-end; }
+
+/* ---- Sides: the two arrows over the track's edges, vertically centred ----
+   The controls box spans the viewport and lets clicks through; only the
+   buttons take them. */
+.b61-car__viewport {
+  position: relative;
+}
+
+.b61-car--ctl-sides .b61-car__viewport > .b61-car__controls {
+  position: absolute;
+  /* --b61-car-sides-offset: distance from the track edge. Positive sits the
+     arrows over the slides; a negative value (e.g. calc(-1 * (var(--b61-car-btn-box)
+     + var(--b61-space-md)))) moves them out into the page gutter on sites
+     that have one. */
+  inset: 50% var(--b61-car-sides-offset) auto var(--b61-car-sides-offset);
+  transform: translateY(-50%);
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+/* No gutter to spare below desktop: a negative offset falls back inside. */
+@media (max-width: 1279px) {
+  .b61-car--ctl-sides .b61-car__viewport > .b61-car__controls {
+    inset-inline: max(var(--b61-car-sides-offset), var(--b61-space-sm));
+  }
+}
+
+.b61-car--ctl-sides .b61-car__viewport > .b61-car__controls .b61-car__btn {
+  pointer-events: auto;
+  /* Over a slide the arrow can land on its own colour (a navy button on a
+     navy Testimonial), so it carries a ring in the page surface and a soft
+     shadow; the at-an-end state gets a solid ground instead of see-through. */
+  box-shadow: 0 0 0 var(--b61-car-sides-ring) var(--b61-surface), var(--b61-shadow-lg);
+}
+
+.b61-car--ctl-sides .b61-car__viewport > .b61-car__controls .b61-car__btn[aria-disabled="true"] {
+  background: var(--b61-surface);
+  color: var(--b61-muted);
+}
+
+/* Once the script has wired the buttons, the scrollbar is redundant. Before
+   that -- and forever with no script -- it is the only visible cue. */
+.b61-car__track[data-b61-car-ready] {
+  scrollbar-width: none;
+}
+.b61-car__track[data-b61-car-ready]::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .b61-car__track {
+    scroll-behavior: smooth;
+  }
+}
+
+.b61-car__track:focus-visible {
+  outline: var(--b61-focus-width) solid var(--b61-focus);
+  outline-offset: var(--b61-focus-offset);
+}
+
+/* ---- Controls ------------------------------------------------------------
+   Button colours are the band's primary pair, taken ON THE REGION where the
+   band class lives, so the alias resolves against the right band. A site
+   retunes them there: `.js-b61-car { --car-btn-bg: ... }`. */
+.js-b61-car {
+  --car-btn-bg: var(--b61-btn-bg);
+  --car-btn-ink: var(--b61-btn-text);
+  --car-btn-bg-hover: var(--b61-btn-bg-hover);
+  --car-off-ink: var(--b61-on-bg-muted, var(--b61-muted));
+  --car-off-line: color-mix(in srgb, var(--b61-on-bg-ink, var(--b61-ink)) var(--b61-rule-trail-strength), transparent);
+}
+
+.b61-car__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--b61-car-btn-gap);
+}
+
+.b61-car__controls[hidden] {
+  display: none;
+}
+
+.b61-car__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: var(--b61-car-btn-box);
+  height: var(--b61-car-btn-box);
+  padding: 0;
+  border: var(--b61-car-btn-stroke) solid var(--car-btn-bg);
+  border-radius: var(--b61-car-btn-radius);
+  background: var(--car-btn-bg);
+  color: var(--car-btn-ink);
+  cursor: pointer;
+  transition: background-color var(--b61-ease), border-color var(--b61-ease), color var(--b61-ease);
+}
+
+.b61-car__btn:hover {
+  background: var(--car-btn-bg-hover);
+  border-color: var(--car-btn-bg-hover);
+}
+
+.b61-car__btn:focus-visible {
+  outline: var(--b61-focus-width) solid var(--b61-focus);
+  outline-offset: var(--b61-focus-offset);
+}
+
+/* At an end: still focusable (aria-disabled, not disabled), drawn as an
+   outline so the one that still works is the obvious one. */
+.b61-car__btn[aria-disabled="true"] {
+  background: transparent;
+  border-color: var(--car-off-line);
+  color: var(--car-off-ink);
+  cursor: default;
+}
+
+.b61-car__progress {
+  position: relative;
+  display: block;
+  width: var(--b61-car-progress-width);
+  max-width: 40vw;
+  height: var(--b61-car-progress-thickness);
+  background: var(--car-off-line);
+  margin-inline-end: var(--b61-space-md);
+}
+
+.b61-car__progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: var(--b61-rule-accent, var(--b61-accent));
+  transition: width var(--b61-ease);
+}
+
+.b61-car__count {
+  font-family: var(--b61-car-count-font);
+  font-size: var(--b61-car-count-size);
+  letter-spacing: var(--b61-car-count-tracking);
+  font-variant-numeric: tabular-nums;
+  color: var(--b61-on-bg-muted, var(--b61-muted));
+  margin-inline-end: var(--b61-space-sm);
+  white-space: nowrap;
+}
+
+.b61-car__count-sep {
+  margin-inline: 0.4em;
+}
+
+/* Announced after a button press ("Slide 3 of 5"), never shown. */
+.b61-car__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
