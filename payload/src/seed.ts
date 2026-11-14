@@ -1,5 +1,6 @@
 import type { Payload } from 'payload'
 import type { School } from './payload-types'
+import { syncElementLibrary } from './b61/library'
 import { demoChrome } from './b61/chrome/demo'
 import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, statsFrom } from './b61/demo'
 
@@ -228,4 +229,13 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
 
   payload.logger.info(`[b61] Demo content ready for ${name}`)
   return school
+}
+
+/** Creates every demo school in SEED_SCHOOLS (default: both) and keeps each one's Element library current. */
+export async function seedDemoSchools(payload: Payload) {
+  const keys = (process.env.SEED_SCHOOLS || 'cedar-ridge,harbor-oaks').split(',').map((k) => k.trim()).filter(Boolean)
+  for (const key of keys) {
+    const school = await seedDemoSchool(payload, key)
+    if (school) await syncElementLibrary(payload, school).catch((e) => payload.logger.error(`[b61] Element library: ${e.message}`))
+  }
 }

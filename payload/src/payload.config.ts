@@ -1,4 +1,3 @@
-import { syncElementLibrary } from './b61/library'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -12,8 +11,9 @@ import { Events, News, Pages, Programs, Staff } from './collections/content'
 import { SchoolSettings } from './collections/SchoolSettings'
 import { Schools } from './collections/Schools'
 import { multiTenantPlugin } from '@payloadcms/plugin-multi-tenant'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+import { seedDemoSchools } from './seed'
 import { secret } from './lib/secrets'
-import { seedDemoSchool } from './seed'
 import { migrations } from './migrations'
 
 const filename = fileURLToPath(import.meta.url)
@@ -34,11 +34,30 @@ export default buildConfig({
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URL || '' },
-    // Schema changes ship as migrations; production runs them on start.
-    prodMigrations: migrations,
+    // Never change the database schema on the fly; every change is a migration.
+    push: false,
+    // Schema changes ship as migrations. On Vercel they run during the build
+    // (vercel-build); on an always-on server they run when it starts.
+    prodMigrations: process.env.VERCEL ? undefined : migrations,
   }),
   sharp,
+  // Scheduled publishing and other queued work. On Vercel a cron job calls
+  // /api/payload-jobs/run (vercel.json); elsewhere the server runs it itself.
+  jobs: {
+    access: {
+      run: ({ req }) => Boolean(req.user) || (Boolean(process.env.CRON_SECRET) && req.headers.get('authorization') === `Bearer ${process.env.CRON_SECRET}`),
+    },
+    autoRun: process.env.VERCEL ? undefined : [{ cron: '* * * * *', queue: 'default', limit: 20 }],
+  },
   plugins: [
+    // Photos go to Vercel Blob when its token is set (Vercel), straight from
+    // the browser so large files aren't capped by the server; otherwise to disk.
+    vercelBlobStorage({
+      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      collections: { media: { disablePayloadAccessControl: true } },
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+      clientUploads: true,
+    }),
     // One app, many schools. Everything a school edits carries its school;
     // editors only see their own schools, Banner 61 admins see all of them.
     multiTenantPlugin({
@@ -58,12 +77,7 @@ export default buildConfig({
     }),
   ],
   onInit: async (payload) => {
-    if (process.env.SEED_DEMO === 'true') {
-      const keys = (process.env.SEED_SCHOOLS || 'cedar-ridge,harbor-oaks').split(',').map((k) => k.trim()).filter(Boolean)
-      for (const key of keys) {
-        const school = await seedDemoSchool(payload, key)
-        if (school) await syncElementLibrary(payload, school).catch((e) => payload.logger.error(`[b61] Element library: ${e.message}`))
-      }
-    }
+    // On Vercel the demo is seeded during the build (scripts/seed.ts), not on every cold start.
+    if (process.env.SEED_DEMO === 'true' && !process.env.VERCEL) await seedDemoSchools(payload)
   },
 })
