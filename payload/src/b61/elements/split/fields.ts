@@ -2,7 +2,6 @@ import { defineElement, panel } from '../../kit/element'
 import { segmented, step, toggle, type WhenRule } from '../../kit/controls'
 import {
   buttonsField,
-  contentBlocksField,
   entranceField,
   eyebrowRuleField,
   frameColorField,
@@ -16,6 +15,7 @@ import {
   surfaceField,
 } from '../../kit/groups'
 import { dropdown } from '../../kit/controls'
+import { bodyField } from '../../kit/body'
 
 /*
  * B61 SPLIT, built on the B61 editing kit (see ../../EDITING-STANDARD.md).
@@ -44,7 +44,7 @@ export const B61Split = defineElement({
   content: [
     panel('Heading', [...headingFields({ levels: ['h2', 'h3', 'h4'] }), subheadsField()]),
 
-    contentBlocksField(),
+    bodyField(),
 
     buttonsField(),
 

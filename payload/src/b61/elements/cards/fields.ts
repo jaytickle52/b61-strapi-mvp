@@ -1,3 +1,4 @@
+import { simpleEditor } from '../../kit/editors'
 import { defineElement, panel } from '../../kit/element'
 import { dropdown, link, segmented, toggle, type WhenRule } from '../../kit/controls'
 import {
@@ -47,7 +48,7 @@ export const B61CardGrid = defineElement({
     panel('Heading', [
       ...headingFields({ levels: ['h2', 'h3', 'h4'] }),
       subheadsField(),
-      { name: 'intro', label: 'Intro', type: 'richText' },
+      { name: 'intro', label: 'Intro', type: 'richText', editor: simpleEditor() },
     ]),
     panel('Cards', [
       dropdown(
@@ -105,7 +106,7 @@ export const B61CardGrid = defineElement({
               { name: 'title', label: 'Title', type: 'text', admin: { width: '60%' } },
             ],
           },
-          { name: 'body', label: 'Body', type: 'richText' },
+          { name: 'body', label: 'Body', type: 'richText', editor: simpleEditor() },
           link(),
           { name: 'linkText', label: 'Link text', type: 'text', admin: { description: 'Shows a "Read more"-style link. Leave empty to link the title.' } },
         ],

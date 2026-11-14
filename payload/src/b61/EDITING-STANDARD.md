@@ -85,3 +85,13 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 - A menu item's first choice is what it opens: a page, a dropdown or a mega menu.
   Only that kind's fields show.
 - Phones get the same items as a slide-in menu. There is nothing to set up for it.
+
+## 10. Writing (the Content editor)
+
+- Split, Prose and CTA Band have one Content editor, typed like a document.
+- Its + / slash menu offers the band's own pieces as cards: Pull quote, Icon list, Emphasis
+  (and Divider in Prose). One way to make each thing.
+- Built-in items that break the design are left out: Heading 1, uploads, relationships,
+  check lists, plain blockquotes. Headings are H2-H4.
+- Intros and item bodies (accordion, pillars, cards) use a short editor: paragraphs,
+  bold, italic, links and lists.

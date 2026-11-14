@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import type { Page } from '@/payload-types'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { Buttons, ContentBlocks, HeadingLines, revealAttr } from '../../kit/render/parts'
+import { fromBody } from '../../kit/body'
 
 export type ProseBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Prose' }>
 
@@ -63,7 +64,7 @@ export default function B61Prose({ block, index = 0 }: { block: ProseBlock; inde
   const main: ReactNode = (
     <>
       <ContentBlocks
-        blocks={block.contentBlocks as any}
+        blocks={fromBody(block.body)}
         prefix="b61-prose"
         ri={ri}
         emphasisScale

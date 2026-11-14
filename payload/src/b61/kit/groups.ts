@@ -1,3 +1,4 @@
+import { simpleEditor } from './editors'
 import type { ArrayField, Condition, Field, FilterOptions, UploadField } from 'payload'
 import { dropdown, link, segmented, toggle, whenCondition, type When } from './controls'
 
@@ -78,77 +79,6 @@ export const ICON_OPTIONS: [string, string][] = [
   ['cross', 'Cross'],
   ['school', 'School'],
 ]
-
-/**
- * The text stack a band's content is made of: body copy, emphasis lines,
- * pull quotes and icon rows, in any order. Consecutive icon rows render as one
- * list. Shared by Split, Prose and CTA Band.
- */
-export function contentBlocksField(o: { emphasisScale?: boolean; dividers?: boolean; quotePhoto?: boolean } = {}): ArrayField {
-  const quotePhoto = o.quotePhoto !== false
-  const is = (t: string) => (_: unknown, s: any) => (s?.type ?? 'body') === t
-  return list(
-    'contentBlocks',
-    'Content',
-    'Block',
-    [
-      segmented(
-        'type',
-        'Type',
-        [
-          ['body', 'Body copy'],
-          ['emphasis', 'Emphasis'],
-          ['quote', 'Pull quote'],
-          ['iconrow', 'Icon row'],
-        ],
-        { default: 'body' },
-      ),
-      { name: 'body', label: 'Body copy', type: 'richText', admin: { condition: is('body') } },
-      {
-        name: 'text',
-        label: 'Text',
-        type: 'textarea',
-        admin: { rows: 2, condition: (_, s) => (s?.type ?? 'body') !== 'body' },
-      },
-      {
-        type: 'row',
-        admin: { condition: is('quote') },
-        fields: [
-          { name: 'attribution', label: 'Attribution', type: 'text', admin: { width: quotePhoto ? '60%' : '100%' } },
-          ...(quotePhoto
-            ? [{ name: 'photo', label: 'Photo', type: 'upload', relationTo: 'media', filterOptions: onlyImages, admin: { width: '40%' } } as Field]
-            : []),
-        ],
-      },
-      {
-        type: 'row',
-        admin: { condition: is('iconrow') },
-        fields: [
-          dropdown('icon', 'Icon', ICON_OPTIONS, { default: 'dot', width: '40%' }),
-          { name: 'hasLink', label: 'Link this row', type: 'checkbox', admin: { width: '60%', style: { alignSelf: 'flex-end', paddingBottom: 10 } } },
-        ],
-      },
-      { ...link(), admin: { hideGutter: true, condition: (_: unknown, s: any) => s?.type === 'iconrow' && Boolean(s?.hasLink) } } as Field,
-      // Prose: emphasis at body-adjacent or display size.
-      ...(o.emphasisScale
-        ? [
-            segmented(
-              'scale',
-              'Scale',
-              [
-                ['regular', 'Regular'],
-                ['display', 'Display'],
-              ],
-              { default: 'regular', condition: is('emphasis') },
-            ),
-          ]
-        : []),
-      // Prose: a hairline above this block (never above the first).
-      ...(o.dividers ? [toggle('divider', 'Divider above')] : []),
-    ],
-    { admin: { description: 'Body copy, emphasis lines, pull quotes and icon rows, in any order.' } },
-  )
-}
 
 /** The band surface: the shared four, from utilities.css. */
 export function surfaceField(): Field {
@@ -292,6 +222,6 @@ export function bandHeadFields(o: { levels?: ('h1' | 'h2' | 'h3' | 'h4')[]; intr
   return [
     ...headingFields({ levels: o.levels ?? ['h2', 'h3', 'h4'] }),
     subheadsField(),
-    ...(o.intro ? [{ name: 'intro', label: 'Intro', type: 'richText' } as Field] : []),
+    ...(o.intro ? [{ name: 'intro', label: 'Intro', type: 'richText', editor: simpleEditor() } as Field] : []),
   ]
 }

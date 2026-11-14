@@ -3,6 +3,7 @@ import type { Page } from '@/payload-types'
 import { asMedia, focusOf, imgProps } from '../../lib/media'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { Buttons, ContentBlocks, HeadingLines, revealAttr } from '../../kit/render/parts'
+import { fromBody } from '../../kit/body'
 
 export type CtaBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Cta' }>
 
@@ -101,7 +102,7 @@ export default function B61Cta({ block, index = 0 }: { block: CtaBlock; index?: 
                 {s.text}
               </p>
             ))}
-          <ContentBlocks blocks={block.contentBlocks as any} prefix="b61-cta" ri={ri} />
+          <ContentBlocks blocks={fromBody(block.body)} prefix="b61-cta" ri={ri} />
           <Buttons buttons={block.buttons as any} ri={ri} />
         </div>
       </Wrap>

@@ -1,3 +1,4 @@
+import { toBody } from './kit/body'
 import type { Payload, PayloadRequest } from 'payload'
 import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, statsFrom } from './demo'
 import { PROFILES } from '../seed'
@@ -107,7 +108,7 @@ export async function upgradeDemoProse(
               blockType: 'b61Prose',
               headingLevel: 'auto',
               lines: o.heading ? [{ text: o.heading, emphasize: false }] : [],
-              contentBlocks: o.body ? [{ type: 'body', body: o.body }] : [],
+              body: toBody(o.body ? [{ type: 'body', body: o.body }] : [], { emphasisScale: true, dividers: true }),
             }
       sections.splice(Math.min(o.pos - 1, sections.length), 0, prose as any)
     }
@@ -227,4 +228,36 @@ export async function upgradeChrome(
   }
   await payload.updateGlobal({ slug: 'school-settings', data: { ...data, _status: 'published' }, req })
   payload.logger.info('[b61] Moved navigation into the new header menu and footer')
+}
+
+/*
+ * Run once by the b61_body migration. Each Split, Prose and CTA Band's old
+ * Content list (body copy, emphasis, pull quotes, icon rows) becomes the same
+ * content in the single Content editor. Nested ones (in Tabs, Carousels and
+ * Sections) are converted too.
+ */
+const BODY_OPTS: Record<string, Parameters<typeof toBody>[1]> = {
+  b61Split: {},
+  b61Prose: { emphasisScale: true, dividers: true },
+  b61Cta: { quotePhoto: false },
+}
+export async function upgradeBodies(payload: Payload, req: PayloadRequest | undefined, byBlock: Map<string, any[]>) {
+  if (!byBlock.size) return
+  const pages = await payload.find({ collection: 'pages', limit: 500, depth: 0, req })
+  for (const page of pages.docs) {
+    let changed = 0
+    const walk = (v: any) => {
+      if (Array.isArray(v)) return v.forEach(walk)
+      if (!v || typeof v !== 'object') return
+      if (BODY_OPTS[v.blockType] && byBlock.has(v.id)) {
+        v.body = toBody(byBlock.get(v.id), BODY_OPTS[v.blockType])
+        changed++
+      }
+      Object.values(v).forEach(walk)
+    }
+    walk(page.sections)
+    if (!changed) continue
+    await payload.update({ collection: 'pages', id: page.id, data: { sections: page.sections, _status: 'published' } as any, req })
+    payload.logger.info(`[b61] Moved ${changed} Content list(s) into the single Content editor on "${page.title}"`)
+  }
 }

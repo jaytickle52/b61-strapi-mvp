@@ -3,6 +3,7 @@ import type { Page } from '@/payload-types'
 import { asMedia, focusOf, imgProps } from '../../lib/media'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { Buttons, ContentBlocks, HeadingLines, revealAttr } from '../../kit/render/parts'
+import { fromBody } from '../../kit/body'
 import LiteVideo, { parseVideo } from '../../kit/render/LiteVideo'
 
 export type SplitBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Split' }>
@@ -101,7 +102,7 @@ export default function B61Split({ block, index = 0 }: { block: SplitBlock; inde
                   {s.text}
                 </p>
               ))}
-            <ContentBlocks blocks={block.contentBlocks as any} prefix="b61-split" ri={ri} />
+            <ContentBlocks blocks={fromBody(block.body)} prefix="b61-split" ri={ri} />
             <Buttons buttons={block.buttons as any} ri={ri} />
           </div>
 

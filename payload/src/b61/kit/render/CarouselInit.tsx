@@ -1,15 +1,17 @@
 'use client'
 import { useEffect, useRef } from 'react'
-// The plugin's carousel engine, unchanged: it defines window.B61Carousel.
-import './carousel.js'
 
-/** Wires the carousel this sits inside (Previous/Next, counter, progress, ARIA). */
+/**
+ * Wires the carousel this sits inside (Previous/Next, counter, progress, ARIA).
+ * The plugin's engine (carousel.js, unchanged) defines window.B61Carousel and
+ * loads in the browser only.
+ */
 export default function CarouselInit() {
   const ref = useRef<HTMLSpanElement>(null)
   useEffect(() => {
     const region = ref.current?.closest('.js-b61-car')
-    const api = (window as any).B61Carousel
-    if (region && api) api.init(region)
+    if (!region) return
+    import('./carousel.js').then(() => (window as any).B61Carousel?.init(region))
   }, [])
   return <span ref={ref} hidden />
 }

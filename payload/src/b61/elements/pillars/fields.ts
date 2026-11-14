@@ -1,3 +1,4 @@
+import { simpleEditor } from '../../kit/editors'
 import { defineElement, panel } from '../../kit/element'
 import { segmented, toggle } from '../../kit/controls'
 import { bandHeadFields, entranceField, eyebrowRuleField, headingAlignField, list, paddingFields, photo, surfaceField } from '../../kit/groups'
@@ -12,7 +13,7 @@ export const B61Pillars = defineElement({
     panel('Heading', bandHeadFields({ intro: true })),
     list('items', 'Tabs', 'Tab', [
       { name: 'title', label: 'Title', type: 'text', required: true },
-      { name: 'body', label: 'Description', type: 'richText' },
+      { name: 'body', label: 'Description', type: 'richText', editor: simpleEditor() },
       photo('image', 'Photo'),
     ]),
     { ...toggle('firstItemOpen', 'First tab open'), defaultValue: true } as any,

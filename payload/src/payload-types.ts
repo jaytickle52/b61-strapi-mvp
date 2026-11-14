@@ -253,57 +253,23 @@ export interface Page {
                 }[]
               | null;
             /**
-             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
              */
-            contentBlocks?:
-              | {
-                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
-                  body?: {
-                    root: {
-                      type: string;
-                      children: {
-                        type: any;
-                        version: number;
-                        [k: string]: unknown;
-                      }[];
-                      direction: ('ltr' | 'rtl') | null;
-                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                      indent: number;
-                      version: number;
-                    };
-                    [k: string]: unknown;
-                  } | null;
-                  text?: string | null;
-                  attribution?: string | null;
-                  photo?: (number | null) | Media;
-                  icon?:
-                    | (
-                        | 'dot'
-                        | 'check'
-                        | 'email'
-                        | 'phone'
-                        | 'location'
-                        | 'calendar'
-                        | 'clock'
-                        | 'link'
-                        | 'star'
-                        | 'heart'
-                        | 'book'
-                        | 'people'
-                        | 'cross'
-                        | 'school'
-                      )
-                    | null;
-                  hasLink?: boolean | null;
-                  link?: {
-                    type?: ('page' | 'url') | null;
-                    page?: (number | null) | Page;
-                    url?: string | null;
-                    newTab?: boolean | null;
-                  };
-                  id?: string | null;
-                }[]
-              | null;
+            body?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             buttons?:
               | {
                   label: string;
@@ -372,59 +338,23 @@ export interface Page {
                 }[]
               | null;
             /**
-             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
              */
-            contentBlocks?:
-              | {
-                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
-                  body?: {
-                    root: {
-                      type: string;
-                      children: {
-                        type: any;
-                        version: number;
-                        [k: string]: unknown;
-                      }[];
-                      direction: ('ltr' | 'rtl') | null;
-                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                      indent: number;
-                      version: number;
-                    };
-                    [k: string]: unknown;
-                  } | null;
-                  text?: string | null;
-                  attribution?: string | null;
-                  photo?: (number | null) | Media;
-                  icon?:
-                    | (
-                        | 'dot'
-                        | 'check'
-                        | 'email'
-                        | 'phone'
-                        | 'location'
-                        | 'calendar'
-                        | 'clock'
-                        | 'link'
-                        | 'star'
-                        | 'heart'
-                        | 'book'
-                        | 'people'
-                        | 'cross'
-                        | 'school'
-                      )
-                    | null;
-                  hasLink?: boolean | null;
-                  link?: {
-                    type?: ('page' | 'url') | null;
-                    page?: (number | null) | Page;
-                    url?: string | null;
-                    newTab?: boolean | null;
-                  };
-                  scale?: ('regular' | 'display') | null;
-                  divider?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
+            body?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             buttons?:
               | {
                   label: string;
@@ -924,57 +854,23 @@ export interface Page {
                                 }[]
                               | null;
                             /**
-                             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
                              */
-                            contentBlocks?:
-                              | {
-                                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
-                                  body?: {
-                                    root: {
-                                      type: string;
-                                      children: {
-                                        type: any;
-                                        version: number;
-                                        [k: string]: unknown;
-                                      }[];
-                                      direction: ('ltr' | 'rtl') | null;
-                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                                      indent: number;
-                                      version: number;
-                                    };
-                                    [k: string]: unknown;
-                                  } | null;
-                                  text?: string | null;
-                                  attribution?: string | null;
-                                  photo?: (number | null) | Media;
-                                  icon?:
-                                    | (
-                                        | 'dot'
-                                        | 'check'
-                                        | 'email'
-                                        | 'phone'
-                                        | 'location'
-                                        | 'calendar'
-                                        | 'clock'
-                                        | 'link'
-                                        | 'star'
-                                        | 'heart'
-                                        | 'book'
-                                        | 'people'
-                                        | 'cross'
-                                        | 'school'
-                                      )
-                                    | null;
-                                  hasLink?: boolean | null;
-                                  link?: {
-                                    type?: ('page' | 'url') | null;
-                                    page?: (number | null) | Page;
-                                    url?: string | null;
-                                    newTab?: boolean | null;
-                                  };
-                                  id?: string | null;
-                                }[]
-                              | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
                             buttons?:
                               | {
                                   label: string;
@@ -1043,59 +939,23 @@ export interface Page {
                                 }[]
                               | null;
                             /**
-                             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
                              */
-                            contentBlocks?:
-                              | {
-                                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
-                                  body?: {
-                                    root: {
-                                      type: string;
-                                      children: {
-                                        type: any;
-                                        version: number;
-                                        [k: string]: unknown;
-                                      }[];
-                                      direction: ('ltr' | 'rtl') | null;
-                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                                      indent: number;
-                                      version: number;
-                                    };
-                                    [k: string]: unknown;
-                                  } | null;
-                                  text?: string | null;
-                                  attribution?: string | null;
-                                  photo?: (number | null) | Media;
-                                  icon?:
-                                    | (
-                                        | 'dot'
-                                        | 'check'
-                                        | 'email'
-                                        | 'phone'
-                                        | 'location'
-                                        | 'calendar'
-                                        | 'clock'
-                                        | 'link'
-                                        | 'star'
-                                        | 'heart'
-                                        | 'book'
-                                        | 'people'
-                                        | 'cross'
-                                        | 'school'
-                                      )
-                                    | null;
-                                  hasLink?: boolean | null;
-                                  link?: {
-                                    type?: ('page' | 'url') | null;
-                                    page?: (number | null) | Page;
-                                    url?: string | null;
-                                    newTab?: boolean | null;
-                                  };
-                                  scale?: ('regular' | 'display') | null;
-                                  divider?: boolean | null;
-                                  id?: string | null;
-                                }[]
-                              | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
                             buttons?:
                               | {
                                   label: string;
@@ -1297,57 +1157,23 @@ export interface Page {
                                 }[]
                               | null;
                             /**
-                             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
                              */
-                            contentBlocks?:
-                              | {
-                                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
-                                  body?: {
-                                    root: {
-                                      type: string;
-                                      children: {
-                                        type: any;
-                                        version: number;
-                                        [k: string]: unknown;
-                                      }[];
-                                      direction: ('ltr' | 'rtl') | null;
-                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                                      indent: number;
-                                      version: number;
-                                    };
-                                    [k: string]: unknown;
-                                  } | null;
-                                  text?: string | null;
-                                  attribution?: string | null;
-                                  photo?: (number | null) | Media;
-                                  icon?:
-                                    | (
-                                        | 'dot'
-                                        | 'check'
-                                        | 'email'
-                                        | 'phone'
-                                        | 'location'
-                                        | 'calendar'
-                                        | 'clock'
-                                        | 'link'
-                                        | 'star'
-                                        | 'heart'
-                                        | 'book'
-                                        | 'people'
-                                        | 'cross'
-                                        | 'school'
-                                      )
-                                    | null;
-                                  hasLink?: boolean | null;
-                                  link?: {
-                                    type?: ('page' | 'url') | null;
-                                    page?: (number | null) | Page;
-                                    url?: string | null;
-                                    newTab?: boolean | null;
-                                  };
-                                  id?: string | null;
-                                }[]
-                              | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
                             buttons?:
                               | {
                                   label: string;
@@ -1416,59 +1242,23 @@ export interface Page {
                                 }[]
                               | null;
                             /**
-                             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
                              */
-                            contentBlocks?:
-                              | {
-                                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
-                                  body?: {
-                                    root: {
-                                      type: string;
-                                      children: {
-                                        type: any;
-                                        version: number;
-                                        [k: string]: unknown;
-                                      }[];
-                                      direction: ('ltr' | 'rtl') | null;
-                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                                      indent: number;
-                                      version: number;
-                                    };
-                                    [k: string]: unknown;
-                                  } | null;
-                                  text?: string | null;
-                                  attribution?: string | null;
-                                  photo?: (number | null) | Media;
-                                  icon?:
-                                    | (
-                                        | 'dot'
-                                        | 'check'
-                                        | 'email'
-                                        | 'phone'
-                                        | 'location'
-                                        | 'calendar'
-                                        | 'clock'
-                                        | 'link'
-                                        | 'star'
-                                        | 'heart'
-                                        | 'book'
-                                        | 'people'
-                                        | 'cross'
-                                        | 'school'
-                                      )
-                                    | null;
-                                  hasLink?: boolean | null;
-                                  link?: {
-                                    type?: ('page' | 'url') | null;
-                                    page?: (number | null) | Page;
-                                    url?: string | null;
-                                    newTab?: boolean | null;
-                                  };
-                                  scale?: ('regular' | 'display') | null;
-                                  divider?: boolean | null;
-                                  id?: string | null;
-                                }[]
-                              | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
                             buttons?:
                               | {
                                   label: string;
@@ -1549,59 +1339,23 @@ export interface Page {
                           }[]
                         | null;
                       /**
-                       * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                       * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
                        */
-                      contentBlocks?:
-                        | {
-                            type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
-                            body?: {
-                              root: {
-                                type: string;
-                                children: {
-                                  type: any;
-                                  version: number;
-                                  [k: string]: unknown;
-                                }[];
-                                direction: ('ltr' | 'rtl') | null;
-                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                                indent: number;
-                                version: number;
-                              };
-                              [k: string]: unknown;
-                            } | null;
-                            text?: string | null;
-                            attribution?: string | null;
-                            photo?: (number | null) | Media;
-                            icon?:
-                              | (
-                                  | 'dot'
-                                  | 'check'
-                                  | 'email'
-                                  | 'phone'
-                                  | 'location'
-                                  | 'calendar'
-                                  | 'clock'
-                                  | 'link'
-                                  | 'star'
-                                  | 'heart'
-                                  | 'book'
-                                  | 'people'
-                                  | 'cross'
-                                  | 'school'
-                                )
-                              | null;
-                            hasLink?: boolean | null;
-                            link?: {
-                              type?: ('page' | 'url') | null;
-                              page?: (number | null) | Page;
-                              url?: string | null;
-                              newTab?: boolean | null;
-                            };
-                            scale?: ('regular' | 'display') | null;
-                            divider?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
+                      body?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       buttons?:
                         | {
                             label: string;
@@ -1654,57 +1408,23 @@ export interface Page {
                           }[]
                         | null;
                       /**
-                       * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                       * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
                        */
-                      contentBlocks?:
-                        | {
-                            type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
-                            body?: {
-                              root: {
-                                type: string;
-                                children: {
-                                  type: any;
-                                  version: number;
-                                  [k: string]: unknown;
-                                }[];
-                                direction: ('ltr' | 'rtl') | null;
-                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                                indent: number;
-                                version: number;
-                              };
-                              [k: string]: unknown;
-                            } | null;
-                            text?: string | null;
-                            attribution?: string | null;
-                            photo?: (number | null) | Media;
-                            icon?:
-                              | (
-                                  | 'dot'
-                                  | 'check'
-                                  | 'email'
-                                  | 'phone'
-                                  | 'location'
-                                  | 'calendar'
-                                  | 'clock'
-                                  | 'link'
-                                  | 'star'
-                                  | 'heart'
-                                  | 'book'
-                                  | 'people'
-                                  | 'cross'
-                                  | 'school'
-                                )
-                              | null;
-                            hasLink?: boolean | null;
-                            link?: {
-                              type?: ('page' | 'url') | null;
-                              page?: (number | null) | Page;
-                              url?: string | null;
-                              newTab?: boolean | null;
-                            };
-                            id?: string | null;
-                          }[]
-                        | null;
+                      body?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       buttons?:
                         | {
                             label: string;
@@ -2245,56 +1965,23 @@ export interface Page {
                           }[]
                         | null;
                       /**
-                       * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                       * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
                        */
-                      contentBlocks?:
-                        | {
-                            type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
-                            body?: {
-                              root: {
-                                type: string;
-                                children: {
-                                  type: any;
-                                  version: number;
-                                  [k: string]: unknown;
-                                }[];
-                                direction: ('ltr' | 'rtl') | null;
-                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                                indent: number;
-                                version: number;
-                              };
-                              [k: string]: unknown;
-                            } | null;
-                            text?: string | null;
-                            attribution?: string | null;
-                            icon?:
-                              | (
-                                  | 'dot'
-                                  | 'check'
-                                  | 'email'
-                                  | 'phone'
-                                  | 'location'
-                                  | 'calendar'
-                                  | 'clock'
-                                  | 'link'
-                                  | 'star'
-                                  | 'heart'
-                                  | 'book'
-                                  | 'people'
-                                  | 'cross'
-                                  | 'school'
-                                )
-                              | null;
-                            hasLink?: boolean | null;
-                            link?: {
-                              type?: ('page' | 'url') | null;
-                              page?: (number | null) | Page;
-                              url?: string | null;
-                              newTab?: boolean | null;
-                            };
-                            id?: string | null;
-                          }[]
-                        | null;
+                      body?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       buttons?:
                         | {
                             label: string;
@@ -2445,59 +2132,23 @@ export interface Page {
                           }[]
                         | null;
                       /**
-                       * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                       * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
                        */
-                      contentBlocks?:
-                        | {
-                            type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
-                            body?: {
-                              root: {
-                                type: string;
-                                children: {
-                                  type: any;
-                                  version: number;
-                                  [k: string]: unknown;
-                                }[];
-                                direction: ('ltr' | 'rtl') | null;
-                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                                indent: number;
-                                version: number;
-                              };
-                              [k: string]: unknown;
-                            } | null;
-                            text?: string | null;
-                            attribution?: string | null;
-                            photo?: (number | null) | Media;
-                            icon?:
-                              | (
-                                  | 'dot'
-                                  | 'check'
-                                  | 'email'
-                                  | 'phone'
-                                  | 'location'
-                                  | 'calendar'
-                                  | 'clock'
-                                  | 'link'
-                                  | 'star'
-                                  | 'heart'
-                                  | 'book'
-                                  | 'people'
-                                  | 'cross'
-                                  | 'school'
-                                )
-                              | null;
-                            hasLink?: boolean | null;
-                            link?: {
-                              type?: ('page' | 'url') | null;
-                              page?: (number | null) | Page;
-                              url?: string | null;
-                              newTab?: boolean | null;
-                            };
-                            scale?: ('regular' | 'display') | null;
-                            divider?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
+                      body?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       buttons?:
                         | {
                             label: string;
@@ -2550,57 +2201,23 @@ export interface Page {
                           }[]
                         | null;
                       /**
-                       * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                       * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
                        */
-                      contentBlocks?:
-                        | {
-                            type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
-                            body?: {
-                              root: {
-                                type: string;
-                                children: {
-                                  type: any;
-                                  version: number;
-                                  [k: string]: unknown;
-                                }[];
-                                direction: ('ltr' | 'rtl') | null;
-                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                                indent: number;
-                                version: number;
-                              };
-                              [k: string]: unknown;
-                            } | null;
-                            text?: string | null;
-                            attribution?: string | null;
-                            photo?: (number | null) | Media;
-                            icon?:
-                              | (
-                                  | 'dot'
-                                  | 'check'
-                                  | 'email'
-                                  | 'phone'
-                                  | 'location'
-                                  | 'calendar'
-                                  | 'clock'
-                                  | 'link'
-                                  | 'star'
-                                  | 'heart'
-                                  | 'book'
-                                  | 'people'
-                                  | 'cross'
-                                  | 'school'
-                                )
-                              | null;
-                            hasLink?: boolean | null;
-                            link?: {
-                              type?: ('page' | 'url') | null;
-                              page?: (number | null) | Page;
-                              url?: string | null;
-                              newTab?: boolean | null;
-                            };
-                            id?: string | null;
-                          }[]
-                        | null;
+                      body?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       buttons?:
                         | {
                             label: string;
@@ -3141,56 +2758,23 @@ export interface Page {
                           }[]
                         | null;
                       /**
-                       * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+                       * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
                        */
-                      contentBlocks?:
-                        | {
-                            type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
-                            body?: {
-                              root: {
-                                type: string;
-                                children: {
-                                  type: any;
-                                  version: number;
-                                  [k: string]: unknown;
-                                }[];
-                                direction: ('ltr' | 'rtl') | null;
-                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                                indent: number;
-                                version: number;
-                              };
-                              [k: string]: unknown;
-                            } | null;
-                            text?: string | null;
-                            attribution?: string | null;
-                            icon?:
-                              | (
-                                  | 'dot'
-                                  | 'check'
-                                  | 'email'
-                                  | 'phone'
-                                  | 'location'
-                                  | 'calendar'
-                                  | 'clock'
-                                  | 'link'
-                                  | 'star'
-                                  | 'heart'
-                                  | 'book'
-                                  | 'people'
-                                  | 'cross'
-                                  | 'school'
-                                )
-                              | null;
-                            hasLink?: boolean | null;
-                            link?: {
-                              type?: ('page' | 'url') | null;
-                              page?: (number | null) | Page;
-                              url?: string | null;
-                              newTab?: boolean | null;
-                            };
-                            id?: string | null;
-                          }[]
-                        | null;
+                      body?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       buttons?:
                         | {
                             label: string;
@@ -3315,56 +2899,23 @@ export interface Page {
                 }[]
               | null;
             /**
-             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
+             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
              */
-            contentBlocks?:
-              | {
-                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
-                  body?: {
-                    root: {
-                      type: string;
-                      children: {
-                        type: any;
-                        version: number;
-                        [k: string]: unknown;
-                      }[];
-                      direction: ('ltr' | 'rtl') | null;
-                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                      indent: number;
-                      version: number;
-                    };
-                    [k: string]: unknown;
-                  } | null;
-                  text?: string | null;
-                  attribution?: string | null;
-                  icon?:
-                    | (
-                        | 'dot'
-                        | 'check'
-                        | 'email'
-                        | 'phone'
-                        | 'location'
-                        | 'calendar'
-                        | 'clock'
-                        | 'link'
-                        | 'star'
-                        | 'heart'
-                        | 'book'
-                        | 'people'
-                        | 'cross'
-                        | 'school'
-                      )
-                    | null;
-                  hasLink?: boolean | null;
-                  link?: {
-                    type?: ('page' | 'url') | null;
-                    page?: (number | null) | Page;
-                    url?: string | null;
-                    newTab?: boolean | null;
-                  };
-                  id?: string | null;
-                }[]
-              | null;
+            body?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             buttons?:
               | {
                   label: string;
@@ -3944,26 +3495,7 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     id?: T;
                   };
-              contentBlocks?:
-                | T
-                | {
-                    type?: T;
-                    body?: T;
-                    text?: T;
-                    attribution?: T;
-                    photo?: T;
-                    icon?: T;
-                    hasLink?: T;
-                    link?:
-                      | T
-                      | {
-                          type?: T;
-                          page?: T;
-                          url?: T;
-                          newTab?: T;
-                        };
-                    id?: T;
-                  };
+              body?: T;
               buttons?:
                 | T
                 | {
@@ -4028,28 +3560,7 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     id?: T;
                   };
-              contentBlocks?:
-                | T
-                | {
-                    type?: T;
-                    body?: T;
-                    text?: T;
-                    attribution?: T;
-                    photo?: T;
-                    icon?: T;
-                    hasLink?: T;
-                    link?:
-                      | T
-                      | {
-                          type?: T;
-                          page?: T;
-                          url?: T;
-                          newTab?: T;
-                        };
-                    scale?: T;
-                    divider?: T;
-                    id?: T;
-                  };
+              body?: T;
               buttons?:
                 | T
                 | {
@@ -4432,26 +3943,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       id?: T;
                                     };
-                                contentBlocks?:
-                                  | T
-                                  | {
-                                      type?: T;
-                                      body?: T;
-                                      text?: T;
-                                      attribution?: T;
-                                      photo?: T;
-                                      icon?: T;
-                                      hasLink?: T;
-                                      link?:
-                                        | T
-                                        | {
-                                            type?: T;
-                                            page?: T;
-                                            url?: T;
-                                            newTab?: T;
-                                          };
-                                      id?: T;
-                                    };
+                                body?: T;
                                 buttons?:
                                   | T
                                   | {
@@ -4516,28 +4008,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       id?: T;
                                     };
-                                contentBlocks?:
-                                  | T
-                                  | {
-                                      type?: T;
-                                      body?: T;
-                                      text?: T;
-                                      attribution?: T;
-                                      photo?: T;
-                                      icon?: T;
-                                      hasLink?: T;
-                                      link?:
-                                        | T
-                                        | {
-                                            type?: T;
-                                            page?: T;
-                                            url?: T;
-                                            newTab?: T;
-                                          };
-                                      scale?: T;
-                                      divider?: T;
-                                      id?: T;
-                                    };
+                                body?: T;
                                 buttons?:
                                   | T
                                   | {
@@ -4690,26 +4161,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       id?: T;
                                     };
-                                contentBlocks?:
-                                  | T
-                                  | {
-                                      type?: T;
-                                      body?: T;
-                                      text?: T;
-                                      attribution?: T;
-                                      photo?: T;
-                                      icon?: T;
-                                      hasLink?: T;
-                                      link?:
-                                        | T
-                                        | {
-                                            type?: T;
-                                            page?: T;
-                                            url?: T;
-                                            newTab?: T;
-                                          };
-                                      id?: T;
-                                    };
+                                body?: T;
                                 buttons?:
                                   | T
                                   | {
@@ -4774,28 +4226,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       id?: T;
                                     };
-                                contentBlocks?:
-                                  | T
-                                  | {
-                                      type?: T;
-                                      body?: T;
-                                      text?: T;
-                                      attribution?: T;
-                                      photo?: T;
-                                      icon?: T;
-                                      hasLink?: T;
-                                      link?:
-                                        | T
-                                        | {
-                                            type?: T;
-                                            page?: T;
-                                            url?: T;
-                                            newTab?: T;
-                                          };
-                                      scale?: T;
-                                      divider?: T;
-                                      id?: T;
-                                    };
+                                body?: T;
                                 buttons?:
                                   | T
                                   | {
@@ -4871,28 +4302,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 id?: T;
                               };
-                          contentBlocks?:
-                            | T
-                            | {
-                                type?: T;
-                                body?: T;
-                                text?: T;
-                                attribution?: T;
-                                photo?: T;
-                                icon?: T;
-                                hasLink?: T;
-                                link?:
-                                  | T
-                                  | {
-                                      type?: T;
-                                      page?: T;
-                                      url?: T;
-                                      newTab?: T;
-                                    };
-                                scale?: T;
-                                divider?: T;
-                                id?: T;
-                              };
+                          body?: T;
                           buttons?:
                             | T
                             | {
@@ -4944,26 +4354,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 id?: T;
                               };
-                          contentBlocks?:
-                            | T
-                            | {
-                                type?: T;
-                                body?: T;
-                                text?: T;
-                                attribution?: T;
-                                photo?: T;
-                                icon?: T;
-                                hasLink?: T;
-                                link?:
-                                  | T
-                                  | {
-                                      type?: T;
-                                      page?: T;
-                                      url?: T;
-                                      newTab?: T;
-                                    };
-                                id?: T;
-                              };
+                          body?: T;
                           buttons?:
                             | T
                             | {
@@ -5367,25 +4758,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 id?: T;
                               };
-                          contentBlocks?:
-                            | T
-                            | {
-                                type?: T;
-                                body?: T;
-                                text?: T;
-                                attribution?: T;
-                                icon?: T;
-                                hasLink?: T;
-                                link?:
-                                  | T
-                                  | {
-                                      type?: T;
-                                      page?: T;
-                                      url?: T;
-                                      newTab?: T;
-                                    };
-                                id?: T;
-                              };
+                          body?: T;
                           buttons?:
                             | T
                             | {
@@ -5520,28 +4893,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 id?: T;
                               };
-                          contentBlocks?:
-                            | T
-                            | {
-                                type?: T;
-                                body?: T;
-                                text?: T;
-                                attribution?: T;
-                                photo?: T;
-                                icon?: T;
-                                hasLink?: T;
-                                link?:
-                                  | T
-                                  | {
-                                      type?: T;
-                                      page?: T;
-                                      url?: T;
-                                      newTab?: T;
-                                    };
-                                scale?: T;
-                                divider?: T;
-                                id?: T;
-                              };
+                          body?: T;
                           buttons?:
                             | T
                             | {
@@ -5593,26 +4945,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 id?: T;
                               };
-                          contentBlocks?:
-                            | T
-                            | {
-                                type?: T;
-                                body?: T;
-                                text?: T;
-                                attribution?: T;
-                                photo?: T;
-                                icon?: T;
-                                hasLink?: T;
-                                link?:
-                                  | T
-                                  | {
-                                      type?: T;
-                                      page?: T;
-                                      url?: T;
-                                      newTab?: T;
-                                    };
-                                id?: T;
-                              };
+                          body?: T;
                           buttons?:
                             | T
                             | {
@@ -6016,25 +5349,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 id?: T;
                               };
-                          contentBlocks?:
-                            | T
-                            | {
-                                type?: T;
-                                body?: T;
-                                text?: T;
-                                attribution?: T;
-                                icon?: T;
-                                hasLink?: T;
-                                link?:
-                                  | T
-                                  | {
-                                      type?: T;
-                                      page?: T;
-                                      url?: T;
-                                      newTab?: T;
-                                    };
-                                id?: T;
-                              };
+                          body?: T;
                           buttons?:
                             | T
                             | {
@@ -6147,25 +5462,7 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     id?: T;
                   };
-              contentBlocks?:
-                | T
-                | {
-                    type?: T;
-                    body?: T;
-                    text?: T;
-                    attribution?: T;
-                    icon?: T;
-                    hasLink?: T;
-                    link?:
-                      | T
-                      | {
-                          type?: T;
-                          page?: T;
-                          url?: T;
-                          newTab?: T;
-                        };
-                    id?: T;
-                  };
+              body?: T;
               buttons?:
                 | T
                 | {

@@ -1,3 +1,4 @@
+import { simpleEditor } from '../../kit/editors'
 import { defineElement, panel } from '../../kit/element'
 import { dropdown, segmented, step, toggle } from '../../kit/controls'
 import { bandHeadFields, buttonsField, entranceField, eyebrowRuleField, headingAlignField, list, paddingFields, surfaceField } from '../../kit/groups'
@@ -17,7 +18,7 @@ export const B61Accordion = defineElement({
           { name: 'subtitle', label: 'Meta label', type: 'text', admin: { width: '35%', placeholder: 'e.g. Fall' } },
         ],
       },
-      { name: 'body', label: 'Body', type: 'richText' },
+      { name: 'body', label: 'Body', type: 'richText', editor: simpleEditor() },
     ]),
     buttonsField(),
   ],

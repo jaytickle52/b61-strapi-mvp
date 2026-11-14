@@ -1,3 +1,4 @@
+import { toBody } from './kit/body'
 import type { Payload, PayloadRequest } from 'payload'
 import sharp from 'sharp'
 
@@ -163,13 +164,13 @@ export function demoSplits(opts: { name: string; mission: string; phone?: string
         { text: 'Why families', emphasize: false },
         { text: `choose ${short}`, emphasize: true },
       ],
-      contentBlocks: [
+      body: toBody([
         { type: 'body', body: para(opts.mission) },
         { type: 'emphasis', text: 'Every child known, every day.' },
         ...(opts.phone ? [{ type: 'iconrow', icon: 'phone', text: opts.phone, hasLink: true, link: { type: 'url', url: `tel:${opts.phone.replace(/[^0-9+]/g, '')}` } }] : []),
         ...(opts.email ? [{ type: 'iconrow', icon: 'email', text: opts.email, hasLink: true, link: { type: 'url', url: `mailto:${opts.email}` } }] : []),
         ...(opts.address ? [{ type: 'iconrow', icon: 'location', text: opts.address.replace(/\n/g, ', ') }] : []),
-      ],
+      ]),
       buttons: [{ label: 'Schedule a tour', link: { type: 'url', url: '/visit' }, variant: 'primary' }],
       media: 'photo',
       image: img3,
@@ -192,10 +193,10 @@ export function demoSplits(opts: { name: string; mission: string; phone?: string
         { text: 'A day in the life', emphasize: false },
         { text: 'of our students', emphasize: true },
       ],
-      contentBlocks: [
+      body: toBody([
         { type: 'body', body: para('Mornings start with chapel and close with friends on the field. In between: real books, hands-on science and teachers who know every student by name.') },
         { type: 'quote', text: 'Our kids come home talking about what they learned, not just what they did.', attribution: 'A current parent' },
-      ],
+      ]),
       buttons: [{ label: 'See our programs', link: { type: 'url', url: '/programs' }, variant: 'link' }],
       media: 'gallery',
       images: [{ image: img2 }, { image: img4 }, { image: img1 }, { image: img3 }],
@@ -232,7 +233,7 @@ export function demoProse(opts: { heading?: string; body?: unknown; phone?: stri
     eyebrow: 'Plan your visit',
     headingLevel: 'auto',
     lines: [{ text: opts.heading || 'How to schedule', emphasize: false }],
-    contentBlocks: [
+    body: toBody([
       {
         type: 'body',
         body:
@@ -241,7 +242,7 @@ export function demoProse(opts: { heading?: string; body?: unknown; phone?: stri
       },
       { type: 'emphasis', scale: 'display', text: 'Most families know within the first ten minutes.' },
       ...rows.map((r, i) => (i === 0 ? { ...r, divider: true } : r)),
-    ],
+    ], { emphasisScale: true, dividers: true }),
     headPosition: 'beside',
     textAlign: 'left',
     position: 'center',
@@ -273,7 +274,7 @@ export function demoCta(opts: {
     eyebrow: 'Admissions',
     headingLevel: 'auto',
     lines: [{ text: opts.heading || 'See it for yourself', emphasize: false }],
-    contentBlocks: [{ type: 'body', body: para(opts.body || 'The best way to know if we are the right fit is to visit.') }],
+    body: toBody([{ type: 'body', body: para(opts.body || 'The best way to know if we are the right fit is to visit.') }], { quotePhoto: false }),
     buttons: [
       { label: opts.buttonLabel || 'Schedule a tour', link: { type: 'url', url: opts.buttonUrl || '/visit' }, variant: 'primary' },
       { label: 'Ask a question', link: { type: 'url', url: '/visit' }, variant: 'light' },

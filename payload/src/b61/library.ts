@@ -1,3 +1,4 @@
+import { toBody } from './kit/body'
 import type { Payload } from 'payload'
 import { cardsFrom, ensureDemoImages, statsFrom } from './demo'
 
@@ -20,7 +21,7 @@ const para = (text: string) => ({
 
 const label = (name: string, note: string) => ({
   blockType: 'b61Prose', eyebrow: 'Element', lines: [{ text: name }], headingLevel: 'h2',
-  contentBlocks: [{ type: 'body', body: para(note) }], padTop: 'normal', padBottom: 'tight', surface: 'none',
+  body: toBody([{ type: 'body', body: para(note) }], { emphasisScale: true, dividers: true }), padTop: 'normal', padBottom: 'tight', surface: 'none',
 })
 
 export async function syncElementLibrary(payload: Payload) {
@@ -70,8 +71,8 @@ export async function syncElementLibrary(payload: Payload) {
     {
       blockType: 'b61Tabs', lines: [{ text: 'A path for every stage' }], tabPosition: 'top', surface: 'soft',
       tabs: [
-        { label: 'Grammar School', content: [{ blockType: 'b61Prose', headingLevel: 'h3', lines: [{ text: 'Wonder and memory' }], contentBlocks: [{ type: 'body', body: para('Songs, chants and stories build a store of knowledge and a love of learning.') }], padTop: 'none', padBottom: 'none' }] },
-        { label: 'Logic School', content: [{ blockType: 'b61Split', headingLevel: 'h3', lines: [{ text: 'Asking why' }], media: 'photo', image: pic(2), contentBlocks: [{ type: 'body', body: para('Students learn to reason, argue fairly and follow an idea to its source.') }], padTop: 'none', padBottom: 'none' }] },
+        { label: 'Grammar School', content: [{ blockType: 'b61Prose', headingLevel: 'h3', lines: [{ text: 'Wonder and memory' }], body: toBody([{ type: 'body', body: para('Songs, chants and stories build a store of knowledge and a love of learning.') }], { emphasisScale: true, dividers: true }), padTop: 'none', padBottom: 'none' }] },
+        { label: 'Logic School', content: [{ blockType: 'b61Split', headingLevel: 'h3', lines: [{ text: 'Asking why' }], media: 'photo', image: pic(2), body: toBody([{ type: 'body', body: para('Students learn to reason, argue fairly and follow an idea to its source.') }]), padTop: 'none', padBottom: 'none' }] },
       ],
     },
     label('Pillars', 'Feature tabs with a photo for each.'),
@@ -95,7 +96,7 @@ export async function syncElementLibrary(payload: Payload) {
     label('Section', 'A band that holds other elements, here with a side column holding a Rail.'),
     {
       blockType: 'b61Section', columns: 'rail-right', surface: 'soft',
-      content: [{ blockType: 'b61Prose', lines: [{ text: 'Admissions at a glance' }], contentBlocks: [{ type: 'body', body: para('Applications open each fall for the following year. Most families visit, apply, and then spend a morning in class with us.') }], padTop: 'none', padBottom: 'none' }],
+      content: [{ blockType: 'b61Prose', lines: [{ text: 'Admissions at a glance' }], body: toBody([{ type: 'body', body: para('Applications open each fall for the following year. Most families visit, apply, and then spend a morning in class with us.') }], { emphasisScale: true, dividers: true }), padTop: 'none', padBottom: 'none' }],
       side: [{ blockType: 'b61Rail', buttons: [{ label: 'Apply now', variant: 'primary', link: go('admissions'), fullWidth: true }], linksLabel: 'Keep exploring', links: [{ label: 'Tuition', link: go('tuition') }, { label: 'Visit', link: go('visit') }] }],
     },
     label('Card Grid', 'Hand-written cards, or filled from Programs, Events, News or Staff.'),
