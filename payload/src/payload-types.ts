@@ -237,36 +237,123 @@ export interface Page {
             blockType: 'b61Hero';
           }
         | {
-            heading: string;
-            body?: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            } | null;
-            image?: (number | null) | Media;
-            imagePosition?: ('left' | 'right') | null;
+            eyebrow?: string | null;
+            lines?:
+              | {
+                  text: string;
+                  emphasize?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
             /**
-             * Background color for this section
+             * Body copy, emphasis lines, pull quotes and icon rows, in any order.
              */
-            tone?: ('light' | 'muted' | 'brand' | 'dark') | null;
-            button?: {
-              label?: string | null;
-              url?: string | null;
-              style?: ('primary' | 'secondary' | 'link') | null;
-            };
+            contentBlocks?:
+              | {
+                  type?: ('body' | 'emphasis' | 'quote' | 'iconrow') | null;
+                  body?: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: any;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  } | null;
+                  text?: string | null;
+                  attribution?: string | null;
+                  photo?: (number | null) | Media;
+                  icon?:
+                    | (
+                        | 'dot'
+                        | 'check'
+                        | 'email'
+                        | 'phone'
+                        | 'location'
+                        | 'calendar'
+                        | 'clock'
+                        | 'link'
+                        | 'star'
+                        | 'heart'
+                        | 'book'
+                        | 'people'
+                        | 'cross'
+                        | 'school'
+                      )
+                    | null;
+                  hasLink?: boolean | null;
+                  link?: {
+                    type?: ('page' | 'url') | null;
+                    page?: (number | null) | Page;
+                    url?: string | null;
+                    newTab?: boolean | null;
+                  };
+                  id?: string | null;
+                }[]
+              | null;
+            buttons?:
+              | {
+                  label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  link?: {
+                    type?: ('page' | 'url') | null;
+                    page?: (number | null) | Page;
+                    url?: string | null;
+                    newTab?: boolean | null;
+                  };
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            media?: ('photo' | 'gallery' | 'video') | null;
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            image?: (number | null) | Media;
+            caption?: string | null;
+            images?:
+              | {
+                  image: number | Media;
+                  caption?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            columns?: ('1' | '2' | '3') | null;
+            /**
+             * YouTube or Vimeo. The player loads only when someone presses play.
+             */
+            video?: string | null;
+            imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+            imageSide?: ('left' | 'right') | null;
+            verticalPosition?: ('top' | 'center') | null;
+            stackOrder?: ('text' | 'media') | null;
+            columnHeight?: ('fit' | 'fill') | null;
+            overlap?: boolean | null;
+            headingAlign?: ('left' | 'center') | null;
+            columnBalance?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+            frameColor?: ('primary' | 'secondary' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
             id?: string | null;
             blockName?: string | null;
-            blockType: 'split';
+            blockType: 'b61Split';
           }
         | {
             heading?: string | null;
@@ -819,21 +906,87 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
-        split?:
+        b61Split?:
           | T
           | {
-              heading?: T;
-              body?: T;
-              image?: T;
-              imagePosition?: T;
-              tone?: T;
-              button?:
+              eyebrow?: T;
+              lines?:
+                | T
+                | {
+                    text?: T;
+                    emphasize?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              contentBlocks?:
+                | T
+                | {
+                    type?: T;
+                    body?: T;
+                    text?: T;
+                    attribution?: T;
+                    photo?: T;
+                    icon?: T;
+                    hasLink?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                          newTab?: T;
+                        };
+                    id?: T;
+                  };
+              buttons?:
                 | T
                 | {
                     label?: T;
-                    url?: T;
-                    style?: T;
+                    variant?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                          newTab?: T;
+                        };
+                    fullWidth?: T;
+                    id?: T;
                   };
+              media?: T;
+              image?: T;
+              caption?: T;
+              images?:
+                | T
+                | {
+                    image?: T;
+                    caption?: T;
+                    id?: T;
+                  };
+              columns?: T;
+              video?: T;
+              imageShape?: T;
+              imageSide?: T;
+              verticalPosition?: T;
+              stackOrder?: T;
+              columnHeight?: T;
+              overlap?: T;
+              headingAlign?: T;
+              columnBalance?: T;
+              padTop?: T;
+              padBottom?: T;
+              surface?: T;
+              textPanel?: T;
+              frameColor?: T;
+              eyebrowRule?: T;
+              entrance?: T;
               id?: T;
               blockName?: T;
             };

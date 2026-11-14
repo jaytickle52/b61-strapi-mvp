@@ -1,6 +1,7 @@
-import { Fragment, type CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 import type { Page } from '@/payload-types'
-import { asMedia, focusOf, imgProps, resolveLink } from '../../lib/media'
+import { asMedia, focusOf, imgProps } from '../../lib/media'
+import { Buttons, HeadingLines, revealAttr } from '../../kit/render/parts'
 import HeroBehavior from './HeroBehavior'
 import { resolveHeadingLevel } from '../../kit/groups'
 
@@ -24,7 +25,7 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
   const pt = block.padTop ?? 'normal'
   const pb = block.padBottom ?? 'normal'
   const rv = block.entrance === 'off' ? 'off' : 'on'
-  const ri = rv === 'on' ? { 'data-b61-reveal-item': '' } : {}
+  const ri = revealAttr(block.entrance)
   const Heading = resolveHeadingLevel(block.headingLevel, index)
 
   const lines = (block.lines ?? []).filter((l) => l?.text)
@@ -109,20 +110,7 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
         </span>
       )}
 
-      {lines.length > 0 && (
-        <Heading className="b61-hero__title" id={headingId}>
-          {lines.map((l, i) => (
-            <Fragment key={l.id ?? i}>
-              {/* A real space between lines keeps the accessible name readable:
-                  "Headline here, emphasised there", not "Headline here,emphasised there". */}
-              {i > 0 && ' '}
-              <span className={`b61-hero__title-line${l.emphasize ? ' b61-hero__title-line--em' : ''}`} {...ri}>
-                {l.text}
-              </span>
-            </Fragment>
-          ))}
-        </Heading>
-      )}
+      <HeadingLines as={Heading} id={headingId} className="b61-hero__title" lineClass="b61-hero__title-line" lines={lines} ri={ri} />
 
       {introStyle === 'meta' ? (
         metaItems.length > 0 && (
@@ -142,31 +130,7 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
         )
       )}
 
-      {buttons.length > 0 && (
-        <div className="b61-hero__actions" {...ri}>
-          {buttons.map((b, i) => {
-            const variant = b.variant ?? 'primary'
-            const full = variant !== 'link' && b.fullWidth
-            const cls = variant === 'link' ? 'b61-link' : `b61-btn b61-btn--${variant}${full ? ' b61-btn--block' : ''}`
-            const { href, newTab } = resolveLink(b.link)
-            return (
-              <a
-                key={b.id ?? i}
-                className={cls}
-                href={href ?? undefined}
-                {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              >
-                {b.label}
-                {variant === 'link' && (
-                  <span className="b61-link-arrow" aria-hidden="true">
-                    &rarr;
-                  </span>
-                )}
-              </a>
-            )
-          })}
-        </div>
-      )}
+      <Buttons buttons={buttons as any} className="b61-hero__actions" ri={ri} />
     </>
   )
 

@@ -1,0 +1,773 @@
+/* ---------------------------------------------------------------------------
+   DIALS
+
+   Element-specific dials only. Buttons, stack rhythm, surfaces and the focus
+   ring live in assets/components.css now and read the shared --b61-btn-* and
+   --b61-focus-* site tokens; what remains here is what only a split needs.
+
+   Nothing paints a colour, weight or border directly, so a
+   site re-skins any variant by redeclaring a handful of variables - in
+   Breakdance > Variables, in a child theme, or on a wrapper class - and never
+   edits this file.
+
+   Declared on the REGION, not the element root: surface sets the --b61-on-bg-*
+   globals on the region, and a var() inside a custom property resolves against
+   the element the property is declared on. On the root it could not see them.
+
+   Declared inside :where() so the block carries ZERO specificity: a site rule
+   beats it, and so does a Breakdance variable on any ancestor.
+
+   "Secondary is an outline" is a DEFAULT, not a decision baked into markup.
+   --------------------------------------------------------------------------- */
+:where(.b61-split__region) {
+  /* emphasis - the single non-body line type */
+  /* 1.47.0: emphasis was body size in semibold red (4.97:1 on white on
+     Potomac), set apart by colour alone. It now steps up the type scale and
+     reads in ink, and the red moves to a short rule above it, where it
+     marks the line without the words depending on its contrast. */
+  --b61-split-emphasis-font: var(--b61-font-display);
+  --b61-split-emphasis-size: var(--b61-text-h3);
+  --b61-split-emphasis-leading: 1.35;
+  --b61-split-emphasis-weight: 500;
+  --b61-split-emphasis-rule-color: var(--b61-accent);
+  --b61-split-emphasis-rule-length: 2.5rem;
+  --b61-split-emphasis-rule-gap: var(--b61-space-sm);
+
+  /* media */
+  --b61-split-media-gap: var(--b61-space-sm);
+  --b61-split-photo-height: 300px;
+  --b61-split-photo-height-sm: 240px;
+  --b61-split-frame-min-height: 420px;
+
+  /* Empty-slot placeholder (builder only) */
+  --b61-split-placeholder-ink: var(--b61-muted);
+  --b61-split-placeholder-bg: rgb(var(--b61-scrim-rgb) / 0.05);
+  --b61-split-placeholder-size: 30%;
+
+  /* rhythm and rule geometry - these were literals inherited from Split. Every
+     one is a decision a site might want to make, so every one is a dial. */
+  --b61-split-col-gap: clamp(32px, 5vw, 72px);
+  --b61-split-col-gap-sm: 40px;
+  --b61-split-eyebrow-rule-gap: 0.75rem;
+  --b61-split-eyebrow-space: 1.125rem;
+  --b61-split-heading-space: 1.25rem;
+  --b61-split-body-para-space: 0.875rem;
+
+
+}
+
+.b61-split {
+  width: 100%;
+  align-self: stretch;
+  text-align: left;
+}
+
+/* The ratio is expressed as a text share and a media share, not as column 1
+   and column 2 — because `order` (below) swaps which item lands in which
+   column. Defining it positionally meant "Wide text" produced a wide *image*
+   whenever the image was on the left. */
+/* Split was the only section-level element with no band padding at all, so it
+   sat flush against its neighbours. The region carries it now, on the same
+   tokens as every other band. */
+.b61-split__region {
+  --band-pt: var(--b61-pad-block);
+  --band-pb: var(--b61-pad-block);
+  padding: var(--band-pt) var(--b61-pad-inline) var(--band-pb);
+}
+
+.b61-split__region--pt-tight { --band-pt: var(--b61-pad-block-tight); }
+.b61-split__region--pt-none { --band-pt: 0; }
+.b61-split__region--pb-tight { --band-pb: var(--b61-pad-block-tight); }
+.b61-split__region--pb-none { --band-pb: 0; }
+
+.b61-split__inner {
+  max-width: var(--b61-width);
+  margin-inline: auto;
+  /* 1.71.0: the text share reads the Column balance step when set; the media
+     share is the 1fr it is measured against. The legacy ratio classes below
+     fall back to their old shares, so an unset slider renders as before. */
+  --split-text: var(--b61-split-balance, 1fr);
+  --split-media: 1fr;
+  display: grid;
+  grid-template-columns: var(--split-text) var(--split-media);
+  gap: var(--b61-split-col-gap);
+  align-items: center;
+}
+
+.b61-split--vtop {
+  align-items: start;
+}
+
+.b61-split--wide-text {
+  --split-text: var(--b61-split-balance, 2fr);
+  --split-media: 1fr;
+}
+
+/* 0.5fr : 1fr is the old 1fr : 2fr, restated against a fixed media share so
+   a Column balance step can take over the text share alone. */
+.b61-split--wide-media {
+  --split-text: var(--b61-split-balance, 0.5fr);
+  --split-media: 1fr;
+}
+
+/* WHICH SIDE THE IMAGE SITS ON IS A DIAL (1.66.0), not a class, because a
+   class is the same at every width. The shares stay semantic either way; the
+   columns and the flow order swap to match. css.twig publishes the pair for
+   whichever breakpoints the author set, and the fallbacks here are image-right
+   -- so an instance that never touched the control emits nothing and renders
+   as it always has. The class is still emitted as a styling hook and still
+   carries the base value. */
+.b61-split__inner {
+  grid-template-columns: var(--b61-split-cols, var(--split-text) var(--split-media));
+}
+
+.b61-split__text {
+  order: var(--b61-split-text-order, 1);
+}
+
+.b61-split__media {
+  order: var(--b61-split-media-order, 2);
+}
+
+.b61-split__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--b61-split-eyebrow-rule-gap);
+  font-family: var(--b61-eyebrow-font);
+  font-size: var(--b61-eyebrow-size);
+  font-weight: var(--b61-eyebrow-weight);
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: var(--b61-eyebrow-case);
+  color: var(--b61-on-bg-accent, var(--b61-accent-text));
+  margin: 0 0 var(--b61-split-eyebrow-space);
+}
+
+.b61-split__eyebrow::before {
+  content: "";
+  width: var(--b61-eyebrow-rule-width, 32px);
+  height: var(--b61-eyebrow-rule-thickness);
+  background: var(--b61-eyebrow-rule-color, var(--b61-on-bg-line, var(--b61-accent)));
+  display: var(--b61-eyebrow-rule);
+}
+
+.b61-split__heading {
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-split-heading-size);
+  line-height: 1.18;
+  color: var(--b61-on-bg-ink, var(--b61-ink));
+  margin: 0 0 var(--b61-split-heading-space);
+}
+
+/* Accent word: <em> inside the heading. Resolves through --b61-on-bg-accent so
+   a dark band (utilities .b61-band--dark) turns it gold and a light band red. */
+.b61-split__heading em {
+  font-style: italic;
+  color: var(--b61-on-bg-accent, var(--b61-heading-accent));
+}
+
+/* Pull quote between heading and body (Academics splits): italic display face,
+   thin gold rule on the left, small-caps sans attribution. The same rules cover
+   a blockquote typed into the rich-text body, so editors get one look either
+   way. Colours resolve through the band globals first. */
+.b61-split__quote,
+.b61-split__body blockquote {
+  margin: 0;
+  padding: var(--b61-space-2xs) 0 var(--b61-space-2xs) var(--b61-space-lg);
+  border: 0;
+  border-left: var(--b61-split-quote-rule-width, var(--b61-frame-width)) solid var(--b61-split-quote-rule, var(--b61-secondary));
+  font-family: var(--b61-font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--b61-split-quote-size, var(--b61-text-h3));
+  line-height: 1.4;
+  color: var(--b61-on-bg-ink, var(--b61-ink));
+}
+
+.b61-split__quote blockquote {
+  margin: 0;
+}
+
+.b61-split__quote p,
+.b61-split__body blockquote p {
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0;
+}
+
+.b61-split__quote figcaption,
+.b61-split__body blockquote cite {
+  display: block;
+  margin-top: var(--b61-space-sm);
+  font-family: var(--b61-font-ui);
+  font-style: normal;
+  font-size: var(--b61-text-label);
+  font-weight: 600;
+  letter-spacing: var(--b61-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--b61-on-bg-muted, var(--b61-muted));
+}
+
+/* Emphasis - one line that is not body copy. It replaced both the lead-in and
+   the closing line: with the main content dragged rather than ranked, those two
+   were the same device named for two positions.
+
+   Every value here is an ALIAS with a fallback, so a site can retune the role
+   from Breakdance > Variables without editing plugin CSS - the same contract
+   the frame colours already use. --b61-split-emphasis-* are the dials. */
+/* THE COLOUR DIAL IS DECLARED HERE, NOT WITH ITS FOUR SIBLINGS ON THE REGION,
+   and the reason is the alias trap: a var() inside a custom property resolves
+   against the element the DECLARATION sits on, not the element that finally
+   uses it. On the region it froze at the BAND's accent -- which was invisible
+   until the Text panel arrived, because a panel re-declares --b61-on-bg-accent
+   on a DESCENDANT of the region and a frozen alias cannot be reached back into.
+   Declared on the using element it resolves against whatever palette actually
+   surrounds the line: the band's when the text is bare, the panel's when it is
+   not. Same bug, same fix, as the card CTA. The font/size/leading/weight dials
+   stay on the region because none of them alias anything a panel changes. */
+:where(.b61-split__emphasis) {
+  --b61-split-emphasis-color: var(--b61-on-bg-ink, var(--b61-ink));
+}
+
+.b61-split__emphasis {
+  font-family: var(--b61-split-emphasis-font);
+  font-size: var(--b61-split-emphasis-size);
+  line-height: var(--b61-split-emphasis-leading);
+  font-weight: var(--b61-split-emphasis-weight);
+  color: var(--b61-split-emphasis-color);
+  margin: 0;
+}
+
+.b61-split__emphasis em {
+  font-style: italic;
+  color: var(--b61-on-bg-accent, var(--b61-heading-accent));
+}
+
+.b61-split__body {
+  font-family: var(--b61-font-body);
+  color: var(--b61-on-bg-muted, var(--b61-muted));
+}
+
+.b61-split__body p {
+  font-size: var(--b61-text-body);
+  line-height: var(--b61-leading-body);
+  margin: 0 0 var(--b61-split-body-para-space);
+}
+
+.b61-split__body p:last-child {
+  margin-bottom: 0;
+}
+
+
+.b61-split__frame {
+  display: grid;
+  position: relative;
+  padding: var(--b61-frame-offset) 0 0 var(--b61-frame-offset);
+  isolation: isolate;
+}
+
+.b61-split__frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--b61-frame-width) solid var(--b61-frame-color, var(--b61-primary));
+  /* Above the media: the frame is a plain border drawn ON the image edge,
+     not a box behind it. */
+  z-index: 2;
+  pointer-events: none;
+}
+
+.b61-split__frame--secondary { --b61-frame-color: var(--b61-frame-color-alt, var(--b61-secondary)); }
+.b61-split__frame--accent { --b61-frame-color: var(--b61-accent); }
+
+/* The floor height and the placeholder fill belong to the SINGLE-photo case
+   only. They were written when the frame could hold nothing else: one cover
+   photo, and 420px guaranteed the frame had presence. A grid of two 16:9 photos
+   is about half that tall, so the leftover --b61-surface showed as a blank slab
+   under the photos — invisible on a white page, obvious the moment a surface is
+   set, and it also inflated the row height so the text column's centring looked
+   wrong. Grid and video size to their own content. */
+.b61-split__frame-media {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  margin: 0 calc(-1 * var(--b61-frame-offset)) calc(-1 * var(--b61-frame-offset)) 0;
+}
+
+.b61-split__frame-media--single {
+  min-height: var(--b61-split-frame-min-height);
+  background-color: var(--b61-surface);
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
+.b61-split__frame-media > img,
+.b61-split__frame-media--single .b61-split__item--single img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Focal point (1.37.0), set per split from Appearance > Photo. Unset it
+     resolves to center, the browser default, so no existing split moves. */
+  object-position: var(--b61-photo-focus, var(--b61-bg-position));
+}
+
+/* The figure has to be a grid too, or a caption would be pushed outside the
+   frame by an image told to fill it. */
+.b61-split__item--single {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 0;
+}
+
+/* An explicit shape is a deliberate proportion, so it wins over the floor. */
+.b61-split__region--shape-portrait .b61-split__frame-media--single,
+.b61-split__region--shape-square .b61-split__frame-media--single,
+.b61-split__region--shape-landscape .b61-split__frame-media--single,
+.b61-split__region--shape-wide .b61-split__frame-media--single {
+  min-height: 0;
+}
+
+.b61-split__region--shape-portrait .b61-split__frame-media--single .b61-split__item--single img,
+.b61-split__region--shape-square .b61-split__frame-media--single .b61-split__item--single img,
+.b61-split__region--shape-landscape .b61-split__frame-media--single .b61-split__item--single img,
+.b61-split__region--shape-wide .b61-split__frame-media--single .b61-split__item--single img {
+  height: auto;
+}
+
+.b61-split--img-left .b61-split__frame {
+  padding: var(--b61-frame-offset) var(--b61-frame-offset) 0 0;
+}
+
+.b61-split--img-left .b61-split__frame-media {
+  margin: 0 0 calc(-1 * var(--b61-frame-offset)) calc(-1 * var(--b61-frame-offset));
+}
+
+/* ---------------------------------------------------------------------------
+   TEXT PANEL AND OVERLAP
+
+   Two controls that are usually used together and are deliberately separate:
+   a panel with no overlap is a card beside a photo, and an overlap with no
+   panel is copy running over an image, which is a legitimate treatment on a
+   quiet photograph and unreadable on a busy one. The editor picks both.
+
+   NOTHING HERE PAINTS. The panel's ground, palette and shape are
+   `b61-surface--X b61-band--X b61-card`, emitted by the twig and owned by
+   assets/. See the card layer note: the surface paints, the band declares the
+   colours that belong on it, and the card is shape only.
+   --------------------------------------------------------------------------- */
+
+/* COLUMN HEIGHT, and what Vertical position means in each mode.
+
+   Fit: the column is as tall as its content, and Vertical position moves THE
+   COLUMN within the row -- the original behaviour, and what every split built
+   before 1.32.0 does.
+
+   Fill: the column stretches to the media's height, so a panel becomes a card
+   the full height of the photograph beside it, and Vertical position moves THE
+   CONTENT within that card. One control, and the meaning of the other follows
+   from it rather than being duplicated.
+
+   The twig emits exactly ONE of these two classes, always. That is deliberate:
+   written as a modifier plus a `:not()`, the vtop rules would sit at (0,3,0)
+   and the fill rule at (0,2,0), so a top-aligned fit rule would beat the fill
+   rule and the column would silently stop stretching. Two mutually exclusive
+   classes make the pair impossible to get wrong. */
+.b61-split__inner--hfit .b61-split__text {
+  align-self: center;
+}
+
+.b61-split--vtop.b61-split__inner--hfit .b61-split__text {
+  align-self: start;
+}
+
+.b61-split__inner--hfill .b61-split__text {
+  align-self: stretch;
+  /* Flex, so the content can be positioned inside a box that is now taller than
+     it is. The stack rhythm is unaffected: `.b61-block + .b61-block` sets an
+     explicit margin-top, and flex items honour margins -- there is no collapse
+     to lose. */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.b61-split--vtop.b61-split__inner--hfill .b61-split__text {
+  justify-content: flex-start;
+}
+
+/* BOTH columns stretch in fill mode, not just the text one.
+   Measured: with only the text column stretched, `.b61-split__media` kept
+   align-self:auto, resolved through the inner's `align-items: center`, and
+   stayed at its natural height. Whenever the copy was TALLER than the
+   photograph the card overhung it by 82px at the top and 83px at the bottom --
+   invisible whenever the copy happened to be shorter, which is most test
+   content and is why this shipped in 1.32.0 looking almost right.
+
+   Stretching both is what "match" has to mean: the two columns are equal,
+   whichever one is taller. The frame chain has to carry the height down to the
+   photo, or the media column stretches while the frame inside it does not and
+   the same gap reappears one level in.
+
+   CONSEQUENCE, deliberate: an explicit Photo shape (portrait/square/landscape/
+   wide) sets an aspect-ratio, and a box cannot both hold an aspect and fill a
+   height it did not choose. In Match mode the HEIGHT wins and the shape becomes
+   approximate. The image is object-fit:cover, so it crops rather than
+   distorts. Fit mode is unaffected and still honours the shape exactly. */
+.b61-split__inner--hfill .b61-split__media {
+  align-self: stretch;
+}
+
+.b61-split__inner--hfill .b61-split__frame,
+.b61-split__inner--hfill .b61-split__frame-media {
+  height: 100%;
+}
+
+/* Overlap. The text box reaches into the media column and is raised above it.
+   The column gap goes to zero in the same breath: leaving it in place would
+   make the real overlap (overlap-x minus col-gap), so the dial would no longer
+   say what it does -- and a site retuning --b61-split-col-gap would silently
+   change how far the card sits over the photo. */
+.b61-split__inner--overlap {
+  gap: 0;
+}
+
+/* z-index is declared, never left to source order. The text column comes FIRST
+   in the DOM, so without this the media column paints over it -- the exact
+   failure the card grid's scrim hit. */
+.b61-split__inner--overlap .b61-split__text {
+  position: relative;
+  z-index: var(--b61-overlap-z);
+  margin-right: calc(-1 * var(--b61-overlap-x));
+}
+
+/* Image on the left: the text still reaches TOWARDS the photo, which is now on
+   the other side. margin-right is reset explicitly rather than relying on the
+   shorthand, because the two rules have equal specificity and order alone is a
+   fragile thing to depend on. */
+.b61-split__inner--overlap.b61-split--img-left .b61-split__text {
+  margin-right: 0;
+  margin-left: calc(-1 * var(--b61-overlap-x));
+}
+
+@media (max-width: 1023px) {
+  .b61-split__inner,
+  .b61-split--wide-text,
+  .b61-split--wide-media,
+  .b61-split--img-left {
+    grid-template-columns: 1fr;
+    gap: var(--b61-split-col-gap-sm);
+  }
+
+  /* STACKED ORDER (1.66.0). Once the columns collapse, side is meaningless
+     and the only question is which block comes first. It was always the text,
+     because the order swap was simply unwound here. Now it is a control:
+     unset keeps text first, exactly as before. Set at base only -- the answer
+     cannot differ between one stacked width and another, since there is only
+     one stack. */
+  .b61-split__text {
+    order: var(--b61-split-stack-text-order, 0);
+  }
+
+  .b61-split__media {
+    order: var(--b61-split-stack-media-order, 0);
+  }
+
+  /* Stacked, there is no column to reach into: an overlap here would just pull
+     the card off the side of the page. The gap is restored to the stacked
+     value rather than left at zero, or a panel would sit flush against the
+     photograph above it. Both are stated explicitly -- the overlap rules above
+     carry the same specificity as this block, and relying on source order to
+     unwind a layout at a breakpoint is how a mobile bug hides. */
+  .b61-split__inner--overlap {
+    gap: var(--b61-split-col-gap-sm);
+  }
+
+  .b61-split__inner--overlap .b61-split__text,
+  .b61-split__inner--overlap.b61-split--img-left .b61-split__text {
+    margin-inline: 0;
+  }
+}
+
+/* Inline links in rich text sit tighter than a button, so they take the site's
+   focus width with a smaller offset. Both are existing site tokens. */
+.b61-split__body a:focus-visible {
+  outline: var(--b61-focus-width) solid var(--b61-focus, var(--b61-ink));
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Text-stack roles (Flex demo)
+
+   Two new roles, both deriving from tokens that already exist. Nothing here
+   introduces a raw type size - the guard (bin/check-css-tokens.sh) forbids it,
+   and a stack whose roles drift off the scale defeats the point of the stack.
+   --------------------------------------------------------------------------- */
+
+/* Subheading - the "second headline" role. Display face like the heading, one
+   step down the scale, weight and colour pulled back so two display lines read
+   as a pair rather than as a competition. This is the slot that did not exist
+   before: previously a second display line meant either a Prose element above
+   the Split (wrong outline) or an oversized lead. */
+.b61-split__subhead {
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: var(--b61-text-h3);
+  line-height: 1.25;
+  color: var(--b61-on-bg-muted, var(--b61-muted));
+  margin: 0 0 var(--b61-space-md);
+}
+
+.b61-split__subhead em {
+  font-style: italic;
+  color: var(--b61-on-bg-accent, var(--b61-heading-accent));
+}
+
+/* ---------------------------------------------------------------------------
+   Heading lines
+
+   One heading tag, N spans. Each line is display:block so it breaks without a
+   <br>, and emphasis is a class on the line rather than a separate element -
+   which is what let the stack drop its Position control entirely.
+   --------------------------------------------------------------------------- */
+.b61-split__heading-line {
+  display: block;
+}
+
+/* Matches the existing `.b61-split__heading em` treatment, so a line-level
+   emphasis and an inline <em> inside a line look like the same device. */
+.b61-split__heading-line--em {
+  font-style: italic;
+  color: var(--b61-on-bg-accent, var(--b61-heading-accent));
+}
+
+/* ---------------------------------------------------------------------------
+   Stack rhythm
+
+   The fixed ladder could hard-code its own margins because the order was
+   known. Once any role can follow any role, per-role bottom margins collide:
+   two eyebrows in a row double-space, and an eyebrow directly above the
+   heading inherits a margin tuned for the old fixed gap. So spacing between
+   stack items becomes the STACK's job, not the item's.
+   --------------------------------------------------------------------------- */
+
+.b61-split__eyebrow + .b61-split__heading {
+  margin-top: var(--b61-space-sm);
+}
+
+.b61-split__heading + .b61-split__subhead,
+.b61-split__subhead + .b61-split__subhead {
+  margin-top: var(--b61-space-sm);
+}
+
+/* A pull quote is a set piece and wants air on both sides regardless of what it
+   lands between - the one block whose spacing is about the block, not the seam. */
+.b61-block + .b61-split__quote,
+.b61-split__quote + .b61-block {
+  margin-top: var(--b61-space-lg);
+}
+
+/* An eyebrow is inline-flex for its rule; as a stack item it must still start
+   its own line. */
+.b61-block.b61-split__eyebrow {
+  display: flex;
+  width: fit-content;
+}
+
+/* HEADING ALIGNMENT (1.74.0). css.twig sets the --b61-align-* dials on the
+   heading-group parts only when Heading alignment is set; the fallbacks are
+   the element's existing left-set default, so an untouched Split is
+   unchanged. The fit-content eyebrow centres by its inline margins. */
+.b61-split__eyebrow,
+.b61-split__heading,
+.b61-split__subhead { text-align: var(--b61-align-text, left); }
+.b61-block.b61-split__eyebrow {
+  margin-inline: var(--b61-align-inline, 0);
+  justify-content: var(--b61-align-justify, flex-start);
+}
+.b61-split__eyebrow::before { display: var(--b61-align-eyebrow-rule, var(--b61-eyebrow-rule)); }
+
+/* ---------------------------------------------------------------------------
+   MEDIA
+
+   Grid, video and single photo all sit inside the existing frame, so the
+   split's signature is a property of the column rather than of the
+   single-image case.
+   --------------------------------------------------------------------------- */
+.b61-split__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--b61-split-cols, 2), minmax(0, 1fr));
+  gap: var(--b61-split-media-gap);
+}
+
+.b61-split__region--cols1 { --b61-split-cols: 1; }
+.b61-split__region--cols2 { --b61-split-cols: 2; }
+.b61-split__region--cols3 { --b61-split-cols: 3; }
+
+.b61-split__item {
+  margin: 0;
+  min-width: 0;
+}
+
+.b61-split__item img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* Photo shape. Fixed is the only one that pins a height; the rest set a ratio
+   so the column can breathe. Ratios match Gallery's exactly, so a photo looks
+   the same in either element. */
+.b61-split__region--shape-fixed .b61-split__grid .b61-split__item img { height: var(--b61-split-photo-height); }
+.b61-split__region--shape-portrait .b61-split__grid .b61-split__item img,
+.b61-split__region--shape-portrait .b61-split__item--single img { height: auto; aspect-ratio: 3 / 4; }
+.b61-split__region--shape-square .b61-split__grid .b61-split__item img,
+.b61-split__region--shape-square .b61-split__item--single img { height: auto; aspect-ratio: 1 / 1; }
+.b61-split__region--shape-landscape .b61-split__grid .b61-split__item img,
+.b61-split__region--shape-landscape .b61-split__item--single img { height: auto; aspect-ratio: 4 / 3; }
+.b61-split__region--shape-wide .b61-split__grid .b61-split__item img,
+.b61-split__region--shape-wide .b61-split__item--single img { height: auto; aspect-ratio: 16 / 9; }
+
+.b61-split__caption {
+  font-family: var(--b61-font-ui);
+  font-size: var(--b61-text-label);
+  line-height: 1.4;
+  color: var(--b61-on-bg-muted, var(--b61-muted));
+  margin-top: var(--b61-space-2xs);
+}
+
+/* Video keeps a 16:9 box whatever the shape control says — a letterboxed embed
+   in a portrait frame is never what anyone meant. */
+.b61-split__video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+}
+
+.b61-split__video iframe,
+.b61-split__video video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .b61-split__region--shape-fixed .b61-split__grid .b61-split__item img { height: var(--b61-split-photo-height-sm); }
+  .b61-split__region--cols3 { --b61-split-cols: 2; }
+}
+
+/* No media: the two-column grid has nothing to put in the second track, so it
+   collapses to one rather than leaving a dead column the text cannot use. */
+.b61-split__inner--nomedia {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+
+/* ---------------------------------------------------------------------------
+   Empty-slot placeholder
+
+   Rendered ONLY in the builder (see html.twig). It borrows the single-photo
+   frame treatment so the slot has the same presence the real photo will have,
+   which means an editor is looking at the finished proportion while choosing
+   the image rather than watching the layout jump afterwards.
+   --------------------------------------------------------------------------- */
+.b61-split__placeholder {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  background: var(--b61-split-placeholder-bg);
+  color: var(--b61-split-placeholder-ink);
+}
+
+.b61-split__placeholder svg {
+  width: var(--b61-split-placeholder-size);
+  height: auto;
+  max-width: 160px;
+  opacity: 0.75;
+}
+
+
+/* The placeholder tint is element-specific, but WHICH WAY it flips is a property
+   of the shared ground - so it keys off the shared surface class. */
+.b61-surface--dark .b61-split__placeholder,
+.b61-surface--accent .b61-split__placeholder {
+  --b61-split-placeholder-bg: rgb(var(--b61-light-scrim-rgb) / 0.10);
+  --b61-split-placeholder-ink: rgb(var(--b61-light-scrim-rgb) / 0.55);
+}
+
+/* ---------------------------------------------------------------------------
+   PULL QUOTE WITH PHOTO (1.46.0)
+   An optional small round portrait sits beside the quote. The gold rule moves
+   from the figure to the text column so it still runs beside the words, not
+   between the photo and the words. Size is a dial.
+   --------------------------------------------------------------------------- */
+:where(.b61-split__quote--photo) {
+  --split-quote-photo-size: 5.5rem;
+  --split-quote-photo-gap: var(--b61-space-lg);
+}
+
+.b61-split__quote--photo {
+  display: flex;
+  align-items: center;
+  gap: var(--split-quote-photo-gap);
+  padding: 0;
+  border-left: 0;
+}
+
+.b61-split__quote-photo {
+  flex: none;
+  width: var(--split-quote-photo-size);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--b61-surface);
+}
+
+.b61-split__quote-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.b61-split__quote-text {
+  min-width: 0;
+  padding: var(--b61-space-2xs) 0 var(--b61-space-2xs) var(--b61-space-lg);
+  border-left: var(--b61-split-quote-rule-width, var(--b61-frame-width)) solid var(--b61-split-quote-rule, var(--b61-secondary));
+}
+
+@media (max-width: 767px) {
+  :where(.b61-split__quote--photo) {
+    --split-quote-photo-size: 4rem;
+    --split-quote-photo-gap: var(--b61-space-md);
+  }
+}
+
+/* EMPHASIS RULE (1.47.0) — a short accent bar above the line. Decorative, so
+   it carries no text-contrast burden; the words themselves are ink. The Prose
+   display scale keeps its own look. */
+.b61-split__emphasis::before {
+  content: "";
+  display: block;
+  width: var(--b61-split-emphasis-rule-length);
+  border-top: var(--b61-frame-width) solid var(--b61-on-bg-line, var(--b61-split-emphasis-rule-color));
+  margin-bottom: var(--b61-split-emphasis-rule-gap);
+}
+
+.b61-split__emphasis em {
+  color: var(--b61-on-bg-accent, var(--b61-accent-text));
+}
+
+/* PHOTO RADIUS (1.53.0). The frame and the photo share --b61-radius-media,
+   the same value cards read (see tokens.css), so a card grid and a framed
+   photo on one page always have the same corners. 0 on a square site. */
+.b61-split__frame::before {
+  border-radius: var(--b61-radius-media);
+}
+
+.b61-split__frame-media {
+  border-radius: var(--b61-radius-media);
+}

@@ -1,5 +1,5 @@
 import type { Payload } from 'payload'
-import { demoHeroes, ensureDemoImages } from './b61/demo'
+import { demoHeroes, demoSplits, ensureDemoImages } from './b61/demo'
 
 // Fictional demo schools, same content as the Strapi build so the two editors
 // can be compared like for like. SEED_SCHOOL picks one.
@@ -176,6 +176,14 @@ export async function seedDemoSchool(payload: Payload, key: string) {
     b: (profile.settings.secondaryColor as string) ?? '#C8A24A',
   })
   const heroes = demoHeroes({ tagline: profile.tagline, mission: profile.mission, phone: profile.settings.phone as string, imgs })
+  const splits = demoSplits({
+    name,
+    mission: profile.mission,
+    phone: profile.settings.phone as string,
+    email: profile.settings.email as string,
+    address: profile.settings.address as string,
+    imgs,
+  })
 
   const pages = [
     {
@@ -184,6 +192,7 @@ export async function seedDemoSchool(payload: Payload, key: string) {
       sections: [
         heroes.home,
         { blockType: 'statsBand', heading: `${name} at a glance`, tone: 'light', stats: profile.stats },
+        splits.home,
         { blockType: 'cardGrid', heading: 'Programs', intro: "A path for every stage of your child's growth.",
           source: 'programs', limit: 3, columns: 'three', tone: 'muted' },
         { blockType: 'cardGrid', heading: 'Upcoming events', source: 'upcoming-events', limit: 3, columns: 'three', tone: 'light' },
@@ -196,7 +205,7 @@ export async function seedDemoSchool(payload: Payload, key: string) {
       seoDescription: `About ${name}`,
       sections: [
         heroes.about,
-        { blockType: 'split', heading: 'Our mission', body: p(profile.mission), imagePosition: 'right', tone: 'light' },
+        splits.about,
         { blockType: 'cardGrid', heading: 'Meet our leaders', source: 'staff', limit: 4, columns: 'four', tone: 'muted' },
       ],
     },

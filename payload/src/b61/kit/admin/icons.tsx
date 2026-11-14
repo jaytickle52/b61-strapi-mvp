@@ -8,6 +8,8 @@ const paths: Record<string, string> = {
   image: 'M3 4h14v12H3zM3 13l4-4 3 3 2-2 5 5M13 7.5a1 1 0 1 0 0 .01',
   slideshow: 'M5 6h12v10H5zM3 4h12',
   video: 'M3 5h10v10H3zM13 9l4-2v6l-4-2',
+  'side-left': 'M2 4h7v12H2zM12 6h6M12 10h6M12 14h4',
+  'side-right': 'M11 4h7v12h-7zM2 6h6M2 10h6M2 14h4',
   cover: 'M2 4h16v12H2zM2 12l5-4 4 3 3-2 4 3M5 13h6',
   band: 'M2 4h16v12H2zM4 8h5M4 11h4M11 6h5v8h-5z',
 }

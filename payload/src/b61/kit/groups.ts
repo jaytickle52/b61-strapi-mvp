@@ -24,8 +24,15 @@ export function list(name: string, label: string, singular: string, fields: Fiel
   } as ArrayField
 }
 
-/** Eyebrow, heading lines (each can be emphasised), heading level. */
-export function headingFields(): Field[] {
+type Level = 'h1' | 'h2' | 'h3' | 'h4'
+
+/**
+ * Eyebrow, heading lines (each can be emphasised), heading level.
+ * `levels` are the fixed levels an element offers besides Automatic
+ * (Hero: H1-H3; bands: H2-H4).
+ */
+export function headingFields(o: { levels?: Level[] } = {}): Field[] {
+  const levels = o.levels ?? ['h1', 'h2', 'h3']
   return [
     { name: 'eyebrow', label: 'Eyebrow', type: 'text' },
     list('lines', 'Heading lines', 'Line', [
@@ -37,24 +44,131 @@ export function headingFields(): Field[] {
         ],
       },
     ]),
-    dropdown(
-      'headingLevel',
-      'Heading level',
-      [
-        ['auto', 'Automatic'],
-        ['h1', 'H1'],
-        ['h2', 'H2'],
-        ['h3', 'H3'],
-      ],
-      { default: 'auto', width: '50%' },
-    ),
+    dropdown('headingLevel', 'Heading level', [['auto', 'Automatic'], ...levels.map((l) => [l, l.toUpperCase()] as [string, string])], {
+      default: 'auto',
+    }),
   ]
 }
 
 /** Automatic = H1 for the first section on a page, H2 after it. */
-export function resolveHeadingLevel(level: string | null | undefined, index: number): 'h1' | 'h2' | 'h3' {
-  if (level === 'h1' || level === 'h2' || level === 'h3') return level
+export function resolveHeadingLevel(level: string | null | undefined, index: number): Level {
+  if (level === 'h1' || level === 'h2' || level === 'h3' || level === 'h4') return level
   return index === 0 ? 'h1' : 'h2'
+}
+
+/** Display-face second headlines under the heading (bands; the Hero uses Subheadline). */
+export function subheadsField(): ArrayField {
+  return list('subheads', 'Subheadings', 'Subheading', [{ name: 'text', label: 'Text', type: 'text', required: true }])
+}
+
+/** The built-in icon set (kit/icons.ts). "Dot" is the neutral default mark. */
+export const ICON_OPTIONS: [string, string][] = [
+  ['dot', 'Dot'],
+  ['check', 'Check'],
+  ['email', 'Email'],
+  ['phone', 'Phone'],
+  ['location', 'Location'],
+  ['calendar', 'Calendar'],
+  ['clock', 'Clock'],
+  ['link', 'Link'],
+  ['star', 'Star'],
+  ['heart', 'Heart'],
+  ['book', 'Book'],
+  ['people', 'People'],
+  ['cross', 'Cross'],
+  ['school', 'School'],
+]
+
+/**
+ * The text stack a band's content is made of: body copy, emphasis lines,
+ * pull quotes and icon rows, in any order. Consecutive icon rows render as one
+ * list. Shared by Split, Prose and CTA Band.
+ */
+export function contentBlocksField(): ArrayField {
+  const is = (t: string) => (_: unknown, s: any) => (s?.type ?? 'body') === t
+  return list(
+    'contentBlocks',
+    'Content',
+    'Block',
+    [
+      segmented(
+        'type',
+        'Type',
+        [
+          ['body', 'Body copy'],
+          ['emphasis', 'Emphasis'],
+          ['quote', 'Pull quote'],
+          ['iconrow', 'Icon row'],
+        ],
+        { default: 'body' },
+      ),
+      { name: 'body', label: 'Body copy', type: 'richText', admin: { condition: is('body') } },
+      {
+        name: 'text',
+        label: 'Text',
+        type: 'textarea',
+        admin: { rows: 2, condition: (_, s) => (s?.type ?? 'body') !== 'body' },
+      },
+      {
+        type: 'row',
+        admin: { condition: is('quote') },
+        fields: [
+          { name: 'attribution', label: 'Attribution', type: 'text', admin: { width: '60%' } },
+          { name: 'photo', label: 'Photo', type: 'upload', relationTo: 'media', filterOptions: onlyImages, admin: { width: '40%' } },
+        ],
+      },
+      {
+        type: 'row',
+        admin: { condition: is('iconrow') },
+        fields: [
+          dropdown('icon', 'Icon', ICON_OPTIONS, { default: 'dot', width: '40%' }),
+          { name: 'hasLink', label: 'Link this row', type: 'checkbox', admin: { width: '60%', style: { alignSelf: 'flex-end', paddingBottom: 10 } } },
+        ],
+      },
+      { ...link(), admin: { hideGutter: true, condition: (_: unknown, s: any) => s?.type === 'iconrow' && Boolean(s?.hasLink) } } as Field,
+    ],
+    { admin: { description: 'Body copy, emphasis lines, pull quotes and icon rows, in any order.' } },
+  )
+}
+
+/** The band surface: the shared four, from utilities.css. */
+export function surfaceField(): Field {
+  return segmented(
+    'surface',
+    'Surface',
+    [
+      ['none', 'None'],
+      ['soft', 'Light wash'],
+      ['dark', 'Dark'],
+      ['accent', 'Accent'],
+    ],
+    { default: 'none' },
+  )
+}
+
+export function headingAlignField(): Field {
+  return segmented(
+    'headingAlign',
+    'Heading alignment',
+    [
+      ['left', 'Left', 'align-left'],
+      ['center', 'Center', 'align-center'],
+    ],
+    { default: 'left', iconOnly: true },
+  )
+}
+
+export function frameColorField(o: { when?: When } = {}): Field {
+  return segmented(
+    'frameColor',
+    'Frame color',
+    [
+      ['primary', 'Primary'],
+      ['secondary', 'Secondary'],
+      ['accent', 'Accent'],
+    ],
+    { default: 'primary', when: o.when },
+  )
 }
 
 /** The shared four button styles, with a compact row per button. */

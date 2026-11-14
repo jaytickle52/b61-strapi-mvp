@@ -135,3 +135,81 @@ export function demoHeroes(opts: { tagline: string; mission: string; phone?: str
     },
   } as const
 }
+
+/** One paragraph in Payload's Lexical rich-text format. */
+const para = (text: string) => ({
+  root: {
+    type: 'root', format: '' as const, indent: 0, version: 1, direction: 'ltr' as const,
+    children: [{
+      type: 'paragraph', format: '' as const, indent: 0, version: 1, direction: 'ltr' as const, textFormat: 0, textStyle: '',
+      children: [{ type: 'text', text, format: 0, style: '', mode: 'normal', detail: 0, version: 1 }],
+    }],
+  },
+})
+
+/**
+ * Demo B61 Splits: About gets a single photo with body copy, an emphasis line
+ * and contact icon rows; Home gets a photo gallery with a pull quote.
+ */
+export function demoSplits(opts: { name: string; mission: string; phone?: string; email?: string; address?: string; imgs: number[] }) {
+  const [img1, img2, img3, img4] = opts.imgs
+  const short = opts.name.split(' ').slice(0, 2).join(' ')
+  return {
+    about: {
+      blockType: 'b61Split',
+      eyebrow: 'Our mission',
+      headingLevel: 'auto',
+      lines: [
+        { text: 'Why families', emphasize: false },
+        { text: `choose ${short}`, emphasize: true },
+      ],
+      contentBlocks: [
+        { type: 'body', body: para(opts.mission) },
+        { type: 'emphasis', text: 'Every child known, every day.' },
+        ...(opts.phone ? [{ type: 'iconrow', icon: 'phone', text: opts.phone, hasLink: true, link: { type: 'url', url: `tel:${opts.phone.replace(/[^0-9+]/g, '')}` } }] : []),
+        ...(opts.email ? [{ type: 'iconrow', icon: 'email', text: opts.email, hasLink: true, link: { type: 'url', url: `mailto:${opts.email}` } }] : []),
+        ...(opts.address ? [{ type: 'iconrow', icon: 'location', text: opts.address.replace(/\n/g, ', ') }] : []),
+      ],
+      buttons: [{ label: 'Schedule a tour', link: { type: 'url', url: '/visit' }, variant: 'primary' }],
+      media: 'photo',
+      image: img3,
+      imageShape: 'fixed',
+      imageSide: 'right',
+      verticalPosition: 'center',
+      stackOrder: 'text',
+      columnHeight: 'fit',
+      headingAlign: 'left',
+      surface: 'none',
+      textPanel: 'none',
+      frameColor: 'primary',
+      entrance: 'on',
+    },
+    home: {
+      blockType: 'b61Split',
+      eyebrow: 'Life at school',
+      headingLevel: 'auto',
+      lines: [
+        { text: 'A day in the life', emphasize: false },
+        { text: 'of our students', emphasize: true },
+      ],
+      contentBlocks: [
+        { type: 'body', body: para('Mornings start with chapel and close with friends on the field. In between: real books, hands-on science and teachers who know every student by name.') },
+        { type: 'quote', text: 'Our kids come home talking about what they learned, not just what they did.', attribution: 'A current parent' },
+      ],
+      buttons: [{ label: 'See our programs', link: { type: 'url', url: '/programs' }, variant: 'link' }],
+      media: 'gallery',
+      images: [{ image: img2 }, { image: img4 }, { image: img1 }, { image: img3 }],
+      columns: '2',
+      imageShape: 'square',
+      imageSide: 'left',
+      verticalPosition: 'center',
+      stackOrder: 'text',
+      columnHeight: 'fit',
+      headingAlign: 'left',
+      surface: 'soft',
+      textPanel: 'none',
+      frameColor: 'secondary',
+      entrance: 'on',
+    },
+  } as const
+}

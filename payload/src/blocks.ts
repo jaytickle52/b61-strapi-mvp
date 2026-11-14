@@ -1,5 +1,6 @@
 import type { Block, Field } from 'payload'
 import { B61Hero } from './b61/elements/hero/fields'
+import { B61Split } from './b61/elements/split/fields'
 
 // The sections an editor can add, reorder and remove on any page.
 // Each mirrors a Banner 61 design element; the website decides how it looks.
@@ -32,20 +33,6 @@ const button = (name: string, label: string): Field => ({
     },
   ],
 })
-
-export const Split: Block = {
-  slug: 'split',
-  admin: { components: { Label: { path: '@/b61/kit/admin/ElementLabel#ElementLabel', clientProps: { name: 'Text and image' } } } },
-  labels: { singular: 'Text and image', plural: 'Text and image' },
-  fields: [
-    { name: 'heading', type: 'text', required: true },
-    { name: 'body', type: 'richText' },
-    { name: 'image', type: 'upload', relationTo: 'media' },
-    { name: 'imagePosition', type: 'select', defaultValue: 'right', options: ['left', 'right'] },
-    tone,
-    button('button', 'Button'),
-  ],
-}
 
 export const CardGrid: Block = {
   slug: 'cardGrid',
@@ -125,4 +112,4 @@ export const Prose: Block = {
   ],
 }
 
-export const sectionBlocks = [B61Hero, Split, CardGrid, StatsBand, CtaBand, Prose]
+export const sectionBlocks = [B61Hero, B61Split, CardGrid, StatsBand, CtaBand, Prose]

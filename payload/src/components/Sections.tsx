@@ -1,6 +1,7 @@
 import Link from "next/link";
 import RichText from "@/components/RichText";
 import B61Hero from "@/b61/elements/hero/Hero";
+import B61Split from "@/b61/elements/split/Split";
 import {
   formatDate,
   getEvents,
@@ -34,24 +35,6 @@ function Picture({ media, className = "", label, size = "card" }: { media?: numb
 }
 
 const wrap = "mx-auto w-full max-w-6xl px-5 sm:px-8";
-
-function Split({ s }: { s: Section }) {
-  const imageLeft = s.imagePosition === "left";
-  return (
-    <section className={`tone-${s.tone ?? "light"} py-16 sm:py-24`}>
-      <div className={`${wrap} grid items-center gap-10 lg:grid-cols-2`}>
-        <div className={imageLeft ? "lg:order-2" : ""}>
-          <h2 className="mb-5 text-3xl sm:text-4xl">{s.heading}</h2>
-          <RichText content={s.body} />
-          <div className="mt-6"><Btn button={s.button} /></div>
-        </div>
-        <div className={`aspect-[4/3] overflow-hidden rounded-3xl ${imageLeft ? "lg:order-1" : ""}`}>
-          <Picture media={s.image} />
-        </div>
-      </div>
-    </section>
-  );
-}
 
 type Card = { title: string; body?: string | null; image?: number | Media | null; link?: string | null; meta?: string };
 
@@ -118,6 +101,7 @@ async function CardGrid({ s }: { s: Section }) {
   );
 }
 
+
 function StatsBand({ s }: { s: Section }) {
   const stats = (s.stats ?? []) as { value: string; label: string }[];
   return (
@@ -170,7 +154,7 @@ export default function Sections({ sections }: { sections: Section[] | any[] }) 
         const key = s.id ?? `${s.blockType}-${i}`;
         switch (s.blockType) {
           case "b61Hero": return <B61Hero key={key} block={s as any} index={i} />;
-          case "split": return <Split key={key} s={s} />;
+          case "b61Split": return <B61Split key={key} block={s as any} index={i} />;
           case "cardGrid": return <CardGrid key={key} s={s} />;
           case "statsBand": return <StatsBand key={key} s={s} />;
           case "ctaBand": return <CtaBand key={key} s={s} />;
