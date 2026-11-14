@@ -128,6 +128,12 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
   const existing = await payload.find({ collection: 'pages', where: { school: { equals: school.id } }, limit: 1, draft: true })
   if (existing.totalDocs > 0) return school // already has content; never overwrite a school's work
 
+  // A demo school with no pages never finished seeding (a build stopped part
+  // way). Clear what that attempt left so this run starts clean.
+  for (const collection of ['programs', 'staff', 'events', 'news', 'school-settings', 'media'] as const) {
+    await payload.delete({ collection, where: { school: { equals: school.id } } })
+  }
+
   payload.logger.info(`[b61] Seeding demo content for ${name}`)
   const published = { _status: 'published' as const }
   const create = (collection: any, data: any) => payload.create({ collection, data: { ...data, school: school.id, ...published } })
