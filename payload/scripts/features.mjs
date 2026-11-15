@@ -279,6 +279,22 @@ async function main() {
     check(off.status === 503 && /not switched on/.test(off.json?.message ?? ''), 'without Bunny keys, uploads answer "not switched on yet"')
   }
 
+  // ----- Page caching (Thread H) -----------------------------------------------
+  // Visitors' pages are cached per school; publishing must show on the next visit.
+  console.log('\nPage caching')
+  const post = (await api('GET', `/news?where[school][equals]=${cedar}&where[_status][equals]=published&limit=1&depth=0`, { token: admin })).json?.docs?.[0]
+  if (post) {
+    const fresh = `Cache check ${RUN}`
+    await page(`/news/${post.slug}`, 'cedar-ridge') // fills the cache
+    await api('PATCH', `/news/${post.id}`, { token: admin, body: { title: fresh, _status: 'published' } })
+    check(visible((await page(`/news/${post.slug}`, 'cedar-ridge')).text).includes(fresh), 'a published edit shows on the very next visit')
+    check(visible((await page('/news', 'cedar-ridge')).text).includes(fresh), '… on the news list too')
+    await api('PATCH', `/news/${post.id}?draft=true`, { token: admin, body: { title: `Draft ${fresh}` } })
+    check(!visible((await page(`/news/${post.slug}`, 'cedar-ridge')).text).includes(`Draft ${fresh}`), 'a draft save stays off the public page')
+    check(!visible((await page('/news', 'harbor-oaks')).text).includes(fresh), "another school's cache never shows it")
+    await api('PATCH', `/news/${post.id}`, { token: admin, body: { title: post.title, _status: 'published' } })
+  }
+
   // ----- Tidy up --------------------------------------------------------------
   const mine = await api('GET', `/announcements?where[title][like]=${RUN}&limit=50&depth=0&draft=true`, { token: admin })
   for (const a of mine.json?.docs ?? []) await api('DELETE', `/announcements/${a.id}`, { token: admin })

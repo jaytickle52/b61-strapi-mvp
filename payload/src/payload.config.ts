@@ -1,4 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { cacheInvalidation } from './cache/plugin'
 import { bunnyEndpoints } from './video/endpoints'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -176,6 +177,9 @@ export default buildConfig({
         ],
       },
     }),
+    // Clears a school's cached public pages when staff change its content
+    // (src/cache). Last, so it also sees the plugin collections above.
+    cacheInvalidation,
   ],
   onInit: async (payload) => {
     // On Vercel the demo is seeded during the build (scripts/seed.ts), not on every cold start.

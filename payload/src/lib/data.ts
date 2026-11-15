@@ -1,8 +1,10 @@
 import { cache } from 'react'
 import { cookies, draftMode, headers } from 'next/headers'
+import { unstable_cache } from 'next/cache'
 import { getPayload, type Where } from 'payload'
 import config from '@payload-config'
 import { ymd } from '@/events/time'
+import { CACHE_SECONDS, CACHE_VERSION, quarterHour, SCHOOLS_TAG, schoolTag } from '@/cache/tags'
 import type { Announcement, Event, Media, News, NewsCategory, Page, Program, School, SchoolSetting, Staff } from '@/payload-types'
 
 export type { Announcement, Event, Media, News, NewsCategory, Page, Program, School, SchoolSetting, Staff }
@@ -35,26 +37,35 @@ export const SCHOOL_COOKIE = 'b61-school'
  * 3. otherwise DEFAULT_SCHOOL, or the first school.
  */
 export const currentSchool = cache(async (): Promise<School | null> => {
-  const payload = await payloadClient()
   const h = await headers()
   const host = (h.get('x-forwarded-host') ?? h.get('host') ?? '').split(',')[0].trim().split(':')[0].toLowerCase()
-  const one = async (where: Where) =>
-    (await payload.find({ collection: 'schools', where, limit: 1, depth: 0, overrideAccess: true })).docs[0] ?? null
-  if (host) {
-    const byHost = await one({ 'domains.domain': { equals: host } })
-    if (byHost) return byHost
-  }
-  const picked = (await cookies()).get(SCHOOL_COOKIE)?.value
-  if (picked) {
-    const bySlug = await one(/^\d+$/.test(picked) ? { id: { equals: Number(picked) } } : { slug: { equals: picked } })
-    if (bySlug) return bySlug
-  }
-  if (process.env.DEFAULT_SCHOOL) {
-    const fallback = await one({ slug: { equals: process.env.DEFAULT_SCHOOL } })
-    if (fallback) return fallback
-  }
-  return (await payload.find({ collection: 'schools', sort: 'createdAt', limit: 1, depth: 0, overrideAccess: true })).docs[0] ?? null
+  const picked = (await cookies()).get(SCHOOL_COOKIE)?.value ?? ''
+  return lookupSchool(host, picked)
 })
+
+/** The school for an address and picker cookie. Cached; cleared when any school changes (src/cache). */
+const lookupSchool = unstable_cache(
+  async (host: string, picked: string): Promise<School | null> => {
+    const payload = await payloadClient()
+    const one = async (where: Where) =>
+      (await payload.find({ collection: 'schools', where, limit: 1, depth: 0, overrideAccess: true })).docs[0] ?? null
+    if (host) {
+      const byHost = await one({ 'domains.domain': { equals: host } })
+      if (byHost) return byHost
+    }
+    if (picked) {
+      const bySlug = await one(/^\d+$/.test(picked) ? { id: { equals: Number(picked) } } : { slug: { equals: picked } })
+      if (bySlug) return bySlug
+    }
+    if (process.env.DEFAULT_SCHOOL) {
+      const fallback = await one({ slug: { equals: process.env.DEFAULT_SCHOOL } })
+      if (fallback) return fallback
+    }
+    return (await payload.find({ collection: 'schools', sort: 'createdAt', limit: 1, depth: 0, overrideAccess: true })).docs[0] ?? null
+  },
+  ['current-school', CACHE_VERSION],
+  { tags: [SCHOOLS_TAG], revalidate: CACHE_SECONDS },
+)
 
 /** Adds "this school only" to a query. */
 const scoped = async (where?: Where): Promise<Where> => {
@@ -63,11 +74,15 @@ const scoped = async (where?: Where): Promise<Where> => {
   return where ? { and: [mine, where] } : mine
 }
 
-async function find<T>(collection: 'pages' | 'events' | 'news' | 'news-categories' | 'programs' | 'staff' | 'announcements', opts: { where?: Where; sort?: string; limit?: number; depth?: number } = {}) {
-  const { payload, user, draft } = await reader()
+type SiteCollection = 'pages' | 'events' | 'news' | 'news-categories' | 'programs' | 'staff' | 'announcements' | 'school-settings'
+type FindOpts = { where?: Where; sort?: string; limit?: number; depth?: number }
+
+async function query<T>(collection: SiteCollection, schoolId: number | string, opts: FindOpts, draft: boolean, user: any) {
+  const payload = await payloadClient()
+  const mine: Where = { school: { equals: schoolId } }
   const res = await payload.find({
     collection,
-    where: await scoped(opts.where),
+    where: opts.where ? { and: [mine, opts.where] } : mine,
     sort: opts.sort,
     limit: opts.limit ?? 50,
     depth: opts.depth ?? 1,
@@ -78,11 +93,25 @@ async function find<T>(collection: 'pages' | 'events' | 'news' | 'news-categorie
   return res.docs as T[]
 }
 
+/**
+ * This school's content. Visitors' reads are cached per school (Thread H) so
+ * a page view doesn't query the database each time; staff edits clear it
+ * (src/cache/plugin.ts). An editor's preview always reads live, with drafts.
+ */
+async function find<T>(collection: SiteCollection, opts: FindOpts = {}) {
+  const [{ user, draft }, school] = await Promise.all([reader(), currentSchool()])
+  const schoolId = school?.id ?? -1
+  if (draft) return query<T>(collection, schoolId, opts, true, user)
+  return unstable_cache(
+    () => query<T>(collection, schoolId, opts, false, null),
+    [CACHE_VERSION, 'find', collection, String(schoolId), JSON.stringify(opts)],
+    { tags: [schoolTag(schoolId)], revalidate: CACHE_SECONDS },
+  )()
+}
+
 export const getSettings = cache(async (): Promise<Partial<SchoolSetting> & { schoolName: string }> => {
-  const { payload, user, draft } = await reader()
-  const school = await currentSchool()
-  const res = await payload.find({ collection: 'school-settings', where: await scoped(), limit: 1, depth: 1, draft, user, overrideAccess: false })
-  const s = res.docs[0]
+  const [docs, school] = await Promise.all([find<SchoolSetting>('school-settings', { limit: 1, depth: 1 }), currentSchool()])
+  const s = docs[0]
   return { ...(s ?? {}), schoolName: s?.schoolName || school?.name || 'Our School' }
 })
 
@@ -92,9 +121,11 @@ export async function getPage(slug: string) {
 }
 
 // Not over yet: starts later today or after, or is still going (multi-day).
+// "Now" is rounded to 15 minutes so the cached list is reused (an event may show up to 15 minutes after it ends).
 const upcomingWhere = (): Where => {
-  const since = new Date(Date.now() - 6 * 3600 * 1000).toISOString()
-  return { or: [{ startsAt: { greater_than_equal: since } }, { endsAt: { greater_than_equal: new Date().toISOString() } }] }
+  const now = quarterHour().getTime()
+  const since = new Date(now - 6 * 3600 * 1000).toISOString()
+  return { or: [{ startsAt: { greater_than_equal: since } }, { endsAt: { greater_than_equal: new Date(now).toISOString() } }] }
 }
 
 export const getEvents = (opts: { limit?: number } = {}) =>
@@ -146,20 +177,24 @@ export const getStaff = (limit = 100) => find<Staff>('staff', { sort: '_order', 
 
 /** Announcements showing right now: started, not yet ended. Urgent ones first. */
 export const getAnnouncements = cache(async () => {
-  const now = new Date().toISOString()
+  // The query uses 15-minute steps so it can be cached; the exact Show from /
+  // Hide after times are checked here, on every visit.
+  const step = quarterHour().getTime()
   const docs = await find<Announcement>('announcements', {
     where: {
       and: [
-        { startsAt: { less_than_equal: now } },
-        { or: [{ endsAt: { exists: false } }, { endsAt: { greater_than: now } }] },
+        { startsAt: { less_than_equal: new Date(step + 900_000).toISOString() } },
+        { or: [{ endsAt: { exists: false } }, { endsAt: { greater_than: new Date(step).toISOString() } }] },
       ],
     },
     sort: '-startsAt',
-    limit: 6,
+    limit: 20,
     depth: 1,
   })
+  const now = Date.now()
+  const showing = docs.filter((a) => new Date(a.startsAt).getTime() <= now && (!a.endsAt || new Date(a.endsAt).getTime() > now))
   const rank = { urgent: 0, celebrate: 1, standard: 2 } as Record<string, number>
-  return docs.sort((a, b) => (rank[a.style] ?? 2) - (rank[b.style] ?? 2)).slice(0, 3)
+  return showing.sort((a, b) => (rank[a.style] ?? 2) - (rank[b.style] ?? 2)).slice(0, 3)
 })
 
 /**
@@ -242,25 +277,32 @@ export async function hiddenFromSearch(): Promise<boolean> {
   return /(\.vercel\.app|\.railway\.app|^localhost|^127\.)/.test(host) || ownDomains.length === 0
 }
 
-/** A redirect this school set up for an old address, if any. */
+/** A redirect this school set up for an old address, if any. Cached (every missing page checks it). */
 export async function findRedirect(path: string): Promise<{ to: string; permanent: boolean } | null> {
-  const payload = await payloadClient()
-  const res = await payload.find({
-    collection: 'redirects',
-    where: await scoped({ from: { equals: path } }),
-    limit: 1,
-    depth: 1,
-    overrideAccess: true,
-  })
-  const r: any = res.docs[0]
-  if (!r) return null
-  let to: string | null = null
-  if (r.to?.type === 'custom') to = r.to.url || null
-  else if (r.to?.reference?.value && typeof r.to.reference.value === 'object') {
-    const { pathFor } = await import('@/seo/config')
-    to = pathFor(r.to.reference.relationTo, r.to.reference.value)
-  }
-  return to ? { to, permanent: r.type !== '302' } : null
+  const schoolId = (await currentSchool())?.id ?? -1
+  return unstable_cache(
+    async () => {
+      const payload = await payloadClient()
+      const res = await payload.find({
+        collection: 'redirects',
+        where: { and: [{ school: { equals: schoolId } }, { from: { equals: path } }] },
+        limit: 1,
+        depth: 1,
+        overrideAccess: true,
+      })
+      const r: any = res.docs[0]
+      if (!r) return null
+      let to: string | null = null
+      if (r.to?.type === 'custom') to = r.to.url || null
+      else if (r.to?.reference?.value && typeof r.to.reference.value === 'object') {
+        const { pathFor } = await import('@/seo/config')
+        to = pathFor(r.to.reference.relationTo, r.to.reference.value)
+      }
+      return to ? { to, permanent: r.type !== '302' } : null
+    },
+    [CACHE_VERSION, 'redirect', String(schoolId), path],
+    { tags: [schoolTag(schoolId)], revalidate: CACHE_SECONDS },
+  )()
 }
 
 /** Site search: this school's published pages, programs, events and news. */
