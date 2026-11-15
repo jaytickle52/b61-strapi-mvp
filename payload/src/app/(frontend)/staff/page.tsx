@@ -1,8 +1,9 @@
+import { seoMetadata } from "@/seo/metadata";
 import { cardsFrom } from "@/b61/demo";
 import Sections from "@/components/Sections";
 import PageHeader from "@/components/PageHeader";
 
-export const metadata = { title: "Our team" };
+export const generateMetadata = () => seoMetadata({ title: "Our team", path: "/staff" });
 
 export default function StaffPage() {
   return (

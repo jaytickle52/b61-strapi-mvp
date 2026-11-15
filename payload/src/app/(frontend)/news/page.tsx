@@ -1,8 +1,9 @@
+import { seoMetadata } from "@/seo/metadata";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { formatDate, getNews } from "@/lib/data";
 
-export const metadata = { title: "News" };
+export const generateMetadata = () => seoMetadata({ title: "News", path: "/news" });
 
 export default async function NewsPage() {
   const posts = await getNews();

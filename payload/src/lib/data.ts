@@ -153,3 +153,70 @@ export function formatDate(iso: string, opts: { withTime?: boolean } = {}) {
   const time = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: tz })
   return `${date} · ${time}`
 }
+
+/**
+ * The address this school's pages should be known by: its first domain, or
+ * (no domain yet) the address this request came in on.
+ */
+export async function siteOrigin(): Promise<string> {
+  const school = await currentSchool()
+  const own = school?.domains?.[0]?.domain
+  if (own) return `https://${own.replace(/^https?:\/\//, '').replace(/\/+$/, '')}`
+  const h = await headers()
+  const host = (h.get('x-forwarded-host') ?? h.get('host') ?? 'localhost').split(',')[0].trim()
+  const proto = (h.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https')).split(',')[0].trim()
+  return `${proto}://${host}`
+}
+
+/** True when search engines should stay away: the school says so, or this is a demo/preview address. */
+export async function hiddenFromSearch(): Promise<boolean> {
+  const [settings, school] = await Promise.all([getSettings(), currentSchool()])
+  if ((settings as any).hideFromSearch) return true
+  const h = await headers()
+  const host = (h.get('x-forwarded-host') ?? h.get('host') ?? '').split(',')[0].trim().split(':')[0]
+  const ownDomains = (school?.domains ?? []).map((d) => d.domain?.toLowerCase())
+  if (ownDomains.includes(host.toLowerCase())) return false
+  return /(\.vercel\.app|\.railway\.app|^localhost|^127\.)/.test(host) || ownDomains.length === 0
+}
+
+/** A redirect this school set up for an old address, if any. */
+export async function findRedirect(path: string): Promise<{ to: string; permanent: boolean } | null> {
+  const payload = await payloadClient()
+  const res = await payload.find({
+    collection: 'redirects',
+    where: await scoped({ from: { equals: path } }),
+    limit: 1,
+    depth: 1,
+    overrideAccess: true,
+  })
+  const r: any = res.docs[0]
+  if (!r) return null
+  let to: string | null = null
+  if (r.to?.type === 'custom') to = r.to.url || null
+  else if (r.to?.reference?.value && typeof r.to.reference.value === 'object') {
+    const { pathFor } = await import('@/seo/config')
+    to = pathFor(r.to.reference.relationTo, r.to.reference.value)
+  }
+  return to ? { to, permanent: r.type !== '302' } : null
+}
+
+/** Site search: this school's published pages, programs, events and news. */
+export async function searchSite(q: string, limit = 30) {
+  const term = q.trim().slice(0, 100)
+  if (term.length < 2) return []
+  const payload = await payloadClient()
+  const words = term.split(/\s+/).filter((w) => w.length > 1).slice(0, 6)
+  const res = await payload.find({
+    collection: 'search',
+    where: await scoped({
+      and: words.map((w): Where => ({ or: [{ title: { like: w } }, { text: { like: w } }] as Where[] })),
+    }),
+    sort: 'priority',
+    limit,
+    depth: 0,
+    overrideAccess: true,
+  })
+  const t = term.toLowerCase()
+  // Title matches first, then the plugin's priority (pages, programs, events, news).
+  return (res.docs as any[]).sort((a, b) => Number(!String(a.title).toLowerCase().includes(t)) - Number(!String(b.title).toLowerCase().includes(t)))
+}

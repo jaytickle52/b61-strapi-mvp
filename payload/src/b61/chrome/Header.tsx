@@ -142,6 +142,12 @@ export default function Header({ brand, items, utility, button }: { brand: Brand
         </nav>
 
         <div className="b61-hdr__end">
+          <Link href="/search" className="b61-hdr__search" aria-label="Search this site">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+              <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="2" />
+              <path d="m20 20-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </Link>
           {utility.map((l, i) => (
             <A key={i} l={l} className="b61-hdr__util" current={pathname} />
           ))}

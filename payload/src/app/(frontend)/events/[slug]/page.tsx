@@ -1,23 +1,29 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import RichText from "@/components/RichText";
 import PageHeader from "@/components/PageHeader";
 import { formatDate, getEvent, mediaUrl } from "@/lib/data";
+import { seoMetadata } from "@/seo/metadata";
+import { redirectOrNotFound } from "@/seo/redirect";
+import { eventSchema } from "@/seo/schema";
+import JsonLd from "@/seo/JsonLd";
 
 export async function generateMetadata({ params }: PageProps<"/events/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const event = await getEvent(slug);
-  return event && event.audience === "public" ? { title: event.title, description: event.summary } : {};
+  return event && event.audience === "public"
+    ? seoMetadata({ title: event.title, description: event.summary, meta: (event as any).meta, image: event.image, path: `/events/${slug}` })
+    : {};
 }
 
 export default async function EventPage({ params }: PageProps<"/events/[slug]">) {
   const { slug } = await params;
   const event = await getEvent(slug);
   // Parents-only events never appear on the public site.
-  if (!event || event.audience !== "public") notFound();
+  if (!event || event.audience !== "public") return redirectOrNotFound(`/events/${slug}`);
   const img = mediaUrl(event.image);
   return (
     <>
+      <JsonLd data={await eventSchema(event)} />
       <PageHeader
         eyebrow={formatDate(event.startsAt, { withTime: true })}
         title={event.title}

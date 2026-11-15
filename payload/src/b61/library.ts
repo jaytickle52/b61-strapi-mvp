@@ -10,7 +10,6 @@ import { cardsFrom, ensureDemoImages, statsFrom } from './demo'
  * by hand survive until the next version bump.
  */
 const LIBRARY_VERSION = 3
-const MARK = `[b61-library v${LIBRARY_VERSION}]`
 
 const para = (text: string) => ({
   root: {
@@ -28,8 +27,8 @@ const label = (name: string, note: string) => ({
 export async function syncElementLibrary(payload: Payload, school: School) {
   const mine = { school: { equals: school.id } }
   const found = await payload.find({ collection: 'pages', where: { and: [mine, { slug: { equals: 'elements' } }] }, limit: 1, depth: 0, draft: true })
-  const page = found.docs[0]
-  if (page?.seoDescription?.includes(MARK)) return
+  const page = found.docs.find((d: any) => d?.id)
+  if ((page as any)?.libraryVersion === LIBRARY_VERSION) return
   const settings = (await payload.find({ collection: 'school-settings', where: mine, limit: 1, depth: 0 })).docs[0]
   const imgs = (await ensureDemoImages(
     payload,
@@ -124,7 +123,7 @@ export async function syncElementLibrary(payload: Payload, school: School) {
     { blockType: 'b61ButtonBar', firstLabel: 'Schedule a visit', firstLink: go('visit'), secondLabel: 'Start an application', secondLink: go('admissions'), size: 'large' },
   ]
 
-  const data = { title: 'Element library', slug: 'elements', seoDescription: `Every Banner 61 element on one page. ${MARK}`, sections, _status: 'published' as const }
+  const data = { title: 'Element library', slug: 'elements', libraryVersion: LIBRARY_VERSION, meta: { description: 'Every Banner 61 element on one page.', noindex: true }, sections, _status: 'published' as const }
   if (page) await payload.update({ collection: 'pages', id: page.id, data: data as any })
   else await payload.create({ collection: 'pages', data: { ...data, school: school.id } as any })
   payload.logger.info(`[b61] Element library page updated for ${school.name} (v${LIBRARY_VERSION})`)

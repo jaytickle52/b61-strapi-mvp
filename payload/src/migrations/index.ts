@@ -1,6 +1,7 @@
 import * as migration_20261114_174733_initial from './20261114_174733_initial';
 import * as migration_20261114_185711_blob_object_key from './20261114_185711_blob_object_key';
 import * as migration_20261114_221832_forms_email from './20261114_221832_forms_email';
+import * as migration_20261114_224927_seo_search from './20261114_224927_seo_search';
 
 export const migrations = [
   {
@@ -16,6 +17,11 @@ export const migrations = [
   {
     up: migration_20261114_221832_forms_email.up,
     down: migration_20261114_221832_forms_email.down,
-    name: '20261114_221832_forms_email'
+    name: '20261114_221832_forms_email',
+  },
+  {
+    up: migration_20261114_224927_seo_search.up,
+    down: migration_20261114_224927_seo_search.down,
+    name: '20261114_224927_seo_search',
   },
 ];
