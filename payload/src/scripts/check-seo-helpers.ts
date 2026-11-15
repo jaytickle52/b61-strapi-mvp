@@ -3,6 +3,7 @@ import { clip, descriptionFrom } from '@/seo/text'
 import { joinAddress, profileUrl, splitAddress } from '@/school/fields'
 import { officeHours } from '@/school/facts'
 import { factSentence, faqSchema } from '@/seo/schema'
+import { aiAssistantName, groupAiAssistants } from '@/analytics/report'
 
 /*
  * Checks the small SEO helpers that run without a site: the page editor's
@@ -78,6 +79,11 @@ check(officeHours(['Mo', 'We'], '08:00', '12:00') === 'Mon, Wed, 8:00 AM–12:00
 check(factSentence({ grades: 'PreK–12', denomination: 'Nondenominational', city: 'Greenville', state: 'SC', foundedYear: 1987 }) === 'A PreK–12 nondenominational school in Greenville, SC, founded in 1987.', 'facts make one plain sentence')
 check(faqSchema([{ title: 'Is there a bus?', body: lexical('Yes, from Greer.') }])?.mainEntity?.[0]?.acceptedAnswer?.text === 'Yes, from Greer.', 'an FAQ accordion item becomes a question and answer')
 check(faqSchema([{ title: 'No answer', body: null }]) === null, 'questions without answers are left out')
+
+// ----- Visits from AI assistants (Analytics) ----------------------------------------
+check(aiAssistantName('chatgpt.com') === 'ChatGPT' && aiAssistantName('perplexity.ai') === 'Perplexity' && aiAssistantName('google') === null, 'AI assistants are told apart from other sources')
+const grouped = groupAiAssistants([{ source: 'chatgpt.com', visits: 5 }, { source: 'chat.openai.com', visits: 2 }, { source: 'claude.ai', visits: 3 }, { source: 'facebook.com', visits: 9 }])
+check(JSON.stringify(grouped) === JSON.stringify([{ name: 'ChatGPT', visits: 7 }, { name: 'Claude', visits: 3 }]), 'visits are added up per assistant, largest first, others left out')
 
 console.log(failed ? `\n${failed} failed` : '\nSEO helper checks passed')
 process.exit(failed ? 1 : 0)

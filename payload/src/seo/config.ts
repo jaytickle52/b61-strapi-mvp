@@ -38,8 +38,18 @@ export function normalizePath(input: string): string {
   return p.toLowerCase()
 }
 
+// One line of plain advice under each SEO field: what Google and AI tools do with it.
+const SEO_HINTS: Record<string, string> = {
+  title: 'What the page is, in the words a family would search, then the school\'s name: "Admissions and Tuition | Grace Christian School". Used exactly as written. About 50-60 characters.',
+  description:
+    'One or two plain sentences that answer what a family is looking for here (grades, tuition, how to apply). Google shows it under the title; AI tools may quote it. Empty: taken from the page.',
+  image: 'Shown when the page is shared in a text or on social media. Empty: the page\'s first photo.',
+}
+
 const seoFields = ({ defaultFields }: { defaultFields: Field[] }): Field[] => [
-  ...defaultFields,
+  ...defaultFields.map((f: any) =>
+    f?.name && SEO_HINTS[f.name] ? { ...f, admin: { ...(f.admin ?? {}), description: SEO_HINTS[f.name] } } : f,
+  ),
   {
     name: 'noindex',
     label: 'Hide this page from search engines',

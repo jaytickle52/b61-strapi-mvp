@@ -193,6 +193,10 @@ async function main() {
   check(Boolean(og), "the home page's link preview has a picture (its first photo when no share image is set)")
   check(/<style id="b61-fonts">|<link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com/.test(visit.text), 'fonts load inline, or by link when Google is out of reach')
 
+  // ----- Analytics: visits from AI assistants -------------------------------------------
+  const an = await get('/admin/analytics', { cookie: `payload-token=${admin}; payload-tenant=${school.id}` })
+  check(an.text.includes('From AI assistants') && an.text.includes('ChatGPT'), 'Analytics shows visits from AI assistants (sample numbers on the demo)')
+
   // ----- On the school's own domain (as a live site) -----------------------------
   const domains = school.domains ?? []
   const set = await api('PATCH', `/schools/${school.id}`, { token: admin, body: { domains: [{ domain: DOMAIN }, { domain: WWW }, ...domains] } })
