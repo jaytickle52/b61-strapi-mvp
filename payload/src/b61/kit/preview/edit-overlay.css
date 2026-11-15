@@ -1,0 +1,30 @@
+/* Click-to-edit outlines in the editor's live preview (EditOverlay.tsx). */
+.b61-edit-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  box-sizing: border-box;
+  border-radius: 2px;
+}
+.b61-edit-box[hidden] { display: none; }
+.b61-edit-box--hover { outline: 2px dashed #2f6fed; outline-offset: -2px; background: rgb(47 111 237 / 0.05); }
+.b61-edit-box--picked { outline: 2px solid #2f6fed; outline-offset: -2px; }
+.b61-edit-chip {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: #2f6fed;
+  color: #fff;
+  font: 600 12px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+}
+.b61-edit-chip:empty { display: none; }
+.b61-editing [data-b61-edit-label] { cursor: pointer; }
+.b61-editing [data-b61-edit-label] :is(button, input, select, textarea, summary, [role='tab'], [role='button']) { cursor: auto; }
+.b61-editing [data-b61-edit-label] :is(button, summary, [role='tab'], [role='button']) { cursor: pointer; }

@@ -5,7 +5,7 @@ import Inner from '../../kit/render/Inner'
 import CarouselInit from '../../kit/render/CarouselInit'
 
 /* Ported from elements/Carousel/html.twig and elements/Carousel_Slide/html.twig (plugin 1.77.1). */
-export default function B61Carousel({ block, index = 0 }: { block: any; index?: number }) {
+export default function B61Carousel({ block, index = 0, path }: { block: any; index?: number; path?: string }) {
   const ri = revealAttr(block.entrance)
   const rv = block.entrance === 'off' ? 'off' : 'on'
   const as = resolveHeadingLevel(block.headingLevel, index)
@@ -96,7 +96,7 @@ export default function B61Carousel({ block, index = 0 }: { block: any; index?: 
               {(block.slides ?? []).map((s: any, i: number) => (
                 <div key={s.id ?? i} className="b61-slide">
                   <div className="b61-slide__content" {...(s.label ? { 'data-b61-slide-label': s.label } : {})}>
-                    <Inner blocks={s.content} />
+                    <Inner blocks={s.content} path={path && `${path}.slides.${i}.content`} />
                   </div>
                 </div>
               ))}

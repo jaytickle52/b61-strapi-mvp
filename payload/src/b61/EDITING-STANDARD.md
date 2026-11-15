@@ -83,6 +83,8 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 - Only one level of nesting: a container offers the elements in `src/b61/inner.ts`,
   which leaves containers out. A Section's side column also offers the B61 Rail.
 - Inside a container, Automatic heading level means H2 (never H1).
+- A container passes `path` on to `Inner` (`${path}.content`, `${path}.tabs.${i}.content`,
+  ...) so click-to-edit (section 12) can reach its children. A new container must do the same.
 
 ## 9. Header and footer
 
@@ -110,3 +112,16 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
   and a hidden question is never required.
 - Forms always send from the school's sender (School settings > Email). Editors choose who
   receives each email, never the From address.
+
+## 12. Click-to-edit (live preview)
+
+- In the live preview, hovering an element outlines it with "Edit <name>"; clicking it opens
+  that element in the form (other sections close), scrolls to it and flashes it. Elements
+  inside a Tab, Slide or Section column open all the way down. Opening a section in the form
+  scrolls the preview to it.
+- Clicking the header or footer opens that tab in School settings (on a page, a note says
+  where they are edited). Links in the preview are not followed; buttons, tabs, accordions
+  and carousels still work.
+- Nothing to do per element: `Sections` and `Inner` add the markers. Code in
+  `src/b61/kit/preview/` (EditMark, EditOverlay) and `src/b61/kit/admin/PreviewFocus.tsx`.
+  The markers are `<template>` tags, only in the preview, which the plugin CSS already ignores.

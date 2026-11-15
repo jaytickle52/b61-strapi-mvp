@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Sections from "@/components/Sections";
-import { getPage } from "@/lib/data";
+import { getPage, isPreview } from "@/lib/data";
 import { seoMetadata } from "@/seo/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -13,5 +13,5 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage() {
   const page = await getPage("home");
   if (!page) notFound();
-  return <Sections sections={page.sections ?? []} />;
+  return <Sections sections={page.sections ?? []} editable={await isPreview()} />;
 }

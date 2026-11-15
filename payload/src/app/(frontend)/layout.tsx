@@ -53,6 +53,8 @@ import Footer from '@/b61/chrome/Footer'
 import { resolveMenu } from '@/b61/chrome/resolve'
 import { asMedia, resolveLink } from '@/b61/lib/media'
 import LivePreviewListener from '@/components/LivePreviewListener'
+import EditOverlay from '@/b61/kit/preview/EditOverlay'
+import EditMark from '@/b61/kit/preview/EditMark'
 
 export const dynamic = 'force-dynamic'
 
@@ -123,9 +125,12 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <JsonLd data={await schoolSchema()} />
         {preview && <PreviewBanner />}
         {preview && <LivePreviewListener />}
+        {preview && <EditOverlay />}
         <Announcements notices={notices} />
+        {preview && <EditMark tab="Header" label="Header" />}
         <Header brand={{ name: settings.schoolName, logo: logo?.url ? { src: logo.url, width: logo.width ?? undefined, height: logo.height ?? undefined } : null }} {...resolveMenu(settings)} />
         <main className="flex-1">{children}</main>
+        {preview && <EditMark tab="Footer" label="Footer" />}
         <Footer s={settings} logo={logoOnDark?.url ?? logo?.url} />
         <Reveal />
         {gaTag && <AnalyticsTag id={gaTag} />}

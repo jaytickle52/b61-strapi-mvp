@@ -15,9 +15,11 @@ import B61Tabs from "@/b61/elements/tabs/Tabs";
 import B61Carousel from "@/b61/elements/carousel/Carousel";
 import B61Section from "@/b61/elements/section/Section";
 import B61Form from "@/b61/elements/form/Form";
+import EditMark, { elementName } from "@/b61/kit/preview/EditMark";
+import { Fragment } from "react";
 
 // Every section is a Banner 61 element; each renders the plugin's own markup.
-const ELEMENTS: Record<string, (p: { block: any; index?: number }) => any> = {
+const ELEMENTS: Record<string, (p: { block: any; index?: number; path?: string }) => any> = {
   b61Hero: B61Hero,
   b61Split: B61Split,
   b61Prose: B61Prose,
@@ -37,12 +39,20 @@ const ELEMENTS: Record<string, (p: { block: any; index?: number }) => any> = {
   b61Form: B61Form,
 };
 
-export default function Sections({ sections }: { sections: any[] }) {
+/** `editable` (live preview only) adds click-to-edit markers; see b61/kit/preview. */
+export default function Sections({ sections, editable = false }: { sections: any[]; editable?: boolean }) {
   return (
     <>
       {sections.map((s, i) => {
         const El = ELEMENTS[s.blockType];
-        return El ? <El key={s.id ?? `${s.blockType}-${i}`} block={s} index={i} /> : null;
+        if (!El) return null;
+        const path = editable ? `sections.${i}` : undefined;
+        return (
+          <Fragment key={s.id ?? `${s.blockType}-${i}`}>
+            {path && <EditMark path={path} label={elementName(s.blockType)} />}
+            <El block={s} index={i} path={path} />
+          </Fragment>
+        );
       })}
     </>
   );

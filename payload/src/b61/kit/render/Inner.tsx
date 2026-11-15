@@ -12,6 +12,8 @@ import B61Accordion from '../../elements/accordion/Accordion'
 import B61Pillars from '../../elements/pillars/Pillars'
 import B61Rail from '../../elements/rail/Rail'
 import B61Form from '../../elements/form/Form'
+import EditMark, { elementName } from '../preview/EditMark'
+import { Fragment } from 'react'
 
 export const INNER: Record<string, (p: { block: any; index?: number }) => any> = {
   b61Split: B61Split,
@@ -31,12 +33,19 @@ export const INNER: Record<string, (p: { block: any; index?: number }) => any> =
 }
 
 /** Renders a container's child elements. Index 1, so Automatic headings are H2, never H1. */
-export default function Inner({ blocks }: { blocks?: any[] | null }) {
+/** `path` (live preview only) is where these children live in the editor, e.g. "sections.2.content". */
+export default function Inner({ blocks, path }: { blocks?: any[] | null; path?: string }) {
   return (
     <>
       {(blocks ?? []).map((b, i) => {
         const El = INNER[b.blockType]
-        return El ? <El key={b.id ?? i} block={b} index={i + 1} /> : null
+        if (!El) return null
+        return (
+          <Fragment key={b.id ?? i}>
+            {path && <EditMark path={`${path}.${i}`} label={elementName(b.blockType)} />}
+            <El block={b} index={i + 1} />
+          </Fragment>
+        )
       })}
     </>
   )

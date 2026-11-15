@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
 import Sections from "@/components/Sections";
-import { getPage } from "@/lib/data";
+import { getPage, isPreview } from "@/lib/data";
 import { seoMetadata } from "@/seo/metadata";
 import { redirectOrNotFound } from "@/seo/redirect";
 
@@ -24,5 +24,5 @@ export default async function CmsPage({ params }: PageProps<"/[...path]">) {
   if (slug === "home") permanentRedirect("/");
   const page = slug ? await getPage(slug) : null;
   if (!page) return redirectOrNotFound(`/${path.join("/")}`);
-  return <Sections sections={page.sections ?? []} />;
+  return <Sections sections={page.sections ?? []} editable={await isPreview()} />;
 }

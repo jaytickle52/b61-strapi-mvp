@@ -184,6 +184,16 @@ Ask AI was dropped from this thread at Jay's request (14 Nov 2026).
 - Migration `20261115_010944_thread_g_analytics` (IF NOT EXISTS, safe to run twice).
 - Smoke test now also opens `/admin/analytics` (each period) and School settings.
 
+## Click-to-edit preview
+
+- Jay chose to hold off on Puck (visual drag-and-drop editor) and close the gap inside Payload.
+- In the live preview: hover outlines an element with "Edit <name>"; click opens it in the form,
+  closes the other sections, scrolls and flashes it (works inside Tabs, Carousel slides and
+  Section columns). Opening a section in the form scrolls the preview to it. Header/footer
+  clicks open those tabs in School settings. See EDITING-STANDARD.md section 12.
+- Code: `src/b61/kit/preview/` (EditMark, EditOverlay, withPreviewFocus) and
+  `src/b61/kit/admin/PreviewFocus.tsx`. No database change.
+
 ## Working rules with Jay
 
 - End work replies with a 2-line status: what was done, and the one thing needed from Jay.
