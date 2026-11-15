@@ -456,7 +456,7 @@ export interface Page {
               };
               [k: string]: unknown;
             } | null;
-            source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff') | null;
+            source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts') | null;
             limit?: number | null;
             mediaType?: ('image' | 'icon' | 'none') | null;
             cards?:
@@ -784,6 +784,10 @@ export interface Page {
                   id?: string | null;
                 }[]
               | null;
+            /**
+             * Search engines and AI tools read each title as a question and its body as the answer.
+             */
+            faq?: boolean | null;
             buttons?:
               | {
                   label: string;
@@ -1553,7 +1557,8 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
-                      source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff') | null;
+                      source?:
+                        ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts') | null;
                       limit?: number | null;
                       mediaType?: ('image' | 'icon' | 'none') | null;
                       cards?:
@@ -1898,6 +1903,10 @@ export interface Page {
                             id?: string | null;
                           }[]
                         | null;
+                      /**
+                       * Search engines and AI tools read each title as a question and its body as the answer.
+                       */
+                      faq?: boolean | null;
                       buttons?:
                         | {
                             label: string;
@@ -2393,7 +2402,8 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
-                      source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff') | null;
+                      source?:
+                        ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts') | null;
                       limit?: number | null;
                       mediaType?: ('image' | 'icon' | 'none') | null;
                       cards?:
@@ -2738,6 +2748,10 @@ export interface Page {
                             id?: string | null;
                           }[]
                         | null;
+                      /**
+                       * Search engines and AI tools read each title as a question and its body as the answer.
+                       */
+                      faq?: boolean | null;
                       buttons?:
                         | {
                             label: string;
@@ -4137,7 +4151,59 @@ export interface SchoolSetting {
   siteIcon?: (number | null) | Media;
   phone?: string | null;
   email?: string | null;
+  street?: string | null;
+  city?: string | null;
+  state?: string | null;
+  postalCode?: string | null;
   address?: string | null;
+  /**
+   * In Google Maps, right-click the school's front door and click the two numbers at the top to copy them.
+   */
+  latitude?: number | null;
+  longitude?: number | null;
+  officeDays?: ('Mo' | 'Tu' | 'We' | 'Th' | 'Fr' | 'Sa' | 'Su')[] | null;
+  officeOpens?: string | null;
+  officeCloses?: string | null;
+  shortName?: string | null;
+  grades?: string | null;
+  foundedYear?: number | null;
+  enrollment?: number | null;
+  studentTeacherRatio?: string | null;
+  denomination?: string | null;
+  transportation?: string | null;
+  churchName?: string | null;
+  churchUrl?: string | null;
+  beforeAfterCare?: boolean | null;
+  /**
+   * Who accredits the school, e.g. ACSI or Cognia.
+   */
+  accreditations?:
+    | {
+        name: string;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Associations the school belongs to.
+   */
+  memberships?:
+    | {
+        name: string;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The school's own page on Google (Business Profile), Niche, GreatSchools and similar. Helps search engines and AI tools match them to this site.
+   */
+  profiles?:
+    | {
+        name: string;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   /**
    * Headings, buttons, header links.
    */
@@ -5260,6 +5326,7 @@ export interface PagesSelect<T extends boolean = true> {
                     body?: T;
                     id?: T;
                   };
+              faq?: T;
               buttons?:
                 | T
                 | {
@@ -6093,6 +6160,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 body?: T;
                                 id?: T;
                               };
+                          faq?: T;
                           buttons?:
                             | T
                             | {
@@ -6726,6 +6794,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 body?: T;
                                 id?: T;
                               };
+                          faq?: T;
                           buttons?:
                             | T
                             | {
@@ -7405,7 +7474,47 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   siteIcon?: T;
   phone?: T;
   email?: T;
+  street?: T;
+  city?: T;
+  state?: T;
+  postalCode?: T;
   address?: T;
+  latitude?: T;
+  longitude?: T;
+  officeDays?: T;
+  officeOpens?: T;
+  officeCloses?: T;
+  shortName?: T;
+  grades?: T;
+  foundedYear?: T;
+  enrollment?: T;
+  studentTeacherRatio?: T;
+  denomination?: T;
+  transportation?: T;
+  churchName?: T;
+  churchUrl?: T;
+  beforeAfterCare?: T;
+  accreditations?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        id?: T;
+      };
+  memberships?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        id?: T;
+      };
+  profiles?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        id?: T;
+      };
   primaryColor?: T;
   secondaryColor?: T;
   accentColor?: T;

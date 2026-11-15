@@ -19,7 +19,8 @@ import {
  * Port of Banner 61 Elements' B61 Card Grid (plugin 1.77.1); stored values match it.
  *
  * Added for Payload: "Fill with" pulls cards from Programs, Upcoming events,
- * Latest news or Staff, so an item entered once shows here too. Hand-written
+ * Latest news, Staff or School facts (School settings > School), so an item
+ * entered once shows here too. Hand-written
  * cards remain the default.
  *
  * Left out: the per-element "Text link hover color" picker (per-site flair
@@ -42,7 +43,7 @@ export const B61CardGrid = defineElement({
   slug: 'b61CardGrid',
   name: 'Card Grid',
   plural: 'Card Grids',
-  mode: { field: 'source', labels: { manual: 'Cards', programs: 'Programs', 'upcoming-events': 'Events', 'latest-news': 'News', staff: 'Staff' } },
+  mode: { field: 'source', labels: { manual: 'Cards', programs: 'Programs', 'upcoming-events': 'Events', 'latest-news': 'News', staff: 'Staff', 'school-facts': 'School facts' } },
 
   content: [
     panel('Heading', [
@@ -60,6 +61,7 @@ export const B61CardGrid = defineElement({
           ['upcoming-events', 'Upcoming events'],
           ['latest-news', 'Latest news'],
           ['staff', 'Staff'],
+          ['school-facts', 'School facts'],
         ],
         { default: 'manual' },
       ),
@@ -70,7 +72,7 @@ export const B61CardGrid = defineElement({
         defaultValue: 3,
         min: 1,
         max: 12,
-        admin: { condition: (_, s) => (s?.source ?? 'manual') !== 'manual', width: '50%' },
+        admin: { condition: (_, s) => !['manual', 'school-facts'].includes(s?.source ?? 'manual'), width: '50%' },
       },
       segmented(
         'mediaType',

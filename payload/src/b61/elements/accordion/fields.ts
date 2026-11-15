@@ -20,6 +20,8 @@ export const B61Accordion = defineElement({
       },
       { name: 'body', label: 'Body', type: 'richText', editor: simpleEditor() },
     ]),
+    // Marks the items as questions and answers for search engines (schema.org FAQPage).
+    { ...toggle('faq', 'These are questions and answers'), admin: { description: 'Search engines and AI tools read each title as a question and its body as the answer.' } } as any,
     buttonsField(),
   ],
   design: {

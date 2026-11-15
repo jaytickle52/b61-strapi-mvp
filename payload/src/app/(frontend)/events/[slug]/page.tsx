@@ -32,6 +32,7 @@ export default async function EventPage({ params }: PageProps<"/events/[slug]">)
         eyebrow={eventWhen(event)}
         title={event.title}
         intro={event.location}
+        crumbs={[{ name: "Events", path: "/events" }, { name: event.title, path: `/events/${slug}` }]}
       />
       <article className="mx-auto w-full max-w-3xl px-5 py-14 sm:px-8">
         <p className="b61-addcal">

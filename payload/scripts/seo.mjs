@@ -57,6 +57,10 @@ const tag = (html, re) => html.match(re)?.[1] ?? null
 const description = (html) => tag(html, /<meta name="description" content="([^"]*)"/)
 const robots = (html) => tag(html, /<meta name="robots" content="([^"]*)"/)
 const title = (html) => tag(html, /<title>([^<]*)<\/title>/)
+/** Every JSON-LD block on a page, parsed. */
+const jsonld = (html) => [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]))
+const ofType = (html, type) => jsonld(html).find((d) => d['@type'] === type)
+const para = (text) => ({ root: { type: 'root', format: '', indent: 0, version: 1, direction: null, children: [{ type: 'paragraph', format: '', indent: 0, version: 1, direction: null, children: [{ type: 'text', text, version: 1 }] }] } })
 const decode = (s) => (s ?? '').replace(/&amp;/g, '&').replace(/&#x27;/g, "'").replace(/&quot;/g, '"')
 
 async function main() {
@@ -105,6 +109,50 @@ async function main() {
   const missing = await get(`/no-such-page-${RUN}`, { school: 'cedar-ridge' })
   check(missing.status === 404, 'a missing page is a 404')
   check((title(missing.text) ?? '').startsWith('Page not found'), 'its tab title says Page not found')
+
+  // ----- Structured data ------------------------------------------------------------
+  const home = (await get('/', { school: 'cedar-ridge' })).text
+  const sch = ofType(home, 'School')
+  check(sch?.address?.addressLocality && sch?.address?.postalCode, 'School data has the address in parts')
+  check(Array.isArray(sch?.sameAs) && sch.sameAs.every((u) => new URL(u).pathname.replace(/\/+$/, '') !== ''), 'School data links only to full profile pages')
+  if (settings?.grades) check(sch?.description?.includes(settings.grades), 'School data describes the school with its facts')
+  check(Boolean(ofType(home, 'WebSite')), 'the home page names the site (WebSite)')
+  check(!ofType((await get('/about', { school: 'cedar-ridge' })).text, 'WebSite'), '… and only the home page')
+  const prog = (await api('GET', `/programs?where[school][equals]=${school.id}&limit=1&depth=0`, { token: admin })).json?.docs?.[0]
+  if (prog) {
+    const crumbs = ofType((await get(`/programs/${prog.slug}`, { school: 'cedar-ridge' })).text, 'BreadcrumbList')
+    check(crumbs?.itemListElement?.map((x) => x.name).join(' > ') === `Home > Programs > ${prog.name}`, 'program pages carry a breadcrumb trail')
+  }
+  const staff = ofType((await get('/staff', { school: 'cedar-ridge' })).text, 'ItemList')
+  check(staff?.itemListElement?.[0]?.item?.['@type'] === 'Person', 'Our team describes each person')
+  if (settings?.grades) check((await get('/about', { school: 'cedar-ridge' })).text.includes(settings.grades), 'School facts show on the demo About page')
+
+  // FAQ accordion on a throwaway page
+  const faqPage = await api('POST', '/pages', {
+    token: admin,
+    body: {
+      school: school.id,
+      title: `FAQ test ${RUN}`,
+      slug: `faq-test-${RUN}`,
+      _status: 'published',
+      sections: [{ blockType: 'b61Accordion', faq: true, lines: [{ text: 'Questions' }], items: [{ title: 'Is there a bus?', body: para('Yes, from Greer.') }] }],
+    },
+  })
+  check(faqPage.status === 201, 'test page with an FAQ accordion saved')
+  if (faqPage.json?.doc?.id) {
+    const faq = ofType((await get(`/faq-test-${RUN}`, { school: 'cedar-ridge' })).text, 'FAQPage')
+    check(faq?.mainEntity?.[0]?.acceptedAnswer?.text === 'Yes, from Greer.', 'an accordion marked as questions and answers gives FAQ data')
+    await api('DELETE', `/pages/${faqPage.json.doc.id}`, { token: admin })
+  }
+
+  // Settings rules
+  const bad = await api('PATCH', `/school-settings/${settings.id}`, { token: admin, body: { social: [{ platform: 'facebook', url: 'https://facebook.com/' }] } })
+  check(bad.status === 400, 'a social link to a site\'s home page is refused')
+  if (settings?.street) {
+    const moved = await api('PATCH', `/school-settings/${settings.id}?draft=true`, { token: admin, body: { postalCode: '29999' } })
+    check(String(moved.json?.doc?.address ?? '').endsWith('29999'), 'the footer address follows the parts')
+    await api('PATCH', `/school-settings/${settings.id}`, { token: admin, body: { postalCode: settings.postalCode, _status: 'published' } })
+  }
 
   // ----- On the school's own domain (as a live site) -----------------------------
   const domains = school.domains ?? []

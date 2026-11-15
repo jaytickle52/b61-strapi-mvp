@@ -5,6 +5,7 @@ import { footerFields, headerFields } from '../b61/chrome/fields'
 import { testEmailEndpoint } from '../email/endpoints'
 import { colorField } from '../branding/fields'
 import { BODY_FONTS, HEADING_FONTS, UI_FONTS } from '../b61/lib/theme'
+import { addressFields, factFields, withJoinedAddress } from '../school/fields'
 
 /**
  * One per school (the multi-school plugin makes this behave like a single
@@ -20,7 +21,7 @@ export const SchoolSettings: CollectionConfig = {
   },
   // Contributors can look but not change settings (they go live at once).
   access: { read: publishedOrSignedIn, create: publishersOnly, update: publishersOnly },
-  hooks: { beforeChange: [guardPublishing] },
+  hooks: { beforeChange: [guardPublishing, ({ data }) => withJoinedAddress(data)] },
   endpoints: [testEmailEndpoint],
   versions: { drafts: { autosave: { interval: 400 } }, maxPerDoc: 25 },
   fields: [
@@ -52,9 +53,15 @@ export const SchoolSettings: CollectionConfig = {
                 },
               ],
             },
-            { name: 'phone', type: 'text' },
-            { name: 'email', type: 'email' },
-            { name: 'address', type: 'textarea' },
+            {
+              type: 'row',
+              fields: [
+                { name: 'phone', type: 'text', admin: { width: '50%' } },
+                { name: 'email', type: 'email', admin: { width: '50%' } },
+              ],
+            },
+            ...addressFields,
+            ...factFields,
           ],
         },
         {

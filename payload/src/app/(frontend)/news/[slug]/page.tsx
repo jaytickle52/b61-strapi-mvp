@@ -26,7 +26,7 @@ export default async function NewsPostPage({ params }: PageProps<"/news/[slug]">
   return (
     <>
       <JsonLd data={await articleSchema(post)} />
-      <PageHeader eyebrow={[formatDate(post.date), ...cats.map((c) => c.name)].join(" · ")} title={post.title} intro={post.summary} />
+      <PageHeader eyebrow={[formatDate(post.date), ...cats.map((c) => c.name)].join(" · ")} title={post.title} intro={post.summary} crumbs={[{ name: "News", path: "/news" }, { name: post.title, path: `/news/${slug}` }]} />
       <article className="mx-auto w-full max-w-3xl px-5 py-14 sm:px-8">
         {img && <img {...img} alt={alt} className="mb-8 h-auto w-full rounded-3xl" />}
         <RichText content={post.body} />

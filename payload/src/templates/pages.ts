@@ -171,6 +171,8 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
         ['[Value three]', '[One or two sentences.]'],
       ], 'muted'),
       prose({ eyebrow: 'Our story', heading: 'How we began', text: ['[When and why the school was founded, and by whom.]', '[Where the school is today.]'] }),
+      // Filled from School settings > School > School facts; families (and AI tools) look for these.
+      { ...cardsFrom({ heading: 'At a glance', source: 'school-facts', columns: 'four', tone: 'light' }), mediaType: 'none' },
       cardsFrom({ heading: 'Meet our leaders', source: 'staff', limit: 4, columns: 'four', tone: 'muted' }),
       cta('Come and visit', 'Walk the halls, sit in on a class and meet our teachers.', [['Schedule a tour', '/schedule-a-tour'], ['Contact us', '/contact']]),
     ],

@@ -1,6 +1,7 @@
 import type { Field } from 'payload'
 import { link, segmented } from '../kit/controls'
 import { list, photo } from '../kit/groups'
+import { profileUrl } from '../../school/fields'
 
 /*
  * Site header and footer, edited in School settings. Same kit controls as the
@@ -102,7 +103,7 @@ export const footerFields: Field[] = [
         type: 'row',
         fields: [
           { name: 'platform', label: 'Platform', type: 'select', required: true, defaultValue: 'facebook', options: SOCIAL.map(([value, label]) => ({ value, label })), admin: { width: '35%', isClearable: false } },
-          { name: 'url', label: 'Web address', type: 'text', required: true, admin: { width: '65%', placeholder: 'https://' } },
+          { name: 'url', label: 'Web address', type: 'text', required: true, validate: profileUrl, admin: { width: '65%', placeholder: 'https://' } },
         ],
       },
     ],

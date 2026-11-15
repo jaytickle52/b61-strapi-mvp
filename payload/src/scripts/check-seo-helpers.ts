@@ -1,5 +1,8 @@
 import { countH1 } from '@/b61/kit/headings'
 import { clip, descriptionFrom } from '@/seo/text'
+import { joinAddress, profileUrl, splitAddress } from '@/school/fields'
+import { officeHours } from '@/school/facts'
+import { factSentence, faqSchema } from '@/seo/schema'
 
 /*
  * Checks the small SEO helpers that run without a site: the page editor's
@@ -62,6 +65,19 @@ const d = descriptionFrom(lexical(long))
 check(d.length <= 155 && d.endsWith('.'), `long text is cut at a sentence (${d.length} characters)`)
 check(clip('word '.repeat(60)).endsWith('…') && clip('word '.repeat(60)).length <= 155, 'no sentence end: cut at a word with an ellipsis')
 check(descriptionFrom([{ blockType: 'b61Divider' }]) === '', 'nothing to say: empty, so the page default is used')
+
+// ----- Address, links and facts (structured data) -------------------------------
+const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b)
+check(same(splitAddress('410 Cedar Ridge Road\nGreenville, SC 29601'), { street: '410 Cedar Ridge Road', city: 'Greenville', state: 'SC', postalCode: '29601' }), 'two-line address splits into parts')
+check(same(splitAddress('123 Elm St, Taylors, SC 29687'), { street: '123 Elm St', city: 'Taylors', state: 'SC', postalCode: '29687' }), 'one-line address splits too')
+check(same(splitAddress('100 Main St, Suite 2\nSpartanburg, SC 29301-1234'), { street: '100 Main St, Suite 2', city: 'Spartanburg', state: 'SC', postalCode: '29301-1234' }), 'suite and ZIP+4 kept')
+check(joinAddress({ street: '410 Cedar Ridge Road', city: 'Greenville', state: 'SC', postalCode: '29601' }) === '410 Cedar Ridge Road\nGreenville, SC 29601', 'parts join back into the footer address')
+check(profileUrl('https://facebook.com/') !== true && profileUrl('https://facebook.com/cedarridge') === true && profileUrl('facebook.com/x') !== true, 'social links must be a full profile address')
+check(officeHours(['Mo', 'Tu', 'We', 'Th', 'Fr'], '07:30', '16:00') === 'Mon–Fri, 7:30 AM–4:00 PM', 'office hours read like a person wrote them')
+check(officeHours(['Mo', 'We'], '08:00', '12:00') === 'Mon, Wed, 8:00 AM–12:00 PM', '… with gaps between days')
+check(factSentence({ grades: 'PreK–12', denomination: 'Nondenominational', city: 'Greenville', state: 'SC', foundedYear: 1987 }) === 'A PreK–12 nondenominational school in Greenville, SC, founded in 1987.', 'facts make one plain sentence')
+check(faqSchema([{ title: 'Is there a bus?', body: lexical('Yes, from Greer.') }])?.mainEntity?.[0]?.acceptedAnswer?.text === 'Yes, from Greer.', 'an FAQ accordion item becomes a question and answer')
+check(faqSchema([{ title: 'No answer', body: null }]) === null, 'questions without answers are left out')
 
 console.log(failed ? `\n${failed} failed` : '\nSEO helper checks passed')
 process.exit(failed ? 1 : 0)
