@@ -40,7 +40,9 @@ import '@/b61/styles/kit-instance.css'
 import '@/b61/styles/kit-frontend.css'
 import '@/b61/chrome/chrome.css'
 import '@/b61/styles/calendar.css'
-import { b61Theme, FONT_STACKS, fontsHref } from '@/b61/lib/theme'
+import '@/b61/styles/tone.css'
+import { b61Theme, FONT_STACKS, fontsHref, toneOf } from '@/b61/lib/theme'
+import { customCssTag } from '@/b61/lib/custom-css'
 import Reveal from '@/b61/reveal/Reveal'
 import { getAnnouncements, getSettings, hiddenFromSearch, isPreview, siteOrigin } from '@/lib/data'
 import AnalyticsTag from '@/analytics/Tag'
@@ -103,6 +105,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   // A separate logo for the dark footer, when the school has one.
   const logoOnDark = asMedia((settings as any).logoOnDark)
   const fontsUrl = fontsHref(settings)
+  const customCss = customCssTag(settings.customCss)
 
   // The school's colors and fonts become CSS variables every component uses.
   const theme = {
@@ -115,11 +118,13 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     // The B61 palette goes on <html>: tokens.css derives its role tokens on
     // :root, so the raw values have to be set there to flow through.
-    <html lang="en" className="h-full antialiased" style={b61Theme(settings)}>
+    <html lang="en" className="h-full antialiased" data-b61-tone={toneOf(settings)} style={b61Theme(settings)}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="stylesheet" href={fontsUrl} />
+        {/* Banner 61's custom CSS for this school, last so it wins over the element styles. */}
+        {customCss && <style id="b61-custom-css" dangerouslySetInnerHTML={{ __html: customCss }} />}
       </head>
       <body className="flex min-h-full flex-col" style={theme}>
         <JsonLd data={await schoolSchema()} />

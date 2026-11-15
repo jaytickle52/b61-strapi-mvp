@@ -1,6 +1,6 @@
 // School features test (Thread F): announcements, the events calendar and its
 // subscribe feed, calendar feed import, news categories, drag ordering, page
-// templates, Bunny video links and uploads, and branding (colors, fonts, site icon). Runs against a site with the demo schools
+// templates, Bunny video links and uploads, branding (colors, fonts, site icon), site tone and custom CSS. Runs against a site with the demo schools
 // and a Banner 61 admin account (the smoke test creates one):
 //
 //   BASE_URL=http://localhost:3000 SMOKE_EMAIL=... SMOKE_PASSWORD=... node scripts/features.mjs
@@ -293,6 +293,48 @@ async function main() {
     check(!visible((await page(`/news/${post.slug}`, 'cedar-ridge')).text).includes(`Draft ${fresh}`), 'a draft save stays off the public page')
     check(!visible((await page('/news', 'harbor-oaks')).text).includes(fresh), "another school's cache never shows it")
     await api('PATCH', `/news/${post.id}`, { token: admin, body: { title: post.title, _status: 'published' } })
+  }
+
+  // ----- Site tone, custom CSS and element classes -------------------------------
+  console.log('\nSite tone and custom CSS')
+  const hs = (await api('GET', `/school-settings?where[school][equals]=${harbor}&depth=0`, { token: admin })).json?.docs?.[0]
+  if (hs) {
+    const marker = `css-check-${RUN}`
+    await api('PATCH', `/school-settings/${hs.id}`, {
+      token: admin,
+      body: { siteTone: 'dark', customCss: `.${marker} { color: red } </style><b id="${marker}-escaped">x</b>`, _status: 'published' },
+    })
+    const dark = (await page('/', 'harbor-oaks')).text
+    check(dark.includes('data-b61-tone="dark"'), 'a dark site marks its page as dark')
+    check(dark.includes(`.${marker} { color: red }`), 'custom CSS is on the page')
+    check(!dark.includes(`</style><b id="${marker}-escaped">`), '… and cannot close its style tag')
+    check((await page('/', 'cedar-ridge')).text.includes('data-b61-tone="light"'), "another school's tone is untouched")
+
+    // A Harbor Oaks Editor can change the look but not the Banner 61-only CSS.
+    const edEmail = `feat-editor-${RUN}@example.com`
+    await api('POST', '/users', { token: admin, body: { email: edEmail, password: PASSWORD, name: 'Feature editor', role: 'editor', tenants: [{ tenant: harbor, role: 'editor' }] } })
+    const editor = await login(edEmail, PASSWORD)
+    await api('PATCH', `/school-settings/${hs.id}`, { token: editor, body: { customCss: 'body { display: none }', _status: 'published' } })
+    const after = (await api('GET', `/school-settings/${hs.id}?depth=0`, { token: admin })).json
+    check(String(after?.customCss ?? '').includes(marker), 'an Editor cannot change the custom CSS')
+
+    // Element CSS class (Design > Advanced).
+    const hp = (await api('GET', `/pages?where[school][equals]=${harbor}&where[slug][equals]=home&depth=0`, { token: admin })).json?.docs?.[0]
+    if (hp?.sections?.length) {
+      const withClass = hp.sections.map((s, i) => (i === 0 ? { ...s, cssClass: `${marker} wide` } : s))
+      await api('PATCH', `/pages/${hp.id}`, { token: admin, body: { sections: withClass, _status: 'published' } })
+      check((await page('/', 'harbor-oaks')).text.includes(`class="b61-custom ${marker} wide"`), 'an element carries its CSS class')
+      const bad = await api('PATCH', `/pages/${hp.id}`, { token: admin, body: { sections: hp.sections.map((s, i) => (i === 0 ? { ...s, cssClass: 'no"quotes' } : s)) } })
+      check(bad.status >= 400, 'a CSS class with odd characters is refused')
+      await api('PATCH', `/pages/${hp.id}`, { token: editor, body: { sections: hp.sections.map((s, i) => (i === 0 ? { ...s, cssClass: 'editor-class' } : s)), _status: 'published' } })
+      const kept = (await api('GET', `/pages/${hp.id}?depth=0`, { token: admin })).json
+      check(kept?.sections?.[0]?.cssClass === `${marker} wide`, 'an Editor cannot change an element CSS class')
+      await api('PATCH', `/pages/${hp.id}`, { token: admin, body: { sections: hp.sections.map((s) => ({ ...s, cssClass: null })), _status: 'published' } })
+    }
+
+    await api('PATCH', `/school-settings/${hs.id}`, { token: admin, body: { siteTone: hs.siteTone ?? 'light', customCss: hs.customCss ?? null, _status: 'published' } })
+    const ed = (await api('GET', `/users?where[email][equals]=${encodeURIComponent(edEmail)}&depth=0`, { token: admin })).json?.docs?.[0]
+    if (ed) await api('DELETE', `/users/${ed.id}`, { token: admin })
   }
 
   // ----- Tidy up --------------------------------------------------------------

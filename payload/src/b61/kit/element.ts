@@ -1,5 +1,7 @@
 import type { Block, Condition, Field } from 'payload'
 import { whenCondition, type When } from './controls'
+import { isB61Admin } from '../../access'
+import { validateCssClass } from '../lib/custom-css'
 
 /*
  * defineElement(): the one way to build a B61 element's form.
@@ -87,6 +89,39 @@ function designPanel(label: string, fields: Field[] | undefined, open: boolean):
   ]
 }
 
+/**
+ * Design > Advanced: a CSS class for this one element, so the school's Custom
+ * CSS (School settings > Look) can target it. Banner 61 admins only; school
+ * staff never see it. The class goes on a wrapper around the element (see
+ * kit/render/custom-class.tsx), so no element's own markup changes.
+ */
+function advancedPanel(): Field[] {
+  return [
+    {
+      type: 'collapsible',
+      label: 'Advanced',
+      admin: {
+        initCollapsed: true,
+        className: 'b61-panel',
+        condition: (_data: unknown, _sibling: unknown, ctx: any) => isB61Admin(ctx?.user),
+      },
+      fields: [
+        {
+          name: 'cssClass',
+          label: 'CSS class',
+          type: 'text',
+          validate: validateCssClass,
+          access: {
+            create: ({ req }) => isB61Admin(req.user),
+            update: ({ req }) => isB61Admin(req.user),
+          },
+          admin: { placeholder: 'e.g. ls-hero-tilt', description: 'Banner 61 only. Style it in School settings > Look > Custom CSS.' },
+        },
+      ],
+    } as Field,
+  ]
+}
+
 export function defineElement(spec: ElementSpec): Block {
   const d = spec.design
   return {
@@ -113,6 +148,7 @@ export function defineElement(spec: ElementSpec): Block {
               ...(d.part ? designPanel(d.part.label, d.part.fields, false) : []),
               ...designPanel('Color', d.color, false),
               ...designPanel('Accents', d.accents, false),
+              ...advancedPanel(),
             ],
           },
         ],

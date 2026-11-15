@@ -19,7 +19,8 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
   const surface = block.surface ?? 'primary'
   // Overlay + surface resolve to ONE scheme, which carries its text colours.
   const scheme = mode === 'band' ? surface : overlay === 'gradient' ? 'gradient' : surface
-  const ovop = block.overlayStrength ? Math.min(Math.max(Math.round(block.overlayStrength), 80), 100) : null
+  // Empty: the plugin's default. 0-100: the overlay's opacity (was floored at 80).
+  const ovop = typeof block.overlayStrength === 'number' ? Math.min(Math.max(Math.round(block.overlayStrength), 0), 100) : null
   const valign = mode === 'band' ? 'center' : (block.verticalPosition ?? 'bottom')
   const talign = block.textAlign ?? 'left'
   const pt = block.padTop ?? 'normal'
@@ -170,7 +171,7 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
           <div
             className={`b61-hero__scrim b61-hero__scrim--${scheme} b61-hero__scrim--at-v${valign} b61-hero__scrim--at-h${talign}`}
             aria-hidden="true"
-            style={ovop ? { opacity: ovop / 100 } : undefined}
+            style={ovop !== null ? { opacity: ovop / 100 } : undefined}
           />
         </>
       )}

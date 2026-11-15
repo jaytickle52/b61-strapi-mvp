@@ -25,7 +25,7 @@ export const B61Section = defineElement({
     }),
     panel('Background photo', [
       photo('image', 'Photo'),
-      { name: 'overlayStrength', label: 'Overlay strength (%)', type: 'number', min: 0, max: 90, admin: { step: 5, placeholder: '70', condition: (_, s) => Boolean(s?.image) } },
+      { name: 'overlayStrength', label: 'Overlay strength (%)', type: 'number', min: 0, max: 100, admin: { step: 5, placeholder: '70', description: 'Check the words stay easy to read over the photo (70% is a safe start).', condition: (_, s) => Boolean(s?.image) } },
     ]),
   ],
   design: {
@@ -45,7 +45,14 @@ export const B61Section = defineElement({
       fields: [
         toggle('patternOn', 'Pattern'),
         photo('patternImage', 'Tile image (optional)', { when: { field: 'patternOn', in: [true] } }),
-        { name: 'tileSize', label: 'Tile size (px)', type: 'number', min: 4, max: 600, admin: { condition: (_, s) => Boolean(s?.patternOn) } },
+        {
+          type: 'row',
+          admin: { condition: (_: unknown, s: any) => Boolean(s?.patternOn) },
+          fields: [
+            { name: 'tileSize', label: 'Tile size (px)', type: 'number', min: 4, max: 600, admin: { width: '50%' } },
+            { name: 'patternStrength', label: 'Strength (%)', type: 'number', min: 1, max: 100, admin: { width: '50%', placeholder: '6', step: 1 } },
+          ],
+        },
         toggle('watermarkOn', 'Watermark'),
         photo('watermarkImage', 'Watermark image', { when: { field: 'watermarkOn', in: [true] } }),
         {

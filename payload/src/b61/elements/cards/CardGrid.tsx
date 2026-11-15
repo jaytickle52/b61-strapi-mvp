@@ -90,9 +90,13 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
   const ovl = block.cardOverlay ?? 'gradient'
   const pos = block.cardTextPosition ?? 'bottom'
   const shape = block.cardShape ?? 'portrait'
-  const customRatio = mtype === 'image' && ((ov && shape === 'custom') || (!ov && block.imageShape === 'custom'))
-  const rw = customRatio ? Math.min(Math.max(block.ratioW ?? 3, 0.1), 10000) : 3
-  const rh = customRatio ? Math.min(Math.max(block.ratioH ?? 2, 0.1), 10000) : 2
+  const setRatio = mtype === 'image' && ((ov && shape === 'custom') || (!ov && block.imageShape === 'custom'))
+  // Staff photos are portraits: a staff grid with the default fixed-height image
+  // shows them upright (4:5) instead of cropping faces to a wide strip.
+  const staffPortrait = mtype === 'image' && !ov && block.source === 'staff' && (block.imageShape ?? 'fixed') === 'fixed'
+  const customRatio = setRatio || staffPortrait
+  const rw = setRatio ? Math.min(Math.max(block.ratioW ?? 3, 0.1), 10000) : staffPortrait ? 4 : 3
+  const rh = setRatio ? Math.min(Math.max(block.ratioH ?? 2, 0.1), 10000) : staffPortrait ? 5 : 2
   const isize = block.iconSize === 'md' || block.iconSize === 'lg' ? block.iconSize : 'sm'
   const pt = block.padTop ?? 'normal'
   const pb = block.padBottom ?? 'normal'

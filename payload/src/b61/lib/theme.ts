@@ -99,6 +99,9 @@ export function fontsHref(s: { headingFont?: string | null; bodyFont?: string | 
 }
 
 type Settings = {
+  siteTone?: string | null
+  backgroundColor?: string | null
+  textColor?: string | null
   primaryColor?: string | null
   secondaryColor?: string | null
   accentColor?: string | null
@@ -112,16 +115,47 @@ type Settings = {
   uiFont?: string | null
 }
 
+export type SiteTone = 'light' | 'dark'
+
+/** Light (dark letters on light grounds) or Dark (light letters on dark grounds). */
+export const toneOf = (s: Pick<Settings, 'siteTone'>): SiteTone => (s.siteTone === 'dark' ? 'dark' : 'light')
+
+/** Page background and text defaults for each tone, used when the school leaves them empty. */
+export const TONE_DEFAULTS: Record<SiteTone, { background: string; text: string }> = {
+  light: { background: '#ffffff', text: '#111111' },
+  dark: { background: '#101218', text: '#f2efe9' },
+}
+
 /**
  * The B61 raw palette for this school, the values a Breakdance site registers
  * under Settings > Variables. Shades left empty are mixed from the base colour.
+ *
+ * Page background and text (--b61-page / --b61-text) only change a light site
+ * when the school sets them; on a dark site tone.css builds every light-ground
+ * role token from them (see that file).
  */
 export function b61Theme(s: Settings): CSSProperties {
   const primary = color(s.primaryColor, '#1f3a5f')
   const secondary = color(s.secondaryColor, '#c8a24a')
   const accent = color(s.accentColor, '#b23a2e')
   const paper = color(s.paperColor, '#f7f3ec')
+  const tone = toneOf(s)
+  const page = color(s.backgroundColor, TONE_DEFAULTS[tone].background)
+  const text = color(s.textColor, TONE_DEFAULTS[tone].text)
+  // A light site keeps the plugin's own neutrals unless the school picks its own.
+  // (--b61-white is not touched: it is also the letter colour on dark bands.)
+  const lightOverrides =
+    tone === 'light'
+      ? {
+          ...(s.backgroundColor ? { '--b61-surface': page, '--paper': page } : {}),
+          ...(s.textColor ? { '--b61-black': text, '--ink': text } : {}),
+        }
+      : {}
   return {
+    '--b61-page': page,
+    '--b61-text': text,
+    '--b61-page-rgb': rgbTriple(page) ?? '255 255 255',
+    ...lightOverrides,
     '--b61-palette-primary': primary,
     '--b61-palette-primary-deep': s.primaryDeep ? color(s.primaryDeep, primary) : mix(primary, '#000', 78),
     '--b61-palette-secondary': secondary,
@@ -131,7 +165,9 @@ export function b61Theme(s: Settings): CSSProperties {
     '--b61-palette-accent-deep': s.accentDeep ? color(s.accentDeep, accent) : mix(accent, '#000', 70),
     '--b61-palette-paper': paper,
     '--b61-scrim-rgb': rgbTriple(primary) ?? '31 58 95',
-    '--b61-light-scrim-rgb': rgbTriple(paper) ?? '247 243 236',
+    // The light channel colour: light letters and lines on dark bands. Paper on a
+    // light site; on a dark site the text colour (paper may still be a light cream).
+    '--b61-light-scrim-rgb': (tone === 'dark' ? rgbTriple(text) : rgbTriple(paper)) ?? '247 243 236',
     '--b61-font-display': FONT_STACKS[s.headingFont ?? ''] ?? FONT_STACKS.Fraunces,
     '--b61-font-body': FONT_STACKS[s.bodyFont ?? ''] ?? FONT_STACKS.Inter,
     '--b61-font-ui': FONT_STACKS[s.uiFont ?? ''] ?? FONT_STACKS.Montserrat,

@@ -31,6 +31,7 @@ build elements with `defineElement()` and the shared field groups, never by hand
 | *Element's part* (e.g. Cards) | treatment of the element's own items |
 | Color | surface, overlay, item colours |
 | Accents | eyebrow rule, frames, entrance animation |
+| Advanced | CSS class (Banner 61 admins only; school staff never see it) |
 
 A panel with nothing to show for the current choices is left out.
 Layout opens by default; the others start closed and show their current
@@ -125,3 +126,22 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 - Nothing to do per element: `Sections` and `Inner` add the markers. Code in
   `src/b61/kit/preview/` (EditMark, EditOverlay) and `src/b61/kit/admin/PreviewFocus.tsx`.
   The markers are `<template>` tags, only in the preview, which the plugin CSS already ignores.
+
+## 13. Site tone and custom CSS
+
+- School settings > Look > **Site tone**: Light (default) or Dark. Dark puts light letters on a
+  dark page; coloured bands (primary, accent, photos) keep their colours. **Page background** and
+  **Text** set the two grounds; empty uses white/#111 (light) or #101218/#F2EFE9 (dark).
+- Dark is one layer of role-token overrides in `src/b61/styles/tone.css`, keyed on
+  `<html data-b61-tone="dark">`. Element CSS (copied from the plugin) is not edited. A new element
+  that uses role tokens (ink, muted, surface, on-*) works on dark sites for free; one that names
+  `--b61-white` / `--b61-black` as a ground needs a line in tone.css.
+- In Payload-only CSS, "primary as a letter colour" is `var(--b61-primary-text, var(--b61-primary))`,
+  so dark sites can lighten it.
+- **Custom CSS** (School settings > Look, Banner 61 admins only) goes on every page of that school,
+  after all element styles. Target one element with its **Design > Advanced > CSS class**: the
+  class goes on a `display: contents` wrapper (`.my-class .b61-hero`). Elements without a class get
+  no wrapper, because a wrapper breaks plugin rules that rely on two elements being neighbours.
+- Overlay strength on Hero, CTA Band and Section is exactly what the editor sets (0-100%); the old
+  hidden floors (80% on Hero, 70-75% elsewhere) are gone, and the help text asks editors to check
+  readability. Section patterns have a Strength (default 6%, the plugin's value).

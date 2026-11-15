@@ -32,7 +32,8 @@ export const B61FramedImage = defineElement({
       } as any,
       toggle('flipFrame', 'Frame on the other side'),
     ],
-    size: [step('widthStep', 'Width', { low: 'Narrow', high: 'Wide' })],
+    // New framed images start at step 4 (a comfortable column), not the full page width.
+    size: [step('widthStep', 'Width', { low: 'Narrow', high: 'Wide', default: 4 })],
     color: [frameColorField()],
     accents: [entranceField()],
   },

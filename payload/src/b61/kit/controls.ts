@@ -86,13 +86,14 @@ export function toggle(name: string, label: string, o: { when?: When; condition?
 }
 
 /** A stop on a site-wide 1-7 scale. Empty = site default. */
-export function step(name: string, label: string, o: { low: string; high: string; when?: When }): NumberField {
+export function step(name: string, label: string, o: { low: string; high: string; when?: When; default?: number }): NumberField {
   return {
     name,
     label,
     type: 'number',
     min: 1,
     max: 7,
+    ...(o.default ? { defaultValue: o.default } : {}),
     custom: { b61When: o.when, b61Step: true },
     admin: {
       condition: whenCondition(o.when),

@@ -8,6 +8,7 @@ import * as migration_20261115_010944_thread_g_analytics from './20261115_010944
 import * as migration_20261115_012311_school_features from './20261115_012311_school_features';
 import * as migration_20261115_015924_branding_video from './20261115_015924_branding_video';
 import * as migration_20261115_120000_order_versions from './20261115_120000_order_versions';
+import * as migration_20261115_121541_theme_dark_css from './20261115_121541_theme_dark_css';
 
 export const migrations = [
   {
@@ -53,11 +54,16 @@ export const migrations = [
   {
     up: migration_20261115_015924_branding_video.up,
     down: migration_20261115_015924_branding_video.down,
-    name: '20261115_015924_branding_video'
+    name: '20261115_015924_branding_video',
   },
   {
     up: migration_20261115_120000_order_versions.up,
     down: migration_20261115_120000_order_versions.down,
     name: '20261115_120000_order_versions',
+  },
+  {
+    up: migration_20261115_121541_theme_dark_css.up,
+    down: migration_20261115_121541_theme_dark_css.down,
+    name: '20261115_121541_theme_dark_css'
   },
 ];

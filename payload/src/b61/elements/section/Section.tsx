@@ -7,8 +7,8 @@ export default function B61Section({ block, path }: { block: any; index?: number
   const choice = block.surface ?? 'none'
   const bg = imgProps(block.image, '100vw')
   const surface = bg && ['none', 'accent'].includes(choice) ? 'dark' : choice
-  const floor = surface === 'soft' ? 75 : 70
-  const shade = Math.max(Number(block.overlayStrength ?? 70), floor)
+  // What the editor set (default 70); no longer raised silently to 70-75%.
+  const shade = Math.min(Math.max(Number(block.overlayStrength ?? 70), 0), 100)
   const focus = focusOf(block.image)
   const cols = block.columns ?? 'full'
   const rail = cols !== 'full'
@@ -25,6 +25,8 @@ export default function B61Section({ block, path }: { block: any; index?: number
   if (block.patternOn && pat?.url) style['--b61-pattern'] = `url('${encodeURI(pat.url)}')`
   const px = block.tileSize ? Math.min(Math.max(Number(block.tileSize), 4), 600) : 0
   if (block.patternOn && px) style['--b61-pattern-size'] = `${px}px ${pat?.url ? 'auto' : `${px}px`}`
+  // Strength: how strongly the tile shows (the plugin's fixed 6% is the default).
+  if (block.patternOn && block.patternStrength > 0) style['--b61-pattern-opacity'] = String(Math.min(Number(block.patternStrength), 100) / 100)
   if (block.watermarkOn && wm?.url) style['--b61-watermark'] = `url('${encodeURI(wm.url)}')`
   if (block.watermarkOn && block.watermarkSize) {
     const p = Math.min(Math.max(Number(block.watermarkSize), 5), 100)

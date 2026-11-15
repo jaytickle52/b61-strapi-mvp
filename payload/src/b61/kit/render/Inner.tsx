@@ -1,4 +1,5 @@
 import B61Split from '../../elements/split/Split'
+import { WithClass } from './custom-class'
 import B61Prose from '../../elements/prose/Prose'
 import B61Cta from '../../elements/cta/Cta'
 import B61CardGrid from '../../elements/cards/CardGrid'
@@ -42,8 +43,10 @@ export default function Inner({ blocks, path }: { blocks?: any[] | null; path?: 
         if (!El) return null
         return (
           <Fragment key={b.id ?? i}>
-            {path && <EditMark path={`${path}.${i}`} label={elementName(b.blockType)} />}
-            <El block={b} index={i + 1} />
+            <WithClass block={b}>
+              {path && <EditMark path={`${path}.${i}`} label={elementName(b.blockType)} />}
+              <El block={b} index={i + 1} />
+            </WithClass>
           </Fragment>
         )
       })}
