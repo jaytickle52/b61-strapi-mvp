@@ -1,6 +1,6 @@
 import type { CollectionBeforeChangeHook, Config, Field } from 'payload'
 import type { PluginConfig as FormBuilderPluginConfig } from '@payloadcms/plugin-form-builder/types'
-import { signedIn } from '../access'
+import { publishersOnly, signedIn } from '../access'
 import { simpleEditor } from '../b61/kit/editors'
 import {
   brandedEmail,
@@ -150,7 +150,8 @@ export const formBuilderConfig: FormBuilderPluginConfig = {
       description:
         'Inquiry, tour, contact and application forms. Add one to a page with the Form element.',
     },
-    access: { read: signedIn, create: signedIn, update: signedIn, delete: signedIn },
+    // Forms go live as soon as they're saved, so only publishers change them.
+    access: { read: signedIn, create: publishersOnly, update: publishersOnly, delete: publishersOnly },
     fields: ({ defaultFields }) => {
       const reshaped = reshapeFormFields(defaultFields).map((f) => {
         if (!('name' in f)) return f
@@ -198,7 +199,8 @@ export const formBuilderConfig: FormBuilderPluginConfig = {
         "What families sent through the website forms. Download a form's submissions as a spreadsheet from the form.",
     },
     // Only the website's own form handler (Local API) creates submissions.
-    access: { create: () => false, read: signedIn, update: () => false, delete: signedIn },
+    // Families' answers: Editors and School Admins only, never Contributors.
+    access: { create: () => false, read: publishersOnly, update: () => false, delete: publishersOnly },
     endpoints: [exportEndpoint],
     fields: ({ defaultFields }) => [
       { name: 'summary', label: 'From', type: 'text', admin: { readOnly: true } },

@@ -3990,7 +3990,7 @@ export interface EmailLog {
   subject?: string | null;
   to?: string | null;
   status?: ('sent' | 'failed' | 'logged') | null;
-  kind?: ('form' | 'test' | 'password' | 'other') | null;
+  kind?: ('form' | 'test' | 'password' | 'invite' | 'other') | null;
   detail?: string | null;
   school?: (number | null) | School;
   updatedAt: string;
@@ -4213,6 +4213,8 @@ export interface SchoolSetting {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * People who can sign in to edit the website. Use "Invite someone" to add a person; they get an email to choose their password.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -4220,9 +4222,12 @@ export interface User {
   id: number;
   name?: string | null;
   role: 'editor' | 'admin';
+  invitedAt?: string | null;
+  lastSignInAt?: string | null;
   tenants?:
     | {
         tenant: number | School;
+        role: 'schoolAdmin' | 'editor' | 'contributor';
         id?: string | null;
       }[]
     | null;
@@ -7306,10 +7311,13 @@ export interface SchoolsSelect<T extends boolean = true> {
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
   role?: T;
+  invitedAt?: T;
+  lastSignInAt?: T;
   tenants?:
     | T
     | {
         tenant?: T;
+        role?: T;
         id?: T;
       };
   updatedAt?: T;

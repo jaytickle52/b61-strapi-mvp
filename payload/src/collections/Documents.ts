@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { publishersOnly } from '../access'
 import { refuseDeleteWhenUsed, usageEndpoint, usageField } from '../usage/fields'
 import { sameSchoolFolder } from '../media/folders'
 
@@ -11,7 +12,8 @@ import { sameSchoolFolder } from '../media/folders'
 export const Documents: CollectionConfig = {
   slug: 'documents',
   labels: { singular: 'Document', plural: 'Documents' },
-  access: { read: () => true },
+  // Everyone at the school uploads; only Editors and School Admins delete.
+  access: { read: () => true, delete: publishersOnly },
   folders: true,
   admin: {
     useAsTitle: 'title',

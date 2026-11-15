@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { signedIn } from '../access'
+import { publishersOnly } from '../access'
 
 /**
  * Every email the site sends (or tried to send), kept 90 days. Read-only:
@@ -16,7 +16,7 @@ export const EmailLog: CollectionConfig = {
     description:
       'Emails the site sent in the last 90 days. "Failed" shows the reason; "Logged" means email is not switched on yet.',
   },
-  access: { read: signedIn, create: () => false, update: () => false, delete: () => false },
+  access: { read: publishersOnly, create: () => false, update: () => false, delete: () => false },
   timestamps: true,
   fields: [
     { name: 'subject', type: 'text', admin: { readOnly: true } },
@@ -39,6 +39,7 @@ export const EmailLog: CollectionConfig = {
         { label: 'Form notification', value: 'form' },
         { label: 'Test email', value: 'test' },
         { label: 'Password reset', value: 'password' },
+        { label: 'Invite', value: 'invite' },
         { label: 'Other', value: 'other' },
       ],
     },

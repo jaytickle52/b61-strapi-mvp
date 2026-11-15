@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { publishedOrSignedIn, signedIn } from '../access'
+import { guardPublishing, isB61Admin, publishedOrSignedIn, publishersOnly } from '../access'
 import { previewUrl } from './content'
 import { footerFields, headerFields } from '../b61/chrome/fields'
 import { testEmailEndpoint } from '../email/endpoints'
@@ -16,7 +16,9 @@ export const SchoolSettings: CollectionConfig = {
     description: 'Name, contact details, colors, fonts, header menu and footer for this school.',
     livePreview: { url: ({ data }) => previewUrl('/', (data as any)?.school) },
   },
-  access: { read: publishedOrSignedIn, create: signedIn, update: signedIn },
+  // Contributors can look but not change settings (they go live at once).
+  access: { read: publishedOrSignedIn, create: publishersOnly, update: publishersOnly },
+  hooks: { beforeChange: [guardPublishing] },
   endpoints: [testEmailEndpoint],
   versions: { drafts: { autosave: { interval: 400 } }, maxPerDoc: 25 },
   fields: [
@@ -132,7 +134,7 @@ export const SchoolSettings: CollectionConfig = {
               name: 'emailFromAddress',
               label: 'Sender address',
               type: 'email',
-              access: { update: ({ req }) => (req.user as any)?.role === 'admin', create: ({ req }) => (req.user as any)?.role === 'admin' },
+              access: { update: ({ req }) => isB61Admin(req.user), create: ({ req }) => isB61Admin(req.user) },
               admin: {
                 description: 'Set by Banner 61 once the school\'s domain is verified for sending. Empty: the Banner 61 address, with replies going to the school.',
               },

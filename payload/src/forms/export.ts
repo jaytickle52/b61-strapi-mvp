@@ -1,5 +1,5 @@
 import type { Endpoint } from 'payload'
-import { canUseSchool } from '../access'
+import { canPublishAt } from '../access'
 
 /**
  * GET /api/form-submissions/export?form=<id>
@@ -17,7 +17,7 @@ export const exportEndpoint: Endpoint = {
       .findByID({ collection: 'forms', id: formId, depth: 0, overrideAccess: true })
       .catch(() => null)
     if (!form) return new Response('Form not found.', { status: 404 })
-    if (!canUseSchool(req.user, form.school))
+    if (!canPublishAt(req.user, form.school))
       return new Response('Not your school.', { status: 403 })
 
     const subs: any[] = []

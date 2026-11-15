@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { signedIn } from '../access'
+import { publishersOnly } from '../access'
 
 /**
  * Files families send through forms (transcripts, photos, signatures).
@@ -17,7 +17,7 @@ export const FormUploads: CollectionConfig = {
     defaultColumns: ['filename', 'mimeType', 'filesize', 'createdAt'],
     description: 'Files sent through website forms. Open them from the submission.',
   },
-  access: { read: signedIn, create: () => false, update: () => false, delete: signedIn },
+  access: { read: publishersOnly, create: () => false, update: () => false, delete: publishersOnly },
   upload: {
     staticDir: process.env.FORM_UPLOADS_DIR || 'form-uploads',
     // No resized copies: these are records, not website photos.

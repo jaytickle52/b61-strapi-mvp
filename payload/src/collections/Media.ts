@@ -1,4 +1,5 @@
 import type { CollectionConfig, ImageSize } from 'payload'
+import { publishersOnly } from '../access'
 import { refuseDeleteWhenUsed, usageEndpoint, usageField } from '../usage/fields'
 import { sameSchoolFolder } from '../media/folders'
 import { altTextEnabled, suggestAltEndpoint } from '../media/suggestAlt'
@@ -42,7 +43,8 @@ export const MEDIA_SIZES: ImageSize[] = [
 export const Media: CollectionConfig = {
   slug: 'media',
   labels: { singular: 'Photo or video', plural: 'Photos and videos' },
-  access: { read: () => true },
+  // Everyone at the school uploads; only Editors and School Admins delete.
+  access: { read: () => true, delete: publishersOnly },
   folders: true,
   admin: {
     description:

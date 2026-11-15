@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { isAdmin } from '../access'
+import { isAdmin, isB61Admin } from '../access'
 
 /**
  * The schools this app serves. Every page, event, news post, program, staff
@@ -15,7 +15,7 @@ export const Schools: CollectionConfig = {
     defaultColumns: ['name', 'slug', 'updatedAt'],
     group: 'Banner 61',
     description: 'Each school is one website. Only Banner 61 admins see this list.',
-    hidden: ({ user }) => (user as any)?.role !== 'admin',
+    hidden: ({ user }) => !isB61Admin(user),
   },
   access: {
     create: isAdmin,
