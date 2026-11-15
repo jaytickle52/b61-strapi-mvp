@@ -7,6 +7,7 @@ import * as migration_20261115_002446_permissions_invites from './20261115_00244
 import * as migration_20261115_010944_thread_g_analytics from './20261115_010944_thread_g_analytics';
 import * as migration_20261115_012311_school_features from './20261115_012311_school_features';
 import * as migration_20261115_015924_branding_video from './20261115_015924_branding_video';
+import * as migration_20261115_120000_order_versions from './20261115_120000_order_versions';
 
 export const migrations = [
   {
@@ -53,5 +54,10 @@ export const migrations = [
     up: migration_20261115_015924_branding_video.up,
     down: migration_20261115_015924_branding_video.down,
     name: '20261115_015924_branding_video'
+  },
+  {
+    up: migration_20261115_120000_order_versions.up,
+    down: migration_20261115_120000_order_versions.down,
+    name: '20261115_120000_order_versions',
   },
 ];
