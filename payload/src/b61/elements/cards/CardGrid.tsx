@@ -1,3 +1,4 @@
+import { b61Converters } from '../../kit/render/converters'
 import type { CSSProperties, ReactNode } from 'react'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
@@ -58,7 +59,7 @@ async function loadCards(block: CardGridBlock): Promise<Card[]> {
         const { href, newTab } = resolveLink(c.link as any)
         return {
           key: c.id ?? String(i), image: c.image, icon: c.icon, eyebrow: c.eyebrow, title: c.title,
-          body: c.body ? <RichText data={c.body as SerializedEditorState} disableContainer /> : null,
+          body: c.body ? <RichText data={c.body as SerializedEditorState} disableContainer converters={b61Converters} /> : null,
           href, newTab, linkText: c.linkText,
         }
       })
@@ -154,7 +155,7 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
         ))}
       {Boolean(block.intro) && (
         <div className="b61-cards__intro breakdance-rich-text-styles" {...ri}>
-          <RichText data={block.intro as SerializedEditorState} disableContainer />
+          <RichText data={block.intro as SerializedEditorState} disableContainer converters={b61Converters} />
         </div>
       )}
     </div>

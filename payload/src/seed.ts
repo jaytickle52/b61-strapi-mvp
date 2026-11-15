@@ -132,7 +132,7 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
   // A demo school with no pages never finished seeding (a build stopped part
   // way). Clear what that attempt left so this run starts clean.
   for (const collection of ['programs', 'staff', 'events', 'news', 'school-settings', 'media'] as const) {
-    await payload.delete({ collection, where: { school: { equals: school.id } } })
+    await payload.delete({ collection, where: { school: { equals: school.id } }, context: { b61AllowDelete: true } })
   }
 
   payload.logger.info(`[b61] Seeding demo content for ${name}`)

@@ -1,3 +1,4 @@
+import { b61Converters } from '../../kit/render/converters'
 import type { CSSProperties } from 'react'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
@@ -72,7 +73,7 @@ export default function B61Pillars({ block, index = 0 }: { block: any; index?: n
                   style={{ '--b61-pillar-i': i + 1, '--b61-pillar-row': (i + 1) * 2 } as CSSProperties}
                 >
                   <div className="b61-pillars__panel-inner">
-                    <div className="b61-pillars__panel-body breakdance-rich-text-styles">{it.body && <RichText data={it.body as SerializedEditorState} disableContainer />}</div>
+                    <div className="b61-pillars__panel-body breakdance-rich-text-styles">{it.body && <RichText data={it.body as SerializedEditorState} disableContainer converters={b61Converters} />}</div>
                   </div>
                 </div>
               ))}

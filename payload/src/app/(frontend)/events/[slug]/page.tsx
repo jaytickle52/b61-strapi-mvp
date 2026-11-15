@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import RichText from "@/components/RichText";
 import PageHeader from "@/components/PageHeader";
-import { formatDate, getEvent, mediaUrl } from "@/lib/data";
+import { formatDate, getEvent } from "@/lib/data";
 import { seoMetadata } from "@/seo/metadata";
 import { redirectOrNotFound } from "@/seo/redirect";
 import { eventSchema } from "@/seo/schema";
 import JsonLd from "@/seo/JsonLd";
+import { imgProps } from "@/b61/lib/media";
 
 export async function generateMetadata({ params }: PageProps<"/events/[slug]">): Promise<Metadata> {
   const { slug } = await params;
@@ -20,7 +21,8 @@ export default async function EventPage({ params }: PageProps<"/events/[slug]">)
   const event = await getEvent(slug);
   // Parents-only events never appear on the public site.
   if (!event || event.audience !== "public") return redirectOrNotFound(`/events/${slug}`);
-  const img = mediaUrl(event.image);
+  const img = imgProps(event.image, "(min-width: 768px) 720px, 100vw");
+  const alt = typeof event.image === "object" ? event.image?.alt ?? "" : "";
   return (
     <>
       <JsonLd data={await eventSchema(event)} />
@@ -30,7 +32,7 @@ export default async function EventPage({ params }: PageProps<"/events/[slug]">)
         intro={event.location}
       />
       <article className="mx-auto w-full max-w-3xl px-5 py-14 sm:px-8">
-        {img && <img src={img} alt="" className="mb-8 w-full rounded-3xl" />}
+        {img && <img {...img} alt={alt} className="mb-8 h-auto w-full rounded-3xl" />}
         <RichText content={event.description} />
       </article>
     </>

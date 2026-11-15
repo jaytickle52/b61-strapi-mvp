@@ -18,7 +18,7 @@ export const simpleEditor = () =>
       BoldFeature(),
       ItalicFeature(),
       UnderlineFeature(),
-      LinkFeature({ enabledCollections: ['pages'] }),
+      LinkFeature({ enabledCollections: ['pages', 'documents'] }),
       UnorderedListFeature(),
       OrderedListFeature(),
       InlineToolbarFeature(),

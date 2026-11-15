@@ -7,6 +7,8 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { Documents } from './collections/Documents'
+import { sameSchoolFolder } from './media/folders'
 import { Events, News, Pages, Programs, Staff } from './collections/content'
 import { SchoolSettings } from './collections/SchoolSettings'
 import { Schools } from './collections/Schools'
@@ -35,7 +37,15 @@ export default buildConfig({
       collections: ['pages', 'events', 'news', 'programs', 'staff', 'school-settings'],
     },
   },
-  collections: [Pages, Events, News, Programs, Staff, Media, FormUploads, EmailLog, SchoolSettings, Schools, Users],
+  // Folders (Payload beta) for Photos and Documents; each school has its own.
+  folders: {
+    browseByFolder: true,
+    // A sub-folder must sit in a folder of the same school.
+    collectionOverrides: [
+      ({ collection }) => ({ ...collection, hooks: { ...collection.hooks, beforeValidate: [...(collection.hooks?.beforeValidate ?? []), sameSchoolFolder] } }),
+    ],
+  },
+  collections: [Pages, Events, News, Programs, Staff, Media, Documents, FormUploads, EmailLog, SchoolSettings, Schools, Users],
   // Resend when RESEND_API_KEY is set; otherwise emails are only logged (src/email).
   email: emailAdapter,
   editor: lexicalEditor(),
@@ -69,6 +79,7 @@ export default buildConfig({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
       collections: {
         media: { disablePayloadAccessControl: true },
+        documents: { disablePayloadAccessControl: true, prefix: 'documents' },
         // Served through Payload, so only signed-in staff can open them.
         'form-uploads': { prefix: 'form-uploads' },
       },
@@ -91,6 +102,9 @@ export default buildConfig({
         programs: {},
         staff: {},
         media: {},
+        documents: {},
+        // Folders for photos and documents belong to a school too.
+        'payload-folders': {},
         'school-settings': { isGlobal: true },
         forms: {},
         'form-submissions': {},

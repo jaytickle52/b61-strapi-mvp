@@ -1,3 +1,4 @@
+import { b61Converters } from '../../kit/render/converters'
 import type { CSSProperties } from 'react'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
@@ -71,7 +72,7 @@ export default function B61Accordion({ block, index = 0 }: { block: any; index?:
                   <div role="region" aria-labelledby={`${id}-head-${i + 1}`} id={`${id}-panel-${i + 1}`} className="b61-acc__panel">
                     <div className="b61-acc__panel-inner">
                       <div className="b61-acc__panel-body">
-                        <div className="breakdance-rich-text-styles">{item.body && <RichText data={item.body as SerializedEditorState} disableContainer />}</div>
+                        <div className="breakdance-rich-text-styles">{item.body && <RichText data={item.body as SerializedEditorState} disableContainer converters={b61Converters} />}</div>
                       </div>
                     </div>
                   </div>
