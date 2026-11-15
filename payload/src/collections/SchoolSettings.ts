@@ -3,6 +3,8 @@ import { guardPublishing, isB61Admin, publishedOrSignedIn, publishersOnly } from
 import { previewUrl } from './content'
 import { footerFields, headerFields } from '../b61/chrome/fields'
 import { testEmailEndpoint } from '../email/endpoints'
+import { colorField } from '../branding/fields'
+import { BODY_FONTS, HEADING_FONTS, UI_FONTS } from '../b61/lib/theme'
 
 /**
  * One per school (the multi-school plugin makes this behave like a single
@@ -31,6 +33,25 @@ export const SchoolSettings: CollectionConfig = {
             { name: 'schoolName', type: 'text', required: true },
             { name: 'tagline', type: 'text' },
             { name: 'logo', type: 'upload', relationTo: 'media' },
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'logoOnDark',
+                  label: 'Logo for dark backgrounds',
+                  type: 'upload',
+                  relationTo: 'media',
+                  admin: { width: '50%', description: 'A light version for the dark footer. Empty: the logo above.' },
+                },
+                {
+                  name: 'siteIcon',
+                  label: 'Site icon',
+                  type: 'upload',
+                  relationTo: 'media',
+                  admin: { width: '50%', description: 'The small square icon in browser tabs and bookmarks. Empty: the logo.' },
+                },
+              ],
+            },
             { name: 'phone', type: 'text' },
             { name: 'email', type: 'email' },
             { name: 'address', type: 'textarea' },
@@ -39,18 +60,19 @@ export const SchoolSettings: CollectionConfig = {
         {
           label: 'Look',
           fields: [
+            { name: 'brandPreview', type: 'ui', admin: { components: { Field: '@/branding/BrandPreview#BrandPreview' } } },
             {
               type: 'row',
               fields: [
-                { name: 'primaryColor', type: 'text', defaultValue: '#1F3A5F', admin: { description: 'Hex color, e.g. #1F3A5F' } },
-                { name: 'secondaryColor', type: 'text', defaultValue: '#C8A24A' },
+                colorField('primaryColor', { defaultValue: '#1F3A5F', description: 'Headings, buttons, header links.' }),
+                colorField('secondaryColor', { defaultValue: '#C8A24A', description: 'Second buttons and highlights.' }),
               ],
             },
             {
               type: 'row',
               fields: [
-                { name: 'accentColor', type: 'text', defaultValue: '#B23A2E', admin: { description: 'Rules, frames, accent words' } },
-                { name: 'paperColor', type: 'text', defaultValue: '#F7F3EC', admin: { description: 'Soft background' } },
+                colorField('accentColor', { defaultValue: '#B23A2E', description: 'Rules, frames, accent words.' }),
+                colorField('paperColor', { defaultValue: '#F7F3EC', description: 'Soft background.' }),
               ],
             },
             {
@@ -64,15 +86,15 @@ export const SchoolSettings: CollectionConfig = {
                 {
                   type: 'row',
                   fields: [
-                    { name: 'primaryDeep', type: 'text', admin: { placeholder: 'Darker primary' } },
-                    { name: 'secondarySoft', type: 'text', admin: { placeholder: 'Lighter secondary' } },
+                    colorField('primaryDeep', { placeholder: 'Darker primary' }),
+                    colorField('secondarySoft', { placeholder: 'Lighter secondary' }),
                   ],
                 },
                 {
                   type: 'row',
                   fields: [
-                    { name: 'accentStrong', type: 'text', admin: { placeholder: 'Accent for small text' } },
-                    { name: 'accentDeep', type: 'text', admin: { placeholder: 'Darker accent' } },
+                    colorField('accentStrong', { placeholder: 'Accent for small text' }),
+                    colorField('accentDeep', { placeholder: 'Darker accent' }),
                   ],
                 },
               ],
@@ -80,25 +102,9 @@ export const SchoolSettings: CollectionConfig = {
             {
               type: 'row',
               fields: [
-                {
-                  name: 'headingFont',
-                  type: 'select',
-                  defaultValue: 'Fraunces',
-                  options: ['Fraunces', 'Playfair Display', 'Merriweather', 'EB Garamond', 'Montserrat', 'Poppins'],
-                },
-                {
-                  name: 'bodyFont',
-                  type: 'select',
-                  defaultValue: 'Inter',
-                  options: ['Inter', 'Source Sans 3', 'Lato', 'Open Sans', 'EB Garamond'],
-                },
-                {
-                  name: 'uiFont',
-                  label: 'Buttons and labels font',
-                  type: 'select',
-                  defaultValue: 'Montserrat',
-                  options: ['Montserrat', 'Inter', 'Poppins', 'Lato', 'Source Sans 3'],
-                },
+                { name: 'headingFont', type: 'select', defaultValue: 'Fraunces', options: HEADING_FONTS },
+                { name: 'bodyFont', type: 'select', defaultValue: 'Inter', options: BODY_FONTS },
+                { name: 'uiFont', label: 'Buttons and labels font', type: 'select', defaultValue: 'Montserrat', options: UI_FONTS },
               ],
             },
           ],

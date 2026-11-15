@@ -40,7 +40,7 @@ import '@/b61/styles/kit-instance.css'
 import '@/b61/styles/kit-frontend.css'
 import '@/b61/chrome/chrome.css'
 import '@/b61/styles/calendar.css'
-import { b61Theme, FONT_STACKS } from '@/b61/lib/theme'
+import { b61Theme, FONT_STACKS, fontsHref } from '@/b61/lib/theme'
 import Reveal from '@/b61/reveal/Reveal'
 import { getAnnouncements, getSettings, hiddenFromSearch, isPreview, siteOrigin } from '@/lib/data'
 import AnalyticsTag from '@/analytics/Tag'
@@ -56,6 +56,14 @@ import LivePreviewListener from '@/components/LivePreviewListener'
 
 export const dynamic = 'force-dynamic'
 
+// The browser-tab icon: the school's Site icon, else its logo. Next adds no
+// icon of its own, so a school without either shows the browser's default.
+function siteIcons(settings: any): Metadata['icons'] {
+  const icon = asMedia(settings.siteIcon) ?? asMedia(settings.logo)
+  if (!icon?.url) return undefined
+  return { icon: [{ url: icon.url, type: icon.mimeType ?? undefined }], apple: [{ url: icon.url }] }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const [settings, origin] = await Promise.all([getSettings(), siteOrigin()])
   return {
@@ -63,6 +71,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: { default: settings.schoolName, template: `%s | ${settings.schoolName}` },
     description: settings.tagline ?? undefined,
     verification: (settings as any).googleVerification ? { google: (settings as any).googleVerification } : undefined,
+    icons: siteIcons(settings),
   }
 }
 
@@ -88,14 +97,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const heading = settings.headingFont ?? 'Fraunces'
   const body = settings.bodyFont ?? 'Inter'
   const ui = settings.uiFont ?? 'Montserrat'
-  const fam = (f: string, axes: string) => `family=${encodeURIComponent(f)}:${axes}`
-  const fonts = [
-    fam(heading, 'ital,wght@0,400;0,600;0,700;1,400;1,600'),
-    ...(body !== heading ? [fam(body, 'wght@400;600')] : []),
-    ...(ui !== heading && ui !== body ? [fam(ui, 'wght@500;600;700')] : []),
-  ]
   const logo = asMedia(settings.logo)
-  const fontsHref = `https://fonts.googleapis.com/css2?${fonts.join('&')}&display=swap`
+  // A separate logo for the dark footer, when the school has one.
+  const logoOnDark = asMedia((settings as any).logoOnDark)
+  const fontsUrl = fontsHref(settings)
 
   // The school's colors and fonts become CSS variables every component uses.
   const theme = {
@@ -112,7 +117,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link rel="stylesheet" href={fontsHref} />
+        <link rel="stylesheet" href={fontsUrl} />
       </head>
       <body className="flex min-h-full flex-col" style={theme}>
         <JsonLd data={await schoolSchema()} />
@@ -121,7 +126,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <Announcements notices={notices} />
         <Header brand={{ name: settings.schoolName, logo: logo?.url ? { src: logo.url, width: logo.width ?? undefined, height: logo.height ?? undefined } : null }} {...resolveMenu(settings)} />
         <main className="flex-1">{children}</main>
-        <Footer s={settings} logo={logo?.url} />
+        <Footer s={settings} logo={logoOnDark?.url ?? logo?.url} />
         <Reveal />
         {gaTag && <AnalyticsTag id={gaTag} />}
       </body>

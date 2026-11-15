@@ -1,4 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { bunnyEndpoints } from './video/endpoints'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -64,6 +65,8 @@ export default buildConfig({
     ],
   },
   collections: [Pages, Events, CalendarFeeds, News, Announcements, Programs, Staff, NewsCategories, Media, Documents, FormUploads, EmailLog, SchoolSettings, Schools, Users],
+  // Video uploads to Bunny Stream from the editor (src/video).
+  endpoints: bunnyEndpoints,
   // Resend when RESEND_API_KEY is set; otherwise emails are only logged (src/email).
   email: emailAdapter,
   editor: lexicalEditor(),
