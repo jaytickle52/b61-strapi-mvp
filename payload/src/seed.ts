@@ -2,6 +2,7 @@ import type { Payload } from 'payload'
 import type { School } from './payload-types'
 import { syncElementLibrary } from './b61/library'
 import { ensureStandardForms } from './forms/standard'
+import { ensureFeatureDemo } from './b61/features-demo'
 import { demoChrome } from './b61/chrome/demo'
 import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, statsFrom } from './b61/demo'
 
@@ -145,11 +146,12 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
     ...demoChrome({ name, programs }),
   })
 
-  for (const [i, prog] of profile.programs.entries()) {
-    await create('programs', { ...prog, slug: slugify(prog.name), generateSlug: false, description: p(prog.summary), sortOrder: (i + 1) * 10 })
+  // Created in order, so each lands at the end of its list (drag to reorder).
+  for (const prog of profile.programs) {
+    await create('programs', { ...prog, slug: slugify(prog.name), generateSlug: false, description: p(prog.summary) })
   }
-  for (const [i, person] of profile.staff.entries()) {
-    await create('staff', { ...person, sortOrder: (i + 1) * 10 })
+  for (const person of profile.staff) {
+    await create('staff', person)
   }
 
   const events = [
@@ -245,5 +247,6 @@ export async function seedDemoSchools(payload: Payload) {
     const school = await seedDemoSchool(payload, key)
     if (school) await ensureStandardForms(payload, school).catch((e) => payload.logger.error(`[b61] Standard forms: ${e.message}`))
     if (school) await syncElementLibrary(payload, school).catch((e) => payload.logger.error(`[b61] Element library: ${e.message}`))
+    if (school) await ensureFeatureDemo(payload, school).catch((e) => payload.logger.error(`[b61] School features demo: ${e.message}`))
   }
 }

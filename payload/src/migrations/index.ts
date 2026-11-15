@@ -5,6 +5,7 @@ import * as migration_20261114_224927_seo_search from './20261114_224927_seo_sea
 import * as migration_20261115_000930_media_documents_folders from './20261115_000930_media_documents_folders';
 import * as migration_20261115_002446_permissions_invites from './20261115_002446_permissions_invites';
 import * as migration_20261115_010944_thread_g_analytics from './20261115_010944_thread_g_analytics';
+import * as migration_20261115_012311_school_features from './20261115_012311_school_features';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20261115_010944_thread_g_analytics.up,
     down: migration_20261115_010944_thread_g_analytics.down,
-    name: '20261115_010944_thread_g_analytics'
+    name: '20261115_010944_thread_g_analytics',
+  },
+  {
+    up: migration_20261115_012311_school_features.up,
+    down: migration_20261115_012311_school_features.down,
+    name: '20261115_012311_school_features'
   },
 ];

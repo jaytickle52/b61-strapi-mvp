@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import RichText from "@/components/RichText";
 import PageHeader from "@/components/PageHeader";
-import { formatDate, getNewsPost } from "@/lib/data";
+import { formatDate, getNewsPost, type NewsCategory } from "@/lib/data";
 import { seoMetadata } from "@/seo/metadata";
 import { redirectOrNotFound } from "@/seo/redirect";
 import { articleSchema } from "@/seo/schema";
@@ -22,10 +22,11 @@ export default async function NewsPostPage({ params }: PageProps<"/news/[slug]">
   if (!post || post.audience !== "public") return redirectOrNotFound(`/news/${slug}`);
   const img = imgProps(post.image, "(min-width: 768px) 720px, 100vw");
   const alt = typeof post.image === "object" ? post.image?.alt ?? "" : "";
+  const cats = (post.categories ?? []).filter((c): c is NewsCategory => typeof c === "object" && c !== null);
   return (
     <>
       <JsonLd data={await articleSchema(post)} />
-      <PageHeader eyebrow={formatDate(post.date)} title={post.title} intro={post.summary} />
+      <PageHeader eyebrow={[formatDate(post.date), ...cats.map((c) => c.name)].join(" · ")} title={post.title} intro={post.summary} />
       <article className="mx-auto w-full max-w-3xl px-5 py-14 sm:px-8">
         {img && <img {...img} alt={alt} className="mb-8 h-auto w-full rounded-3xl" />}
         <RichText content={post.body} />

@@ -10,6 +10,10 @@ import { Media } from './collections/Media'
 import { Documents } from './collections/Documents'
 import { sameSchoolFolder } from './media/folders'
 import { Events, News, Pages, Programs, Staff } from './collections/content'
+import { Announcements } from './collections/Announcements'
+import { NewsCategories } from './collections/NewsCategories'
+import { CalendarFeeds } from './collections/CalendarFeeds'
+import { importAllFeeds } from './events/ics-import'
 import { SchoolSettings } from './collections/SchoolSettings'
 import { Schools } from './collections/Schools'
 import { multiTenantPlugin } from '@payloadcms/plugin-multi-tenant'
@@ -48,7 +52,7 @@ export default buildConfig({
       },
     },
     livePreview: {
-      collections: ['pages', 'events', 'news', 'programs', 'staff', 'school-settings'],
+      collections: ['pages', 'events', 'news', 'announcements', 'programs', 'staff', 'school-settings'],
     },
   },
   // Folders (Payload beta) for Photos and Documents; each school has its own.
@@ -59,7 +63,7 @@ export default buildConfig({
       ({ collection }) => ({ ...collection, hooks: { ...collection.hooks, beforeValidate: [...(collection.hooks?.beforeValidate ?? []), sameSchoolFolder] } }),
     ],
   },
-  collections: [Pages, Events, News, Programs, Staff, Media, Documents, FormUploads, EmailLog, SchoolSettings, Schools, Users],
+  collections: [Pages, Events, CalendarFeeds, News, Announcements, Programs, Staff, NewsCategories, Media, Documents, FormUploads, EmailLog, SchoolSettings, Schools, Users],
   // Resend when RESEND_API_KEY is set; otherwise emails are only logged (src/email).
   email: emailAdapter,
   editor: lexicalEditor(),
@@ -81,6 +85,22 @@ export default buildConfig({
       run: ({ req }) => Boolean(req.user) || (Boolean(process.env.CRON_SECRET) && req.headers.get('authorization') === `Bearer ${process.env.CRON_SECRET}`),
     },
     autoRun: process.env.VERCEL ? undefined : [{ cron: '* * * * *', queue: 'default', limit: 20 }],
+    tasks: [
+      {
+        // Copies events in from every school's Calendar feeds, once a day.
+        // Scheduled just before the daily cron (vercel.json, 10:00 UTC), so
+        // that run queues and runs it.
+        slug: 'importCalendars',
+        label: 'Import calendar feeds',
+        retries: 0,
+        schedule: [{ cron: '55 9 * * *', queue: 'default' }],
+        outputSchema: [{ name: 'summary', type: 'text' }],
+        handler: async ({ req }) => {
+          const out = await importAllFeeds(req.payload)
+          return { output: { summary: out.map((o) => `${o.feed}: ${o.message}`).join('\n').slice(0, 2000) || 'No feeds' } }
+        },
+      },
+    ],
   },
   plugins: [
     // Forms: inquiry, tour, contact, application (src/forms). Before the
@@ -112,7 +132,10 @@ export default buildConfig({
       collections: {
         pages: {},
         events: {},
+        'calendar-feeds': {},
         news: {},
+        'news-categories': {},
+        announcements: {},
         programs: {},
         staff: {},
         media: {},

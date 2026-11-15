@@ -8,7 +8,7 @@ import { resolveHeadingLevel } from '../../kit/groups'
 import { Buttons, HeadingLines, revealAttr } from '../../kit/render/parts'
 import { B61Icon } from '../../kit/render/icons'
 import CarouselInit from '../../kit/render/CarouselInit'
-import { formatDate, getEvents, getNews, getPrograms, getStaff } from '@/lib/data'
+import { formatDate, getEvents, getNews, getPrograms, getStaff, eventWhen } from '@/lib/data'
 
 export type CardGridBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61CardGrid' }>
 
@@ -42,7 +42,7 @@ async function loadCards(block: CardGridBlock): Promise<Card[]> {
       }))
     case 'upcoming-events':
       return (await getEvents({ limit })).map((e) => ({
-        key: String(e.id), image: e.image, eyebrow: formatDate(e.startsAt, { withTime: true }), title: e.title,
+        key: String(e.id), image: e.image, eyebrow: eventWhen(e), title: e.title,
         body: e.summary ? <p>{e.summary}</p> : null, href: `/events/${e.slug}`,
       }))
     case 'latest-news':

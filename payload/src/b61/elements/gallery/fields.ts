@@ -1,4 +1,5 @@
 import { defineElement, panel } from '../../kit/element'
+import { videoLinkField } from '../../kit/video'
 import { dropdown, segmented, step, type WhenRule } from '../../kit/controls'
 import { bandHeadFields, buttonsField, entranceField, eyebrowRuleField, headingAlignField, list, onlyImages, paddingFields, photo, surfaceField } from '../../kit/groups'
 
@@ -39,16 +40,7 @@ export const B61Gallery = defineElement({
         defaultValue: 'Scroll',
         admin: { condition: (_, s) => (s?.media ?? 'gallery') === 'gallery' && (s?.galleryLayout ?? 'strip') === 'strip' },
       },
-      {
-        name: 'video',
-        label: 'Video link',
-        type: 'text',
-        admin: {
-          condition: (_, s) => s?.media === 'video',
-          placeholder: 'https://www.youtube.com/watch?v=… or https://vimeo.com/…',
-          description: 'YouTube or Vimeo. The player loads only when someone presses play.',
-        },
-      },
+      videoLinkField((s) => s?.media === 'video'),
     ]),
     buttonsField(),
   ],

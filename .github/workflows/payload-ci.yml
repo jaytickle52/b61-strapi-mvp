@@ -5,7 +5,9 @@
 #   3. fails if the generated types are out of date,
 #   4. builds the site against a fresh, seeded database, starts it, and loads
 #      every school's public pages plus the editor (scripts/smoke.mjs),
-#   5. checks who can do what: roles, invites, publishing (scripts/permissions.mjs).
+#   5. checks who can do what: roles, invites, publishing (scripts/permissions.mjs),
+#   6. checks the school features: announcements, calendar + feeds, news
+#      categories, drag ordering, page templates, video links (scripts/features.mjs).
 # Vercel still deploys main on its own; a red check here means look before you trust that deploy.
 name: Payload checks
 
@@ -112,6 +114,13 @@ jobs:
         run: |
           node scripts/permissions.mjs
           npx payload run src/scripts/check-publish-button.ts
+
+      - name: School features test (announcements, calendar, templates)
+        env:
+          BASE_URL: http://localhost:3000
+          SMOKE_EMAIL: ci@example.com
+          SMOKE_PASSWORD: ci-smoke-password-123
+        run: node scripts/features.mjs
 
       - name: Server log
         if: failure()
