@@ -1,6 +1,18 @@
 import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
+  // This migration first ran under an earlier name (20261114_224543_media_documents_folders)
+  // when Thread D's preview deploys migrated the shared database before Thread C merged.
+  // Its SQL is identical. If that earlier one ran here, the tables already exist: just
+  // retire the old name so it isn't listed as an unknown migration.
+  const earlier = await db.execute(
+    sql`SELECT 1 FROM "payload_migrations" WHERE "name" = '20261114_224543_media_documents_folders' LIMIT 1`,
+  )
+  if ((earlier as any).rows?.length) {
+    await db.execute(sql`DELETE FROM "payload_migrations" WHERE "name" = '20261114_224543_media_documents_folders'`)
+    payload.logger.info('[b61] media_documents_folders already applied under its earlier name; skipping')
+    return
+  }
   await db.execute(sql`
    CREATE TYPE "public"."enum_payload_folders_folder_type" AS ENUM('media', 'documents');
   ALTER TYPE "public"."enum_pages_blocks_b61_hero_buttons_link_type" ADD VALUE 'document' BEFORE 'url';
