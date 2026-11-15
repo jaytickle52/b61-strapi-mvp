@@ -1,6 +1,6 @@
 'use client'
 import { useFormFields } from '@payloadcms/ui'
-import { FONT_STACKS, fontsHref } from '../b61/lib/theme'
+import { FONT_STACKS, fontsHref, TONE_DEFAULTS } from '../b61/lib/theme'
 import { normalizeHex, textOn } from './color'
 
 /**
@@ -14,6 +14,9 @@ export function BrandPreview() {
     secondary: f?.secondaryColor?.value,
     accent: f?.accentColor?.value,
     paper: f?.paperColor?.value,
+    tone: f?.siteTone?.value as string | undefined,
+    background: f?.backgroundColor?.value,
+    text: f?.textColor?.value,
     heading: f?.headingFont?.value as string | undefined,
     body: f?.bodyFont?.value as string | undefined,
     ui: f?.uiFont?.value as string | undefined,
@@ -22,6 +25,14 @@ export function BrandPreview() {
   const secondary = normalizeHex(v.secondary) ?? '#c8a24a'
   const accent = normalizeHex(v.accent) ?? '#b23a2e'
   const paper = normalizeHex(v.paper) ?? '#f7f3ec'
+  const dark = v.tone === 'dark'
+  const tone = TONE_DEFAULTS[dark ? 'dark' : 'light']
+  // A light site previews on its soft paper (as before); a dark site on its page.
+  const ground = dark ? (normalizeHex(v.background) ?? tone.background) : paper
+  const letters = normalizeHex(v.text) ?? (dark ? tone.text : '#1a1a1a')
+  // On a dark page, primary-coloured headings and accent words lighten toward the text (as tone.css does).
+  const headingColor = dark ? `color-mix(in srgb, ${primary} 40%, ${letters})` : primary
+  const accentText = dark ? `color-mix(in srgb, ${accent} 62%, ${letters})` : accent
   const font = (name: string | undefined, fallback: string) => FONT_STACKS[name ?? ''] ?? FONT_STACKS[fallback]
   const onPrimary = textOn(primary).text === 'white' ? '#fff' : '#1a1a1a'
   const onSecondary = textOn(secondary).text === 'white' ? '#fff' : '#1a1a1a'
@@ -30,12 +41,12 @@ export function BrandPreview() {
     <div className="field-type" style={{ marginBottom: 24 }}>
       <link rel="stylesheet" href={fontsHref({ headingFont: v.heading, bodyFont: v.body, uiFont: v.ui })} />
       <p className="field-label">Preview</p>
-      <div style={{ background: paper, color: '#1a1a1a', borderRadius: 6, padding: '28px 28px 24px', border: '1px solid var(--theme-elevation-100)' }}>
-        <div style={{ font: `600 12px/1.2 ${font(v.ui, 'Montserrat')}`, letterSpacing: '0.12em', textTransform: 'uppercase', color: accent }}>
+      <div style={{ background: ground, color: letters, borderRadius: 6, padding: '28px 28px 24px', border: '1px solid var(--theme-elevation-100)' }}>
+        <div style={{ font: `600 12px/1.2 ${font(v.ui, 'Montserrat')}`, letterSpacing: '0.12em', textTransform: 'uppercase', color: accentText }}>
           Welcome
         </div>
         <div style={{ width: 40, height: 3, background: accent, margin: '10px 0 14px' }} />
-        <div style={{ font: `600 30px/1.15 ${font(v.heading, 'Fraunces')}`, color: primary }}>{v.name || 'Your school name'}</div>
+        <div style={{ font: `600 30px/1.15 ${font(v.heading, 'Fraunces')}`, color: headingColor }}>{v.name || 'Your school name'}</div>
         <p style={{ font: `400 16px/1.6 ${font(v.body, 'Inter')}`, margin: '12px 0 20px', maxWidth: 560 }}>
           Body text looks like this. A Christ-centered education where every student is known, challenged and loved.
         </p>

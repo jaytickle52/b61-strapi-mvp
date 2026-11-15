@@ -30,7 +30,7 @@
   text-decoration: none;
 }
 .b61-cal-tab.is-on { background: var(--b61-primary); color: var(--b61-on-primary, #fff); }
-.b61-cal-tab:not(.is-on):hover { color: var(--b61-primary); }
+.b61-cal-tab:not(.is-on):hover { color: var(--b61-primary-text, var(--b61-primary)); }
 .b61-cal-tab:focus-visible { outline: 2px solid var(--b61-primary); outline-offset: 2px; }
 
 /* ---------- Subscribe ---------- */
@@ -48,7 +48,7 @@
   list-style: none;
 }
 .b61-subscribe__btn::-webkit-details-marker { display: none; }
-.b61-subscribe__btn:hover { border-color: var(--b61-primary); color: var(--b61-primary); }
+.b61-subscribe__btn:hover { border-color: var(--b61-primary-text, var(--b61-primary)); color: var(--b61-primary-text, var(--b61-primary)); }
 .b61-subscribe__btn:focus-visible { outline: 2px solid var(--b61-primary); outline-offset: 2px; }
 .b61-subscribe__menu {
   position: absolute;
@@ -74,7 +74,7 @@
   text-decoration: none;
 }
 .b61-subscribe__menu li a:hover,
-.b61-subscribe__menu li a:focus-visible { background: var(--b61-surface-soft, #f4f1ea); color: var(--b61-primary); }
+.b61-subscribe__menu li a:focus-visible { background: var(--b61-surface-soft, #f4f1ea); color: var(--b61-primary-text, var(--b61-primary)); }
 .b61-subscribe__copy { display: block; font-size: 13px; color: var(--b61-muted); }
 .b61-subscribe__copy input {
   display: block;
@@ -109,7 +109,7 @@
   color: var(--b61-ink);
   text-decoration: none;
 }
-.b61-cal__nav:hover { border-color: var(--b61-primary); color: var(--b61-primary); }
+.b61-cal__nav:hover { border-color: var(--b61-primary-text, var(--b61-primary)); color: var(--b61-primary-text, var(--b61-primary)); }
 .b61-cal__nav:focus-visible { outline: 2px solid var(--b61-primary); outline-offset: 2px; }
 .b61-cal__empty { text-align: center; margin: 0 0 12px; }
 
@@ -176,7 +176,7 @@
   .b61-cal__grid td .b61-cal__dlabel {
     position: static; width: auto; height: auto; overflow: visible; clip-path: none; white-space: normal;
   }
-  .b61-cal__grid td.is-today .b61-cal__day { border-radius: 0; background: none; color: var(--b61-primary); }
+  .b61-cal__grid td.is-today .b61-cal__day { border-radius: 0; background: none; color: var(--b61-primary-text, var(--b61-primary)); }
   .b61-cal__day { display: block; flex: none; width: 7.5em; height: auto; font-size: 14px; text-align: left; }
   .b61-cal__grid ul { flex: 1; min-width: 0; margin: 0; }
   .b61-cal__grid li a { display: block; font-size: 15px; padding: 6px 10px; }
@@ -185,4 +185,4 @@
 /* ---------- One event: Add to calendar ---------- */
 .b61-addcal { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 0 0 32px; font-family: var(--b61-font-ui, inherit); font-size: 15px; }
 .b61-addcal strong { font-weight: 700; }
-.b61-addcal a { font-weight: 600; color: var(--b61-primary); text-decoration: underline; text-underline-offset: 3px; }
+.b61-addcal a { font-weight: 600; color: var(--b61-primary-text, var(--b61-primary)); text-decoration: underline; text-underline-offset: 3px; }

@@ -1,0 +1,123 @@
+/*
+ * Site tone (School settings > Look > Site tone).
+ *
+ * The plugin's tokens assume a LIGHT site: the page is white, letters are
+ * black, and the only dark grounds are bands (primary, accent). A dark site
+ * flips that: the page is dark, letters are light, and the bands keep their
+ * brand colours.
+ *
+ * Elements never name a colour; they read role tokens (tokens.css). So a dark
+ * site is this one layer of role-token overrides, keyed on
+ * <html data-b61-tone="dark">, and NOT edits to the element CSS copied from the
+ * Breakdance plugin. Raw inputs, set per school by b61Theme() in lib/theme.ts:
+ *   --b61-page      page background (School settings > Page background)
+ *   --b61-text      body text        (School settings > Text)
+ *   --b61-page-rgb  the page as channels, for rgb(... / alpha)
+ *
+ * Rules:
+ *  - Letters on the page, on "White" and on "Light wash" bands are --b61-text.
+ *  - Secondary stays a LIGHT brand colour carrying dark letters (it is the
+ *    yellow button, the celebrate bar). So --b61-on-secondary pins to black
+ *    instead of following ink, which is light here.
+ *  - Accent words and small accent text lighten toward the text colour so they
+ *    clear contrast on a dark page.
+ *  - Paper is NOT the soft band on a dark site (a school's cream would put light
+ *    letters on a light band). The soft and mid grounds are lifted from the page.
+ *    Paper keeps its other job: the light accent colour on accent bands.
+ */
+
+:root {
+  /* "Primary used as a letter colour" (header links, calendar). Payload-only
+     files read this, so a dark site can lighten it. */
+  --b61-primary-text: var(--b61-primary);
+}
+
+:root[data-b61-tone='dark'] {
+  color-scheme: dark;
+
+  /* ---- Text ---- */
+  --b61-ink: var(--b61-text);
+  --b61-muted: color-mix(in srgb, var(--b61-text) 74%, var(--b61-page));
+  --b61-accent-text: color-mix(in srgb, var(--b61-palette-accent) 62%, var(--b61-text));
+  --b61-accent-text-on-soft: var(--b61-accent-text);
+  --b61-heading-accent: color-mix(in srgb, var(--b61-palette-accent) 85%, var(--b61-text));
+  --b61-heading-accent-text: var(--b61-accent-text);
+  --b61-primary-text: color-mix(in srgb, var(--b61-primary) 40%, var(--b61-text));
+  --b61-on-secondary: var(--b61-black);
+
+  /* ---- Grounds ---- */
+  --b61-surface: var(--b61-page);
+  --b61-on-surface: var(--b61-ink);
+  --b61-surface-soft: color-mix(in srgb, var(--b61-page) 93%, var(--b61-text));
+  --b61-on-surface-soft: var(--b61-ink);
+  --b61-on-soft-muted: var(--b61-muted);
+  --b61-surface-mid: color-mix(in srgb, var(--b61-page) 86%, var(--b61-text));
+  --b61-on-surface-mid: var(--b61-ink);
+  /* A card or tile sitting on the page (the plugin uses white for these). */
+  --b61-surface-raised: color-mix(in srgb, var(--b61-page) 95%, var(--b61-text));
+
+  /* ---- Lines ---- */
+  --b61-hairline: color-mix(in srgb, var(--b61-text) 16%, transparent);
+  --b61-border: var(--b61-hairline);
+  --b61-border-strong: var(--b61-text);
+  --b61-rule-ink: var(--b61-ink);
+  --b61-rule-muted: var(--b61-muted);
+  --b61-rule-accent: var(--b61-heading-accent);
+  --b61-eyebrow-rule-color: var(--b61-heading-accent);
+
+  /* ---- Buttons on the page ---- */
+  --b61-btn-outline-color: var(--b61-ink);
+  --b61-btn-light-border: var(--b61-ink);
+  --b61-btn-secondary-hover-scrim: rgb(var(--b61-light-scrim-rgb) / 0.12);
+  --b61-focus: var(--b61-text);
+
+  /* ---- The older app-wide tokens (styles.css) ---- */
+  --paper: var(--b61-page);
+  --paper-muted: var(--b61-surface-soft);
+  --ink: var(--b61-text);
+  --ink-soft: var(--b61-muted);
+  --line: var(--b61-hairline);
+}
+
+/* The light bands re-declare their button and rule tokens (utilities.css), so
+   they need the dark values again at the same level. */
+[data-b61-tone='dark'] .b61-band--plain,
+[data-b61-tone='dark'] .b61-band--soft {
+  --b61-btn-outline-color: var(--b61-ink);
+  --b61-btn-light-border: var(--b61-ink);
+  --b61-btn-secondary-hover-scrim: rgb(var(--b61-light-scrim-rgb) / 0.12);
+  --b61-focus: var(--b61-text);
+  --b61-rule-accent: var(--b61-heading-accent);
+}
+
+/* Accent bands: muted letters were "paper at 92%"; keep them light. */
+[data-b61-tone='dark'] .b61-band--accent {
+  --b61-on-bg-muted: rgb(255 255 255 / 0.88);
+}
+
+/* The "Light" button is a pill in the page's ground colour; on a dark site that
+   would be a dark pill on dark bands. Keep it a light pill everywhere. */
+[data-b61-tone='dark'] .b61-btn--light {
+  --b61-btn-bg: var(--b61-text);
+  --b61-btn-text: var(--b61-page);
+  --b61-btn-bg-hover: color-mix(in srgb, var(--b61-text) 86%, var(--b61-page));
+  --b61-btn-text-hover: var(--b61-page);
+  --b61-btn-border: var(--b61-text);
+}
+
+/* White cards and tiles become raised dark cards. */
+[data-b61-tone='dark'] .b61-cards__region { --cards-card-bg: var(--b61-surface-raised); }
+[data-b61-tone='dark'] .b61-gallery__region.b61-surface--soft { --gal-item-bg: var(--b61-surface-raised); }
+[data-b61-tone='dark'] .b61-acc__item--surf-card { --acc-item-bg: var(--b61-surface-raised); }
+[data-b61-tone='dark'] .b61-stats__region--style-boxed .b61-stats__item--surf-card { background: var(--b61-surface-raised); }
+
+/* The hero's "wash" overlay fades a photo toward the page, so dark here. */
+[data-b61-tone='dark'] .b61-hero__scrim--light { background: rgb(var(--b61-page-rgb) / 0.62); }
+
+/* Form fields sit on the page or a card; give them a visible ground. */
+[data-b61-tone='dark'] .b61-form input:not([type='checkbox']):not([type='radio']):not([type='file']),
+[data-b61-tone='dark'] .b61-form select,
+[data-b61-tone='dark'] .b61-form textarea {
+  background: var(--b61-surface-raised);
+  color: var(--b61-ink);
+}

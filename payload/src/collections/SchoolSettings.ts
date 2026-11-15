@@ -5,6 +5,7 @@ import { footerFields, headerFields } from '../b61/chrome/fields'
 import { testEmailEndpoint } from '../email/endpoints'
 import { colorField } from '../branding/fields'
 import { BODY_FONTS, HEADING_FONTS, UI_FONTS } from '../b61/lib/theme'
+import { CUSTOM_CSS_MAX } from '../b61/lib/custom-css'
 
 /**
  * One per school (the multi-school plugin makes this behave like a single
@@ -62,6 +63,24 @@ export const SchoolSettings: CollectionConfig = {
           fields: [
             { name: 'brandPreview', type: 'ui', admin: { components: { Field: '@/branding/BrandPreview#BrandPreview' } } },
             {
+              name: 'siteTone',
+              label: 'Site tone',
+              type: 'radio',
+              defaultValue: 'light',
+              options: [
+                { label: 'Light', value: 'light' },
+                { label: 'Dark', value: 'dark' },
+              ],
+              admin: { layout: 'horizontal', description: 'Dark: light letters on a dark page. Colored bands keep their colors.' },
+            },
+            {
+              type: 'row',
+              fields: [
+                colorField('backgroundColor', { label: 'Page background', placeholder: 'White, or near-black on a dark site', description: 'Empty: white (light) or #101218 (dark).' }),
+                colorField('textColor', { label: 'Text', placeholder: 'Near-black, or off-white on a dark site', description: 'Empty: #111111 (light) or #F2EFE9 (dark).' }),
+              ],
+            },
+            {
               type: 'row',
               fields: [
                 colorField('primaryColor', { defaultValue: '#1F3A5F', description: 'Headings, buttons, header links.' }),
@@ -72,7 +91,7 @@ export const SchoolSettings: CollectionConfig = {
               type: 'row',
               fields: [
                 colorField('accentColor', { defaultValue: '#B23A2E', description: 'Rules, frames, accent words.' }),
-                colorField('paperColor', { defaultValue: '#F7F3EC', description: 'Soft background.' }),
+                colorField('paperColor', { defaultValue: '#F7F3EC', description: 'Soft background (light sites). On dark sites, the light accent on accent bands.' }),
               ],
             },
             {
@@ -105,6 +124,29 @@ export const SchoolSettings: CollectionConfig = {
                 { name: 'headingFont', type: 'select', defaultValue: 'Fraunces', options: HEADING_FONTS },
                 { name: 'bodyFont', type: 'select', defaultValue: 'Inter', options: BODY_FONTS },
                 { name: 'uiFont', label: 'Buttons and labels font', type: 'select', defaultValue: 'Montserrat', options: UI_FONTS },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Custom CSS (Banner 61)',
+              admin: {
+                initCollapsed: true,
+                condition: (_data: unknown, _sibling: unknown, ctx: any) => isB61Admin(ctx?.user),
+                description:
+                  'Added to every page of this school, after the element styles. Target one element with the CSS class set in its Design tab > Advanced.',
+              },
+              fields: [
+                {
+                  name: 'customCss',
+                  label: 'Custom CSS',
+                  type: 'code',
+                  maxLength: CUSTOM_CSS_MAX,
+                  access: {
+                    create: ({ req }) => isB61Admin(req.user),
+                    update: ({ req }) => isB61Admin(req.user),
+                  },
+                  admin: { language: 'css', editorOptions: { minimap: { enabled: false } } },
+                },
               ],
             },
           ],

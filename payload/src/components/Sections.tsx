@@ -1,4 +1,5 @@
 import B61Hero from "@/b61/elements/hero/Hero";
+import { WithClass } from "@/b61/kit/render/custom-class";
 import B61Split from "@/b61/elements/split/Split";
 import B61Prose from "@/b61/elements/prose/Prose";
 import B61Cta from "@/b61/elements/cta/Cta";
@@ -49,8 +50,10 @@ export default function Sections({ sections, editable = false }: { sections: any
         const path = editable ? `sections.${i}` : undefined;
         return (
           <Fragment key={s.id ?? `${s.blockType}-${i}`}>
-            {path && <EditMark path={path} label={elementName(s.blockType)} />}
-            <El block={s} index={i} path={path} />
+            <WithClass block={s}>
+              {path && <EditMark path={path} label={elementName(s.blockType)} />}
+              <El block={s} index={i} path={path} />
+            </WithClass>
           </Fragment>
         );
       })}

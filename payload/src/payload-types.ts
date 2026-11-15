@@ -243,6 +243,9 @@ export interface Page {
              * Shows while the video loads, if autoplay is blocked, and when motion is turned off.
              */
             poster?: (number | null) | Media;
+            /**
+             * Below 80%, check the words stay easy to read over the photo.
+             */
             overlayStrength?: number | null;
             /**
              * 1 to 3 photos beside the text.
@@ -265,6 +268,10 @@ export interface Page {
             surface?: ('light' | 'primary' | 'secondary') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Hero';
@@ -351,6 +358,10 @@ export interface Page {
             frameColor?: ('primary' | 'secondary' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Split';
@@ -421,6 +432,10 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             headingRule?: ('site' | 'none' | 'trailing') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Prose';
@@ -552,6 +567,10 @@ export interface Page {
             cardOverlay?: ('none' | 'gradient' | 'wash') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61CardGrid';
@@ -622,6 +641,10 @@ export interface Page {
             itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61StatsBand';
@@ -705,6 +728,10 @@ export interface Page {
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Gallery';
@@ -727,6 +754,10 @@ export interface Page {
             showMark?: boolean | null;
             markRoom?: boolean | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Testimonial';
@@ -812,6 +843,10 @@ export interface Page {
             itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Accordion';
@@ -873,6 +908,10 @@ export interface Page {
                             showMark?: boolean | null;
                             markRoom?: boolean | null;
                             entrance?: ('on' | 'off') | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'b61Testimonial';
@@ -959,6 +998,10 @@ export interface Page {
                             frameColor?: ('primary' | 'secondary' | 'accent') | null;
                             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                             entrance?: ('on' | 'off') | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'b61Split';
@@ -1029,6 +1072,10 @@ export interface Page {
                             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                             headingRule?: ('site' | 'none' | 'trailing') | null;
                             entrance?: ('on' | 'off') | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'b61Prose';
@@ -1047,6 +1094,10 @@ export interface Page {
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Tabs';
@@ -1116,6 +1167,10 @@ export interface Page {
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Pillars';
@@ -1178,6 +1233,10 @@ export interface Page {
                             showMark?: boolean | null;
                             markRoom?: boolean | null;
                             entrance?: ('on' | 'off') | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'b61Testimonial';
@@ -1264,6 +1323,10 @@ export interface Page {
                             frameColor?: ('primary' | 'secondary' | 'accent') | null;
                             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                             entrance?: ('on' | 'off') | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'b61Split';
@@ -1334,6 +1397,10 @@ export interface Page {
                             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                             headingRule?: ('site' | 'none' | 'trailing') | null;
                             entrance?: ('on' | 'off') | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'b61Prose';
@@ -1356,6 +1423,10 @@ export interface Page {
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Carousel';
@@ -1432,6 +1503,10 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       headingRule?: ('site' | 'none' | 'trailing') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Prose';
@@ -1518,6 +1593,10 @@ export interface Page {
                       frameColor?: ('primary' | 'secondary' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Split';
@@ -1649,6 +1728,10 @@ export interface Page {
                       cardOverlay?: ('none' | 'gradient' | 'wash') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61CardGrid';
@@ -1719,6 +1802,10 @@ export interface Page {
                       itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61StatsBand';
@@ -1802,6 +1889,10 @@ export interface Page {
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Gallery';
@@ -1824,6 +1915,10 @@ export interface Page {
                       showMark?: boolean | null;
                       markRoom?: boolean | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Testimonial';
@@ -1841,6 +1936,10 @@ export interface Page {
                       widthStep?: number | null;
                       frameColor?: ('primary' | 'secondary' | 'accent') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61FramedImage';
@@ -1926,6 +2025,10 @@ export interface Page {
                       itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Accordion';
@@ -1995,6 +2098,10 @@ export interface Page {
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Pillars';
@@ -2053,7 +2160,7 @@ export interface Page {
                        */
                       image?: (number | null) | Media;
                       /**
-                       * Without a text panel the shade stays at least 70% so the words stay readable.
+                       * Without a text panel, check the words stay easy to read over the photo (70% is a safe start).
                        */
                       overlayStrength?: number | null;
                       textAlign?: ('left' | 'center') | null;
@@ -2065,6 +2172,10 @@ export interface Page {
                       textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Cta';
@@ -2100,6 +2211,10 @@ export interface Page {
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Form';
@@ -2125,6 +2240,10 @@ export interface Page {
                       firstColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
                       secondColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61ButtonBar';
@@ -2140,6 +2259,10 @@ export interface Page {
                       weight?: ('hairline' | 'regular' | 'heavy') | null;
                       lineColor?: ('accent' | 'ink' | 'muted') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Divider';
@@ -2202,6 +2325,10 @@ export interface Page {
                       actionsPosition?: ('top' | 'bottom') | null;
                       sticky?: boolean | null;
                       surface?: ('plain' | 'soft' | 'dark' | 'accent' | 'none') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Rail';
@@ -2272,6 +2399,10 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       headingRule?: ('site' | 'none' | 'trailing') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Prose';
@@ -2358,6 +2489,10 @@ export interface Page {
                       frameColor?: ('primary' | 'secondary' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Split';
@@ -2489,6 +2624,10 @@ export interface Page {
                       cardOverlay?: ('none' | 'gradient' | 'wash') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61CardGrid';
@@ -2559,6 +2698,10 @@ export interface Page {
                       itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61StatsBand';
@@ -2642,6 +2785,10 @@ export interface Page {
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Gallery';
@@ -2664,6 +2811,10 @@ export interface Page {
                       showMark?: boolean | null;
                       markRoom?: boolean | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Testimonial';
@@ -2681,6 +2832,10 @@ export interface Page {
                       widthStep?: number | null;
                       frameColor?: ('primary' | 'secondary' | 'accent') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61FramedImage';
@@ -2766,6 +2921,10 @@ export interface Page {
                       itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Accordion';
@@ -2835,6 +2994,10 @@ export interface Page {
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Pillars';
@@ -2893,7 +3056,7 @@ export interface Page {
                        */
                       image?: (number | null) | Media;
                       /**
-                       * Without a text panel the shade stays at least 70% so the words stay readable.
+                       * Without a text panel, check the words stay easy to read over the photo (70% is a safe start).
                        */
                       overlayStrength?: number | null;
                       textAlign?: ('left' | 'center') | null;
@@ -2905,6 +3068,10 @@ export interface Page {
                       textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Cta';
@@ -2940,6 +3107,10 @@ export interface Page {
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Form';
@@ -2965,6 +3136,10 @@ export interface Page {
                       firstColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
                       secondColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61ButtonBar';
@@ -2980,6 +3155,10 @@ export interface Page {
                       weight?: ('hairline' | 'regular' | 'heavy') | null;
                       lineColor?: ('accent' | 'ink' | 'muted') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Divider';
@@ -2990,6 +3169,9 @@ export interface Page {
              * To set the focal point, click the pencil on the photo, then Edit image.
              */
             image?: (number | null) | Media;
+            /**
+             * Check the words stay easy to read over the photo (70% is a safe start).
+             */
             overlayStrength?: number | null;
             columns?: ('full' | 'rail-right' | 'rail-left') | null;
             railSticky?: boolean | null;
@@ -3005,6 +3187,7 @@ export interface Page {
              */
             patternImage?: (number | null) | Media;
             tileSize?: number | null;
+            patternStrength?: number | null;
             watermarkOn?: boolean | null;
             /**
              * To set the focal point, click the pencil on the photo, then Edit image.
@@ -3014,6 +3197,10 @@ export interface Page {
             watermarkStrength?: number | null;
             surface?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Section';
@@ -3072,7 +3259,7 @@ export interface Page {
              */
             image?: (number | null) | Media;
             /**
-             * Without a text panel the shade stays at least 70% so the words stay readable.
+             * Without a text panel, check the words stay easy to read over the photo (70% is a safe start).
              */
             overlayStrength?: number | null;
             textAlign?: ('left' | 'center') | null;
@@ -3084,6 +3271,10 @@ export interface Page {
             textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Cta';
@@ -3119,6 +3310,10 @@ export interface Page {
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Form';
@@ -3136,6 +3331,10 @@ export interface Page {
             widthStep?: number | null;
             frameColor?: ('primary' | 'secondary' | 'accent') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61FramedImage';
@@ -3161,6 +3360,10 @@ export interface Page {
             firstColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
             secondColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61ButtonBar';
@@ -3176,6 +3379,10 @@ export interface Page {
             weight?: ('hairline' | 'regular' | 'heavy') | null;
             lineColor?: ('accent' | 'ink' | 'muted') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Divider';
@@ -4139,6 +4346,18 @@ export interface SchoolSetting {
   email?: string | null;
   address?: string | null;
   /**
+   * Dark: light letters on a dark page. Colored bands keep their colors.
+   */
+  siteTone?: ('light' | 'dark') | null;
+  /**
+   * Empty: white (light) or #101218 (dark).
+   */
+  backgroundColor?: string | null;
+  /**
+   * Empty: #111111 (light) or #F2EFE9 (dark).
+   */
+  textColor?: string | null;
+  /**
    * Headings, buttons, header links.
    */
   primaryColor?: string | null;
@@ -4151,7 +4370,7 @@ export interface SchoolSetting {
    */
   accentColor?: string | null;
   /**
-   * Soft background.
+   * Soft background (light sites). On dark sites, the light accent on accent bands.
    */
   paperColor?: string | null;
   primaryDeep?: string | null;
@@ -4219,6 +4438,7 @@ export interface SchoolSetting {
         | 'Oswald'
       )
     | null;
+  customCss?: string | null;
   /**
    * The main menu. Order here is the order on the site.
    */
@@ -4881,6 +5101,7 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -4947,6 +5168,7 @@ export interface PagesSelect<T extends boolean = true> {
               frameColor?: T;
               eyebrowRule?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -5000,6 +5222,7 @@ export interface PagesSelect<T extends boolean = true> {
               eyebrowRule?: T;
               headingRule?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -5088,6 +5311,7 @@ export interface PagesSelect<T extends boolean = true> {
               cardOverlay?: T;
               eyebrowRule?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -5147,6 +5371,7 @@ export interface PagesSelect<T extends boolean = true> {
               itemSurface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -5210,6 +5435,7 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -5230,6 +5456,7 @@ export interface PagesSelect<T extends boolean = true> {
               showMark?: T;
               markRoom?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -5290,6 +5517,7 @@ export interface PagesSelect<T extends boolean = true> {
               itemSurface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -5336,6 +5564,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 showMark?: T;
                                 markRoom?: T;
                                 entrance?: T;
+                                cssClass?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5402,6 +5631,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 frameColor?: T;
                                 eyebrowRule?: T;
                                 entrance?: T;
+                                cssClass?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5455,6 +5685,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 eyebrowRule?: T;
                                 headingRule?: T;
                                 entrance?: T;
+                                cssClass?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5470,6 +5701,7 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -5509,6 +5741,7 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -5556,6 +5789,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 showMark?: T;
                                 markRoom?: T;
                                 entrance?: T;
+                                cssClass?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5622,6 +5856,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 frameColor?: T;
                                 eyebrowRule?: T;
                                 entrance?: T;
+                                cssClass?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5675,6 +5910,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 eyebrowRule?: T;
                                 headingRule?: T;
                                 entrance?: T;
+                                cssClass?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5693,6 +5929,7 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -5752,6 +5989,7 @@ export interface PagesSelect<T extends boolean = true> {
                           eyebrowRule?: T;
                           headingRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -5818,6 +6056,7 @@ export interface PagesSelect<T extends boolean = true> {
                           frameColor?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -5906,6 +6145,7 @@ export interface PagesSelect<T extends boolean = true> {
                           cardOverlay?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -5965,6 +6205,7 @@ export interface PagesSelect<T extends boolean = true> {
                           itemSurface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6028,6 +6269,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6048,6 +6290,7 @@ export interface PagesSelect<T extends boolean = true> {
                           showMark?: T;
                           markRoom?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6063,6 +6306,7 @@ export interface PagesSelect<T extends boolean = true> {
                           widthStep?: T;
                           frameColor?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6123,6 +6367,7 @@ export interface PagesSelect<T extends boolean = true> {
                           itemSurface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6162,6 +6407,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6212,6 +6458,7 @@ export interface PagesSelect<T extends boolean = true> {
                           textPanel?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6242,6 +6489,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6272,6 +6520,7 @@ export interface PagesSelect<T extends boolean = true> {
                           firstColor?: T;
                           secondColor?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6285,6 +6534,7 @@ export interface PagesSelect<T extends boolean = true> {
                           weight?: T;
                           lineColor?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6332,6 +6582,7 @@ export interface PagesSelect<T extends boolean = true> {
                           actionsPosition?: T;
                           sticky?: T;
                           surface?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6385,6 +6636,7 @@ export interface PagesSelect<T extends boolean = true> {
                           eyebrowRule?: T;
                           headingRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6451,6 +6703,7 @@ export interface PagesSelect<T extends boolean = true> {
                           frameColor?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6539,6 +6792,7 @@ export interface PagesSelect<T extends boolean = true> {
                           cardOverlay?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6598,6 +6852,7 @@ export interface PagesSelect<T extends boolean = true> {
                           itemSurface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6661,6 +6916,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6681,6 +6937,7 @@ export interface PagesSelect<T extends boolean = true> {
                           showMark?: T;
                           markRoom?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6696,6 +6953,7 @@ export interface PagesSelect<T extends boolean = true> {
                           widthStep?: T;
                           frameColor?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6756,6 +7014,7 @@ export interface PagesSelect<T extends boolean = true> {
                           itemSurface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6795,6 +7054,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6845,6 +7105,7 @@ export interface PagesSelect<T extends boolean = true> {
                           textPanel?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6875,6 +7136,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6905,6 +7167,7 @@ export interface PagesSelect<T extends boolean = true> {
                           firstColor?: T;
                           secondColor?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6918,6 +7181,7 @@ export interface PagesSelect<T extends boolean = true> {
                           weight?: T;
                           lineColor?: T;
                           entrance?: T;
+                          cssClass?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6935,12 +7199,14 @@ export interface PagesSelect<T extends boolean = true> {
               patternOn?: T;
               patternImage?: T;
               tileSize?: T;
+              patternStrength?: T;
               watermarkOn?: T;
               watermarkImage?: T;
               watermarkSize?: T;
               watermarkStrength?: T;
               surface?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -6991,6 +7257,7 @@ export interface PagesSelect<T extends boolean = true> {
               textPanel?: T;
               eyebrowRule?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -7021,6 +7288,7 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -7036,6 +7304,7 @@ export interface PagesSelect<T extends boolean = true> {
               widthStep?: T;
               frameColor?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -7066,6 +7335,7 @@ export interface PagesSelect<T extends boolean = true> {
               firstColor?: T;
               secondColor?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -7079,6 +7349,7 @@ export interface PagesSelect<T extends boolean = true> {
               weight?: T;
               lineColor?: T;
               entrance?: T;
+              cssClass?: T;
               id?: T;
               blockName?: T;
             };
@@ -7406,6 +7677,9 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   phone?: T;
   email?: T;
   address?: T;
+  siteTone?: T;
+  backgroundColor?: T;
+  textColor?: T;
   primaryColor?: T;
   secondaryColor?: T;
   accentColor?: T;
@@ -7417,6 +7691,7 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   headingFont?: T;
   bodyFont?: T;
   uiFont?: T;
+  customCss?: T;
   menu?:
     | T
     | {

@@ -31,9 +31,10 @@ export default function B61Cta({ block, index = 0 }: { block: CtaBlock; index?: 
   const choice = block.surface ?? 'soft'
   // Copy never sits on a bare photo: no surface (or accent) over a photo reads dark.
   const surface = bare && (choice === 'none' || choice === 'accent') ? 'dark' : choice
-  const floor = surface === 'soft' ? 75 : 70
+  // The overlay is what the editor set (default 70). It used to be raised silently
+  // to 70-75% when copy sat on the photo; the field's help now asks them to check.
   const set = typeof block.overlayStrength === 'number' ? block.overlayStrength : 70
-  const shade = panelled ? set : Math.max(Math.round(set), floor)
+  const shade = Math.min(Math.max(Math.round(set), 0), 100)
   const focus = focusOf(block.image)
 
   const wStep = block.widthStep ? Math.min(Math.max(Math.round(block.widthStep), 1), 7) : null
