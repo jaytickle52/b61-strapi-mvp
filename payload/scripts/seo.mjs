@@ -182,6 +182,17 @@ async function main() {
     await api('PATCH', `/school-settings/${settings.id}`, { token: admin, body: { postalCode: settings.postalCode, _status: 'published' } })
   }
 
+  // ----- Speed -----------------------------------------------------------------------
+  const visit = await get('/', { school: 'cedar-ridge' })
+  check(!visit.headers['critical-ch'] && !visit.headers['accept-ch'], 'public pages send no colour-scheme hints (no second request)')
+  check(Boolean((await get('/admin/login')).headers['critical-ch']), '… the admin still does')
+  check(String(visit.headers['cache-control']).startsWith('private, no-cache') && !String(visit.headers['cache-control']).includes('no-store'), 'visitors get pages the browser may keep for Back / Forward')
+  check(String((await get('/', { school: 'cedar-ridge', cookie: `payload-token=${admin}` })).headers['cache-control']).includes('no-store'), 'signed-in staff still get no-store')
+  check(String((await get('/parents', { school: 'cedar-ridge' })).headers['cache-control']).includes('no-store'), 'the parents area still gets no-store')
+  const og = tag(visit.text, /<meta property="og:image" content="([^"]*)"/)
+  check(Boolean(og), "the home page's link preview has a picture (its first photo when no share image is set)")
+  check(/<style id="b61-fonts">|<link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com/.test(visit.text), 'fonts load inline, or by link when Google is out of reach')
+
   // ----- On the school's own domain (as a live site) -----------------------------
   const domains = school.domains ?? []
   const set = await api('PATCH', `/schools/${school.id}`, { token: admin, body: { domains: [{ domain: DOMAIN }, { domain: WWW }, ...domains] } })

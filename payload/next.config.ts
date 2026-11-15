@@ -28,4 +28,19 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withPayload(nextConfig, { devBundleServerPackages: false })
+const withPayloadConfig = withPayload(nextConfig, { devBundleServerPackages: false })
+
+// Payload adds colour-scheme hint headers (Accept-CH / Critical-CH /
+// Vary: Sec-CH-Prefers-Color-Scheme) to every address so its admin can pick
+// light or dark. On public pages Critical-CH makes Chrome request the page a
+// second time on a first visit (Lighthouse counted 340-940 ms). Keep them for
+// the admin only.
+const payloadHeaders = withPayloadConfig.headers
+withPayloadConfig.headers = async () => {
+  const rules = payloadHeaders ? await payloadHeaders() : []
+  return rules.map((rule) =>
+    rule.source === '/:path*' && rule.headers.some((h) => h.key === 'Critical-CH') ? { ...rule, source: '/admin/:path*' } : rule,
+  )
+}
+
+export default withPayloadConfig

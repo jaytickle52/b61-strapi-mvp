@@ -3,6 +3,7 @@ import { permanentRedirect } from "next/navigation";
 import Sections from "@/components/Sections";
 import { getPage } from "@/lib/data";
 import { seoMetadata } from "@/seo/metadata";
+import { firstImage } from "@/seo/text";
 import { redirectOrNotFound } from "@/seo/redirect";
 
 /*
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: PageProps<"/[...path]">): Pro
   const { path } = await params;
   const slug = slugOf(path);
   const page = slug ? await getPage(slug) : null;
-  return page ? seoMetadata({ title: page.title, meta: page.meta, content: page.sections, path: `/${slug}` }) : {};
+  return page ? seoMetadata({ title: page.title, meta: page.meta, content: page.sections, image: firstImage(page.sections), path: `/${slug}` }) : {};
 }
 
 export default async function CmsPage({ params }: PageProps<"/[...path]">) {

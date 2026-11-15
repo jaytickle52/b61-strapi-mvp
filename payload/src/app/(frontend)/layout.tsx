@@ -41,6 +41,7 @@ import '@/b61/styles/kit-frontend.css'
 import '@/b61/chrome/chrome.css'
 import '@/b61/styles/calendar.css'
 import { b61Theme, FONT_STACKS, fontsHref } from '@/b61/lib/theme'
+import { inlineFontCss } from '@/b61/lib/fonts'
 import Reveal from '@/b61/reveal/Reveal'
 import { getAnnouncements, getSettings, hiddenFromSearch, isPreview, siteOrigin } from '@/lib/data'
 import AnalyticsTag from '@/analytics/Tag'
@@ -107,6 +108,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   // A separate logo for the dark footer, when the school has one.
   const logoOnDark = asMedia((settings as any).logoOnDark)
   const fontsUrl = fontsHref(settings)
+  // Inlined so the first paint doesn't wait on Google (src/b61/lib/fonts.ts); a <link> if Google is unreachable.
+  const fontsCss = await inlineFontCss(fontsUrl)
 
   // The school's colors and fonts become CSS variables every component uses.
   const theme = {
@@ -121,9 +124,15 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     // :root, so the raw values have to be set there to flow through.
     <html lang="en" className="h-full antialiased" style={b61Theme(settings)}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link rel="stylesheet" href={fontsUrl} />
+        {fontsCss ? (
+          <style id="b61-fonts" dangerouslySetInnerHTML={{ __html: fontsCss }} />
+        ) : (
+          <>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="stylesheet" href={fontsUrl} />
+          </>
+        )}
         {/* The news feed, for feed readers and AI tools. */}
         <link rel="alternate" type="application/rss+xml" title={`${settings.schoolName} news`} href="/news/feed.xml" />
       </head>
