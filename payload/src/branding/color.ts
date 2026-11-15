@@ -44,6 +44,33 @@ export function textOn(bg: string): { text: 'white' | 'dark'; ratio: number; pas
   return { ...best, passes: best.ratio >= 4.5 }
 }
 
+/** Blend two hex colours: t = 0 gives a, t = 1 gives b. */
+export function mixHex(a: string, b: string, t: number): string {
+  const x = normalizeHex(a) ?? WHITE
+  const y = normalizeHex(b) ?? WHITE
+  const p = (h: string, i: number) => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16)
+  const ch = [0, 1, 2].map((i) => Math.round(p(x, i) + (p(y, i) - p(x, i)) * t))
+  return '#' + ch.map((c) => c.toString(16).padStart(2, '0')).join('')
+}
+
+/**
+ * The colour to use for `fg` on `bg` so it reaches `min` contrast: `fg` itself
+ * when it already does, else the nearest shade of it moved toward white (on a
+ * dark ground) or ink (on a light one). Used for the secondary colour on the
+ * dark (primary) surfaces: footer headings, eyebrows and the focus ring.
+ */
+export function readableOn(fg: string, bg: string, min: number): string {
+  const f = normalizeHex(fg)
+  const b = normalizeHex(bg)
+  if (!f || !b || contrast(f, b) >= min) return f ?? fg
+  const toward = contrast(b, WHITE) >= contrast(b, INK) ? WHITE : INK
+  for (let t = 0.05; t < 1; t += 0.05) {
+    const c = mixHex(f, toward, t)
+    if (contrast(c, b) >= min) return c
+  }
+  return toward
+}
+
 /** Field validation: empty is fine (defaults apply), otherwise a hex colour. */
 export function validateHex(v: unknown): true | string {
   if (v == null || v === '') return true

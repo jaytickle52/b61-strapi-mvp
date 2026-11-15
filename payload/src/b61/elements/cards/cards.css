@@ -760,8 +760,11 @@
   }
 }
 
+/* Same selector weight as the two-column rule above, or that rule wins on
+   phones too and squeezes the text out of the cards (WCAG 1.4.10). Port back
+   to the Breakdance plugin, which has the same mismatch. */
 @media (max-width: 767px) {
-  .b61-cards__grid {
+  .b61-cards__grid:not(.b61-cards__grid--c1) {
     grid-template-columns: 1fr;
   }
 }

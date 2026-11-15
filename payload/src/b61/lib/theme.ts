@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { readableOn } from '../../branding/color'
 
 const HEX = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i
 
@@ -12,6 +13,22 @@ function rgbTriple(hex: string | null | undefined): string | null {
 }
 
 const color = (v: string | null | undefined, fallback: string) => (v && HEX.test(v.trim()) ? (v.trim().startsWith('#') ? v.trim() : `#${v.trim()}`) : fallback)
+/**
+ * Footer column headings, hero eyebrows and similar text use the secondary
+ * colour on the dark (primary) ground, and so does the keyboard focus ring
+ * there. Text needs 4.5:1 and the ring 3:1 (WCAG 1.4.3 / 1.4.11); below that,
+ * those two tokens get a lighter shade of the secondary colour. Schools whose
+ * pair already passes keep tokens.css untouched.
+ */
+function onDarkOverrides(primary: string, secondary: string): Record<string, string> {
+  const out: Record<string, string> = {}
+  const text = readableOn(secondary, primary, 4.5)
+  const ring = readableOn(secondary, primary, 3)
+  if (text.toLowerCase() !== secondary.toLowerCase()) out['--b61-on-dark-accent'] = text
+  if (ring.toLowerCase() !== secondary.toLowerCase()) out['--b61-focus-on-dark'] = ring
+  return out
+}
+
 const mix = (base: string, other: string, pct: number) => `color-mix(in srgb, ${base} ${pct}%, ${other})`
 
 type FontSpec = { stack: string; weights: number[]; italic: boolean }
@@ -164,6 +181,9 @@ export function b61Theme(s: Settings): CSSProperties {
     '--b61-palette-accent-strong': s.accentStrong ? color(s.accentStrong, accent) : mix(accent, '#000', 85),
     '--b61-palette-accent-deep': s.accentDeep ? color(s.accentDeep, accent) : mix(accent, '#000', 70),
     '--b61-palette-paper': paper,
+    // The secondary colour is the text accent and focus ring on dark (primary)
+    // grounds. When a school's pair is too faint, use a lighter shade of it.
+    ...onDarkOverrides(primary, secondary),
     '--b61-scrim-rgb': rgbTriple(primary) ?? '31 58 95',
     // The light channel colour: light letters and lines on dark bands. Paper on a
     // light site; on a dark site the text colour (paper may still be a light cream).

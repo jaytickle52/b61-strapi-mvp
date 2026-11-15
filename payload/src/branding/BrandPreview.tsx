@@ -1,7 +1,7 @@
 'use client'
 import { useFormFields } from '@payloadcms/ui'
 import { FONT_STACKS, fontsHref, TONE_DEFAULTS } from '../b61/lib/theme'
-import { normalizeHex, textOn } from './color'
+import { contrast, normalizeHex, readableOn, textOn } from './color'
 
 /**
  * School settings > Look: a small sample of the school's colors and fonts that
@@ -36,6 +36,9 @@ export function BrandPreview() {
   const font = (name: string | undefined, fallback: string) => FONT_STACKS[name ?? ''] ?? FONT_STACKS[fallback]
   const onPrimary = textOn(primary).text === 'white' ? '#fff' : '#1a1a1a'
   const onSecondary = textOn(secondary).text === 'white' ? '#fff' : '#1a1a1a'
+  // The secondary colour is also the accent text and focus ring on dark (primary) grounds.
+  const pair = contrast(secondary, primary)
+  const onDark = readableOn(secondary, primary, 4.5)
 
   return (
     <div className="field-type" style={{ marginBottom: 24 }}>
@@ -59,6 +62,15 @@ export function BrandPreview() {
           </span>
         </div>
       </div>
+      <div style={{ background: primary, borderRadius: 6, padding: '18px 28px', marginTop: 8 }}>
+        <div style={{ font: `700 12px/1.2 ${font(v.ui, 'Montserrat')}`, letterSpacing: '0.12em', textTransform: 'uppercase', color: onDark }}>Footer heading</div>
+        <div style={{ font: `400 15px/1.5 ${font(v.body, 'Inter')}`, color: onPrimary, marginTop: 6 }}>Links and text on the dark footer and dark bands.</div>
+      </div>
+      {pair < 4.5 && (
+        <p className="field-description" role="note">
+          The secondary color on the primary color is {pair.toFixed(1)}:1, too faint for text (aim for 4.5:1). On dark backgrounds the site uses a lighter shade of it ({onDark}), shown above, for headings and the keyboard focus outline.
+        </p>
+      )}
       <p className="field-description">Updates as you change the colors and fonts below. The live preview beside the form shows the whole site.</p>
     </div>
   )

@@ -4,6 +4,28 @@
  * Desktop menu from 1024px; below that, the slide-in phone menu.
  */
 
+/* ---------- Skip link + sticky offset (WCAG 2.4.1, 2.4.11) ---------- */
+/* Keep focused items and in-page jumps clear of the sticky header. Header.tsx
+   measures the header into --b61-sticky-h; 76px is the fallback. */
+html { scroll-padding-top: calc(var(--b61-sticky-h, 76px) + 16px); }
+#main:focus { outline: none; }
+.b61-skip {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 12px 18px;
+  border-radius: 4px;
+  background: var(--b61-ink, #111);
+  color: #fff;
+  font-family: var(--b61-font-ui, inherit);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+.b61-skip:focus { transform: none; outline: 3px solid var(--b61-focus, #1f3a5f); outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) { .b61-skip { transition: transform 0.15s ease; } }
+
 /* ---------- Header ---------- */
 .b61-hdr {
   --b61-hdr-h: 76px;

@@ -224,6 +224,15 @@
 .b61-surface--dark .b61-gallery__arrow:hover,
 .b61-surface--accent .b61-gallery__arrow:hover { background: rgb(var(--b61-light-scrim-rgb) / 0.16); }
 
+.b61-gallery__region--mode-strip .b61-gallery__strip:focus-visible {
+  outline: var(--b61-focus-width) solid var(--b61-focus, var(--b61-ink));
+  outline-offset: var(--b61-focus-offset);
+}
+.b61-surface--dark .b61-gallery__region--mode-strip .b61-gallery__strip:focus-visible,
+.b61-gallery__region--mode-strip.b61-surface--dark .b61-gallery__strip:focus-visible {
+  outline-color: var(--b61-focus-on-dark);
+}
+
 .b61-gallery__arrow:focus-visible {
   outline: 3px solid var(--b61-focus);
   outline-offset: 3px;

@@ -70,6 +70,19 @@ export default function Header({ brand, items, utility, button }: { brand: Brand
     hoverTimer.current = setTimeout(() => setOpen(i), i === null ? 220 : 80)
   }
 
+  // The header is sticky: publish its height so the page keeps focused items
+  // and in-page jumps (form error links, #main) clear of it (WCAG 2.4.11).
+  const bar = useRef<HTMLElement>(null)
+  useEffect(() => {
+    const el = bar.current
+    if (!el || typeof ResizeObserver === 'undefined') return
+    const set = () => document.documentElement.style.setProperty('--b61-sticky-h', `${Math.ceil(el.getBoundingClientRect().height)}px`)
+    set()
+    const ro = new ResizeObserver(set)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
   const openMobile = () => {
     dialog.current?.showModal()
     document.documentElement.classList.add('b61-hdr-lock')
@@ -79,7 +92,7 @@ export default function Header({ brand, items, utility, button }: { brand: Brand
   const logo = brand.logo ? <img src={brand.logo.src} width={brand.logo.width} height={brand.logo.height} alt="" className="b61-hdr__logo" /> : <span className="b61-hdr__mark" aria-hidden="true">{brand.name.charAt(0)}</span>
 
   return (
-    <header className="b61-hdr">
+    <header ref={bar} className="b61-hdr">
       <div className="b61-hdr__bar">
         <Link href="/" className="b61-hdr__brand">
           {logo}
