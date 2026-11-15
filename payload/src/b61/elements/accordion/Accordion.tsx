@@ -5,6 +5,8 @@ import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical
 import { resolveHeadingLevel } from '../../kit/groups'
 import { BandHead, Buttons, eruleClass, revealAttr } from '../../kit/render/parts'
 import AccordionInit from './AccordionInit'
+import JsonLd from '@/seo/JsonLd'
+import { faqSchema } from '@/seo/schema'
 
 const NEXT: Record<string, string> = { h1: 'h2', h2: 'h3', h3: 'h4', h4: 'h5' }
 
@@ -25,8 +27,10 @@ export default function B61Accordion({ block, index = 0 }: { block: any; index?:
   const Wrap = lines.length ? 'section' : 'div'
   const wStep = block.widthStep ? Math.min(Math.max(Math.round(block.widthStep), 1), 7) : null
   const items = (block.items ?? []).filter((i: any) => i?.title)
+  const faq = block.faq ? faqSchema(items) : null
   return (
     <div className={['b61-acc', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
+      {faq && <JsonLd data={faq} />}
       <Wrap
         className={[
           'b61-acc__region',

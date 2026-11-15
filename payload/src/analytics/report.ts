@@ -13,6 +13,8 @@ export type SchoolReport = {
   daily: { date: string; visitors: number }[]
   topPages: { path: string; title: string; views: number }[]
   sources: { name: string; visits: number }[]
+  /** Visits sent by AI assistants (ChatGPT, Perplexity, Claude, Copilot, Gemini), by assistant. */
+  aiAssistants: { name: string; visits: number }[]
   devices: { name: string; visitors: number }[]
   fetchedAt: string
 }
@@ -34,6 +36,36 @@ const SOURCE_NAMES: Record<string, string> = {
   Display: 'Display ads',
   'Organic Video': 'Video sites',
   Unassigned: 'Other',
+}
+
+/*
+ * AI assistants link to the sites they cite. GA files those visits under
+ * "Links on other websites"; this picks them out by where they came from.
+ * Clicks from Google's own AI Overviews count as Google search and can't be
+ * told apart.
+ */
+const AI_SOURCES: [RegExp, string][] = [
+  [/chatgpt\.com|chat\.openai\.com|openai/i, 'ChatGPT'],
+  [/perplexity/i, 'Perplexity'],
+  [/claude\.ai|anthropic/i, 'Claude'],
+  [/copilot\.microsoft|copilot\.cloud|bing\.com\/chat/i, 'Microsoft Copilot'],
+  [/gemini\.google|bard\.google/i, 'Gemini'],
+]
+export const AI_SOURCE_PATTERN = 'chatgpt|openai|perplexity|claude\\.ai|anthropic|copilot|gemini\\.google|bard\\.google'
+
+/** "chatgpt.com" -> "ChatGPT"; null for anything that isn't an AI assistant. */
+export function aiAssistantName(source: string): string | null {
+  return AI_SOURCES.find(([re]) => re.test(source))?.[1] ?? null
+}
+
+/** Sessions by source -> visits per assistant, largest first. */
+export function groupAiAssistants(rows: { source: string; visits: number }[]): { name: string; visits: number }[] {
+  const by = new Map<string, number>()
+  for (const r of rows) {
+    const name = aiAssistantName(r.source)
+    if (name) by.set(name, (by.get(name) ?? 0) + r.visits)
+  }
+  return [...by].map(([name, visits]) => ({ name, visits })).sort((a, b) => b.visits - a.visits)
 }
 
 async function fetchReport(propertyId: string, days: Period): Promise<SchoolReport> {
@@ -58,6 +90,18 @@ async function fetchReport(propertyId: string, days: Period): Promise<SchoolRepo
     },
     { dateRanges: [current], dimensions: [{ name: 'deviceCategory' }], metrics: [{ name: 'activeUsers' }], orderBys: [{ metric: { metricName: 'activeUsers' }, desc: true }] },
   ])
+
+  // GA allows five reports per batch: the AI assistants report goes on its own.
+  const [ai] = await batchRunReports(propertyId, [
+    {
+      dateRanges: [current],
+      dimensions: [{ name: 'sessionSource' }],
+      metrics: [{ name: 'sessions' }],
+      dimensionFilter: { filter: { fieldName: 'sessionSource', stringFilter: { matchType: 'PARTIAL_REGEXP', value: AI_SOURCE_PATTERN, caseSensitive: false } } },
+      orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+      limit: 50,
+    },
+  ]).catch(() => [{ rows: [] } as any])
 
   // With two date ranges GA adds a dateRange dimension: date_range_0 / date_range_1.
   const byRange = (key: string) => (totals.rows ?? []).find((r) => r.dimensionValues?.some((d) => d.value === key))
@@ -85,6 +129,7 @@ async function fetchReport(propertyId: string, days: Period): Promise<SchoolRepo
     daily: series,
     topPages: (pages.rows ?? []).map((r) => ({ path: dim(r, 0), title: dim(r, 1), views: num(r, 0) })),
     sources: (sources.rows ?? []).map((r) => ({ name: SOURCE_NAMES[dim(r, 0)] ?? dim(r, 0), visits: num(r, 0) })),
+    aiAssistants: groupAiAssistants((ai?.rows ?? []).map((r: GARow) => ({ source: dim(r, 0), visits: num(r, 0) }))),
     devices: (devices.rows ?? []).map((r) => ({ name: dim(r, 0).replace(/^./, (c) => c.toUpperCase()), visitors: num(r, 0) })),
     fetchedAt: new Date().toISOString(),
   }

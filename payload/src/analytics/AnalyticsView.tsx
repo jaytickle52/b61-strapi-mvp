@@ -211,6 +211,25 @@ function Report({ report, site }: { report: SchoolReport; site: string }) {
             )}
           </section>
           <section className="b61-an__panel">
+            <h2>From AI assistants</h2>
+            {(report.aiAssistants ?? []).length ? (
+              <ul className="b61-an__bars">
+                {report.aiAssistants.map((s) => (
+                  <li key={s.name}>
+                    <span className="b61-an__bar-label">{s.name}</span>
+                    <span className="b61-an__bar">
+                      <span style={{ width: `${(s.visits / Math.max(1, ...report.aiAssistants.map((x) => x.visits))) * 100}%` }} />
+                    </span>
+                    <span className="b61-an__bar-num">{n(s.visits)}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="b61-an__empty">No visits from ChatGPT, Perplexity, Claude, Copilot or Gemini in this period.</p>
+            )}
+            <p className="b61-an__note">Visits from links in AI answers. Clicks from Google&apos;s AI Overviews count as Google search.</p>
+          </section>
+          <section className="b61-an__panel">
             <h2>Devices</h2>
             {report.devices.length ? (
               <ul className="b61-an__bars">

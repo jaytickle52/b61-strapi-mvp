@@ -47,6 +47,9 @@ jobs:
       # Emails are saved here as files (no Resend key in CI); the permissions test reads invites from it.
       EMAIL_PREVIEW_DIR: /tmp/emails
       NEXT_TELEMETRY_DISABLED: '1'
+      # IndexNow pings go to the SEO test's own stand-in server, never to Bing.
+      INDEXNOW_ENABLED: 'true'
+      INDEXNOW_ENDPOINT: http://localhost:8766/indexnow
     steps:
       - uses: actions/checkout@v4
 

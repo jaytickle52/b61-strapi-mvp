@@ -6,6 +6,7 @@ import { testEmailEndpoint } from '../email/endpoints'
 import { colorField } from '../branding/fields'
 import { BODY_FONTS, HEADING_FONTS, UI_FONTS } from '../b61/lib/theme'
 import { CUSTOM_CSS_MAX } from '../b61/lib/custom-css'
+import { addressFields, factFields, withJoinedAddress } from '../school/fields'
 
 /**
  * One per school (the multi-school plugin makes this behave like a single
@@ -21,7 +22,7 @@ export const SchoolSettings: CollectionConfig = {
   },
   // Contributors can look but not change settings (they go live at once).
   access: { read: publishedOrSignedIn, create: publishersOnly, update: publishersOnly },
-  hooks: { beforeChange: [guardPublishing] },
+  hooks: { beforeChange: [guardPublishing, ({ data }) => withJoinedAddress(data)] },
   endpoints: [testEmailEndpoint],
   versions: { drafts: { autosave: { interval: 400 } }, maxPerDoc: 25 },
   fields: [
@@ -53,9 +54,15 @@ export const SchoolSettings: CollectionConfig = {
                 },
               ],
             },
-            { name: 'phone', type: 'text' },
-            { name: 'email', type: 'email' },
-            { name: 'address', type: 'textarea' },
+            {
+              type: 'row',
+              fields: [
+                { name: 'phone', type: 'text', admin: { width: '50%' } },
+                { name: 'email', type: 'email', admin: { width: '50%' } },
+              ],
+            },
+            ...addressFields,
+            ...factFields,
           ],
         },
         {
@@ -210,6 +217,22 @@ export const SchoolSettings: CollectionConfig = {
               label: 'Google Search Console code',
               type: 'text',
               admin: { description: 'Optional. The content="…" value from Google\'s HTML-tag verification.' },
+            },
+            {
+              name: 'bingVerification',
+              label: 'Bing Webmaster Tools code',
+              type: 'text',
+              admin: { description: 'Optional. The content="…" value from Bing\'s meta-tag verification. Bing also feeds Microsoft Copilot.' },
+            },
+            {
+              name: 'allowAiTraining',
+              label: 'Let AI companies learn from this site',
+              type: 'checkbox',
+              defaultValue: true,
+              admin: {
+                description:
+                  'Off: robots.txt asks AI training crawlers (GPTBot, ClaudeBot and others) to stay away. ChatGPT, Claude, Perplexity and Google can still find and cite the site in their answers either way.',
+              },
             },
             {
               name: 'hideFromSearch',

@@ -26,6 +26,7 @@ import { secret } from './lib/secrets'
 import { migrations } from './migrations'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { seoPlugins } from './seo/config'
+import { indexNow } from './seo/indexnow'
 import { reindexSearch } from './seo/reindex'
 import { formBuilderConfig, replaceSubmissionHooks } from './forms/config'
 import { FormUploads } from './collections/FormUploads'
@@ -143,6 +144,7 @@ export default buildConfig({
     // SEO fields, redirects from old addresses, site search (src/seo). Before
     // the multi-school plugin, so Redirects and the Search index are per school.
     ...seoPlugins,
+    indexNow,
     multiTenantPlugin({
       tenantsSlug: 'schools',
       tenantField: { name: 'school' },

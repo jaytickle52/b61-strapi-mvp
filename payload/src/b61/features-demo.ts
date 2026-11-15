@@ -1,6 +1,9 @@
 import type { Payload } from 'payload'
 import type { School } from '../payload-types'
 import { addDays, ymd, zoned } from '../events/time'
+import { profileUrl, splitAddress } from '../school/fields'
+import { handle } from './chrome/demo'
+import { cardsFrom } from './demo'
 
 /*
  * Demo content for the school features (Thread F): news categories, an
@@ -76,4 +79,72 @@ export async function ensureFeatureDemo(payload: Payload, school: School) {
     })
     payload.logger.info(`[b61] Demo all-day event added for ${school.name}`)
   }
+
+  await ensureFactsDemo(payload, school, ctx)
+}
+
+const DEMO_FACTS: Record<string, Record<string, unknown>> = {
+  'cedar-ridge': {
+    shortName: 'Cedar Ridge',
+    grades: 'PreK–12',
+    foundedYear: 1987,
+    enrollment: 640,
+    studentTeacherRatio: '14:1',
+    denomination: 'Nondenominational',
+    transportation: 'Morning bus routes from Greer and Taylors',
+    beforeAfterCare: true,
+    churchName: 'Cedar Ridge Community Church',
+    accreditations: [{ name: 'ACSI' }, { name: 'Cognia' }],
+    memberships: [{ name: 'SCISA' }],
+    latitude: 34.8526,
+    longitude: -82.394,
+    officeDays: ['Mo', 'Tu', 'We', 'Th', 'Fr'],
+    officeOpens: '07:30',
+    officeCloses: '16:00',
+  },
+  'harbor-oaks': {
+    shortName: 'Harbor Oaks',
+    grades: 'K–12',
+    foundedYear: 2004,
+    enrollment: 310,
+    studentTeacherRatio: '11:1',
+    denomination: 'Reformed',
+    beforeAfterCare: true,
+    accreditations: [{ name: 'ACCS' }],
+    memberships: [{ name: 'Society for Classical Learning' }],
+    officeDays: ['Mo', 'Tu', 'We', 'Th', 'Fr'],
+    officeOpens: '08:00',
+    officeCloses: '15:30',
+  },
+}
+
+/*
+ * School facts, the address in parts and full social links for the demo
+ * schools (structured data, PR 2). Only when the school has no facts yet.
+ */
+async function ensureFactsDemo(payload: Payload, school: School, ctx: Record<string, unknown>) {
+  const facts = DEMO_FACTS[school.slug ?? '']
+  if (!facts) return
+  const res = await payload.find({ collection: 'school-settings', where: { school: { equals: school.id } }, limit: 1, depth: 0, overrideAccess: true })
+  const s = res.docs[0] as any
+  if (!s || s.grades || s.foundedYear) return
+  const parts = s.street || !s.address ? {} : splitAddress(s.address)
+  // Old demo data linked to the social sites' home pages; those now fail the "full address" check.
+  const social = (s.social ?? []).map((x: any) => (profileUrl(x?.url) === true ? x : { ...x, url: `https://${new URL(x.url).hostname}/${handle(s.schoolName)}` }))
+  await payload.update({
+    collection: 'school-settings',
+    id: s.id,
+    data: { ...facts, ...parts, social, _status: 'published' } as any,
+    overrideAccess: true,
+    context: ctx,
+  })
+  // Show them: an "At a glance" Card Grid on the demo About page, after its second section.
+  const about = (await payload.find({ collection: 'pages', where: { and: [{ school: { equals: school.id } }, { slug: { equals: 'about' } }] }, limit: 1, depth: 0, overrideAccess: true })).docs[0] as any
+  if (about && !(about.sections ?? []).some((x: any) => x.source === 'school-facts')) {
+    const glance = { ...cardsFrom({ heading: 'At a glance', source: 'school-facts', columns: 'four', tone: 'light' }), mediaType: 'none' }
+    const sections = [...(about.sections ?? [])]
+    sections.splice(Math.min(2, sections.length), 0, glance)
+    await payload.update({ collection: 'pages', id: about.id, data: { sections, _status: 'published' } as any, overrideAccess: true, context: ctx })
+  }
+  payload.logger.info(`[b61] Demo school facts added for ${school.name}`)
 }
