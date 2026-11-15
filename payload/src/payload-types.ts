@@ -4205,6 +4205,14 @@ export interface SchoolSetting {
    */
   hideFromSearch?: boolean | null;
   /**
+   * Adds Google Analytics to the live website. Not added on demo or preview addresses, or while the site is hidden from search engines.
+   */
+  gaMeasurementId?: string | null;
+  /**
+   * Set by Banner 61. Lets the Analytics page show this school's numbers.
+   */
+  gaPropertyId?: string | null;
+  /**
    * One shared password families use to open the parent feed. Leave empty to keep the feed closed.
    */
   parentPassword?: string | null;
@@ -7283,6 +7291,8 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   shareImage?: T;
   googleVerification?: T;
   hideFromSearch?: T;
+  gaMeasurementId?: T;
+  gaPropertyId?: T;
   parentPassword?: T;
   updatedAt?: T;
   createdAt?: T;

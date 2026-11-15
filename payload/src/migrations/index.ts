@@ -4,6 +4,7 @@ import * as migration_20261114_221832_forms_email from './20261114_221832_forms_
 import * as migration_20261114_224927_seo_search from './20261114_224927_seo_search';
 import * as migration_20261115_000930_media_documents_folders from './20261115_000930_media_documents_folders';
 import * as migration_20261115_002446_permissions_invites from './20261115_002446_permissions_invites';
+import * as migration_20261115_010944_thread_g_analytics from './20261115_010944_thread_g_analytics';
 
 export const migrations = [
   {
@@ -34,6 +35,11 @@ export const migrations = [
   {
     up: migration_20261115_002446_permissions_invites.up,
     down: migration_20261115_002446_permissions_invites.down,
-    name: '20261115_002446_permissions_invites'
+    name: '20261115_002446_permissions_invites',
+  },
+  {
+    up: migration_20261115_010944_thread_g_analytics.up,
+    down: migration_20261115_010944_thread_g_analytics.down,
+    name: '20261115_010944_thread_g_analytics'
   },
 ];

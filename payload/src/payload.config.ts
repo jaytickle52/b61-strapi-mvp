@@ -33,7 +33,20 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
-    meta: { titleSuffix: ' · School website' },
+    meta: {
+      titleSuffix: ' · School website',
+      icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/b61-icon.svg' }],
+    },
+    // Banner 61 branding, the dashboard welcome and the Analytics page (Thread G).
+    components: {
+      graphics: { Logo: '@/brand/Logo#Logo', Icon: '@/brand/Logo#Icon' },
+      beforeLogin: ['@/brand/BeforeLogin#BeforeLogin'],
+      beforeDashboard: ['@/brand/Welcome#Welcome'],
+      afterNavLinks: ['@/analytics/NavLink#AnalyticsNavLink'],
+      views: {
+        analytics: { Component: '@/analytics/AnalyticsView#AnalyticsView', path: '/analytics', meta: { title: 'Analytics' } },
+      },
+    },
     livePreview: {
       collections: ['pages', 'events', 'news', 'programs', 'staff', 'school-settings'],
     },

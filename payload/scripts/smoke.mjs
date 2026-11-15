@@ -91,6 +91,9 @@ async function signIn() {
 
 async function checkEditor(cookie, pagesBySchool) {
   await get('/admin', { cookie })
+  // Thread G: the Analytics page, once per period, and School settings (Analytics tab lives there).
+  for (const days of [7, 28, 90]) await get(`/admin/analytics?days=${days}`, { cookie })
+  await get('/admin/collections/school-settings', { cookie, expect: [200, 302, 307] })
   for (const collection of ['pages', 'events', 'news', 'programs', 'staff', 'media']) {
     await get(`/admin/collections/${collection}`, { cookie })
   }
