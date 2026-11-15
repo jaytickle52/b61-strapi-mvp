@@ -262,9 +262,9 @@ async function main() {
   // Fonts come inlined (the server fetched Google's stylesheet, which Google only
   // serves when every requested weight exists) or, when Google is out of reach,
   // as a <link> whose address can be checked directly.
-  const harbor = (await page('/', 'harbor-oaks')).text
-  const fontsLink = harbor.match(/https:\/\/fonts\.googleapis\.com\/css2\?[^"]+/)?.[0]?.replace(/&amp;/g, '&') ?? ''
-  const inlined = /<style id="b61-fonts">[\s\S]*?font-family: 'Lato'/.test(harbor)
+  const harborHome = (await page('/', 'harbor-oaks')).text
+  const fontsLink = harborHome.match(/https:\/\/fonts\.googleapis\.com\/css2\?[^"]+/)?.[0]?.replace(/&amp;/g, '&') ?? ''
+  const inlined = /<style id="b61-fonts">[\s\S]*?font-family: 'Lato'/.test(harborHome)
   check(inlined || (fontsLink && !/family=Lato:[^&]*\b(500|600)\b/.test(fontsLink)), 'font requests only name weights the font has (Lato has no 500/600)')
 
   // ----- Bunny video uploads -------------------------------------------------
