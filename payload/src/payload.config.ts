@@ -18,6 +18,7 @@ import { CalendarFeeds } from './collections/CalendarFeeds'
 import { importAllFeeds } from './events/ics-import'
 import { SchoolSettings } from './collections/SchoolSettings'
 import { Schools } from './collections/Schools'
+import { withPreviewFocus } from './b61/kit/preview/withPreviewFocus'
 import { multiTenantPlugin } from '@payloadcms/plugin-multi-tenant'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { seedDemoSchools } from './seed'
@@ -65,7 +66,20 @@ export default buildConfig({
       ({ collection }) => ({ ...collection, hooks: { ...collection.hooks, beforeValidate: [...(collection.hooks?.beforeValidate ?? []), sameSchoolFolder] } }),
     ],
   },
-  collections: [Pages, Events, CalendarFeeds, News, Announcements, Programs, Staff, NewsCategories, Media, Documents, FormUploads, EmailLog, SchoolSettings, Schools, Users],
+  // Live-preview collections get click-to-edit (src/b61/kit/preview).
+  collections: [
+    ...[Pages, Events].map(withPreviewFocus),
+    CalendarFeeds,
+    ...[News, Announcements, Programs, Staff].map(withPreviewFocus),
+    NewsCategories,
+    Media,
+    Documents,
+    FormUploads,
+    EmailLog,
+    withPreviewFocus(SchoolSettings),
+    Schools,
+    Users,
+  ],
   // Video uploads to Bunny Stream from the editor (src/video).
   endpoints: bunnyEndpoints,
   // Resend when RESEND_API_KEY is set; otherwise emails are only logged (src/email).

@@ -81,3 +81,10 @@
     flex: 1 1 auto !important;
   }
 }
+
+/* Click-to-edit: the row the preview just pointed at (PreviewFocus.tsx). */
+@keyframes b61-row-flash {
+  0%, 35% { box-shadow: 0 0 0 3px #2f6fed; }
+  100% { box-shadow: 0 0 0 3px transparent; }
+}
+.b61-row-flash > .collapsible { animation: b61-row-flash 1.8s ease-out; border-radius: var(--style-radius-m, 4px); }

@@ -4,7 +4,7 @@ import Inner from '../../kit/render/Inner'
 import TabsInit from './TabsInit'
 
 /* Ported from elements/Tabs/html.twig and elements/Tab/html.twig (plugin 1.77.1). */
-export default function B61Tabs({ block, index = 0 }: { block: any; index?: number }) {
+export default function B61Tabs({ block, index = 0, path }: { block: any; index?: number; path?: string }) {
   const ri = revealAttr(block.entrance)
   const rv = block.entrance === 'off' ? 'off' : 'on'
   const as = resolveHeadingLevel(block.headingLevel, index)
@@ -54,7 +54,7 @@ export default function B61Tabs({ block, index = 0 }: { block: any; index?: numb
               <div key={t.id ?? i} className="b61-pane">
                 <h3 className="b61-pane__label js-b61-pane-label">{t.label}</h3>
                 <div className="b61-pane__content">
-                  <Inner blocks={t.content} />
+                  <Inner blocks={t.content} path={path && `${path}.tabs.${i}.content`} />
                 </div>
               </div>
             ))}

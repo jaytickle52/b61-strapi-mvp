@@ -3,7 +3,7 @@ import { asMedia, focusOf, imgProps } from '../../lib/media'
 import Inner from '../../kit/render/Inner'
 
 /* Ported from elements/Section/html.twig and elements/Sidebar (plugin 1.77.1). */
-export default function B61Section({ block }: { block: any; index?: number }) {
+export default function B61Section({ block, path }: { block: any; index?: number; path?: string }) {
   const choice = block.surface ?? 'none'
   const bg = imgProps(block.image, '100vw')
   const surface = bg && ['none', 'accent'].includes(choice) ? 'dark' : choice
@@ -71,13 +71,13 @@ export default function B61Section({ block }: { block: any; index?: number }) {
         >
           {cols === 'rail-left' && rail && (
             <div className="b61-aside">
-              <Inner blocks={block.side} />
+              <Inner blocks={block.side} path={path && `${path}.side`} />
             </div>
           )}
-          <Inner blocks={block.content} />
+          <Inner blocks={block.content} path={path && `${path}.content`} />
           {cols === 'rail-right' && (
             <div className="b61-aside">
-              <Inner blocks={block.side} />
+              <Inner blocks={block.side} path={path && `${path}.side`} />
             </div>
           )}
         </div>
