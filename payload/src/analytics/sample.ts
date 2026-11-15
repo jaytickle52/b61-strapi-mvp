@@ -46,6 +46,12 @@ export function sampleReport(days: Period, seed = 61): SchoolReport {
       { name: 'Links on other websites', visits: Math.round(visitors * 0.11) },
       { name: 'Email', visits: Math.round(visitors * 0.05) },
     ],
+    aiAssistants: [
+      { name: 'ChatGPT', visits: Math.round(visitors * 0.021) },
+      { name: 'Perplexity', visits: Math.round(visitors * 0.006) },
+      { name: 'Gemini', visits: Math.round(visitors * 0.004) },
+      { name: 'Microsoft Copilot', visits: Math.round(visitors * 0.003) },
+    ],
     devices: [
       { name: 'Mobile', visitors: Math.round(visitors * 0.61) },
       { name: 'Desktop', visitors: Math.round(visitors * 0.36) },

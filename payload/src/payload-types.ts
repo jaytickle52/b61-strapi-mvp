@@ -471,7 +471,7 @@ export interface Page {
               };
               [k: string]: unknown;
             } | null;
-            source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff') | null;
+            source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts') | null;
             limit?: number | null;
             mediaType?: ('image' | 'icon' | 'none') | null;
             cards?:
@@ -815,6 +815,10 @@ export interface Page {
                   id?: string | null;
                 }[]
               | null;
+            /**
+             * Search engines and AI tools read each title as a question and its body as the answer.
+             */
+            faq?: boolean | null;
             buttons?:
               | {
                   label: string;
@@ -1632,7 +1636,8 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
-                      source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff') | null;
+                      source?:
+                        ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts') | null;
                       limit?: number | null;
                       mediaType?: ('image' | 'icon' | 'none') | null;
                       cards?:
@@ -1997,6 +2002,10 @@ export interface Page {
                             id?: string | null;
                           }[]
                         | null;
+                      /**
+                       * Search engines and AI tools read each title as a question and its body as the answer.
+                       */
+                      faq?: boolean | null;
                       buttons?:
                         | {
                             label: string;
@@ -2528,7 +2537,8 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
-                      source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff') | null;
+                      source?:
+                        ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts') | null;
                       limit?: number | null;
                       mediaType?: ('image' | 'icon' | 'none') | null;
                       cards?:
@@ -2893,6 +2903,10 @@ export interface Page {
                             id?: string | null;
                           }[]
                         | null;
+                      /**
+                       * Search engines and AI tools read each title as a question and its body as the answer.
+                       */
+                      faq?: boolean | null;
                       buttons?:
                         | {
                             label: string;
@@ -3390,10 +3404,16 @@ export interface Page {
       )[]
     | null;
   meta?: {
+    /**
+     * What the page is, in the words a family would search, then the school's name: "Admissions and Tuition | Grace Christian School". Used exactly as written. About 50-60 characters.
+     */
     title?: string | null;
+    /**
+     * One or two plain sentences that answer what a family is looking for here (grades, tuition, how to apply). Google shows it under the title; AI tools may quote it. Empty: taken from the page.
+     */
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * Shown when the page is shared in a text or on social media. Empty: the page's first photo.
      */
     image?: (number | null) | Media;
     /**
@@ -3419,7 +3439,7 @@ export interface School {
    */
   slug: string;
   /**
-   * Web addresses that show this school, e.g. www.cedarridge.org. No https://.
+   * Web addresses that show this school, e.g. cedarridge.org. No https://. The first is the main address; the others (like www.cedarridge.org) redirect to it.
    */
   domains?:
     | {
@@ -3447,8 +3467,6 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -3514,7 +3532,6 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4052,10 +4069,16 @@ export interface Event {
   } | null;
   image?: (number | null) | Media;
   meta?: {
+    /**
+     * What the page is, in the words a family would search, then the school's name: "Admissions and Tuition | Grace Christian School". Used exactly as written. About 50-60 characters.
+     */
     title?: string | null;
+    /**
+     * One or two plain sentences that answer what a family is looking for here (grades, tuition, how to apply). Google shows it under the title; AI tools may quote it. Empty: taken from the page.
+     */
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * Shown when the page is shared in a text or on social media. Empty: the page's first photo.
      */
     image?: (number | null) | Media;
     /**
@@ -4131,10 +4154,16 @@ export interface News {
   } | null;
   image?: (number | null) | Media;
   meta?: {
+    /**
+     * What the page is, in the words a family would search, then the school's name: "Admissions and Tuition | Grace Christian School". Used exactly as written. About 50-60 characters.
+     */
     title?: string | null;
+    /**
+     * One or two plain sentences that answer what a family is looking for here (grades, tuition, how to apply). Google shows it under the title; AI tools may quote it. Empty: taken from the page.
+     */
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * Shown when the page is shared in a text or on social media. Empty: the page's first photo.
      */
     image?: (number | null) | Media;
     /**
@@ -4246,10 +4275,16 @@ export interface Program {
   image?: (number | null) | Media;
   sortOrder?: number | null;
   meta?: {
+    /**
+     * What the page is, in the words a family would search, then the school's name: "Admissions and Tuition | Grace Christian School". Used exactly as written. About 50-60 characters.
+     */
     title?: string | null;
+    /**
+     * One or two plain sentences that answer what a family is looking for here (grades, tuition, how to apply). Google shows it under the title; AI tools may quote it. Empty: taken from the page.
+     */
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * Shown when the page is shared in a text or on social media. Empty: the page's first photo.
      */
     image?: (number | null) | Media;
     /**
@@ -4291,8 +4326,6 @@ export interface Staff {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -4344,7 +4377,59 @@ export interface SchoolSetting {
   siteIcon?: (number | null) | Media;
   phone?: string | null;
   email?: string | null;
+  street?: string | null;
+  city?: string | null;
+  state?: string | null;
+  postalCode?: string | null;
   address?: string | null;
+  /**
+   * In Google Maps, right-click the school's front door and click the two numbers at the top to copy them.
+   */
+  latitude?: number | null;
+  longitude?: number | null;
+  officeDays?: ('Mo' | 'Tu' | 'We' | 'Th' | 'Fr' | 'Sa' | 'Su')[] | null;
+  officeOpens?: string | null;
+  officeCloses?: string | null;
+  shortName?: string | null;
+  grades?: string | null;
+  foundedYear?: number | null;
+  enrollment?: number | null;
+  studentTeacherRatio?: string | null;
+  denomination?: string | null;
+  transportation?: string | null;
+  churchName?: string | null;
+  churchUrl?: string | null;
+  beforeAfterCare?: boolean | null;
+  /**
+   * Who accredits the school, e.g. ACSI or Cognia.
+   */
+  accreditations?:
+    | {
+        name: string;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Associations the school belongs to.
+   */
+  memberships?:
+    | {
+        name: string;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The school's own page on Google (Business Profile), Niche, GreatSchools and similar. Helps search engines and AI tools match them to this site.
+   */
+  profiles?:
+    | {
+        name: string;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   /**
    * Dark: light letters on a dark page. Colored bands keep their colors.
    */
@@ -4608,6 +4693,14 @@ export interface SchoolSetting {
    * Optional. The content="…" value from Google's HTML-tag verification.
    */
   googleVerification?: string | null;
+  /**
+   * Optional. The content="…" value from Bing's meta-tag verification. Bing also feeds Microsoft Copilot.
+   */
+  bingVerification?: string | null;
+  /**
+   * Off: robots.txt asks AI training crawlers (GPTBot, ClaudeBot and others) to stay away. ChatGPT, Claude, Perplexity and Google can still find and cite the site in their answers either way.
+   */
+  allowAiTraining?: boolean | null;
   /**
    * For a site that is still being built. Demo and preview addresses are always hidden.
    */
@@ -5487,6 +5580,7 @@ export interface PagesSelect<T extends boolean = true> {
                     body?: T;
                     id?: T;
                   };
+              faq?: T;
               buttons?:
                 | T
                 | {
@@ -6337,6 +6431,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 body?: T;
                                 id?: T;
                               };
+                          faq?: T;
                           buttons?:
                             | T
                             | {
@@ -6984,6 +7079,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 body?: T;
                                 id?: T;
                               };
+                          faq?: T;
                           buttons?:
                             | T
                             | {
@@ -7538,7 +7634,6 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
   credit?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -7614,8 +7709,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
-  prefix?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -7635,8 +7728,6 @@ export interface DocumentsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -7676,7 +7767,47 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   siteIcon?: T;
   phone?: T;
   email?: T;
+  street?: T;
+  city?: T;
+  state?: T;
+  postalCode?: T;
   address?: T;
+  latitude?: T;
+  longitude?: T;
+  officeDays?: T;
+  officeOpens?: T;
+  officeCloses?: T;
+  shortName?: T;
+  grades?: T;
+  foundedYear?: T;
+  enrollment?: T;
+  studentTeacherRatio?: T;
+  denomination?: T;
+  transportation?: T;
+  churchName?: T;
+  churchUrl?: T;
+  beforeAfterCare?: T;
+  accreditations?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        id?: T;
+      };
+  memberships?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        id?: T;
+      };
+  profiles?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        id?: T;
+      };
   siteTone?: T;
   backgroundColor?: T;
   textColor?: T;
@@ -7842,6 +7973,8 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   emailFromAddress?: T;
   shareImage?: T;
   googleVerification?: T;
+  bingVerification?: T;
+  allowAiTraining?: T;
   hideFromSearch?: T;
   gaMeasurementId?: T;
   gaPropertyId?: T;

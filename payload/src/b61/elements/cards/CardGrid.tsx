@@ -8,7 +8,8 @@ import { resolveHeadingLevel } from '../../kit/groups'
 import { Buttons, HeadingLines, revealAttr } from '../../kit/render/parts'
 import { B61Icon } from '../../kit/render/icons'
 import CarouselInit from '../../kit/render/CarouselInit'
-import { formatDate, getEvents, getNews, getPrograms, getStaff, eventWhen } from '@/lib/data'
+import { formatDate, getEvents, getNews, getPrograms, getSettings, getStaff, eventWhen } from '@/lib/data'
+import { schoolFacts } from '@/school/facts'
 
 export type CardGridBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61CardGrid' }>
 
@@ -34,7 +35,7 @@ const SIZES: Record<string, string> = {
 /** Cards written by hand, or pulled from Programs / Events / News / Staff. */
 async function loadCards(block: CardGridBlock): Promise<Card[]> {
   const limit = block.limit ?? 3
-  switch (block.source) {
+  switch (block.source as string) {
     case 'programs':
       return (await getPrograms(limit)).map((p) => ({
         key: String(p.id), image: p.image, eyebrow: p.grades ? `Grades ${p.grades}` : null, title: p.name,
@@ -54,6 +55,8 @@ async function loadCards(block: CardGridBlock): Promise<Card[]> {
       return (await getStaff(limit)).map((s) => ({
         key: String(s.id), image: s.photo, eyebrow: s.role, title: s.name, body: s.bio ? <p>{s.bio}</p> : null, href: null,
       }))
+    case 'school-facts':
+      return (await schoolFacts(await getSettings())).map((f) => ({ key: f.key, eyebrow: f.label, title: f.value, href: f.href, newTab: Boolean(f.href) }))
     default:
       return (block.cards ?? []).map((c, i) => {
         const { href, newTab } = resolveLink(c.link as any)

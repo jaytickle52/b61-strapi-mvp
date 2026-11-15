@@ -81,3 +81,20 @@ export function clip(text: string, max = 155): string {
   const word = cut.lastIndexOf(' ')
   return `${cut.slice(0, word > max / 2 ? word : max - 1).replace(/[\s,;:.-]+$/, '')}…`
 }
+
+/** The first photo in a page's sections (its hero, usually), for link previews when no share image is set. */
+export function firstImage(value: unknown): unknown {
+  let found: unknown = null
+  const walk = (v: unknown) => {
+    if (found || v == null || typeof v !== 'object') return
+    if (Array.isArray(v)) return v.forEach(walk)
+    const o = v as Record<string, unknown>
+    if (typeof o.url === 'string' && typeof o.mimeType === 'string' && o.mimeType.startsWith('image/') && o.mimeType !== 'image/svg+xml') {
+      found = o
+      return
+    }
+    for (const [k, x] of Object.entries(o)) if (!SKIP_KEYS.has(k)) walk(x)
+  }
+  walk(value)
+  return found
+}

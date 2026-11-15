@@ -43,11 +43,13 @@ import '@/b61/styles/calendar.css'
 import '@/b61/styles/tone.css'
 import { b61Theme, FONT_STACKS, fontsHref, toneOf } from '@/b61/lib/theme'
 import { customCssTag } from '@/b61/lib/custom-css'
+import { inlineFontCss } from '@/b61/lib/fonts'
 import Reveal from '@/b61/reveal/Reveal'
 import { getAnnouncements, getSettings, hiddenFromSearch, isPreview, siteOrigin } from '@/lib/data'
 import AnalyticsTag from '@/analytics/Tag'
 import Announcements, { type Notice } from '@/b61/chrome/Announcements'
 import JsonLd from '@/seo/JsonLd'
+import { redirectToMainDomain } from '@/seo/domains'
 import { schoolSchema } from '@/seo/schema'
 import { PreviewBanner } from '@/components/SiteChrome'
 import Header from '@/b61/chrome/Header'
@@ -74,12 +76,17 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(origin),
     title: { default: settings.schoolName, template: `%s | ${settings.schoolName}` },
     description: settings.tagline ?? undefined,
-    verification: (settings as any).googleVerification ? { google: (settings as any).googleVerification } : undefined,
+    verification: {
+      google: (settings as any).googleVerification || undefined,
+      other: (settings as any).bingVerification ? { 'msvalidate.01': (settings as any).bingVerification } : undefined,
+    },
     icons: siteIcons(settings),
   }
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
+  // A school's other domains (www, an old domain) go to its main one, page for page.
+  await redirectToMainDomain()
   const [settings, preview, hidden, announcements] = await Promise.all([getSettings(), isPreview(), hiddenFromSearch(), getAnnouncements()])
   // Count visitors only on the school's live site: not demo/preview addresses, not staff previews.
   const gaTag = !preview && !hidden ? settings.gaMeasurementId : null
@@ -106,6 +113,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const logoOnDark = asMedia((settings as any).logoOnDark)
   const fontsUrl = fontsHref(settings)
   const customCss = customCssTag(settings.customCss)
+  // Inlined so the first paint doesn't wait on Google (src/b61/lib/fonts.ts); a <link> if Google is unreachable.
+  const fontsCss = await inlineFontCss(fontsUrl)
 
   // The school's colors and fonts become CSS variables every component uses.
   const theme = {
@@ -120,9 +129,17 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     // :root, so the raw values have to be set there to flow through.
     <html lang="en" className="h-full antialiased" data-b61-tone={toneOf(settings)} style={b61Theme(settings)}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link rel="stylesheet" href={fontsUrl} />
+        {fontsCss ? (
+          <style id="b61-fonts" dangerouslySetInnerHTML={{ __html: fontsCss }} />
+        ) : (
+          <>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="stylesheet" href={fontsUrl} />
+          </>
+        )}
+        {/* The news feed, for feed readers and AI tools. */}
+        <link rel="alternate" type="application/rss+xml" title={`${settings.schoolName} news`} href="/news/feed.xml" />
         {/* Banner 61's custom CSS for this school, last so it wins over the element styles. */}
         {customCss && <style id="b61-custom-css" dangerouslySetInnerHTML={{ __html: customCss }} />}
       </head>

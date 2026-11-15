@@ -22,7 +22,12 @@ export default async function ProgramPage({ params }: PageProps<"/programs/[slug
   const alt = typeof program.image === "object" ? program.image?.alt ?? "" : "";
   return (
     <>
-      <PageHeader eyebrow={program.grades ? `Grades ${program.grades}` : "Program"} title={program.name} intro={program.summary} />
+      <PageHeader
+        eyebrow={program.grades ? `Grades ${program.grades}` : "Program"}
+        title={program.name}
+        intro={program.summary}
+        crumbs={[{ name: "Programs", path: "/programs" }, { name: program.name, path: `/programs/${slug}` }]}
+      />
       <article className="mx-auto w-full max-w-3xl px-5 py-14 sm:px-8">
         {img && <img {...img} alt={alt} className="mb-8 h-auto w-full rounded-3xl" />}
         <RichText content={program.description} />

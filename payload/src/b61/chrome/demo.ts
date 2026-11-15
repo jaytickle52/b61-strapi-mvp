@@ -1,5 +1,7 @@
 /** The demo school's header menu and footer (School settings > Header, Footer). */
 const u = (url: string) => ({ type: 'url', url })
+/** A made-up social handle for a demo school: "Cedar Ridge Christian Academy" -> "cedarridgechristianacademy". */
+export const handle = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '')
 const l = (label: string, url: string, description?: string) => ({ label, link: u(url), ...(description ? { description } : {}) })
 
 export function demoChrome(o: { name: string; programs: { name: string; slug: string; grades?: string }[]; img?: number }) {
@@ -32,9 +34,9 @@ export function demoChrome(o: { name: string; programs: { name: string; slug: st
     ],
     footerShowContact: true,
     social: [
-      { platform: 'facebook', url: 'https://facebook.com/' },
-      { platform: 'instagram', url: 'https://instagram.com/' },
-      { platform: 'youtube', url: 'https://youtube.com/' },
+      { platform: 'facebook', url: `https://facebook.com/${handle(o.name)}` },
+      { platform: 'instagram', url: `https://instagram.com/${handle(o.name)}` },
+      { platform: 'youtube', url: `https://youtube.com/@${handle(o.name)}` },
     ],
     footerNote: `${o.name} admits students of any race, color, and national or ethnic origin.`,
     legalLinks: [{ label: 'Staff sign in', link: u('/admin') }],

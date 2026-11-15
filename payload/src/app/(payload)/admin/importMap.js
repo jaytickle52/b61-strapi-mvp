@@ -45,6 +45,7 @@ import { ImportNowButton as ImportNowButton_33853075840b642aa7120f0a458e5f01 } f
 import { SuggestAlt as SuggestAlt_6b067041defabe0edf7fa7ea34db3026 } from '@/media/SuggestAlt'
 import { FolderTableCell as FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { FolderField as FolderField_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
+import { NameRowLabel as NameRowLabel_e36725be6ff8505e19d4c20e56311f67 } from '@/school/NameRowLabel'
 import { BrandPreview as BrandPreview_5603fa09eeacaaf6bbe10269c8021dc9 } from '@/branding/BrandPreview'
 import { ColorField as ColorField_24680dcb25a0ebe6de30467deef58e4e } from '@/branding/ColorField'
 import { TestEmailButton as TestEmailButton_9efb266fe7741fea6a447ccc8b6dfc05 } from '@/email/TestEmailButton'
@@ -120,6 +121,7 @@ export const importMap = {
   "@/media/SuggestAlt#SuggestAlt": SuggestAlt_6b067041defabe0edf7fa7ea34db3026,
   "@payloadcms/next/rsc#FolderTableCell": FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/next/rsc#FolderField": FolderField_f9c02e79a4aed9a3924487c0cd4cafb1,
+  "@/school/NameRowLabel#NameRowLabel": NameRowLabel_e36725be6ff8505e19d4c20e56311f67,
   "@/branding/BrandPreview#BrandPreview": BrandPreview_5603fa09eeacaaf6bbe10269c8021dc9,
   "@/branding/ColorField#ColorField": ColorField_24680dcb25a0ebe6de30467deef58e4e,
   "@/email/TestEmailButton#TestEmailButton": TestEmailButton_9efb266fe7741fea6a447ccc8b6dfc05,

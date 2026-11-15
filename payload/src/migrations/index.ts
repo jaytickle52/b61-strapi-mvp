@@ -9,6 +9,9 @@ import * as migration_20261115_012311_school_features from './20261115_012311_sc
 import * as migration_20261115_015924_branding_video from './20261115_015924_branding_video';
 import * as migration_20261115_120000_order_versions from './20261115_120000_order_versions';
 import * as migration_20261115_121541_theme_dark_css from './20261115_121541_theme_dark_css';
+import * as migration_20261115_123520_structured_data from './20261115_123520_structured_data';
+import * as migration_20261115_124153_domains_ai_crawlers from './20261115_124153_domains_ai_crawlers';
+import * as migration_20261115_211611_merge_seo_stack from './20261115_211611_merge_seo_stack';
 
 export const migrations = [
   {
@@ -64,6 +67,21 @@ export const migrations = [
   {
     up: migration_20261115_121541_theme_dark_css.up,
     down: migration_20261115_121541_theme_dark_css.down,
-    name: '20261115_121541_theme_dark_css'
+    name: '20261115_121541_theme_dark_css',
+  },
+  {
+    up: migration_20261115_123520_structured_data.up,
+    down: migration_20261115_123520_structured_data.down,
+    name: '20261115_123520_structured_data',
+  },
+  {
+    up: migration_20261115_124153_domains_ai_crawlers.up,
+    down: migration_20261115_124153_domains_ai_crawlers.down,
+    name: '20261115_124153_domains_ai_crawlers',
+  },
+  {
+    up: migration_20261115_211611_merge_seo_stack.up,
+    down: migration_20261115_211611_merge_seo_stack.down,
+    name: '20261115_211611_merge_seo_stack'
   },
 ];
