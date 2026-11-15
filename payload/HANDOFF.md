@@ -154,6 +154,36 @@ plugin 1.77.1) are ported so the sites look the same; the plugin's CSS is copied
 - Two-factor sign-in is **not built yet**: waiting on Jay's choice (install the community
   `payload-totp` plugin, or build our own).
 
+## Branding, dashboard and Analytics (Thread G)
+
+Ask AI was dropped from this thread at Jay's request (14 Nov 2026).
+
+- `src/brand/`: Banner 61 look for the editor. `Logo.tsx` (login page; `Icon` in the
+  breadcrumb), `public/b61-icon.svg` (browser tab), `BeforeLogin.tsx`, `brand.scss` (imported by
+  `custom.scss`). Brand: ink #3F3B4C, paper #F0F1EE, text #101827, accent #EE5758. The accent is
+  only for marks and thin lines (white on it is under 4.5:1); primary buttons use the ink. The
+  marks are drawn in code; to use the real logo file, see the note at the top of `Logo.tsx`.
+- `src/brand/Welcome.tsx` (dashboard, `beforeDashboard`): greeting, shortcuts (by role),
+  "Last 7 days" (website visitors when GA is connected, form answers for Editors/School Admins),
+  "Not published yet" (latest drafts across pages, news, events, programs, staff), help line.
+  `src/brand/school.ts`: `selectedSchool()` reads the admin's School menu (`payload-tenant`
+  cookie), falling back to the account's first school.
+- `src/brand/support.ts`: optional `B61_SUPPORT_EMAIL` and `B61_HELP_URL` (help guides, Thread H)
+  show on the sign-in page and dashboard; hidden when unset.
+- `src/analytics/`: Admin > Analytics (`/admin/analytics`, menu link `NavLink.tsx`). 7 / 28 / 90
+  days vs the period before: visitors, visits, pages viewed, average visit, a daily chart, most
+  viewed pages, how people found the site, devices, plus form answers from our own database
+  (Editors/School Admins). `ga.ts` talks to the GA4 Data API with the Banner 61 service account
+  (`GA_SERVICE_ACCOUNT_JSON`: the key file JSON, or base64 of it) using Node's crypto, no extra
+  packages. `report.ts` caches each school's numbers for an hour. Demo schools without a property
+  show clearly-labelled sample numbers (`sample.ts`).
+- School settings > Analytics: **tag ID** (`gaMeasurementId`, G-…; adds gtag.js to the live site,
+  `Tag.tsx`, never on demo/preview addresses, staff previews, or while hidden from search) and
+  **property ID** (`gaPropertyId`; Banner 61 admins only, not publicly readable). The tab tells
+  Banner 61 admins which service-account email to add as a Viewer in the school's GA property.
+- Migration `20261115_010944_thread_g_analytics` (IF NOT EXISTS, safe to run twice).
+- Smoke test now also opens `/admin/analytics` (each period) and School settings.
+
 ## Working rules with Jay
 
 - End work replies with a 2-line status: what was done, and the one thing needed from Jay.

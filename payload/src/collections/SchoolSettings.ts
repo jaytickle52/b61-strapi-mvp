@@ -172,6 +172,45 @@ export const SchoolSettings: CollectionConfig = {
           ],
         },
         {
+          label: 'Analytics',
+          description: 'Google Analytics: counts visitors on the live website and feeds the Analytics page in this editor.',
+          fields: [
+            {
+              name: 'gaMeasurementId',
+              label: 'Google Analytics tag ID',
+              type: 'text',
+              validate: (v: unknown) =>
+                !v || /^G-[A-Z0-9]{4,}$/.test(String(v).trim()) ? true : 'This should look like G-ABC123XYZ (Admin > Data streams in Google Analytics).',
+              admin: {
+                placeholder: 'G-ABC123XYZ',
+                description:
+                  'Adds Google Analytics to the live website. Not added on demo or preview addresses, or while the site is hidden from search engines.',
+              },
+            },
+            {
+              name: 'gaPropertyId',
+              label: 'Google Analytics property ID',
+              type: 'text',
+              access: {
+                read: ({ req }) => Boolean(req.user),
+                create: ({ req }) => isB61Admin(req.user),
+                update: ({ req }) => isB61Admin(req.user),
+              },
+              validate: (v: unknown) =>
+                !v || /^\d{6,}$/.test(String(v).trim()) ? true : 'A number, like 412345678 (Admin > Property details in Google Analytics).',
+              admin: {
+                placeholder: '412345678',
+                description: 'Set by Banner 61. Lets the Analytics page show this school\'s numbers.',
+              },
+            },
+            {
+              name: 'gaSetup',
+              type: 'ui',
+              admin: { components: { Field: '@/analytics/SetupNote#SetupNote' } },
+            },
+          ],
+        },
+        {
           label: 'Parents',
           fields: [
             {

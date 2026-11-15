@@ -41,7 +41,8 @@ import '@/b61/styles/kit-frontend.css'
 import '@/b61/chrome/chrome.css'
 import { b61Theme, FONT_STACKS } from '@/b61/lib/theme'
 import Reveal from '@/b61/reveal/Reveal'
-import { getSettings, isPreview, siteOrigin } from '@/lib/data'
+import { getSettings, hiddenFromSearch, isPreview, siteOrigin } from '@/lib/data'
+import AnalyticsTag from '@/analytics/Tag'
 import JsonLd from '@/seo/JsonLd'
 import { schoolSchema } from '@/seo/schema'
 import { PreviewBanner } from '@/components/SiteChrome'
@@ -64,7 +65,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const [settings, preview] = await Promise.all([getSettings(), isPreview()])
+  const [settings, preview, hidden] = await Promise.all([getSettings(), isPreview(), hiddenFromSearch()])
+  // Count visitors only on the school's live site: not demo/preview addresses, not staff previews.
+  const gaTag = !preview && !hidden ? settings.gaMeasurementId : null
   const heading = settings.headingFont ?? 'Fraunces'
   const body = settings.bodyFont ?? 'Inter'
   const ui = settings.uiFont ?? 'Montserrat'
@@ -102,6 +105,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <main className="flex-1">{children}</main>
         <Footer s={settings} logo={logo?.url} />
         <Reveal />
+        {gaTag && <AnalyticsTag id={gaTag} />}
       </body>
     </html>
   )

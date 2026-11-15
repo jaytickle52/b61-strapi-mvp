@@ -3229,8 +3229,6 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -3296,7 +3294,6 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -3965,8 +3962,6 @@ export interface Staff {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -4204,6 +4199,14 @@ export interface SchoolSetting {
    * For a site that is still being built. Demo and preview addresses are always hidden.
    */
   hideFromSearch?: boolean | null;
+  /**
+   * Adds Google Analytics to the live website. Not added on demo or preview addresses, or while the site is hidden from search engines.
+   */
+  gaMeasurementId?: string | null;
+  /**
+   * Set by Banner 61. Lets the Analytics page show this school's numbers.
+   */
+  gaPropertyId?: string | null;
   /**
    * One shared password families use to open the parent feed. Leave empty to keep the feed closed.
    */
@@ -6984,7 +6987,6 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
   credit?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -7060,8 +7062,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
-  prefix?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -7081,8 +7081,6 @@ export interface DocumentsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -7283,6 +7281,8 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   shareImage?: T;
   googleVerification?: T;
   hideFromSearch?: T;
+  gaMeasurementId?: T;
+  gaPropertyId?: T;
   parentPassword?: T;
   updatedAt?: T;
   createdAt?: T;
