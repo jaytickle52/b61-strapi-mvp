@@ -3197,10 +3197,16 @@ export interface Page {
       )[]
     | null;
   meta?: {
+    /**
+     * What the page is, in the words a family would search, then the school's name: "Admissions and Tuition | Grace Christian School". Used exactly as written. About 50-60 characters.
+     */
     title?: string | null;
+    /**
+     * One or two plain sentences that answer what a family is looking for here (grades, tuition, how to apply). Google shows it under the title; AI tools may quote it. Empty: taken from the page.
+     */
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * Shown when the page is shared in a text or on social media. Empty: the page's first photo.
      */
     image?: (number | null) | Media;
     /**
@@ -3859,10 +3865,16 @@ export interface Event {
   } | null;
   image?: (number | null) | Media;
   meta?: {
+    /**
+     * What the page is, in the words a family would search, then the school's name: "Admissions and Tuition | Grace Christian School". Used exactly as written. About 50-60 characters.
+     */
     title?: string | null;
+    /**
+     * One or two plain sentences that answer what a family is looking for here (grades, tuition, how to apply). Google shows it under the title; AI tools may quote it. Empty: taken from the page.
+     */
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * Shown when the page is shared in a text or on social media. Empty: the page's first photo.
      */
     image?: (number | null) | Media;
     /**
@@ -3938,10 +3950,16 @@ export interface News {
   } | null;
   image?: (number | null) | Media;
   meta?: {
+    /**
+     * What the page is, in the words a family would search, then the school's name: "Admissions and Tuition | Grace Christian School". Used exactly as written. About 50-60 characters.
+     */
     title?: string | null;
+    /**
+     * One or two plain sentences that answer what a family is looking for here (grades, tuition, how to apply). Google shows it under the title; AI tools may quote it. Empty: taken from the page.
+     */
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * Shown when the page is shared in a text or on social media. Empty: the page's first photo.
      */
     image?: (number | null) | Media;
     /**
@@ -4053,10 +4071,16 @@ export interface Program {
   image?: (number | null) | Media;
   sortOrder?: number | null;
   meta?: {
+    /**
+     * What the page is, in the words a family would search, then the school's name: "Admissions and Tuition | Grace Christian School". Used exactly as written. About 50-60 characters.
+     */
     title?: string | null;
+    /**
+     * One or two plain sentences that answer what a family is looking for here (grades, tuition, how to apply). Google shows it under the title; AI tools may quote it. Empty: taken from the page.
+     */
     description?: string | null;
     /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     * Shown when the page is shared in a text or on social media. Empty: the page's first photo.
      */
     image?: (number | null) | Media;
     /**
