@@ -49,6 +49,13 @@
 
 .b61-fimg__frame--flip { padding: var(--b61-frame-offset) var(--b61-frame-offset) 0 0; }
 
+/* The photo sits one offset past the frame. At full width that pushed the page
+   sideways on phones (WCAG 1.4.10): keep room for it inside the screen. */
+@media (max-width: 767px) {
+  .b61-fimg__frame { width: calc(100% - var(--b61-frame-offset)); margin-inline: 0 auto; }
+  .b61-fimg__frame--flip { margin-inline: auto 0; }
+}
+
 .b61-fimg__media {
   position: relative;
   z-index: 1;

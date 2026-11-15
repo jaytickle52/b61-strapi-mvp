@@ -348,6 +348,20 @@
   padding-inline: 0;
 }
 
+/* Which tab is open must show by more than a slightly darker colour (WCAG
+   1.4.1 / 1.4.11): a bar in the accent colour beside the open tab - under it
+   in the top bar, at its leading edge in a side list. Box shadows, so nothing
+   moves when the selection changes. (Port back to the Breakdance plugin.) */
+.b61-tabs.is-ready .b61-tabs__tab[aria-selected="true"] {
+  box-shadow: inset 4px 0 0 var(--tab-accent);
+}
+.b61-tabs.is-ready .b61-tabs__region:not(.b61-tabs__region--tabs-top) .b61-tabs__tab {
+  padding-inline-start: var(--b61-space-md);
+}
+.b61-tabs.is-ready .b61-tabs__region--tabs-top .b61-tabs__tab[aria-selected="true"] {
+  box-shadow: inset 0 -3px 0 var(--tab-accent);
+}
+
 /* ---- Panels ---------------------------------------------------------------
    A closed panel is display:none, NOT the collapsing 0fr grid row Feature Tabs
    uses. That element's panels hold one paragraph; these hold whole bands, and

@@ -9,7 +9,7 @@ export default function ProgramsPage() {
   return (
     <>
       <PageHeader eyebrow="Academics" title="Our programs" />
-      <Sections sections={[{ ...cardsFrom({ source: "programs", limit: 12, columns: "three", tone: "light" }), id: "all", entrance: "off" }]} />
+      <Sections titled sections={[{ ...cardsFrom({ source: "programs", limit: 12, columns: "three", tone: "light" }), id: "all", entrance: "off" }]} />
     </>
   );
 }

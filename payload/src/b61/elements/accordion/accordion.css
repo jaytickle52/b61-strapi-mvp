@@ -231,6 +231,8 @@
 
 .b61-acc__title {
   flex: 1 1 0;
+  min-width: 0;
+  overflow-wrap: break-word;
   margin: 0;
   font-family: var(--b61-font-display);
   font-weight: var(--b61-weight-display, 700);
@@ -259,6 +261,15 @@
   border: 1px solid var(--acc-line);
   border-radius: var(--b61-radius-pill);
   color: var(--acc-ink);
+}
+
+/* Small phones (320px = 400% zoom): the tag drops to its own line under the
+   title so the row never runs past the screen edge (WCAG 1.4.10). */
+@media (max-width: 479px) {
+  .b61-acc__toggle { flex-wrap: wrap; row-gap: var(--b61-space-2xs, 4px); }
+  .b61-acc__title { order: 1; }
+  .b61-acc__icon { order: 2; }
+  .b61-acc__tag { order: 3; flex-basis: 100%; }
 }
 
 .b61-acc__icon svg {

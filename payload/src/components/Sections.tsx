@@ -40,8 +40,12 @@ const ELEMENTS: Record<string, (p: { block: any; index?: number; path?: string }
   b61Form: B61Form,
 };
 
-/** `editable` (live preview only) adds click-to-edit markers; see b61/kit/preview. */
-export default function Sections({ sections, editable = false }: { sections: any[]; editable?: boolean }) {
+/**
+ * `editable` (live preview only) adds click-to-edit markers; see b61/kit/preview.
+ * `titled`: the page already shows its own H1 (PageHeader), so an element set to
+ * "Automatic" heading level never makes another one: its index starts at 1.
+ */
+export default function Sections({ sections, editable = false, titled = false }: { sections: any[]; editable?: boolean; titled?: boolean }) {
   return (
     <>
       {sections.map((s, i) => {
@@ -52,7 +56,7 @@ export default function Sections({ sections, editable = false }: { sections: any
           <Fragment key={s.id ?? `${s.blockType}-${i}`}>
             <WithClass block={s}>
               {path && <EditMark path={path} label={elementName(s.blockType)} />}
-              <El block={s} index={i} path={path} />
+              <El block={s} index={titled ? i + 1 : i} path={path} />
             </WithClass>
           </Fragment>
         );

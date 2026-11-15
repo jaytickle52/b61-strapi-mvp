@@ -127,6 +127,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         {customCss && <style id="b61-custom-css" dangerouslySetInnerHTML={{ __html: customCss }} />}
       </head>
       <body className="flex min-h-full flex-col" style={theme}>
+        <a href="#main" className="b61-skip">
+          Skip to main content
+        </a>
         <JsonLd data={await schoolSchema()} />
         {preview && <PreviewBanner />}
         {preview && <LivePreviewListener />}
@@ -134,7 +137,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <Announcements notices={notices} />
         {preview && <EditMark tab="Header" label="Header" />}
         <Header brand={{ name: settings.schoolName, logo: logo?.url ? { src: logo.url, width: logo.width ?? undefined, height: logo.height ?? undefined } : null }} {...resolveMenu(settings)} />
-        <main className="flex-1">{children}</main>
+        <main id="main" tabIndex={-1} className="flex-1">{children}</main>
         {preview && <EditMark tab="Footer" label="Footer" />}
         <Footer s={settings} logo={logoOnDark?.url ?? logo?.url} />
         <Reveal />

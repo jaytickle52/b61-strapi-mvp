@@ -812,6 +812,11 @@
   flex: 0 0 auto;
 }
 
+/* Never wider than the screen: on a small phone the progress line shrinks
+   instead of pushing the arrows off the edge (WCAG 1.4.10). */
+.b61-car__controls { max-width: 100%; }
+.b61-car__progress { flex-shrink: 1; min-width: 24px; }
+
 @media (max-width: 767px) {
   .b61-car__headrow {
     flex-direction: column;

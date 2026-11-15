@@ -9,7 +9,7 @@ export default function StaffPage() {
   return (
     <>
       <PageHeader eyebrow="People" title="Our team" />
-      <Sections sections={[{ ...cardsFrom({ source: "staff", limit: 100, columns: "four", tone: "light" }), id: "all", entrance: "off" }]} />
+      <Sections titled sections={[{ ...cardsFrom({ source: "staff", limit: 100, columns: "four", tone: "light" }), id: "all", entrance: "off" }]} />
     </>
   );
 }

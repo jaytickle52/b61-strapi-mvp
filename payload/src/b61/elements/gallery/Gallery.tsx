@@ -76,7 +76,12 @@ export default function B61Gallery({ block, index = 0 }: { block: GalleryBlock; 
       ) : (
         images.length > 0 && (
           <div className="b61-gallery__media">
-            <div className={`b61-gallery__strip js-b61-gal-strip${mode === 'masonry' ? ' js-b61-gal-masonry' : ''}`} {...ri}>
+            <div
+              className={`b61-gallery__strip js-b61-gal-strip${mode === 'masonry' ? ' js-b61-gal-masonry' : ''}`}
+              {...ri}
+              // A scrolling strip must take keyboard focus so arrow keys can scroll it (WCAG 2.1.1).
+              {...(mode === 'strip' ? { tabIndex: 0, role: 'region', 'aria-label': `${lines.map((l) => l.text).join(' ') || 'Photo'} gallery, scrolls sideways` } : {})}
+            >
               {images.map((it, i) => {
                 const f = focusOf(it.image)
                 return (

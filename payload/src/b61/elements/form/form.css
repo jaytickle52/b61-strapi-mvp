@@ -48,6 +48,8 @@
 }
 .b61-form__field { flex: 1 1 100%; min-width: 0; margin: 0; padding: 0; border: 0; }
 .b61-form__field[hidden] { display: none; }
+/* An error link jumps to the control: leave room for its label above it. */
+.b61-form__field :is(input, select, textarea) { scroll-margin-top: 3rem; }
 @media (min-width: 640px) {
   .b61-form__field--w50 { flex: 1 1 calc(50% - var(--b61-space-md)); }
   .b61-form__field--w33 { flex: 1 1 calc(33.333% - var(--b61-space-md)); }

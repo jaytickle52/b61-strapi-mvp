@@ -77,7 +77,9 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
   const lines = (block.lines ?? []).filter((l) => l?.text)
   const hasHeading = lines.length > 0
   const Heading = resolveHeadingLevel(block.headingLevel, index)
-  const CardHeading = (hasHeading ? ({ h1: 'h2', h2: 'h3', h3: 'h4', h4: 'h5' } as const)[Heading] : Heading) as 'h2' | 'h3' | 'h4' | 'h5'
+  // Card titles sit one level under the grid's heading. With no heading they take
+  // its level, but never H1: a page has one H1, and a row of them is not it.
+  const CardHeading = (hasHeading ? ({ h1: 'h2', h2: 'h3', h3: 'h4', h4: 'h5' } as const)[Heading] : Heading === 'h1' ? 'h2' : Heading) as 'h2' | 'h3' | 'h4' | 'h5'
   const surface = block.surface ?? 'none'
   const mtype = block.mediaType ?? 'image'
   let cstyle = block.cardStyle ?? 'bordered'
