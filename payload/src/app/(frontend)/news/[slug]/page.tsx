@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: PageProps<"/news/[slug]">): P
   const { slug } = await params;
   const post = await getNewsPost(slug);
   return post && post.audience === "public"
-    ? seoMetadata({ title: post.title, description: post.summary, meta: (post as any).meta, image: post.image, path: `/news/${slug}`, type: "article" })
+    ? seoMetadata({ title: post.title, description: post.summary, meta: (post as any).meta, image: post.image, content: (post as any).body, path: `/news/${slug}`, type: "article" })
     : {};
 }
 

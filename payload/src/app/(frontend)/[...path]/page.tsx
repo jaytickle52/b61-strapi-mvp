@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: PageProps<"/[...path]">): Pro
   const { path } = await params;
   const slug = slugOf(path);
   const page = slug ? await getPage(slug) : null;
-  return page ? seoMetadata({ title: page.title, meta: page.meta, path: `/${slug}` }) : {};
+  return page ? seoMetadata({ title: page.title, meta: page.meta, content: page.sections, path: `/${slug}` }) : {};
 }
 
 export default async function CmsPage({ params }: PageProps<"/[...path]">) {

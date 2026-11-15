@@ -34,3 +34,50 @@ export function plainText(value: unknown, max = 20000): string {
   walk(value)
   return out.join(' ').replace(/\s+/g, ' ').trim().slice(0, max)
 }
+
+// Words a page shows as running text. Button labels, eyebrows, stat figures and
+// names are left out: they read badly as a description.
+const PROSE_KEYS = new Set(['text', 'quote', 'summary', 'subheadline', 'caption', 'intro', 'body', 'description'])
+// Parts that are headings or buttons, whatever their inner fields are called.
+const NOT_PROSE = new Set(['lines', 'subheads', 'eyebrow', 'buttons', 'primary', 'secondary', 'button', 'link', 'links', 'cta'])
+
+/**
+ * A search-result description (about 155 characters) from a page's own words,
+ * for pages whose SEO description is empty. Ends at a sentence where it can,
+ * otherwise at a word, with an ellipsis.
+ */
+export function descriptionFrom(value: unknown, max = 155): string {
+  const out: string[] = []
+  let size = 0
+  const walk = (v: unknown, inProse: boolean) => {
+    if (size > 600 || v == null) return
+    if (typeof v === 'string') {
+      if (inProse && v.trim()) {
+        out.push(v.trim())
+        size += v.length
+      }
+      return
+    }
+    if (Array.isArray(v)) return v.forEach((x) => walk(x, inProse))
+    if (typeof v !== 'object') return
+    const o = v as Record<string, unknown>
+    if (o.type === 'text' && typeof o.text === 'string') {
+      out.push(o.text)
+      size += o.text.length
+      return
+    }
+    for (const [k, x] of Object.entries(o)) if (!SKIP_KEYS.has(k) && !NOT_PROSE.has(k)) walk(x, inProse || PROSE_KEYS.has(k))
+  }
+  walk(value, typeof value === 'string')
+  return clip(out.join(' ').replace(/\s+/g, ' ').trim(), max)
+}
+
+/** Shortens text to `max` characters: at a sentence end if one falls past the halfway mark, else at a word. */
+export function clip(text: string, max = 155): string {
+  if (text.length <= max) return text
+  const cut = text.slice(0, max)
+  const sentence = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '), cut.lastIndexOf('? '))
+  if (sentence > max / 2) return cut.slice(0, sentence + 1)
+  const word = cut.lastIndexOf(' ')
+  return `${cut.slice(0, word > max / 2 ? word : max - 1).replace(/[\s,;:.-]+$/, '')}…`
+}

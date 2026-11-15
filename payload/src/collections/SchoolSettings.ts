@@ -175,6 +175,11 @@ export const SchoolSettings: CollectionConfig = {
               type: 'checkbox',
               admin: { description: 'For a site that is still being built. Demo and preview addresses are always hidden.' },
             },
+            {
+              name: 'hiddenNote',
+              type: 'ui',
+              admin: { components: { Field: '@/seo/HiddenNote#HiddenNote' } },
+            },
           ],
         },
         {

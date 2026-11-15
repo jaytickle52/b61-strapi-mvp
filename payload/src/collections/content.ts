@@ -66,6 +66,7 @@ export const Pages: CollectionConfig = {
     slugField({ disableUnique: true }),
     // Which Element library version built this page (demo only; see b61/library.ts).
     { name: 'libraryVersion', type: 'number', admin: { hidden: true } },
+    { name: 'headingCheck', type: 'ui', admin: { components: { Field: '@/b61/kit/admin/HeadingCheck#HeadingCheck' } } },
     {
       name: 'sections',
       type: 'blocks',

@@ -1,5 +1,9 @@
 import Link from "next/link";
 
+// The tab title for a missing page. (Next.js sends missing pages as a 404 with a light
+// HTML shell and draws this message in the browser; search engines go by the 404.)
+export const metadata = { title: "Page not found" };
+
 export default function NotFound() {
   return (
     <section className="mx-auto w-full max-w-3xl px-5 py-24 text-center sm:px-8">

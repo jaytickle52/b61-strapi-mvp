@@ -7,7 +7,7 @@ import { seoMetadata } from "@/seo/metadata";
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage("home");
   // The home page's title is the school's name (the layout's default), unless a meta title is set.
-  return page ? seoMetadata({ meta: page.meta, path: "/" }) : {};
+  return page ? seoMetadata({ meta: page.meta, content: page.sections, path: "/" }) : {};
 }
 
 export default async function HomePage() {
