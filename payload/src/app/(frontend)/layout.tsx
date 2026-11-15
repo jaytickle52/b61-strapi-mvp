@@ -46,6 +46,7 @@ import { getAnnouncements, getSettings, hiddenFromSearch, isPreview, siteOrigin 
 import AnalyticsTag from '@/analytics/Tag'
 import Announcements, { type Notice } from '@/b61/chrome/Announcements'
 import JsonLd from '@/seo/JsonLd'
+import { redirectToMainDomain } from '@/seo/domains'
 import { schoolSchema } from '@/seo/schema'
 import { PreviewBanner } from '@/components/SiteChrome'
 import Header from '@/b61/chrome/Header'
@@ -70,12 +71,17 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(origin),
     title: { default: settings.schoolName, template: `%s | ${settings.schoolName}` },
     description: settings.tagline ?? undefined,
-    verification: (settings as any).googleVerification ? { google: (settings as any).googleVerification } : undefined,
+    verification: {
+      google: (settings as any).googleVerification || undefined,
+      other: (settings as any).bingVerification ? { 'msvalidate.01': (settings as any).bingVerification } : undefined,
+    },
     icons: siteIcons(settings),
   }
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
+  // A school's other domains (www, an old domain) go to its main one, page for page.
+  await redirectToMainDomain()
   const [settings, preview, hidden, announcements] = await Promise.all([getSettings(), isPreview(), hiddenFromSearch(), getAnnouncements()])
   // Count visitors only on the school's live site: not demo/preview addresses, not staff previews.
   const gaTag = !preview && !hidden ? settings.gaMeasurementId : null
@@ -118,6 +124,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="stylesheet" href={fontsUrl} />
+        {/* The news feed, for feed readers and AI tools. */}
+        <link rel="alternate" type="application/rss+xml" title={`${settings.schoolName} news`} href="/news/feed.xml" />
       </head>
       <body className="flex min-h-full flex-col" style={theme}>
         <JsonLd data={await schoolSchema()} />

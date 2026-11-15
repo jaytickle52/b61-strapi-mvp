@@ -37,7 +37,7 @@ export const Schools: CollectionConfig = {
       name: 'domains',
       type: 'array',
       labels: { singular: 'Domain', plural: 'Domains' },
-      admin: { description: 'Web addresses that show this school, e.g. www.cedarridge.org. No https://.' },
+      admin: { description: 'Web addresses that show this school, e.g. cedarridge.org. No https://. The first is the main address; the others (like www.cedarridge.org) redirect to it.' },
       fields: [{ name: 'domain', type: 'text', required: true, index: true }],
     },
   ],

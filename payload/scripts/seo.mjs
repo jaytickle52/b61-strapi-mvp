@@ -4,14 +4,39 @@
 //
 //   BASE_URL=http://localhost:3000 SMOKE_EMAIL=... SMOKE_PASSWORD=... node scripts/seo.mjs
 //
+// The IndexNow check needs the site started with INDEXNOW_ENABLED=true and
+// INDEXNOW_ENDPOINT=http://localhost:8766/indexnow (skipped otherwise).
+//
 // Gives a demo school a pretend domain for a moment (to see the site the way a
 // live school's is seen), then takes it away. Run on a test database.
 
 import http from 'node:http'
 
 const BASE = (process.env.BASE_URL || 'http://localhost:3000').replace(/\/$/, '')
+// Stands in for api.indexnow.org: the site under test must run with
+// INDEXNOW_ENABLED=true and INDEXNOW_ENDPOINT=http://localhost:<this port>/indexnow.
+const INDEXNOW_PORT = Number(process.env.INDEXNOW_PORT || 8766)
+const pings = []
+const catcher = http.createServer((req, res) => {
+  let body = ''
+  req.on('data', (c) => (body += c))
+  req.on('end', () => {
+    try {
+      pings.push(JSON.parse(body))
+    } catch {}
+    res.writeHead(202).end()
+  })
+})
+const pingFor = async (url, ms = 8000) => {
+  for (let t = 0; t < ms; t += 250) {
+    if (pings.some((p) => (p.urlList ?? []).includes(url))) return true
+    await new Promise((r) => setTimeout(r, 250))
+  }
+  return false
+}
 const RUN = Date.now().toString(36)
 const DOMAIN = `seo-${RUN}.example`
+const WWW = `www.${DOMAIN}`
 
 let passed = 0
 const failures = []
@@ -64,6 +89,9 @@ const para = (text) => ({ root: { type: 'root', format: '', indent: 0, version: 
 const decode = (s) => (s ?? '').replace(/&amp;/g, '&').replace(/&#x27;/g, "'").replace(/&quot;/g, '"')
 
 async function main() {
+  // Only when the site under test was started pointing IndexNow at this script.
+  if (process.env.INDEXNOW_ENDPOINT) await new Promise((r) => catcher.listen(INDEXNOW_PORT, r))
+  pings.listening = catcher.listening
   const admin = (await api('POST', '/users/login', { body: { email: process.env.SMOKE_EMAIL, password: process.env.SMOKE_PASSWORD } })).json?.token
   if (!admin) throw new Error('Could not sign in as the admin')
   const school = (await api('GET', '/schools?where[slug][equals]=cedar-ridge&depth=0', { token: admin })).json?.docs?.[0]
@@ -156,7 +184,7 @@ async function main() {
 
   // ----- On the school's own domain (as a live site) -----------------------------
   const domains = school.domains ?? []
-  const set = await api('PATCH', `/schools/${school.id}`, { token: admin, body: { domains: [...domains, { domain: DOMAIN }] } })
+  const set = await api('PATCH', `/schools/${school.id}`, { token: admin, body: { domains: [{ domain: DOMAIN }, { domain: WWW }, ...domains] } })
   check(set.status === 200, 'pretend domain added for the test')
   try {
     const live = { host: DOMAIN }
@@ -170,6 +198,47 @@ async function main() {
     const cat = (await api('GET', `/news-categories?where[school][equals]=${school.id}&limit=1&depth=0`, { token: admin })).json?.docs?.[0]
     if (cat) check(robots((await get(`/news?category=${cat.slug}`, live)).text) === 'noindex, follow', 'news category views: noindex, follow')
     check(tag((await get('/about', live)).text, /<link rel="canonical" href="([^"]*)"/) === `https://${DOMAIN}/about`, 'canonical addresses use the school domain')
+
+    // A school's other domain sends visitors to the main one, page for page.
+    const www = await get('/about?x=1', { host: WWW })
+    check([301, 308].includes(www.status) && www.headers.location === `https://${DOMAIN}/about?x=1`, 'the www domain redirects to the main domain, same page')
+    const wwwRobots = await get('/robots.txt', { host: WWW })
+    check([301, 308].includes(wwwRobots.status) && wwwRobots.headers.location === `https://${DOMAIN}/robots.txt`, '… robots.txt too')
+    check((await get('/about', live)).status === 200, 'the main domain itself is not redirected')
+
+    // AI crawlers: allowed by default; the switch turns training crawlers away only.
+    check(!rob.text.includes('GPTBot'), 'by default no AI crawler is turned away')
+    await api('PATCH', `/school-settings/${settings.id}`, { token: admin, body: { allowAiTraining: false, bingVerification: 'bing-test-code', _status: 'published' } })
+    const noTrain = (await get('/robots.txt', live)).text
+    check(/User-agent: GPTBot\nDisallow: \//.test(noTrain) && /User-agent: ClaudeBot\nDisallow: \//.test(noTrain), 'switch off: GPTBot and ClaudeBot are turned away')
+    check(!/OAI-SearchBot|Claude-SearchBot|PerplexityBot|Google-Extended/.test(noTrain) && noTrain.includes('Sitemap:'), '… while answer crawlers and Google stay allowed')
+    check((await get('/', live)).text.includes('<meta name="msvalidate.01" content="bing-test-code"'), 'the Bing code is on the page')
+    await api('PATCH', `/school-settings/${settings.id}`, { token: admin, body: { allowAiTraining: settings.allowAiTraining !== false, bingVerification: settings.bingVerification ?? null, _status: 'published' } })
+
+    // News feed and llms.txt
+    const feed = await get('/news/feed.xml', live)
+    check(feed.status === 200 && String(feed.headers['content-type']).includes('rss') && feed.text.includes(`<link>https://${DOMAIN}/news/`), 'the news feed lists posts on the school domain')
+    check((await get('/', live)).text.includes('type="application/rss+xml"'), 'every page points to the news feed')
+    const llms = await get('/llms.txt', live)
+    check(llms.status === 200 && llms.text.startsWith(`# ${name}`) && llms.text.includes(`(https://${DOMAIN}/about)`), 'llms.txt describes the site with its pages')
+    check((await get('/llms.txt', { school: 'cedar-ridge' })).status === 404, 'no llms.txt while the site is hidden (demo address)')
+    check(/^[0-9a-f]{32}$/.test((await get('/indexnow.txt', live)).text), 'the IndexNow key file is served')
+
+    // IndexNow: publishing tells the search engines at once.
+    if (pings.listening) {
+      const post = await api('POST', '/news', {
+        token: admin,
+        body: { school: school.id, title: `IndexNow ${RUN}`, slug: `indexnow-${RUN}`, date: new Date().toISOString(), audience: 'public', _status: 'published' },
+      })
+      check(await pingFor(`https://${DOMAIN}/news/indexnow-${RUN}`), 'publishing a news post pings IndexNow with its address')
+      const n = pings.length
+      if (post.json?.doc?.id) {
+        await api('PATCH', `/news/${post.json.doc.id}?draft=true`, { token: admin, body: { title: `IndexNow draft ${RUN}` } })
+        await new Promise((r) => setTimeout(r, 1500))
+        check(pings.length === n, 'a draft save does not ping')
+        await api('DELETE', `/news/${post.json.doc.id}`, { token: admin })
+      }
+    }
 
     // "Hide from search" left on with a real domain: the dashboard says so.
     await api('PATCH', `/school-settings/${settings.id}`, { token: admin, body: { hideFromSearch: true, _status: 'published' } })
@@ -189,6 +258,8 @@ try {
 } catch (e) {
   failures.push(`crashed: ${e.message}`)
   console.error(e)
+} finally {
+  if (catcher.listening) catcher.close()
 }
 
 console.log(`\n${passed} passed, ${failures.length} failed`)

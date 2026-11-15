@@ -3226,7 +3226,7 @@ export interface School {
    */
   slug: string;
   /**
-   * Web addresses that show this school, e.g. www.cedarridge.org. No https://.
+   * Web addresses that show this school, e.g. cedarridge.org. No https://. The first is the main address; the others (like www.cedarridge.org) redirect to it.
    */
   domains?:
     | {
@@ -4454,6 +4454,14 @@ export interface SchoolSetting {
    * Optional. The content="…" value from Google's HTML-tag verification.
    */
   googleVerification?: string | null;
+  /**
+   * Optional. The content="…" value from Bing's meta-tag verification. Bing also feeds Microsoft Copilot.
+   */
+  bingVerification?: string | null;
+  /**
+   * Off: robots.txt asks AI training crawlers (GPTBot, ClaudeBot and others) to stay away. ChatGPT, Claude, Perplexity and Google can still find and cite the site in their answers either way.
+   */
+  allowAiTraining?: boolean | null;
   /**
    * For a site that is still being built. Demo and preview addresses are always hidden.
    */
@@ -7676,6 +7684,8 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   emailFromAddress?: T;
   shareImage?: T;
   googleVerification?: T;
+  bingVerification?: T;
+  allowAiTraining?: T;
   hideFromSearch?: T;
   gaMeasurementId?: T;
   gaPropertyId?: T;

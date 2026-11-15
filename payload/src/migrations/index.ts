@@ -9,6 +9,7 @@ import * as migration_20261115_012311_school_features from './20261115_012311_sc
 import * as migration_20261115_015924_branding_video from './20261115_015924_branding_video';
 import * as migration_20261115_120000_order_versions from './20261115_120000_order_versions';
 import * as migration_20261115_123520_structured_data from './20261115_123520_structured_data';
+import * as migration_20261115_124153_domains_ai_crawlers from './20261115_124153_domains_ai_crawlers';
 
 export const migrations = [
   {
@@ -64,6 +65,11 @@ export const migrations = [
   {
     up: migration_20261115_123520_structured_data.up,
     down: migration_20261115_123520_structured_data.down,
-    name: '20261115_123520_structured_data'
+    name: '20261115_123520_structured_data',
+  },
+  {
+    up: migration_20261115_124153_domains_ai_crawlers.up,
+    down: migration_20261115_124153_domains_ai_crawlers.down,
+    name: '20261115_124153_domains_ai_crawlers'
   },
 ];

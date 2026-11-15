@@ -177,6 +177,22 @@ export const SchoolSettings: CollectionConfig = {
               admin: { description: 'Optional. The content="…" value from Google\'s HTML-tag verification.' },
             },
             {
+              name: 'bingVerification',
+              label: 'Bing Webmaster Tools code',
+              type: 'text',
+              admin: { description: 'Optional. The content="…" value from Bing\'s meta-tag verification. Bing also feeds Microsoft Copilot.' },
+            },
+            {
+              name: 'allowAiTraining',
+              label: 'Let AI companies learn from this site',
+              type: 'checkbox',
+              defaultValue: true,
+              admin: {
+                description:
+                  'Off: robots.txt asks AI training crawlers (GPTBot, ClaudeBot and others) to stay away. ChatGPT, Claude, Perplexity and Google can still find and cite the site in their answers either way.',
+              },
+            },
+            {
               name: 'hideFromSearch',
               label: 'Hide this whole site from search engines',
               type: 'checkbox',

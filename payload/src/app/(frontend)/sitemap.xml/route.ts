@@ -1,8 +1,11 @@
 export const dynamic = 'force-dynamic'
 import { getEvents, getNews, getPrograms, getStaff, hiddenFromSearch, payloadClient, siteOrigin, currentSchool } from '@/lib/data'
+import { mainDomainResponse } from '@/seo/domains'
 
 /* This school's sitemap: every published, public page, program, event and news post. */
 export async function GET() {
+  const moved = await mainDomainResponse('/sitemap.xml')
+  if (moved) return moved
   const [origin, hidden, school] = await Promise.all([siteOrigin(), hiddenFromSearch(), currentSchool()])
   const urls: { loc: string; lastmod?: string }[] = []
   if (!hidden && school) {
