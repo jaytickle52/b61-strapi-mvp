@@ -3,7 +3,7 @@ import { cardsFrom } from "@/b61/demo";
 import Sections from "@/components/Sections";
 import PageHeader from "@/components/PageHeader";
 
-export const generateMetadata = () => seoMetadata({ title: "Our team", path: "/staff" });
+export const generateMetadata = () => seoMetadata({ title: "Our team", path: "/staff", fallback: "Meet the teachers and staff of {school}." });
 
 export default function StaffPage() {
   return (

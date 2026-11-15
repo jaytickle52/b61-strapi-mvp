@@ -1,5 +1,6 @@
 import { TenantField as TenantField_1d0591e3cf4f332c83a86da13a0de59a } from '@payloadcms/plugin-multi-tenant/client'
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
+import { HeadingCheck as HeadingCheck_78f126e990ba6279bbc15d0061628924 } from '@/b61/kit/admin/HeadingCheck'
 import { Segmented as Segmented_4a8478d6bbe78531e44a79dc8f1686a4 } from '@/b61/kit/admin/Segmented'
 import { LabelRow as LabelRow_0cc688d8d4d520fe6c0589bb23ce8cf3 } from '@/b61/kit/admin/RowLabel'
 import { StepSlider as StepSlider_f8159974f8a8e5772bb18ab914bb2e3a } from '@/b61/kit/admin/StepSlider'
@@ -47,6 +48,7 @@ import { FolderField as FolderField_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@pa
 import { BrandPreview as BrandPreview_5603fa09eeacaaf6bbe10269c8021dc9 } from '@/branding/BrandPreview'
 import { ColorField as ColorField_24680dcb25a0ebe6de30467deef58e4e } from '@/branding/ColorField'
 import { TestEmailButton as TestEmailButton_9efb266fe7741fea6a447ccc8b6dfc05 } from '@/email/TestEmailButton'
+import { HiddenNote as HiddenNote_e7cf3b3dfec20e5639861c1de043d742 } from '@/seo/HiddenNote'
 import { SetupNote as SetupNote_ad3208fc0d6a1f0e5094f01910836258 } from '@/analytics/SetupNote'
 import { WatchTenantCollection as WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a } from '@payloadcms/plugin-multi-tenant/client'
 import { InviteStatus as InviteStatus_347c307375689c3154b14532242e9bc9 } from '@/users/InviteStatus'
@@ -73,6 +75,7 @@ import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e
 export const importMap = {
   "@payloadcms/plugin-multi-tenant/client#TenantField": TenantField_1d0591e3cf4f332c83a86da13a0de59a,
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
+  "@/b61/kit/admin/HeadingCheck#HeadingCheck": HeadingCheck_78f126e990ba6279bbc15d0061628924,
   "@/b61/kit/admin/Segmented#Segmented": Segmented_4a8478d6bbe78531e44a79dc8f1686a4,
   "@/b61/kit/admin/RowLabel#LabelRow": LabelRow_0cc688d8d4d520fe6c0589bb23ce8cf3,
   "@/b61/kit/admin/StepSlider#StepSlider": StepSlider_f8159974f8a8e5772bb18ab914bb2e3a,
@@ -120,6 +123,7 @@ export const importMap = {
   "@/branding/BrandPreview#BrandPreview": BrandPreview_5603fa09eeacaaf6bbe10269c8021dc9,
   "@/branding/ColorField#ColorField": ColorField_24680dcb25a0ebe6de30467deef58e4e,
   "@/email/TestEmailButton#TestEmailButton": TestEmailButton_9efb266fe7741fea6a447ccc8b6dfc05,
+  "@/seo/HiddenNote#HiddenNote": HiddenNote_e7cf3b3dfec20e5639861c1de043d742,
   "@/analytics/SetupNote#SetupNote": SetupNote_ad3208fc0d6a1f0e5094f01910836258,
   "@payloadcms/plugin-multi-tenant/client#WatchTenantCollection": WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a,
   "@/users/InviteStatus#InviteStatus": InviteStatus_347c307375689c3154b14532242e9bc9,

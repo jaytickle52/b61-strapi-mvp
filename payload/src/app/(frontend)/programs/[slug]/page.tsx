@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: PageProps<"/programs/[slug]">
   const { slug } = await params;
   const program = await getProgram(slug);
   return program
-    ? seoMetadata({ title: program.name, description: program.summary, meta: (program as any).meta, image: program.image, path: `/programs/${slug}` })
+    ? seoMetadata({ title: program.name, description: program.summary, meta: (program as any).meta, image: program.image, content: (program as any).description, path: `/programs/${slug}` })
     : {};
 }
 

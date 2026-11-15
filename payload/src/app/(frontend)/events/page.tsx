@@ -1,24 +1,41 @@
 import { seoMetadata } from "@/seo/metadata";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import PageHeader from "@/components/PageHeader";
 import Subscribe from "@/events/Subscribe";
 import { calendarFeedUrl, eventWhen, getEvents, getEventsBetween, getSettings, type Event } from "@/lib/data";
 import { eventDays, isMonth, monthGrid, monthLabel, ymd, zoned } from "@/events/time";
 
-export const generateMetadata = () => seoMetadata({ title: "Events", path: "/events" });
+// The month calendar reaches this many months either side of today. Past that, no
+// links and a 404, so search engines can't click "next month" forever.
+const MONTH_RANGE = 24;
+const monthIndex = (m: string) => Number(m.slice(0, 4)) * 12 + Number(m.slice(5, 7)) - 1;
+const inRange = (m: string) => Math.abs(monthIndex(m) - monthIndex(ymd(new Date()).slice(0, 7))) <= MONTH_RANGE;
+
+export async function generateMetadata({ searchParams }: PageProps<"/events">) {
+  const month = (await searchParams).view === "month";
+  // Month pages share the events list's canonical address and stay out of results;
+  // their event links are still followed.
+  return seoMetadata({
+    title: month ? "Calendar" : "Events",
+    path: "/events",
+    noindexFollow: month,
+    fallback: "Upcoming events at {school}: open houses, games, programs and community events, with a calendar you can subscribe to.",
+  });
+}
 
 const feedName = (e: Event) => (e.importedFrom && typeof e.importedFrom === "object" ? e.importedFrom.name : null);
 
 function Tabs({ view, month }: { view: "list" | "month"; month: string }) {
-  const tab = (href: string, label: string, on: boolean) => (
-    <Link href={href} aria-current={on ? "page" : undefined} className={`b61-cal-tab${on ? " is-on" : ""}`}>
+  const tab = (href: string, label: string, on: boolean, nofollow = false) => (
+    <Link href={href} rel={nofollow ? "nofollow" : undefined} aria-current={on ? "page" : undefined} className={`b61-cal-tab${on ? " is-on" : ""}`}>
       {label}
     </Link>
   );
   return (
     <nav aria-label="Calendar view" className="b61-cal-tabs">
       {tab("/events", "Upcoming", view === "list")}
-      {tab(`/events?view=month&month=${month}`, "Month", view === "month")}
+      {tab(`/events?view=month&month=${month}`, "Month", view === "month", true)}
     </nav>
   );
 }
@@ -45,6 +62,15 @@ function List({ events }: { events: Event[] }) {
   );
 }
 
+function MonthLink({ month, label, children }: { month: string; label: string; children: string }) {
+  if (!inRange(month)) return <span className="b61-cal__nav" aria-hidden="true" style={{ visibility: "hidden" }}>{children}</span>;
+  return (
+    <Link className="b61-cal__nav" rel="nofollow" href={`/events?view=month&month=${month}`} aria-label={`${label}, ${monthLabel(month)}`}>
+      {children}
+    </Link>
+  );
+}
+
 function Month({ month, events }: { month: string; events: Event[] }) {
   const { days, prevMonth, nextMonth } = monthGrid(month);
   const today = ymd(new Date());
@@ -62,13 +88,9 @@ function Month({ month, events }: { month: string; events: Event[] }) {
   return (
     <div className="b61-cal">
       <div className="b61-cal__head">
-        <Link className="b61-cal__nav" href={`/events?view=month&month=${prevMonth}`} aria-label={`Previous month, ${monthLabel(prevMonth)}`}>
-          ‹
-        </Link>
+        <MonthLink month={prevMonth} label="Previous month">‹</MonthLink>
         <h2 className="b61-cal__title" aria-live="polite">{monthLabel(month)}</h2>
-        <Link className="b61-cal__nav" href={`/events?view=month&month=${nextMonth}`} aria-label={`Next month, ${monthLabel(nextMonth)}`}>
-          ›
-        </Link>
+        <MonthLink month={nextMonth} label="Next month">›</MonthLink>
       </div>
       {!any && <p className="soft b61-cal__empty">No events this month.</p>}
       <table className="b61-cal__grid">
@@ -118,6 +140,7 @@ export default async function EventsPage({ searchParams }: PageProps<"/events">)
   const sp = await searchParams;
   const view = sp.view === "month" ? "month" : "list";
   const month = isMonth(sp.month) ? sp.month : ymd(new Date()).slice(0, 7);
+  if (view === "month" && !inRange(month)) notFound();
   const [settings, feedUrl] = await Promise.all([getSettings(), calendarFeedUrl()]);
 
   let events: Event[];

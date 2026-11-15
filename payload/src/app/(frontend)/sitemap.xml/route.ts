@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic'
-import { getEvents, getNews, getPrograms, hiddenFromSearch, payloadClient, siteOrigin, currentSchool } from '@/lib/data'
+import { getEvents, getNews, getPrograms, getStaff, hiddenFromSearch, payloadClient, siteOrigin, currentSchool } from '@/lib/data'
 
 /* This school's sitemap: every published, public page, program, event and news post. */
 export async function GET() {
@@ -18,8 +18,11 @@ export async function GET() {
       if (p.meta?.noindex) continue
       urls.push({ loc: p.slug === 'home' ? `${origin}/` : `${origin}/${p.slug}`, lastmod: p.updatedAt })
     }
-    const [programs, events, news] = await Promise.all([getPrograms(500), getEvents({ limit: 500 }), getNews({ limit: 500 })])
-    urls.push({ loc: `${origin}/programs` }, { loc: `${origin}/events` }, { loc: `${origin}/news` }, { loc: `${origin}/staff` })
+    const [programs, events, news, staff] = await Promise.all([getPrograms(500), getEvents({ limit: 500 }), getNews({ limit: 500 }), getStaff(500)])
+    // A list page changes when anything on it does: its newest item's date. Empty lists are left out.
+    const newest = (docs: any[]) => docs.map((d) => d.updatedAt as string).filter(Boolean).sort().at(-1)
+    const lists: [string, any[]][] = [['programs', programs], ['events', events], ['news', news], ['staff', staff]]
+    for (const [path, docs] of lists) if (docs.length) urls.push({ loc: `${origin}/${path}`, lastmod: newest(docs) })
     for (const x of programs as any[]) if (!x.meta?.noindex) urls.push({ loc: `${origin}/programs/${x.slug}`, lastmod: x.updatedAt })
     for (const x of events as any[]) if (x.audience === 'public' && !x.meta?.noindex) urls.push({ loc: `${origin}/events/${x.slug}`, lastmod: x.updatedAt })
     for (const x of news as any[]) if (x.audience === 'public' && !x.meta?.noindex) urls.push({ loc: `${origin}/news/${x.slug}`, lastmod: x.updatedAt })

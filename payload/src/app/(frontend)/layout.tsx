@@ -60,11 +60,11 @@ import EditMark from '@/b61/kit/preview/EditMark'
 
 export const dynamic = 'force-dynamic'
 
-// The browser-tab icon: the school's Site icon, else its logo. Next adds no
-// icon of its own, so a school without either shows the browser's default.
+// The browser-tab icon: the school's Site icon, else its logo, else a letter mark
+// on the school's colour (/school-icon.svg), so no school shows a blank tab.
 function siteIcons(settings: any): Metadata['icons'] {
   const icon = asMedia(settings.siteIcon) ?? asMedia(settings.logo)
-  if (!icon?.url) return undefined
+  if (!icon?.url) return { icon: [{ url: '/school-icon.svg', type: 'image/svg+xml' }] }
   return { icon: [{ url: icon.url, type: icon.mimeType ?? undefined }], apple: [{ url: icon.url }] }
 }
 

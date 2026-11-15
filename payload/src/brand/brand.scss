@@ -94,6 +94,32 @@ html[data-theme='light'] .template-minimal { background: var(--b61-paper); }
   a { font-weight: 600; }
   span { font-size: 12px; color: var(--theme-elevation-600); }
 }
+.b61-welcome__alert {
+  margin: 20px 0 0;
+  padding: 14px 16px;
+  border: 1px solid #e0b25b;
+  border-left-width: 4px;
+  border-radius: 6px;
+  background: #fdf6e7;
+  color: #3f3b4c;
+  line-height: 1.5;
+  a { text-decoration: underline; font-weight: 600; }
+}
+.b61-hidden-note,
+.b61-heading-check {
+  margin: -8px 0 16px;
+  padding: 10px 12px;
+  border-left: 4px solid #e0b25b;
+  border-radius: 4px;
+  background: #fdf6e7;
+  color: #3f3b4c;
+  font-size: 13px;
+  line-height: 1.45;
+}
+html[data-theme='dark'] .b61-hidden-note,
+html[data-theme='dark'] .b61-heading-check,
+html[data-theme='dark'] .b61-welcome__alert { background: #3a2f17; color: #f4ead2; }
+.b61-heading-check { margin: 0 0 16px; }
 .b61-welcome__note { margin: 10px 0 0; font-size: 12px; color: var(--theme-elevation-600); }
 .b61-welcome__help { margin: 20px 0 0; color: var(--theme-elevation-700); a { text-decoration: underline; } }
 

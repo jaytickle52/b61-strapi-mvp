@@ -1,22 +1,47 @@
 import { seoMetadata } from "@/seo/metadata";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
-import { formatDate, getNews, getNewsCategories, type NewsCategory } from "@/lib/data";
+import { notFound } from "next/navigation";
+import { formatDate, getNewsCategories, getNewsPage, type NewsCategory } from "@/lib/data";
+
+// ?page=2 and up; anything else is page 1.
+const pageOf = (v: unknown) => (typeof v === "string" && /^[1-9]\d{0,3}$/.test(v) ? Number(v) : 1);
+
+/** The News address for a category and page, without empty parts. */
+const newsHref = (category: string | undefined, page: number) => {
+  const q = new URLSearchParams();
+  if (category) q.set("category", category);
+  if (page > 1) q.set("page", String(page));
+  const s = q.toString();
+  return s ? `/news?${s}` : "/news";
+};
 
 export async function generateMetadata({ searchParams }: PageProps<"/news">) {
-  const slug = (await searchParams).category;
-  const cat = typeof slug === "string" ? (await getNewsCategories()).find((c) => c.slug === slug) : undefined;
-  return seoMetadata({ title: cat ? `${cat.name} news` : "News", path: cat ? `/news?category=${cat.slug}` : "/news" });
+  const sp = await searchParams;
+  const cat = typeof sp.category === "string" ? (await getNewsCategories()).find((c) => c.slug === sp.category) : undefined;
+  const page = pageOf(sp.page);
+  const title = `${cat ? `${cat.name} news` : "News"}${page > 1 ? ` (page ${page})` : ""}`;
+  // Each page of the full list is its own address, so older posts stay reachable.
+  // Category views repeat those posts: kept out of results, links still followed.
+  return seoMetadata({
+    title,
+    path: newsHref(cat?.slug, page),
+    noindexFollow: Boolean(cat),
+    fallback: cat ? `${cat.name} news from {school}.` : "News and stories from {school}.",
+  });
 }
 
 const names = (cats: unknown) =>
   (Array.isArray(cats) ? cats : []).filter((c): c is NewsCategory => Boolean(c) && typeof c === "object").map((c) => c.name);
 
 export default async function NewsPage({ searchParams }: PageProps<"/news">) {
-  const slug = (await searchParams).category;
+  const sp = await searchParams;
   const categories = await getNewsCategories();
-  const active = typeof slug === "string" ? categories.find((c) => c.slug === slug) : undefined;
-  const posts = await getNews({ category: active?.id });
+  const active = typeof sp.category === "string" ? categories.find((c) => c.slug === sp.category) : undefined;
+  const page = pageOf(sp.page);
+  const { docs: posts, totalPages } = await getNewsPage({ category: active?.id, page });
+  // A page past the last one doesn't exist (and shouldn't look like an empty list to Google).
+  if (page > 1 && (posts.length === 0 || page > totalPages)) notFound();
 
   const chip = (href: string, label: string, on: boolean) => (
     <li key={href}>
@@ -64,6 +89,27 @@ export default async function NewsPage({ searchParams }: PageProps<"/news">) {
               );
             })}
           </ul>
+        )}
+        {totalPages > 1 && (
+          <nav aria-label="More news" className="mt-12 flex items-center justify-between gap-4 border-t border-line pt-6 text-sm font-semibold">
+            {page > 1 ? (
+              <Link href={newsHref(active?.slug, page - 1)} rel="prev" className="hover:text-brand">
+                ← Newer posts
+              </Link>
+            ) : (
+              <span />
+            )}
+            <span className="soft font-normal">
+              Page {page} of {totalPages}
+            </span>
+            {page < totalPages ? (
+              <Link href={newsHref(active?.slug, page + 1)} rel="next" className="hover:text-brand">
+                Older posts →
+              </Link>
+            ) : (
+              <span />
+            )}
+          </nav>
         )}
       </section>
     </>

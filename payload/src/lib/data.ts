@@ -75,9 +75,10 @@ const scoped = async (where?: Where): Promise<Where> => {
 }
 
 type SiteCollection = 'pages' | 'events' | 'news' | 'news-categories' | 'programs' | 'staff' | 'announcements' | 'school-settings'
-type FindOpts = { where?: Where; sort?: string; limit?: number; depth?: number }
+type FindOpts = { where?: Where; sort?: string; limit?: number; depth?: number; page?: number }
+type Found<T> = { docs: T[]; page: number; totalPages: number; totalDocs: number }
 
-async function query<T>(collection: SiteCollection, schoolId: number | string, opts: FindOpts, draft: boolean, user: any) {
+async function query<T>(collection: SiteCollection, schoolId: number | string, opts: FindOpts, draft: boolean, user: any): Promise<Found<T>> {
   const payload = await payloadClient()
   const mine: Where = { school: { equals: schoolId } }
   const res = await payload.find({
@@ -85,12 +86,13 @@ async function query<T>(collection: SiteCollection, schoolId: number | string, o
     where: opts.where ? { and: [mine, opts.where] } : mine,
     sort: opts.sort,
     limit: opts.limit ?? 50,
+    page: opts.page,
     depth: opts.depth ?? 1,
     draft,
     user,
     overrideAccess: false,
   })
-  return res.docs as T[]
+  return { docs: res.docs as T[], page: res.page ?? 1, totalPages: res.totalPages ?? 1, totalDocs: res.totalDocs ?? res.docs.length }
 }
 
 /**
@@ -98,7 +100,7 @@ async function query<T>(collection: SiteCollection, schoolId: number | string, o
  * a page view doesn't query the database each time; staff edits clear it
  * (src/cache/plugin.ts). An editor's preview always reads live, with drafts.
  */
-async function find<T>(collection: SiteCollection, opts: FindOpts = {}) {
+async function findPage<T>(collection: SiteCollection, opts: FindOpts = {}): Promise<Found<T>> {
   const [{ user, draft }, school] = await Promise.all([reader(), currentSchool()])
   const schoolId = school?.id ?? -1
   if (draft) return query<T>(collection, schoolId, opts, true, user)
@@ -107,6 +109,10 @@ async function find<T>(collection: SiteCollection, opts: FindOpts = {}) {
     [CACHE_VERSION, 'find', collection, String(schoolId), JSON.stringify(opts)],
     { tags: [schoolTag(schoolId)], revalidate: CACHE_SECONDS },
   )()
+}
+
+async function find<T>(collection: SiteCollection, opts: FindOpts = {}): Promise<T[]> {
+  return (await findPage<T>(collection, opts)).docs
 }
 
 export const getSettings = cache(async (): Promise<Partial<SchoolSetting> & { schoolName: string }> => {
@@ -151,12 +157,19 @@ export async function getEvent(slug: string) {
   return docs[0] ?? null
 }
 
+const newsWhere = (category?: number | string): Where => ({
+  and: [{ audience: { equals: 'public' } }, ...(category ? [{ categories: { in: [category] } }] : [])],
+})
+
 export const getNews = (opts: { limit?: number; category?: number | string } = {}) =>
-  find<News>('news', {
-    where: { and: [{ audience: { equals: 'public' } }, ...(opts.category ? [{ categories: { in: [opts.category] } }] : [])] },
-    sort: '-date',
-    limit: opts.limit,
-  })
+  find<News>('news', { where: newsWhere(opts.category), sort: '-date', limit: opts.limit })
+
+/** How many news posts the News page lists per page. */
+export const NEWS_PER_PAGE = 20
+
+/** One page of public news (newest first), with the page count, for the News page's Previous / Next links. */
+export const getNewsPage = (opts: { page?: number; category?: number | string } = {}) =>
+  findPage<News>('news', { where: newsWhere(opts.category), sort: '-date', limit: NEWS_PER_PAGE, page: Math.max(1, opts.page ?? 1) })
 
 /** This school's news categories, in the order staff dragged them. */
 export const getNewsCategories = cache(() => find<NewsCategory>('news-categories', { sort: '_order', limit: 50, depth: 0 }))

@@ -42,7 +42,9 @@ export async function Welcome({ payload, user }: { payload: Payload; user?: any 
     ...(site ? [{ href: site, label: 'View the website', hint: 'Opens in a new tab', external: true }] : []),
   ]
 
-  const [glance, drafts] = school ? await Promise.all([atAGlance(payload, school.id, publisher), unpublished(payload, school.id)]) : [[], []]
+  const [glance, drafts, hiddenLive] = school
+    ? await Promise.all([atAGlance(payload, school.id, publisher), unpublished(payload, school.id), hiddenWithDomain(payload, school)])
+    : [[], [], false]
 
   return (
     <div className="b61-welcome">
@@ -59,6 +61,20 @@ export async function Welcome({ payload, user }: { payload: Payload; user?: any 
           </p>
         )}
       </div>
+
+      {hiddenLive && (
+        <div className="b61-welcome__alert" role="alert">
+          <strong>This website is hidden from Google and other search engines.</strong> {school?.name} has its own web address, but
+          &quot;Hide this whole site from search engines&quot; is still on, so families can&apos;t find it by searching. Once the site
+          is ready,{' '}
+          {publisher ? (
+            <a href="/admin/collections/school-settings">turn it off in School settings &gt; Search engines</a>
+          ) : (
+            'ask an Editor or School Admin to turn it off in School settings'
+          )}
+          .
+        </div>
+      )}
 
       <nav className="b61-welcome__actions" aria-label="Shortcuts">
         {actions.map((a) => (
@@ -196,4 +212,21 @@ async function unpublished(payload: Payload, schoolId: number | string) {
     .flat()
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
     .slice(0, 5)
+}
+
+/**
+ * True when a school with its own domain still has "Hide this whole site from
+ * search engines" on: fine while building, a problem once the site is live.
+ */
+async function hiddenWithDomain(payload: Payload, school: { id: number | string; domains?: { domain?: string | null }[] | null }) {
+  if (!(school.domains ?? []).some((d) => d?.domain)) return false
+  const res = await payload.find({
+    collection: 'school-settings',
+    where: { school: { equals: school.id } },
+    limit: 1,
+    depth: 0,
+    overrideAccess: true,
+    select: { hideFromSearch: true } as any,
+  })
+  return Boolean((res.docs[0] as any)?.hideFromSearch)
 }

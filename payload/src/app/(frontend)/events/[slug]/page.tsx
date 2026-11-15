@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: PageProps<"/events/[slug]">):
   const { slug } = await params;
   const event = await getEvent(slug);
   return event && event.audience === "public"
-    ? seoMetadata({ title: event.title, description: event.summary, meta: (event as any).meta, image: event.image, path: `/events/${slug}` })
+    ? seoMetadata({ title: event.title, description: event.summary, meta: (event as any).meta, image: event.image, content: (event as any).description, path: `/events/${slug}` })
     : {};
 }
 
