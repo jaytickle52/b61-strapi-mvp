@@ -49,6 +49,8 @@ export function videoLinkField(show: (siblingData: any) => boolean): Field {
       condition: (_, s) => show(s),
       placeholder: VIDEO_PLACEHOLDER,
       description: VIDEO_HELP,
+      // Adds "Upload a video" (to Bunny Stream) when uploads are switched on.
+      components: { Field: '@/video/VideoField#VideoField' },
     },
     validate: (v: unknown, { siblingData }: any) => {
       if (!show(siblingData) || !v) return true

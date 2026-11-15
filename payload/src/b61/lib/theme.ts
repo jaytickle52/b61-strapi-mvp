@@ -14,17 +14,88 @@ function rgbTriple(hex: string | null | undefined): string | null {
 const color = (v: string | null | undefined, fallback: string) => (v && HEX.test(v.trim()) ? (v.trim().startsWith('#') ? v.trim() : `#${v.trim()}`) : fallback)
 const mix = (base: string, other: string, pct: number) => `color-mix(in srgb, ${base} ${pct}%, ${other})`
 
-export const FONT_STACKS: Record<string, string> = {
-  Fraunces: '"Fraunces", Georgia, serif',
-  'Playfair Display': '"Playfair Display", Georgia, serif',
-  Merriweather: '"Merriweather", Georgia, serif',
-  'EB Garamond': '"EB Garamond", Georgia, serif',
-  Montserrat: '"Montserrat", system-ui, sans-serif',
-  Poppins: '"Poppins", system-ui, sans-serif',
-  Inter: '"Inter", system-ui, sans-serif',
-  'Source Sans 3': '"Source Sans 3", system-ui, sans-serif',
-  Lato: '"Lato", system-ui, sans-serif',
-  'Open Sans': '"Open Sans", system-ui, sans-serif',
+type FontSpec = { stack: string; weights: number[]; italic: boolean }
+
+const serif = (name: string) => `"${name}", Georgia, serif`
+const sans = (name: string) => `"${name}", system-ui, sans-serif`
+
+/**
+ * Google Fonts the schools can choose, with the weights each one really has.
+ * Asking Google for a weight a family lacks fails the whole stylesheet, so
+ * requests only name weights listed here (fontsHref below).
+ */
+export const FONTS: Record<string, FontSpec> = {
+  // Serif
+  Fraunces: { stack: serif('Fraunces'), weights: [400, 500, 600, 700], italic: true },
+  'Playfair Display': { stack: serif('Playfair Display'), weights: [400, 500, 600, 700], italic: true },
+  Merriweather: { stack: serif('Merriweather'), weights: [300, 400, 700, 900], italic: true },
+  'EB Garamond': { stack: serif('EB Garamond'), weights: [400, 500, 600, 700], italic: true },
+  Lora: { stack: serif('Lora'), weights: [400, 500, 600, 700], italic: true },
+  'Libre Baskerville': { stack: serif('Libre Baskerville'), weights: [400, 700], italic: true },
+  'Cormorant Garamond': { stack: serif('Cormorant Garamond'), weights: [400, 500, 600, 700], italic: true },
+  'Crimson Pro': { stack: serif('Crimson Pro'), weights: [400, 500, 600, 700], italic: true },
+  'Roboto Slab': { stack: serif('Roboto Slab'), weights: [400, 500, 600, 700], italic: false },
+  // Sans
+  Montserrat: { stack: sans('Montserrat'), weights: [400, 500, 600, 700], italic: true },
+  Poppins: { stack: sans('Poppins'), weights: [400, 500, 600, 700], italic: true },
+  Inter: { stack: sans('Inter'), weights: [400, 500, 600, 700], italic: true },
+  'Source Sans 3': { stack: sans('Source Sans 3'), weights: [400, 500, 600, 700], italic: true },
+  Lato: { stack: sans('Lato'), weights: [300, 400, 700, 900], italic: true },
+  'Open Sans': { stack: sans('Open Sans'), weights: [400, 500, 600, 700], italic: true },
+  Raleway: { stack: sans('Raleway'), weights: [400, 500, 600, 700], italic: true },
+  'Nunito Sans': { stack: sans('Nunito Sans'), weights: [400, 600, 700], italic: true },
+  'Work Sans': { stack: sans('Work Sans'), weights: [400, 500, 600, 700], italic: true },
+  'DM Sans': { stack: sans('DM Sans'), weights: [400, 500, 600, 700], italic: true },
+  Roboto: { stack: sans('Roboto'), weights: [400, 500, 700], italic: true },
+  'Josefin Sans': { stack: sans('Josefin Sans'), weights: [400, 600, 700], italic: true },
+  Oswald: { stack: sans('Oswald'), weights: [400, 500, 600, 700], italic: false },
+}
+
+/** Font stacks by name (kept for existing callers). */
+export const FONT_STACKS: Record<string, string> = Object.fromEntries(Object.entries(FONTS).map(([k, v]) => [k, v.stack]))
+
+const SERIFS = ['Fraunces', 'Playfair Display', 'Merriweather', 'EB Garamond', 'Lora', 'Libre Baskerville', 'Cormorant Garamond', 'Crimson Pro', 'Roboto Slab']
+const SANS = ['Montserrat', 'Poppins', 'Inter', 'Source Sans 3', 'Lato', 'Open Sans', 'Raleway', 'Nunito Sans', 'Work Sans', 'DM Sans', 'Roboto', 'Josefin Sans']
+
+/** The choices offered in School settings > Look, per role. */
+export const HEADING_FONTS = [...SERIFS, ...SANS, 'Oswald']
+export const BODY_FONTS = ['Inter', 'Source Sans 3', 'Lato', 'Open Sans', 'Nunito Sans', 'Work Sans', 'DM Sans', 'Roboto', 'Raleway', 'Lora', 'Merriweather', 'EB Garamond', 'Crimson Pro', 'Libre Baskerville']
+export const UI_FONTS = ['Montserrat', 'Inter', 'Poppins', 'Lato', 'Source Sans 3', 'Open Sans', 'Raleway', 'Nunito Sans', 'Work Sans', 'DM Sans', 'Roboto', 'Josefin Sans', 'Oswald']
+
+/** For each wanted weight, the closest weight the family has (no duplicates). */
+function weightsFor(spec: FontSpec, want: number[]): number[] {
+  const out = new Set<number>()
+  for (const w of want) out.add(spec.weights.reduce((a, b) => (Math.abs(b - w) < Math.abs(a - w) ? b : a)))
+  return [...out].sort((a, b) => a - b)
+}
+
+/**
+ * The Google Fonts stylesheet for a school's heading, body and buttons fonts,
+ * asking only for weights each family has. Unknown names fall back to defaults.
+ */
+export function fontsHref(s: { headingFont?: string | null; bodyFont?: string | null; uiFont?: string | null }): string {
+  const pick = (name: string | null | undefined, fallback: string) => (name && FONTS[name] ? name : fallback)
+  const roles: [string, number[], number[]][] = [
+    [pick(s.headingFont, 'Fraunces'), [400, 600, 700], [400, 600]],
+    [pick(s.bodyFont, 'Inter'), [400, 600], [400]],
+    [pick(s.uiFont, 'Montserrat'), [500, 600, 700], []],
+  ]
+  const merged = new Map<string, { w: Set<number>; i: Set<number> }>()
+  for (const [name, w, i] of roles) {
+    const spec = FONTS[name]
+    const m = merged.get(name) ?? { w: new Set(), i: new Set() }
+    weightsFor(spec, w).forEach((x) => m.w.add(x))
+    if (spec.italic && i.length) weightsFor(spec, i).forEach((x) => m.i.add(x))
+    merged.set(name, m)
+  }
+  const families = [...merged].map(([name, { w, i }]) => {
+    const fam = `family=${encodeURIComponent(name).replace(/%20/g, '+')}`
+    const ws = [...w].sort((a, b) => a - b)
+    if (!i.size) return `${fam}:wght@${ws.join(';')}`
+    const pairs = [...ws.map((x) => `0,${x}`), ...[...i].sort((a, b) => a - b).map((x) => `1,${x}`)]
+    return `${fam}:ital,wght@${pairs.join(';')}`
+  })
+  return `https://fonts.googleapis.com/css2?${families.join('&')}&display=swap`
 }
 
 type Settings = {

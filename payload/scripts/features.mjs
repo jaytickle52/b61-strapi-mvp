@@ -1,6 +1,6 @@
 // School features test (Thread F): announcements, the events calendar and its
 // subscribe feed, calendar feed import, news categories, drag ordering, page
-// templates and Bunny video links. Runs against a site with the demo schools
+// templates, Bunny video links and uploads, and branding (colors, fonts, site icon). Runs against a site with the demo schools
 // and a Banner 61 admin account (the smoke test creates one):
 //
 //   BASE_URL=http://localhost:3000 SMOKE_EMAIL=... SMOKE_PASSWORD=... node scripts/features.mjs
@@ -238,6 +238,46 @@ async function main() {
   check(no.status === 400 && /Video link/.test(JSON.stringify(no.json)), 'a link that is not YouTube, Vimeo or Bunny is refused with a message')
   if (no.json?.doc?.id) await api('DELETE', `/pages/${no.json.doc.id}`, { token: admin })
   if (ok.json?.doc?.id) await api('DELETE', `/pages/${ok.json.doc.id}`, { token: admin })
+
+  // ----- Branding (School settings > Look) ------------------------------------
+  console.log('\nBranding')
+  const settingsOf = async (school) =>
+    (await api('GET', `/school-settings?where[school][equals]=${school}&depth=0&limit=1&draft=true`, { token: admin })).json?.docs?.[0]
+  const cs = await settingsOf(cedar)
+  const badColor = await api('PATCH', `/school-settings/${cs.id}`, { token: admin, body: { primaryColor: 'navy-ish', _status: 'published' } })
+  check(badColor.status === 400 && /hex color|Primary Color/i.test(JSON.stringify(badColor.json)), 'a color that is not a hex code is refused with a message')
+  const media = (await api('GET', `/media?where[school][equals]=${cedar}&limit=1&depth=0`, { token: admin })).json?.docs?.[0]
+  const set = await api('PATCH', `/school-settings/${cs.id}`, {
+    token: admin,
+    body: { primaryColor: '#2E5E4E', ...(media ? { siteIcon: media.id } : {}), _status: 'published' },
+  })
+  check(set.status === 200, 'a new primary color saves')
+  const brandHome = (await page('/', 'cedar-ridge')).text
+  check(/--b61-palette-primary:\s*#2e5e4e/i.test(brandHome), '… and the site uses it')
+  if (media) check(/<link rel="icon"[^>]+href="[^"]+"/.test(brandHome), 'the Site icon shows in the browser tab')
+  await api('PATCH', `/school-settings/${cs.id}`, {
+    token: admin,
+    body: { primaryColor: cs.primaryColor ?? '#1F3A5F', siteIcon: cs.siteIcon ?? null, _status: 'published' },
+  })
+  const fontsLink = (await page('/', 'harbor-oaks')).text.match(/https:\/\/fonts\.googleapis\.com\/css2\?[^"]+/)?.[0]?.replace(/&amp;/g, '&') ?? ''
+  check(fontsLink && !/family=Lato:[^&]*\b(500|600)\b/.test(fontsLink), 'font requests only name weights the font has (Lato has no 500/600)')
+
+  // ----- Bunny video uploads -------------------------------------------------
+  console.log('\nVideo uploads')
+  const anonCfg = await api('GET', '/bunny/config')
+  check(anonCfg.json?.enabled === false, 'the upload button stays hidden for visitors')
+  const cfg = await api('GET', '/bunny/config', { token: admin })
+  const anonUp = await api('POST', '/bunny/upload', { body: { school: cedar, title: 'x' } })
+  check(anonUp.status === 401, 'uploading needs a sign-in')
+  if (cfg.json?.enabled) {
+    const other = await api('POST', '/bunny/upload', { token: contrib, body: { school: harbor, title: 'x' } })
+    check(other.status === 403, "a Contributor can't upload a video for another school")
+    const bogus = await api('GET', '/bunny/status?video=not-a-video', { token: admin })
+    check(bogus.status === 400, 'checking a made-up video id is refused')
+  } else {
+    const off = await api('POST', '/bunny/upload', { token: admin, body: { school: cedar, title: 'x' } })
+    check(off.status === 503 && /not switched on/.test(off.json?.message ?? ''), 'without Bunny keys, uploads answer "not switched on yet"')
+  }
 
   // ----- Tidy up --------------------------------------------------------------
   const mine = await api('GET', `/announcements?where[title][like]=${RUN}&limit=50&depth=0&draft=true`, { token: admin })

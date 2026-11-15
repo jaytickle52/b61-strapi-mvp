@@ -4127,29 +4127,98 @@ export interface SchoolSetting {
   schoolName: string;
   tagline?: string | null;
   logo?: (number | null) | Media;
+  /**
+   * A light version for the dark footer. Empty: the logo above.
+   */
+  logoOnDark?: (number | null) | Media;
+  /**
+   * The small square icon in browser tabs and bookmarks. Empty: the logo.
+   */
+  siteIcon?: (number | null) | Media;
   phone?: string | null;
   email?: string | null;
   address?: string | null;
   /**
-   * Hex color, e.g. #1F3A5F
+   * Headings, buttons, header links.
    */
   primaryColor?: string | null;
+  /**
+   * Second buttons and highlights.
+   */
   secondaryColor?: string | null;
   /**
-   * Rules, frames, accent words
+   * Rules, frames, accent words.
    */
   accentColor?: string | null;
   /**
-   * Soft background
+   * Soft background.
    */
   paperColor?: string | null;
   primaryDeep?: string | null;
   secondarySoft?: string | null;
   accentStrong?: string | null;
   accentDeep?: string | null;
-  headingFont?: ('Fraunces' | 'Playfair Display' | 'Merriweather' | 'EB Garamond' | 'Montserrat' | 'Poppins') | null;
-  bodyFont?: ('Inter' | 'Source Sans 3' | 'Lato' | 'Open Sans' | 'EB Garamond') | null;
-  uiFont?: ('Montserrat' | 'Inter' | 'Poppins' | 'Lato' | 'Source Sans 3') | null;
+  headingFont?:
+    | (
+        | 'Fraunces'
+        | 'Playfair Display'
+        | 'Merriweather'
+        | 'EB Garamond'
+        | 'Lora'
+        | 'Libre Baskerville'
+        | 'Cormorant Garamond'
+        | 'Crimson Pro'
+        | 'Roboto Slab'
+        | 'Montserrat'
+        | 'Poppins'
+        | 'Inter'
+        | 'Source Sans 3'
+        | 'Lato'
+        | 'Open Sans'
+        | 'Raleway'
+        | 'Nunito Sans'
+        | 'Work Sans'
+        | 'DM Sans'
+        | 'Roboto'
+        | 'Josefin Sans'
+        | 'Oswald'
+      )
+    | null;
+  bodyFont?:
+    | (
+        | 'Inter'
+        | 'Source Sans 3'
+        | 'Lato'
+        | 'Open Sans'
+        | 'Nunito Sans'
+        | 'Work Sans'
+        | 'DM Sans'
+        | 'Roboto'
+        | 'Raleway'
+        | 'Lora'
+        | 'Merriweather'
+        | 'EB Garamond'
+        | 'Crimson Pro'
+        | 'Libre Baskerville'
+      )
+    | null;
+  uiFont?:
+    | (
+        | 'Montserrat'
+        | 'Inter'
+        | 'Poppins'
+        | 'Lato'
+        | 'Source Sans 3'
+        | 'Open Sans'
+        | 'Raleway'
+        | 'Nunito Sans'
+        | 'Work Sans'
+        | 'DM Sans'
+        | 'Roboto'
+        | 'Josefin Sans'
+        | 'Oswald'
+      )
+    | null;
   /**
    * The main menu. Order here is the order on the site.
    */
@@ -7332,6 +7401,8 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   schoolName?: T;
   tagline?: T;
   logo?: T;
+  logoOnDark?: T;
+  siteIcon?: T;
   phone?: T;
   email?: T;
   address?: T;
