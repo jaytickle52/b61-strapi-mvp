@@ -24,6 +24,7 @@ import { formBuilderConfig, replaceSubmissionHooks } from './forms/config'
 import { FormUploads } from './collections/FormUploads'
 import { EmailLog } from './collections/EmailLog'
 import { emailAdapter } from './email/adapter'
+import { managesAnySchool, SCHOOL_ROLES } from './access'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -115,6 +116,26 @@ export default buildConfig({
         search: {},
       },
       userHasAccessToAllTenants: (user: any) => user?.role === 'admin',
+      // Each school on an account carries a role (src/access.ts). School
+      // Admins may edit this list; src/collections/Users.ts limits them to
+      // their own schools.
+      tenantsArrayField: {
+        includeDefaultField: true,
+        arrayFieldAccess: {
+          create: ({ req }) => managesAnySchool(req.user),
+          update: ({ req }) => managesAnySchool(req.user),
+        },
+        rowFields: [
+          {
+            name: 'role',
+            type: 'select',
+            required: true,
+            defaultValue: 'editor',
+            options: SCHOOL_ROLES,
+            saveToJWT: true,
+          },
+        ],
+      },
     }),
   ],
   onInit: async (payload) => {

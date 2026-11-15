@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
-import { publicAudienceOrSignedIn, publishedOrSignedIn, signedIn } from '../access'
+import { contentAccess, guardPublishing, publicAudienceOrSignedIn, publishedOrSignedIn } from '../access'
 import { sectionBlocks } from '../blocks'
 import { refuseDeleteWhenUsed, usageEndpoint, usageField } from '../usage/fields'
 
@@ -28,7 +28,9 @@ const livePreview = (pathFor: (data: Record<string, unknown>) => string) => ({
   ],
 })
 
-const writeAccess = { create: signedIn, update: signedIn, delete: signedIn }
+// Contributors save drafts; Editors and School Admins publish and delete (src/access.ts).
+const writeAccess = contentAccess
+const publishGuard = { beforeChange: [guardPublishing] }
 
 const audience = {
   name: 'audience',
@@ -67,7 +69,7 @@ export const Pages: CollectionConfig = {
     usageField('pages'),
   ],
   // Menus, buttons and text links point at pages; don't let one vanish under them.
-  hooks: { beforeDelete: [refuseDeleteWhenUsed('pages')] },
+  hooks: { ...publishGuard, beforeDelete: [refuseDeleteWhenUsed('pages')] },
   endpoints: [usageEndpoint('pages')],
 }
 
@@ -81,6 +83,7 @@ export const Events: CollectionConfig = {
   },
   access: { read: publicAudienceOrSignedIn, ...writeAccess },
   versions: drafts,
+  hooks: publishGuard,
   indexes: [{ fields: ['school', 'slug'], unique: true }],
   defaultSort: 'startsAt',
   fields: [
@@ -111,6 +114,7 @@ export const News: CollectionConfig = {
   },
   access: { read: publicAudienceOrSignedIn, ...writeAccess },
   versions: drafts,
+  hooks: publishGuard,
   indexes: [{ fields: ['school', 'slug'], unique: true }],
   defaultSort: '-date',
   fields: [
@@ -133,6 +137,7 @@ export const Programs: CollectionConfig = {
   },
   access: { read: publishedOrSignedIn, ...writeAccess },
   versions: drafts,
+  hooks: publishGuard,
   indexes: [{ fields: ['school', 'slug'], unique: true }],
   defaultSort: 'sortOrder',
   fields: [
@@ -156,6 +161,7 @@ export const Staff: CollectionConfig = {
   },
   access: { read: publishedOrSignedIn, ...writeAccess },
   versions: drafts,
+  hooks: publishGuard,
   defaultSort: 'sortOrder',
   fields: [
     { name: 'name', type: 'text', required: true },

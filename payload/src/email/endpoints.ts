@@ -1,5 +1,5 @@
 import type { Endpoint } from 'payload'
-import { canUseSchool } from '../access'
+import { canPublishAt } from '../access'
 import { brandedEmail, schoolSender, splitAddresses } from './school'
 
 /**
@@ -14,7 +14,7 @@ export const testEmailEndpoint: Endpoint = {
     if (!req.user) return Response.json({ ok: false, message: 'Sign in first.' }, { status: 401 })
     const body = (await req.json?.().catch(() => ({}))) ?? {}
     const school = body.school
-    if (!canUseSchool(req.user, school))
+    if (!canPublishAt(req.user, school))
       return Response.json(
         { ok: false, message: 'You can only test your own school.' },
         { status: 403 },

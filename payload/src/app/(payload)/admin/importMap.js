@@ -42,6 +42,8 @@ import { FolderTableCell as FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 import { FolderField as FolderField_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { TestEmailButton as TestEmailButton_9efb266fe7741fea6a447ccc8b6dfc05 } from '@/email/TestEmailButton'
 import { WatchTenantCollection as WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a } from '@payloadcms/plugin-multi-tenant/client'
+import { InviteStatus as InviteStatus_347c307375689c3154b14532242e9bc9 } from '@/users/InviteStatus'
+import { InviteForm as InviteForm_3d308d2e6080724a74ef0384d9cf30a9 } from '@/users/InviteForm'
 import { FieldPicker as FieldPicker_9ea8c2d18fb87511fa1afdb6adc070a8 } from '@/forms/FieldPicker'
 import { EmailRowLabel as EmailRowLabel_5968a7d5cc5b18b8bb4f5a521219c0fd } from '@/forms/EmailRowLabel'
 import { SubmissionsLink as SubmissionsLink_c6910aaaae4c22ec3cd3bf920ceab3d4 } from '@/forms/SubmissionsLink'
@@ -100,6 +102,8 @@ export const importMap = {
   "@payloadcms/next/rsc#FolderField": FolderField_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@/email/TestEmailButton#TestEmailButton": TestEmailButton_9efb266fe7741fea6a447ccc8b6dfc05,
   "@payloadcms/plugin-multi-tenant/client#WatchTenantCollection": WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a,
+  "@/users/InviteStatus#InviteStatus": InviteStatus_347c307375689c3154b14532242e9bc9,
+  "@/users/InviteForm#InviteForm": InviteForm_3d308d2e6080724a74ef0384d9cf30a9,
   "@/forms/FieldPicker#FieldPicker": FieldPicker_9ea8c2d18fb87511fa1afdb6adc070a8,
   "@/forms/EmailRowLabel#EmailRowLabel": EmailRowLabel_5968a7d5cc5b18b8bb4f5a521219c0fd,
   "@/forms/SubmissionsLink#SubmissionsLink": SubmissionsLink_c6910aaaae4c22ec3cd3bf920ceab3d4,

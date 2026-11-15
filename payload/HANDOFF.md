@@ -63,7 +63,8 @@ plugin 1.77.1) are ported so the sites look the same; the plugin's CSS is copied
 - `package.json`: `vercel-build` = migrate → seed demo → next build.
   Create migrations with `npm run migrate:create <name>` (turns on the Blob adapter so the
   Media schema matches production).
-- Migration history: initial, `blob_object_key`, `forms_email` (Thread B), `seo_search` (Thread C).
+- Migration history: initial, `blob_object_key`, `forms_email` (Thread B), `seo_search` (Thread C),
+  `media_documents_folders` (Thread D), `permissions_invites` (Thread E).
 
 ## Forms and email (Thread B)
 
@@ -126,6 +127,32 @@ plugin 1.77.1) are ported so the sites look the same; the plugin's CSS is copied
   with the list; the home page can't be deleted. Seeds pass `context.b61AllowDelete`.
 - `media/suggestAlt.ts` + `SuggestAlt.tsx`: "Suggest alt text" under Alt text, via Claude, only
   when `ANTHROPIC_API_KEY` is set (`ALT_TEXT_MODEL` optional).
+
+## People, roles and invites (Thread E)
+
+- Two account types (`users.role`): **Banner 61 admin** (every school) and **school account**.
+  A school account lists its schools, each with a role (`users.tenants[].role`):
+  **School Admin** (edits, publishes, invites and manages people at that school),
+  **Editor** (edits and publishes), **Contributor** (drafts and photo/document uploads only;
+  can't publish, unpublish or delete; can't see forms, form answers or the Email log, or change
+  settings or redirects). Accounts made before Thread E became Editors.
+- Rules live in `src/access.ts` (`roleAt`, `canPublishAt`, `canManagePeopleAt`, `draftWriters`,
+  `publishersOnly`, `guardPublishing`). The admin hides the Publish button from Contributors
+  because it asks the same access rule.
+- `src/collections/Users.ts`: School Admins see and manage only people at their schools,
+  never Banner 61 admins; they can't touch other schools on an account, change their own
+  role, set someone's email or password, or delete someone who also works elsewhere.
+  The Users list is hidden from Editors and Contributors (they use their own account page).
+- Invites (`src/users/`): "Invite someone" above the Users list → `POST /api/users/invite`.
+  New people get a branded email with a set-password link good for 7 days (it reuses
+  `/admin/reset/<token>`); existing accounts get the school added and a "you now have
+  access" email. "Resend invite" on the account page while they haven't signed in.
+  `invitedAt` and `lastSignInAt` show in the sidebar and list.
+- Checks: `scripts/permissions.mjs` (API checks per role; reads invite emails from
+  `EMAIL_PREVIEW_DIR`) and `src/scripts/check-publish-button.ts`; both run in CI after the
+  smoke test.
+- Two-factor sign-in is **not built yet**: waiting on Jay's choice (install the community
+  `payload-totp` plugin, or build our own).
 
 ## Working rules with Jay
 

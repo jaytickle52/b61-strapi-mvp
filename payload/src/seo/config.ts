@@ -1,6 +1,7 @@
 import type { Field, Plugin } from 'payload'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
+import { isB61Admin, publishersOnly } from '../access'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import { plainText } from './text'
 
@@ -67,6 +68,8 @@ export const seoPlugins: Plugin[] = [
     redirectTypes: ['301', '302'],
     overrides: {
       labels: { singular: 'Redirect', plural: 'Redirects' },
+      // Redirects work the moment they're saved: Editors and School Admins only.
+      access: { read: () => true, create: publishersOnly, update: publishersOnly, delete: publishersOnly },
       admin: {
         group: 'Website',
         description: 'Send visitors from an old address (e.g. from the WordPress site) to a page here. Used only when nothing else lives at the old address.',
@@ -108,7 +111,7 @@ export const seoPlugins: Plugin[] = [
       admin: {
         group: 'Website',
         description: 'Kept up to date automatically from pages, programs, events and news.',
-        hidden: ({ user }) => (user as any)?.role !== 'admin',
+        hidden: ({ user }) => !isB61Admin(user),
       },
       fields: ({ defaultFields }) => [
         ...defaultFields,

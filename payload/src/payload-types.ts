@@ -3229,8 +3229,6 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -3296,7 +3294,6 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -3965,8 +3962,6 @@ export interface Staff {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -3990,7 +3985,7 @@ export interface EmailLog {
   subject?: string | null;
   to?: string | null;
   status?: ('sent' | 'failed' | 'logged') | null;
-  kind?: ('form' | 'test' | 'password' | 'other') | null;
+  kind?: ('form' | 'test' | 'password' | 'invite' | 'other') | null;
   detail?: string | null;
   school?: (number | null) | School;
   updatedAt: string;
@@ -4213,6 +4208,8 @@ export interface SchoolSetting {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * People who can sign in to edit the website. Use "Invite someone" to add a person; they get an email to choose their password.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -4220,9 +4217,12 @@ export interface User {
   id: number;
   name?: string | null;
   role: 'editor' | 'admin';
+  invitedAt?: string | null;
+  lastSignInAt?: string | null;
   tenants?:
     | {
         tenant: number | School;
+        role: 'schoolAdmin' | 'editor' | 'contributor';
         id?: string | null;
       }[]
     | null;
@@ -6979,7 +6979,6 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
   credit?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -7055,8 +7054,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
-  prefix?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -7076,8 +7073,6 @@ export interface DocumentsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -7306,10 +7301,13 @@ export interface SchoolsSelect<T extends boolean = true> {
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
   role?: T;
+  invitedAt?: T;
+  lastSignInAt?: T;
   tenants?:
     | T
     | {
         tenant?: T;
+        role?: T;
         id?: T;
       };
   updatedAt?: T;

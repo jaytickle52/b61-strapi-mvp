@@ -4,7 +4,8 @@
 #   2. fails if a database change was made without its migration,
 #   3. fails if the generated types are out of date,
 #   4. builds the site against a fresh, seeded database, starts it, and loads
-#      every school's public pages plus the editor (scripts/smoke.mjs).
+#      every school's public pages plus the editor (scripts/smoke.mjs),
+#   5. checks who can do what: roles, invites, publishing (scripts/permissions.mjs).
 # Vercel still deploys main on its own; a red check here means look before you trust that deploy.
 name: Payload checks
 
@@ -39,6 +40,8 @@ jobs:
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/b61
       SCHOOL_SECRET: ci-only-not-a-real-secret
       SEED_DEMO: 'true'
+      # Emails are saved here as files (no Resend key in CI); the permissions test reads invites from it.
+      EMAIL_PREVIEW_DIR: /tmp/emails
       NEXT_TELEMETRY_DISABLED: '1'
     steps:
       - uses: actions/checkout@v4
@@ -86,6 +89,7 @@ jobs:
 
       - name: Start the site
         run: |
+          mkdir -p /tmp/emails
           nohup npm start > /tmp/server.log 2>&1 &
           for i in $(seq 1 60); do
             if curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/admin/login | grep -q 200; then exit 0; fi
@@ -99,6 +103,15 @@ jobs:
           SMOKE_EMAIL: ci@example.com
           SMOKE_PASSWORD: ci-smoke-password-123
         run: node scripts/smoke.mjs
+
+      - name: Permissions test (roles, invites, publishing)
+        env:
+          BASE_URL: http://localhost:3000
+          SMOKE_EMAIL: ci@example.com
+          SMOKE_PASSWORD: ci-smoke-password-123
+        run: |
+          node scripts/permissions.mjs
+          npx payload run src/scripts/check-publish-button.ts
 
       - name: Server log
         if: failure()
