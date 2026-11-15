@@ -17,7 +17,12 @@ export async function seoMetadata(o: {
   const [settings, origin, hidden] = await Promise.all([getSettings(), siteOrigin(), hiddenFromSearch()])
   const title = o.meta?.title || o.title || undefined
   const description = o.meta?.description || o.description || settings.tagline || undefined
-  const img = mediaUrl(o.meta?.image as any) || mediaUrl(o.image as any) || mediaUrl((settings as any).shareImage) || mediaUrl(settings.logo as any)
+  // Photos use their 1200x630 link-preview crop (Media 'social' size); the logo stays as it is.
+  const img =
+    mediaUrl(o.meta?.image as any, 'social') ||
+    mediaUrl(o.image as any, 'social') ||
+    mediaUrl((settings as any).shareImage, 'social') ||
+    mediaUrl(settings.logo as any)
   const image = img ? (img.startsWith('http') ? img : `${origin}${img}`) : undefined
   const url = `${origin}${o.path === '/' ? '' : o.path}` || origin
   const noindex = hidden || Boolean(o.meta?.noindex)

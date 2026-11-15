@@ -1,3 +1,4 @@
+import { b61Converters } from './converters'
 import { Fragment, type ReactNode } from 'react'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
@@ -143,7 +144,7 @@ export function ContentBlocks({
     if (type === 'body' && b.body) {
       out.push(
         <div key={key} className={`${prefix}__body b61-block${dv} breakdance-rich-text-styles`} {...ri}>
-          <RichText data={b.body as SerializedEditorState} disableContainer />
+          <RichText data={b.body as SerializedEditorState} disableContainer converters={b61Converters} />
         </div>,
       )
     } else if (type === 'emphasis' && b.text) {
@@ -245,7 +246,7 @@ export function BandHead({
       ))}
       {Boolean(block.intro) && (
         <div className={`${prefix}__intro${x} breakdance-rich-text-styles`} {...ri}>
-          <RichText data={block.intro as SerializedEditorState} disableContainer />
+          <RichText data={block.intro as SerializedEditorState} disableContainer converters={b61Converters} />
         </div>
       )}
     </>

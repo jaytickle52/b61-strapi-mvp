@@ -140,7 +140,7 @@ export async function getParentPassword(): Promise<string | null> {
   return (res.docs[0] as any)?.parentPassword || process.env.PARENT_PASSWORD || null
 }
 
-export function mediaUrl(media: number | Media | null | undefined, size?: 'card' | 'hero'): string | null {
+export function mediaUrl(media: number | Media | null | undefined, size?: 'thumbnail' | 'card' | 'wide' | 'hero' | 'social'): string | null {
   if (!media || typeof media === 'number') return null
   return (size && media.sizes?.[size]?.url) || media.url || null
 }

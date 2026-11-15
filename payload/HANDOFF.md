@@ -106,6 +106,27 @@ plugin 1.77.1) are ported so the sites look the same; the plugin's CSS is copied
   save; `src/seo/reindex.ts` adds anything published but missing (runs in the Vercel build
   step and on start elsewhere).
 
+## Media (Thread D)
+
+- `collections/Media.ts`: alt (required), caption, credit; originals capped at 2560px and
+  re-compressed; WebP sizes thumbnail 400 / card 800 / wide 1200 / hero 1800, plus `social`
+  (1200x630 JPEG crop on the focal point) for link previews (Thread C can use it for og:image).
+  `b61/lib/media.ts` `imgProps` builds srcset from the uncropped sizes only.
+- `media/regenerate.ts`: during each build, photos missing the current sizes get them
+  (100 per build). Runs from `scripts/seed.ts` whether or not SEED_DEMO is on.
+- `collections/Documents.ts`: PDFs and office files, per school, public. Link control
+  (`kit/controls.ts link()`) has Page / Document / Web address; both rich-text editors link to
+  pages and documents; `kit/render/converters.ts` turns those links into real URLs (internal
+  page links in text used to render as "#").
+- Folders (Payload beta) on Media and Documents, per school (`payload-folders` is a tenant
+  collection); `media/folders.ts` refuses a folder from another school.
+- `usage/`: "Where this is used" for photos, documents and pages, reading every field of the
+  school's pages, events, news, programs, staff, School settings and forms (published + draft),
+  including photos and links inside the Content editor. Deleting anything still used is refused
+  with the list; the home page can't be deleted. Seeds pass `context.b61AllowDelete`.
+- `media/suggestAlt.ts` + `SuggestAlt.tsx`: "Suggest alt text" under Alt text, via Claude, only
+  when `ANTHROPIC_API_KEY` is set (`ALT_TEXT_MODEL` optional).
+
 ## Working rules with Jay
 
 - End work replies with a 2-line status: what was done, and the one thing needed from Jay.
@@ -121,9 +142,8 @@ plugin 1.77.1) are ported so the sites look the same; the plugin's CSS is copied
 2. ~~Photos on server disk~~ → done (Vercel Blob).
 3. **No automated tests.** Add a type check plus a smoke test (load every page and the
    editor for each school) before deploys, e.g. a GitHub Action.
-4. **Links and photos inside the Content editor aren't tracked** by the database; deleting a
-   photo or page they point to silently breaks them. Add a "where is this used" check or
-   warning.
+4. ~~Links and photos inside the Content editor aren't tracked~~ → "Where this is used" and
+   a delete guard (Thread D).
 5. **Database size:** many block tables; cap versions (`maxPerDoc`) everywhere, trim fields.
 6. **Missing for a real school:** ~~forms~~ and ~~email~~ (Thread B), redirects from old URLs,
    sitemap and SEO fields, search, an accessibility pass.

@@ -101,7 +101,7 @@ export function step(name: string, label: string, o: { low: string; high: string
   }
 }
 
-/** One compact link: a page on this site (survives slug changes) or a web address. */
+/** One compact link: a page on this site (survives slug changes), a document (handbook, PDF) or a web address. */
 export function link(name = 'link'): Field {
   return {
     name,
@@ -112,13 +112,20 @@ export function link(name = 'link'): Field {
       {
         type: 'row',
         fields: [
-          segmented('type', 'Link to', [['page', 'Page'], ['url', 'Web address']], { default: 'page' }),
+          segmented('type', 'Link to', [['page', 'Page'], ['document', 'Document'], ['url', 'Web address']], { default: 'page' }),
           {
             name: 'page',
             label: 'Page',
             type: 'relationship',
             relationTo: 'pages',
-            admin: { condition: (_, s) => s?.type !== 'url', width: '60%' },
+            admin: { condition: (_, s) => s?.type !== 'url' && s?.type !== 'document', width: '60%' },
+          },
+          {
+            name: 'document',
+            label: 'Document',
+            type: 'relationship',
+            relationTo: 'documents',
+            admin: { condition: (_, s) => s?.type === 'document', width: '60%' },
           },
           {
             name: 'url',

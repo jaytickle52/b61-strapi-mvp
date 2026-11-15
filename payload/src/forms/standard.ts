@@ -310,7 +310,7 @@ export async function ensureStandardForms(payload: Payload, school: School) {
     // All or nothing, so the next build tries again from a clean slate.
     for (const m of made.reverse())
       await payload
-        .delete({ collection: m.collection, id: m.id, overrideAccess: true })
+        .delete({ collection: m.collection, id: m.id, overrideAccess: true, context: { b61AllowDelete: true } })
         .catch(() => {})
     throw err
   }

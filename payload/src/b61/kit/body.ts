@@ -69,7 +69,7 @@ const iconListBlock: Block = {
 
 // Separate slugs where an element offers fewer choices, so no card shows a
 // control that would do nothing there.
-const BLOCKS = {
+export const BODY_BLOCKS = {
   emphasis: { slug: 'emphasis', labels: { singular: 'Emphasis', plural: 'Emphasis' }, fields: emphasisFields(false) } as Block,
   emphasisScaled: { slug: 'emphasisScaled', labels: { singular: 'Emphasis', plural: 'Emphasis' }, fields: emphasisFields(true) } as Block,
   pullQuote: { slug: 'pullQuote', labels: { singular: 'Pull quote', plural: 'Pull quotes' }, fields: quoteFields(true) } as Block,
@@ -96,11 +96,11 @@ export function bodyField(o: Opts = {}): RichTextField {
         BoldFeature(),
         ItalicFeature(),
         UnderlineFeature(),
-        LinkFeature({ enabledCollections: ['pages'] }),
+        LinkFeature({ enabledCollections: ['pages', 'documents'] }),
         UnorderedListFeature(),
         OrderedListFeature(),
         ...(o.dividers ? [HorizontalRuleFeature()] : []),
-        BlocksFeature({ blocks: [BLOCKS[s.quote as 'pullQuote'], BLOCKS.iconList, BLOCKS[s.emphasis as 'emphasis']] }),
+        BlocksFeature({ blocks: [BODY_BLOCKS[s.quote as 'pullQuote'], BODY_BLOCKS.iconList, BODY_BLOCKS[s.emphasis as 'emphasis']] }),
         FixedToolbarFeature(),
         InlineToolbarFeature(),
       ],

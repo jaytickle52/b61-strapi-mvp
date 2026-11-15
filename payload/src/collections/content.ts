@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 import { publicAudienceOrSignedIn, publishedOrSignedIn, signedIn } from '../access'
 import { sectionBlocks } from '../blocks'
+import { refuseDeleteWhenUsed, usageEndpoint, usageField } from '../usage/fields'
 
 // Every editable item saves drafts as you type (autosave), so the live preview
 // beside the form updates within a moment without clicking Save.
@@ -63,7 +64,11 @@ export const Pages: CollectionConfig = {
       blocks: sectionBlocks,
       admin: { initCollapsed: true, description: 'Add, reorder and remove sections. Open one to edit it; changes show in the live preview as you type.' },
     },
+    usageField('pages'),
   ],
+  // Menus, buttons and text links point at pages; don't let one vanish under them.
+  hooks: { beforeDelete: [refuseDeleteWhenUsed('pages')] },
+  endpoints: [usageEndpoint('pages')],
 }
 
 export const Events: CollectionConfig = {
