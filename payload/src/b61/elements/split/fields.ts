@@ -1,4 +1,5 @@
 import { defineElement, panel } from '../../kit/element'
+import { videoLinkField } from '../../kit/video'
 import { segmented, step, toggle, type WhenRule } from '../../kit/controls'
 import {
   buttonsField,
@@ -81,20 +82,7 @@ export const B61Split = defineElement({
         ],
         { default: '2', when: isGallery },
       ),
-      {
-        name: 'video',
-        label: 'Video link',
-        type: 'text',
-        admin: {
-          condition: (_, s) => s?.media === 'video',
-          placeholder: 'https://www.youtube.com/watch?v=… or https://vimeo.com/…',
-          description: 'YouTube or Vimeo. The player loads only when someone presses play.',
-        },
-        validate: (v: unknown, { siblingData }: any) => {
-          if (siblingData?.media !== 'video' || !v) return true
-          return /(youtube\.com|youtu\.be|vimeo\.com)\//.test(String(v)) || 'Paste a YouTube or Vimeo link.'
-        },
-      },
+      videoLinkField((s) => s?.media === 'video'),
       segmented(
         'imageShape',
         'Photo shape',

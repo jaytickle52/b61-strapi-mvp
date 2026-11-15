@@ -1,8 +1,10 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionBeforeChangeHook, CollectionConfig } from 'payload'
+import { ymd, zoned } from '../events/time'
 import { slugField } from 'payload'
 import { contentAccess, guardPublishing, publicAudienceOrSignedIn, publishedOrSignedIn } from '../access'
 import { sectionBlocks } from '../blocks'
 import { refuseDeleteWhenUsed, usageEndpoint, usageField } from '../usage/fields'
+import { fromTemplateEndpoint, listTemplatesEndpoint } from '../templates/endpoint'
 
 // Every editable item saves drafts as you type (autosave), so the live preview
 // beside the form updates within a moment without clicking Save.
@@ -30,7 +32,10 @@ const livePreview = (pathFor: (data: Record<string, unknown>) => string) => ({
 
 // Contributors save drafts; Editors and School Admins publish and delete (src/access.ts).
 const writeAccess = contentAccess
-const publishGuard = { beforeChange: [guardPublishing] }
+// A fresh object for each collection: Payload adds its own hooks to these
+// lists (drag ordering does), and a shared list would leak them across
+// collections.
+const publishGuard = () => ({ beforeChange: [guardPublishing] })
 
 const audience = {
   name: 'audience',
@@ -51,6 +56,7 @@ export const Pages: CollectionConfig = {
     defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
     livePreview: livePreview((d) => (d.slug === 'home' || !d.slug ? '/' : `/${d.slug}`)),
     preview: (doc) => previewUrl(doc.slug === 'home' ? '/' : `/${doc.slug}`, doc.school),
+    components: { beforeListTable: ['@/templates/NewFromTemplate#NewFromTemplate'] },
   },
   access: { read: publishedOrSignedIn, ...writeAccess },
   versions: drafts,
@@ -69,35 +75,85 @@ export const Pages: CollectionConfig = {
     usageField('pages'),
   ],
   // Menus, buttons and text links point at pages; don't let one vanish under them.
-  hooks: { ...publishGuard, beforeDelete: [refuseDeleteWhenUsed('pages')] },
-  endpoints: [usageEndpoint('pages')],
+  hooks: { ...publishGuard(), beforeDelete: [refuseDeleteWhenUsed('pages')] },
+  endpoints: [usageEndpoint('pages'), listTemplatesEndpoint, fromTemplateEndpoint],
+}
+
+/**
+ * All-day events start (and end) at midnight at the school, whatever time the
+ * date picker happened to hold, so they land on the right day everywhere.
+ * "Ends" is the last day; a one-day event has none.
+ */
+const allDayToMidnight: CollectionBeforeChangeHook = ({ data }) => {
+  if (!data?.allDay || !data.startsAt) return data
+  const first = ymd(data.startsAt)
+  data.startsAt = zoned(first).toISOString()
+  if (data.endsAt) {
+    const last = ymd(data.endsAt)
+    data.endsAt = last > first ? zoned(last).toISOString() : null
+  }
+  return data
 }
 
 export const Events: CollectionConfig = {
   slug: 'events',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'startsAt', 'audience', '_status'],
-    description: 'Enter an event once: it shows on the website, calendars and the parent feed.',
+    defaultColumns: ['title', 'startsAt', 'audience', 'importedFrom', '_status'],
+    description: 'Enter an event once: it shows on the website, the calendar, the subscribe feed and the parent feed.',
     livePreview: livePreview((d) => (d.audience === 'parents' ? '/parents' : `/events/${d.slug ?? ''}`)),
   },
   access: { read: publicAudienceOrSignedIn, ...writeAccess },
   versions: drafts,
-  hooks: publishGuard,
+  hooks: { beforeChange: [guardPublishing, allDayToMidnight] },
   indexes: [{ fields: ['school', 'slug'], unique: true }],
   defaultSort: 'startsAt',
   fields: [
     { name: 'title', type: 'text', required: true },
     slugField({ disableUnique: true }),
     {
+      name: 'allDay',
+      label: 'All day',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: { description: 'No start time: a holiday, a break, a whole-day trip. Spanning several days? Set the last day in "Ends".' },
+    },
+    {
       type: 'row',
       fields: [
-        { name: 'startsAt', type: 'date', required: true, admin: { date: { pickerAppearance: 'dayAndTime' } } },
-        { name: 'endsAt', type: 'date', admin: { date: { pickerAppearance: 'dayAndTime' } } },
+        {
+          name: 'startsAt',
+          label: 'Starts',
+          type: 'date',
+          required: true,
+          admin: { date: { pickerAppearance: 'dayAndTime' }, width: '50%' },
+        },
+        {
+          name: 'endsAt',
+          label: 'Ends',
+          type: 'date',
+          admin: { date: { pickerAppearance: 'dayAndTime' }, width: '50%' },
+          validate: (v: unknown, { siblingData }: { siblingData: any }) =>
+            !v || !siblingData?.startsAt || new Date(v as string) >= new Date(siblingData.startsAt) || 'Must be after the start.',
+        },
       ],
     },
     { name: 'location', type: 'text' },
     audience,
+    // Filled in by "Calendar feeds" for events copied from another calendar.
+    {
+      name: 'importedFrom',
+      type: 'relationship',
+      relationTo: 'calendar-feeds',
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+        condition: (data) => Boolean(data?.importedFrom),
+        description: 'Copied from this calendar feed. Change it in the original calendar: edits here are replaced at the next import.',
+      },
+    },
+    { name: 'importUid', type: 'text', index: true, admin: { hidden: true } },
+    { name: 'importHash', type: 'text', admin: { hidden: true } },
     { name: 'summary', type: 'textarea', maxLength: 200, admin: { description: 'Short version for cards, the app and the parent feed' } },
     { name: 'description', type: 'richText' },
     { name: 'image', type: 'upload', relationTo: 'media' },
@@ -109,12 +165,12 @@ export const News: CollectionConfig = {
   labels: { singular: 'News post', plural: 'News' },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'date', 'audience', '_status'],
+    defaultColumns: ['title', 'date', 'categories', 'audience', '_status'],
     livePreview: livePreview((d) => (d.audience === 'parents' ? '/parents' : `/news/${d.slug ?? ''}`)),
   },
   access: { read: publicAudienceOrSignedIn, ...writeAccess },
   versions: drafts,
-  hooks: publishGuard,
+  hooks: publishGuard(),
   indexes: [{ fields: ['school', 'slug'], unique: true }],
   defaultSort: '-date',
   fields: [
@@ -122,6 +178,13 @@ export const News: CollectionConfig = {
     slugField({ disableUnique: true }),
     { name: 'date', type: 'date', required: true, admin: { position: 'sidebar' } },
     audience,
+    {
+      name: 'categories',
+      type: 'relationship',
+      relationTo: 'news-categories',
+      hasMany: true,
+      admin: { position: 'sidebar', description: 'Visitors can filter the News page by these.' },
+    },
     { name: 'summary', type: 'textarea', maxLength: 200 },
     { name: 'body', type: 'richText' },
     { name: 'image', type: 'upload', relationTo: 'media' },
@@ -133,13 +196,16 @@ export const Programs: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'grades', '_status'],
+    description: 'Drag the handle at the start of each row to change the order on the website.',
     livePreview: livePreview((d) => `/programs/${d.slug ?? ''}`),
   },
   access: { read: publishedOrSignedIn, ...writeAccess },
   versions: drafts,
-  hooks: publishGuard,
+  hooks: publishGuard(),
   indexes: [{ fields: ['school', 'slug'], unique: true }],
-  defaultSort: 'sortOrder',
+  // Drag the rows in the list to set the order programs appear on the site.
+  orderable: true,
+  defaultSort: '_order',
   fields: [
     { name: 'name', type: 'text', required: true },
     slugField({ useAsSlug: 'name', disableUnique: true }),
@@ -147,7 +213,10 @@ export const Programs: CollectionConfig = {
     { name: 'summary', type: 'textarea', maxLength: 240 },
     { name: 'description', type: 'richText' },
     { name: 'image', type: 'upload', relationTo: 'media' },
-    { name: 'sortOrder', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
+    // Replaced by drag ordering (_order). Kept, hidden, so the live site keeps
+    // working while a preview deploy has already migrated the shared database;
+    // drop it in a later cleanup.
+    { name: 'sortOrder', type: 'number', defaultValue: 100, admin: { hidden: true } },
   ],
 }
 
@@ -157,12 +226,15 @@ export const Staff: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'role', 'department'],
+    description: 'Drag the handle at the start of each row to change the order on the website.',
     livePreview: livePreview(() => '/staff'),
   },
   access: { read: publishedOrSignedIn, ...writeAccess },
   versions: drafts,
-  hooks: publishGuard,
-  defaultSort: 'sortOrder',
+  hooks: publishGuard(),
+  // Drag the rows in the list to set the order people appear on the site.
+  orderable: true,
+  defaultSort: '_order',
   fields: [
     { name: 'name', type: 'text', required: true },
     { name: 'role', type: 'text', required: true },
@@ -170,6 +242,9 @@ export const Staff: CollectionConfig = {
     { name: 'email', type: 'email' },
     { name: 'bio', type: 'textarea' },
     { name: 'photo', type: 'upload', relationTo: 'media' },
-    { name: 'sortOrder', type: 'number', defaultValue: 100, admin: { position: 'sidebar' } },
+    // Replaced by drag ordering (_order). Kept, hidden, so the live site keeps
+    // working while a preview deploy has already migrated the shared database;
+    // drop it in a later cleanup.
+    { name: 'sortOrder', type: 'number', defaultValue: 100, admin: { hidden: true } },
   ],
 }

@@ -39,17 +39,19 @@ import '@/b61/elements/rail/rail.css'
 import '@/b61/styles/kit-instance.css'
 import '@/b61/styles/kit-frontend.css'
 import '@/b61/chrome/chrome.css'
+import '@/b61/styles/calendar.css'
 import { b61Theme, FONT_STACKS } from '@/b61/lib/theme'
 import Reveal from '@/b61/reveal/Reveal'
-import { getSettings, hiddenFromSearch, isPreview, siteOrigin } from '@/lib/data'
+import { getAnnouncements, getSettings, hiddenFromSearch, isPreview, siteOrigin } from '@/lib/data'
 import AnalyticsTag from '@/analytics/Tag'
+import Announcements, { type Notice } from '@/b61/chrome/Announcements'
 import JsonLd from '@/seo/JsonLd'
 import { schoolSchema } from '@/seo/schema'
 import { PreviewBanner } from '@/components/SiteChrome'
 import Header from '@/b61/chrome/Header'
 import Footer from '@/b61/chrome/Footer'
 import { resolveMenu } from '@/b61/chrome/resolve'
-import { asMedia } from '@/b61/lib/media'
+import { asMedia, resolveLink } from '@/b61/lib/media'
 import LivePreviewListener from '@/components/LivePreviewListener'
 
 export const dynamic = 'force-dynamic'
@@ -65,9 +67,24 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const [settings, preview, hidden] = await Promise.all([getSettings(), isPreview(), hiddenFromSearch()])
+  const [settings, preview, hidden, announcements] = await Promise.all([getSettings(), isPreview(), hiddenFromSearch(), getAnnouncements()])
   // Count visitors only on the school's live site: not demo/preview addresses, not staff previews.
   const gaTag = !preview && !hidden ? settings.gaMeasurementId : null
+  const notices: Notice[] = announcements.map((a) => {
+    const { href, newTab } = resolveLink(a.button?.link as any)
+    return {
+      id: a.id,
+      title: a.title,
+      message: a.message,
+      style: a.style,
+      href,
+      newTab,
+      linkLabel: a.button?.label,
+      homeOnly: a.showOn === 'home',
+      dismissible: a.dismissible !== false,
+      version: String(a.updatedAt ?? ''),
+    }
+  })
   const heading = settings.headingFont ?? 'Fraunces'
   const body = settings.bodyFont ?? 'Inter'
   const ui = settings.uiFont ?? 'Montserrat'
@@ -101,6 +118,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <JsonLd data={await schoolSchema()} />
         {preview && <PreviewBanner />}
         {preview && <LivePreviewListener />}
+        <Announcements notices={notices} />
         <Header brand={{ name: settings.schoolName, logo: logo?.url ? { src: logo.url, width: logo.width ?? undefined, height: logo.height ?? undefined } : null }} {...resolveMenu(settings)} />
         <main className="flex-1">{children}</main>
         <Footer s={settings} logo={logo?.url} />

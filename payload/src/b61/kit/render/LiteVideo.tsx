@@ -1,30 +1,26 @@
 'use client'
 import { useState } from 'react'
+import { embedUrl, parseVideo } from '../video'
 
 /**
- * A YouTube or Vimeo video that loads only when played (like Breakdance's
- * "lightweight" loading): a poster and a play button, then the player.
- * YouTube uses the no-cookie domain.
+ * A YouTube, Vimeo or Bunny Stream video that loads only when played (like
+ * Breakdance's "lightweight" loading): a poster and a play button, then the
+ * player. YouTube uses the no-cookie domain.
+ *
+ * Bunny's link doesn't say where its poster image lives, so a Bunny video
+ * shows Bunny's own player straight away (lazy-loaded, nothing preloaded
+ * until it is played); that player shows the video's thumbnail itself.
  */
-export function parseVideo(url?: string | null): { provider: 'youtube' | 'vimeo'; id: string } | null {
-  if (!url) return null
-  const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/)
-  if (yt) return { provider: 'youtube', id: yt[1] }
-  const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/)
-  if (vm) return { provider: 'vimeo', id: vm[1] }
-  return null
-}
-
 export default function LiteVideo({ url, title = 'Video' }: { url: string; title?: string }) {
   const [playing, setPlaying] = useState(false)
   const v = parseVideo(url)
   if (!v) return null
-  const src =
-    v.provider === 'youtube'
-      ? `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0`
-      : `https://player.vimeo.com/video/${v.id}?autoplay=1&dnt=1`
+  const allow = 'accelerometer; gyroscope; autoplay; encrypted-media; fullscreen; picture-in-picture'
+  if (v.provider === 'bunny') {
+    return <iframe src={embedUrl(v, { autoplay: false })} title={title} loading="lazy" allow={allow} allowFullScreen style={{ border: 0 }} />
+  }
   if (playing) {
-    return <iframe src={src} title={title} allow="autoplay; fullscreen; picture-in-picture" allowFullScreen style={{ border: 0 }} />
+    return <iframe src={embedUrl(v)} title={title} allow={allow} allowFullScreen style={{ border: 0 }} />
   }
   const poster = v.provider === 'youtube' ? `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` : null
   return (

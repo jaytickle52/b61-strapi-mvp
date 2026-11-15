@@ -2,9 +2,10 @@ import { cache } from 'react'
 import { cookies, draftMode, headers } from 'next/headers'
 import { getPayload, type Where } from 'payload'
 import config from '@payload-config'
-import type { Event, Media, News, Page, Program, School, SchoolSetting, Staff } from '@/payload-types'
+import { ymd } from '@/events/time'
+import type { Announcement, Event, Media, News, NewsCategory, Page, Program, School, SchoolSetting, Staff } from '@/payload-types'
 
-export type { Event, Media, News, Page, Program, School, SchoolSetting, Staff }
+export type { Announcement, Event, Media, News, NewsCategory, Page, Program, School, SchoolSetting, Staff }
 export type Audience = 'public' | 'parents'
 
 export const payloadClient = () => getPayload({ config })
@@ -62,7 +63,7 @@ const scoped = async (where?: Where): Promise<Where> => {
   return where ? { and: [mine, where] } : mine
 }
 
-async function find<T>(collection: 'pages' | 'events' | 'news' | 'programs' | 'staff', opts: { where?: Where; sort?: string; limit?: number; depth?: number } = {}) {
+async function find<T>(collection: 'pages' | 'events' | 'news' | 'news-categories' | 'programs' | 'staff' | 'announcements', opts: { where?: Where; sort?: string; limit?: number; depth?: number } = {}) {
   const { payload, user, draft } = await reader()
   const res = await payload.find({
     collection,
@@ -90,32 +91,76 @@ export async function getPage(slug: string) {
   return docs[0] ?? null
 }
 
-const upcoming: Where = { startsAt: { greater_than_equal: new Date(Date.now() - 6 * 3600 * 1000).toISOString() } }
+// Not over yet: starts later today or after, or is still going (multi-day).
+const upcomingWhere = (): Where => {
+  const since = new Date(Date.now() - 6 * 3600 * 1000).toISOString()
+  return { or: [{ startsAt: { greater_than_equal: since } }, { endsAt: { greater_than_equal: new Date().toISOString() } }] }
+}
 
 export const getEvents = (opts: { limit?: number } = {}) =>
-  find<Event>('events', { where: { and: [{ audience: { equals: 'public' } }, upcoming] }, sort: 'startsAt', limit: opts.limit })
+  find<Event>('events', { where: { and: [{ audience: { equals: 'public' } }, upcomingWhere()] }, sort: 'startsAt', limit: opts.limit })
+
+/** Public events that touch the period from `from` to `to` (a month calendar). */
+export const getEventsBetween = (from: Date, to: Date) =>
+  find<Event>('events', {
+    where: {
+      and: [
+        { audience: { equals: 'public' } },
+        { startsAt: { less_than: to.toISOString() } },
+        { or: [{ startsAt: { greater_than_equal: from.toISOString() } }, { endsAt: { greater_than_equal: from.toISOString() } }] },
+      ],
+    },
+    sort: 'startsAt',
+    limit: 500,
+    depth: 1,
+  })
 
 export async function getEvent(slug: string) {
   const docs = await find<Event>('events', { where: { slug: { equals: slug }, audience: { equals: 'public' } }, limit: 1 })
   return docs[0] ?? null
 }
 
-export const getNews = (opts: { limit?: number } = {}) =>
-  find<News>('news', { where: { audience: { equals: 'public' } }, sort: '-date', limit: opts.limit })
+export const getNews = (opts: { limit?: number; category?: number | string } = {}) =>
+  find<News>('news', {
+    where: { and: [{ audience: { equals: 'public' } }, ...(opts.category ? [{ categories: { in: [opts.category] } }] : [])] },
+    sort: '-date',
+    limit: opts.limit,
+  })
+
+/** This school's news categories, in the order staff dragged them. */
+export const getNewsCategories = cache(() => find<NewsCategory>('news-categories', { sort: '_order', limit: 50, depth: 0 }))
 
 export async function getNewsPost(slug: string) {
   const docs = await find<News>('news', { where: { slug: { equals: slug }, audience: { equals: 'public' } }, limit: 1 })
   return docs[0] ?? null
 }
 
-export const getPrograms = (limit = 50) => find<Program>('programs', { sort: 'sortOrder', limit })
+export const getPrograms = (limit = 50) => find<Program>('programs', { sort: '_order', limit })
 
 export async function getProgram(slug: string) {
   const docs = await find<Program>('programs', { where: { slug: { equals: slug } }, limit: 1 })
   return docs[0] ?? null
 }
 
-export const getStaff = (limit = 100) => find<Staff>('staff', { sort: 'sortOrder', limit })
+export const getStaff = (limit = 100) => find<Staff>('staff', { sort: '_order', limit })
+
+/** Announcements showing right now: started, not yet ended. Urgent ones first. */
+export const getAnnouncements = cache(async () => {
+  const now = new Date().toISOString()
+  const docs = await find<Announcement>('announcements', {
+    where: {
+      and: [
+        { startsAt: { less_than_equal: now } },
+        { or: [{ endsAt: { exists: false } }, { endsAt: { greater_than: now } }] },
+      ],
+    },
+    sort: '-startsAt',
+    limit: 6,
+    depth: 1,
+  })
+  const rank = { urgent: 0, celebrate: 1, standard: 2 } as Record<string, number>
+  return docs.sort((a, b) => (rank[a.style] ?? 2) - (rank[b.style] ?? 2)).slice(0, 3)
+})
 
 /**
  * The parent feed: public and parents-only items together. Parents-only items are
@@ -126,7 +171,7 @@ export async function getParentFeed() {
   const { payload, draft } = await reader()
   const base: Where = draft ? {} : { _status: { equals: 'published' } }
   const [events, news] = await Promise.all([
-    payload.find({ collection: 'events', where: await scoped({ and: [base, upcoming] }), sort: 'startsAt', limit: 20, draft, overrideAccess: true }),
+    payload.find({ collection: 'events', where: await scoped({ and: [base, upcomingWhere()] }), sort: 'startsAt', limit: 20, draft, overrideAccess: true }),
     payload.find({ collection: 'news', where: await scoped(base), sort: '-date', limit: 20, draft, overrideAccess: true }),
   ])
   return { events: events.docs, news: news.docs }
@@ -152,6 +197,24 @@ export function formatDate(iso: string, opts: { withTime?: boolean } = {}) {
   if (!opts.withTime) return date
   const time = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: tz })
   return `${date} · ${time}`
+}
+
+/**
+ * When an event happens, in words: "Fri, Nov 14 · 6:00 PM – 8:00 PM",
+ * "Fri, Nov 14 (all day)", "Mon, Dec 21 – Fri, Jan 1".
+ */
+export function eventWhen(e: Pick<Event, 'startsAt' | 'endsAt' | 'allDay'>): string {
+  const tz = process.env.SCHOOL_TIMEZONE || 'America/New_York'
+  const day = (iso: string) => formatDate(iso)
+  const time = (iso: string) => new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: tz })
+  const sameDay = (a: string, b: string) => ymd(a, tz) === ymd(b, tz)
+  if (e.allDay) {
+    if (!e.endsAt || sameDay(e.startsAt, e.endsAt)) return `${day(e.startsAt)} (all day)`
+    return `${day(e.startsAt)} – ${day(e.endsAt)}`
+  }
+  if (!e.endsAt) return formatDate(e.startsAt, { withTime: true })
+  if (sameDay(e.startsAt, e.endsAt)) return `${formatDate(e.startsAt, { withTime: true })} – ${time(e.endsAt)}`
+  return `${formatDate(e.startsAt, { withTime: true })} – ${formatDate(e.endsAt, { withTime: true })}`
 }
 
 /**
@@ -219,4 +282,11 @@ export async function searchSite(q: string, limit = 30) {
   const t = term.toLowerCase()
   // Title matches first, then the plugin's priority (pages, programs, events, news).
   return (res.docs as any[]).sort((a, b) => Number(!String(a.title).toLowerCase().includes(t)) - Number(!String(b.title).toLowerCase().includes(t)))
+}
+
+/** This school's subscribe feed address (with ?school= on a shared demo address). */
+export async function calendarFeedUrl(): Promise<string> {
+  const [origin, school] = await Promise.all([siteOrigin(), currentSchool()])
+  const own = (school?.domains ?? []).length > 0
+  return `${origin}/calendar.ics${!own && school?.slug ? `?school=${encodeURIComponent(school.slug)}` : ''}`
 }

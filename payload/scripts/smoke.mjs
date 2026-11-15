@@ -62,7 +62,7 @@ async function checkSchool(school, auth) {
   // The shared demo address picks a school with this link.
   await get(`/next/school/${school.slug}`, { expect: [302, 303, 307, 308], html: false })
 
-  for (const path of ['/', '/events', '/news', '/programs', '/staff']) await get(path, { cookie })
+  for (const path of ['/', '/events', '/events?view=month', '/calendar.ics', '/news', '/programs', '/staff']) await get(path, { cookie })
 
   if (!auth) return []
   const pages = await items('pages', school, auth)
@@ -94,7 +94,7 @@ async function checkEditor(cookie, pagesBySchool) {
   // Thread G: the Analytics page, once per period, and School settings (Analytics tab lives there).
   for (const days of [7, 28, 90]) await get(`/admin/analytics?days=${days}`, { cookie })
   await get('/admin/collections/school-settings', { cookie, expect: [200, 302, 307] })
-  for (const collection of ['pages', 'events', 'news', 'programs', 'staff', 'media']) {
+  for (const collection of ['pages', 'events', 'news', 'news-categories', 'announcements', 'calendar-feeds', 'programs', 'staff', 'media']) {
     await get(`/admin/collections/${collection}`, { cookie })
   }
   // Open one page in the editor per school: this renders every element's form.

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import PageHeader from "@/components/PageHeader";
-import { currentSchool, formatDate, getParentFeed, getParentPassword } from "@/lib/data";
+import { currentSchool, formatDate, getParentFeed, getParentPassword, eventWhen } from "@/lib/data";
 
 export const metadata = { title: "Parent feed", robots: { index: false } };
 
@@ -71,7 +71,7 @@ export default async function ParentsPage({ searchParams }: PageProps<"/parents"
             {events.map((e) => (
               <li key={e.id} className="rounded-2xl border border-line p-5">
                 <div className="mb-2 flex items-center justify-between gap-3">
-                  <span className="text-sm font-semibold text-brand">{formatDate(e.startsAt, { withTime: true })}</span>
+                  <span className="text-sm font-semibold text-brand">{eventWhen(e)}</span>
                   <Badge audience={e.audience} />
                 </div>
                 <p className="font-heading text-lg">{e.title}</p>

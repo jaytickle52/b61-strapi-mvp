@@ -3,7 +3,8 @@ import type { Page } from '@/payload-types'
 import { asMedia, focusOf, imgProps } from '../../lib/media'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { BandHead, Buttons, eruleClass, revealAttr } from '../../kit/render/parts'
-import LiteVideo, { parseVideo } from '../../kit/render/LiteVideo'
+import LiteVideo from '../../kit/render/LiteVideo'
+import { parseVideo } from '../../kit/video'
 import GalleryInit from './GalleryInit'
 
 export type GalleryBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Gallery' }>

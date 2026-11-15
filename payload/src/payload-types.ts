@@ -69,9 +69,12 @@ export interface Config {
   collections: {
     pages: Page;
     events: Event;
+    'calendar-feeds': CalendarFeed;
     news: News;
+    announcements: Announcement;
     programs: Program;
     staff: Staff;
+    'news-categories': NewsCategory;
     media: Media;
     documents: Document;
     'form-uploads': FormUpload;
@@ -98,9 +101,12 @@ export interface Config {
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
+    'calendar-feeds': CalendarFeedsSelect<false> | CalendarFeedsSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
+    announcements: AnnouncementsSelect<false> | AnnouncementsSelect<true>;
     programs: ProgramsSelect<false> | ProgramsSelect<true>;
     staff: StaffSelect<false> | StaffSelect<true>;
+    'news-categories': NewsCategoriesSelect<false> | NewsCategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
     'form-uploads': FormUploadsSelect<false> | FormUploadsSelect<true>;
@@ -123,8 +129,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'payload-jobs-stats': PayloadJobsStat;
+  };
+  globalsSelect: {
+    'payload-jobs-stats': PayloadJobsStatsSelect<false> | PayloadJobsStatsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -132,6 +142,7 @@ export interface Config {
   user: User;
   jobs: {
     tasks: {
+      importCalendars: TaskImportCalendars;
       schedulePublish: TaskSchedulePublish;
       inline: {
         input: unknown;
@@ -322,7 +333,7 @@ export interface Page {
               | null;
             columns?: ('1' | '2' | '3') | null;
             /**
-             * YouTube or Vimeo. The player loads only when someone presses play.
+             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
              */
             video?: string | null;
             imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
@@ -661,7 +672,7 @@ export interface Page {
               | null;
             scrollHint?: string | null;
             /**
-             * YouTube or Vimeo. The player loads only when someone presses play.
+             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
              */
             video?: string | null;
             buttons?:
@@ -930,7 +941,7 @@ export interface Page {
                               | null;
                             columns?: ('1' | '2' | '3') | null;
                             /**
-                             * YouTube or Vimeo. The player loads only when someone presses play.
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
@@ -1235,7 +1246,7 @@ export interface Page {
                               | null;
                             columns?: ('1' | '2' | '3') | null;
                             /**
-                             * YouTube or Vimeo. The player loads only when someone presses play.
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
@@ -1489,7 +1500,7 @@ export interface Page {
                         | null;
                       columns?: ('1' | '2' | '3') | null;
                       /**
-                       * YouTube or Vimeo. The player loads only when someone presses play.
+                       * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
                        */
                       video?: string | null;
                       imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
@@ -1758,7 +1769,7 @@ export interface Page {
                         | null;
                       scrollHint?: string | null;
                       /**
-                       * YouTube or Vimeo. The player loads only when someone presses play.
+                       * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
                        */
                       video?: string | null;
                       buttons?:
@@ -2329,7 +2340,7 @@ export interface Page {
                         | null;
                       columns?: ('1' | '2' | '3') | null;
                       /**
-                       * YouTube or Vimeo. The player loads only when someone presses play.
+                       * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
                        */
                       video?: string | null;
                       imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
@@ -2598,7 +2609,7 @@ export interface Page {
                         | null;
                       scrollHint?: string | null;
                       /**
-                       * YouTube or Vimeo. The player loads only when someone presses play.
+                       * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
                        */
                       video?: string | null;
                       buttons?:
@@ -3785,7 +3796,7 @@ export interface Form {
   createdAt: string;
 }
 /**
- * Enter an event once: it shows on the website, calendars and the parent feed.
+ * Enter an event once: it shows on the website, the calendar, the subscribe feed and the parent feed.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "events".
@@ -3799,10 +3810,20 @@ export interface Event {
    */
   generateSlug?: boolean | null;
   slug: string;
+  /**
+   * No start time: a holiday, a break, a whole-day trip. Spanning several days? Set the last day in "Ends".
+   */
+  allDay?: boolean | null;
   startsAt: string;
   endsAt?: string | null;
   location?: string | null;
   audience: 'public' | 'parents';
+  /**
+   * Copied from this calendar feed. Change it in the original calendar: edits here are replaced at the next import.
+   */
+  importedFrom?: (number | null) | CalendarFeed;
+  importUid?: string | null;
+  importHash?: string | null;
   /**
    * Short version for cards, the app and the parent feed
    */
@@ -3840,6 +3861,33 @@ export interface Event {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Copy events in from another calendar (Google, Outlook, athletics). Imported once a day; use "Import now" after adding one.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "calendar-feeds".
+ */
+export interface CalendarFeed {
+  id: number;
+  school?: (number | null) | School;
+  /**
+   * Shown next to each imported event on the calendar.
+   */
+  name: string;
+  /**
+   * Google Calendar: Settings → the calendar → "Public address in iCal format" (or the secret address). Outlook: Publish calendar → ICS link. webcal:// links work too.
+   */
+  url: string;
+  audience: 'public' | 'parents';
+  /**
+   * Untick to pause. Events already imported stay until you delete this feed.
+   */
+  active?: boolean | null;
+  lastImportedAt?: string | null;
+  lastResult?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "news".
  */
@@ -3854,6 +3902,10 @@ export interface News {
   slug: string;
   date: string;
   audience: 'public' | 'parents';
+  /**
+   * Visitors can filter the News page by these.
+   */
+  categories?: (number | NewsCategory)[] | null;
   summary?: string | null;
   body?: {
     root: {
@@ -3888,11 +3940,75 @@ export interface News {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Drag to set the order the categories appear on the News page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news-categories".
+ */
+export interface NewsCategory {
+  id: number;
+  _order?: string | null;
+  school?: (number | null) | School;
+  name: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * A short message across the top of the website between two dates: closings, deadlines, big news.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "announcements".
+ */
+export interface Announcement {
+  id: number;
+  school?: (number | null) | School;
+  /**
+   * Shown in bold, e.g. "School closed Monday".
+   */
+  title: string;
+  /**
+   * One or two short sentences. Optional.
+   */
+  message?: string | null;
+  button?: {
+    label?: string | null;
+    link?: {
+      type?: ('page' | 'document' | 'url') | null;
+      page?: (number | null) | Page;
+      document?: (number | null) | Document;
+      url?: string | null;
+      newTab?: boolean | null;
+    };
+  };
+  style: 'standard' | 'urgent' | 'celebrate';
+  startsAt: string;
+  /**
+   * Leave empty to keep it up until you unpublish it.
+   */
+  endsAt?: string | null;
+  showOn: 'all' | 'home';
+  /**
+   * Once closed, it stays closed on that visitor's browser.
+   */
+  dismissible?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * Drag the handle at the start of each row to change the order on the website.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "programs".
  */
 export interface Program {
   id: number;
+  _order?: string | null;
   school?: (number | null) | School;
   name: string;
   /**
@@ -3939,11 +4055,14 @@ export interface Program {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Drag the handle at the start of each row to change the order on the website.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "staff".
  */
 export interface Staff {
   id: number;
+  _order?: string | null;
   school?: (number | null) | School;
   name: string;
   role: string;
@@ -4434,7 +4553,7 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug: 'inline' | 'schedulePublish';
+        taskSlug: 'inline' | 'importCalendars' | 'schedulePublish';
         taskID: string;
         input?:
           | {
@@ -4467,10 +4586,19 @@ export interface PayloadJob {
         id?: string | null;
       }[]
     | null;
-  taskSlug?: ('inline' | 'schedulePublish') | null;
+  taskSlug?: ('inline' | 'importCalendars' | 'schedulePublish') | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
+  meta?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -4490,8 +4618,16 @@ export interface PayloadLockedDocument {
         value: number | Event;
       } | null)
     | ({
+        relationTo: 'calendar-feeds';
+        value: number | CalendarFeed;
+      } | null)
+    | ({
         relationTo: 'news';
         value: number | News;
+      } | null)
+    | ({
+        relationTo: 'announcements';
+        value: number | Announcement;
       } | null)
     | ({
         relationTo: 'programs';
@@ -4500,6 +4636,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'staff';
         value: number | Staff;
+      } | null)
+    | ({
+        relationTo: 'news-categories';
+        value: number | NewsCategory;
       } | null)
     | ({
         relationTo: 'media';
@@ -6895,10 +7035,14 @@ export interface EventsSelect<T extends boolean = true> {
   title?: T;
   generateSlug?: T;
   slug?: T;
+  allDay?: T;
   startsAt?: T;
   endsAt?: T;
   location?: T;
   audience?: T;
+  importedFrom?: T;
+  importUid?: T;
+  importHash?: T;
   summary?: T;
   description?: T;
   image?: T;
@@ -6916,6 +7060,21 @@ export interface EventsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "calendar-feeds_select".
+ */
+export interface CalendarFeedsSelect<T extends boolean = true> {
+  school?: T;
+  name?: T;
+  url?: T;
+  audience?: T;
+  active?: T;
+  lastImportedAt?: T;
+  lastResult?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "news_select".
  */
 export interface NewsSelect<T extends boolean = true> {
@@ -6925,6 +7084,7 @@ export interface NewsSelect<T extends boolean = true> {
   slug?: T;
   date?: T;
   audience?: T;
+  categories?: T;
   summary?: T;
   body?: T;
   image?: T;
@@ -6942,9 +7102,41 @@ export interface NewsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "announcements_select".
+ */
+export interface AnnouncementsSelect<T extends boolean = true> {
+  school?: T;
+  title?: T;
+  message?: T;
+  button?:
+    | T
+    | {
+        label?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              page?: T;
+              document?: T;
+              url?: T;
+              newTab?: T;
+            };
+      };
+  style?: T;
+  startsAt?: T;
+  endsAt?: T;
+  showOn?: T;
+  dismissible?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "programs_select".
  */
 export interface ProgramsSelect<T extends boolean = true> {
+  _order?: T;
   school?: T;
   name?: T;
   generateSlug?: T;
@@ -6971,6 +7163,7 @@ export interface ProgramsSelect<T extends boolean = true> {
  * via the `definition` "staff_select".
  */
 export interface StaffSelect<T extends boolean = true> {
+  _order?: T;
   school?: T;
   name?: T;
   role?: T;
@@ -6982,6 +7175,19 @@ export interface StaffSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news-categories_select".
+ */
+export interface NewsCategoriesSelect<T extends boolean = true> {
+  _order?: T;
+  school?: T;
+  name?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -7701,6 +7907,7 @@ export interface PayloadJobsSelect<T extends boolean = true> {
   queue?: T;
   waitUntil?: T;
   processing?: T;
+  meta?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -7751,6 +7958,34 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs-stats".
+ */
+export interface PayloadJobsStat {
+  id: number;
+  stats?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs-stats_select".
+ */
+export interface PayloadJobsStatsSelect<T extends boolean = true> {
+  stats?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collections_widget".
  */
 export interface CollectionsWidget {
@@ -7758,6 +7993,16 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskImportCalendars".
+ */
+export interface TaskImportCalendars {
+  input?: unknown;
+  output: {
+    summary?: string | null;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

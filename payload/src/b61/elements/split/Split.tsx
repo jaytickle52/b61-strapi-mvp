@@ -4,7 +4,8 @@ import { asMedia, focusOf, imgProps } from '../../lib/media'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { Buttons, ContentBlocks, HeadingLines, revealAttr } from '../../kit/render/parts'
 import { fromBody } from '../../kit/body'
-import LiteVideo, { parseVideo } from '../../kit/render/LiteVideo'
+import LiteVideo from '../../kit/render/LiteVideo'
+import { parseVideo } from '../../kit/video'
 
 export type SplitBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Split' }>
 

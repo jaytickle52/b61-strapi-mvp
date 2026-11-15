@@ -1,3 +1,4 @@
+import { ymd } from '@/events/time'
 import { getSettings, mediaUrl, siteOrigin } from '@/lib/data'
 
 const SOCIAL_KEYS = ['facebook', 'instagram', 'youtube', 'x', 'linkedin', 'tiktok', 'vimeo']
@@ -28,8 +29,9 @@ export async function eventSchema(e: any) {
     '@context': 'https://schema.org',
     '@type': 'Event',
     name: e.title,
-    startDate: e.startsAt,
-    endDate: e.endsAt || undefined,
+    // All-day events are dates on the school's calendar, not moments.
+    startDate: e.allDay ? ymd(e.startsAt) : e.startsAt,
+    endDate: e.endsAt ? (e.allDay ? ymd(e.endsAt) : e.endsAt) : undefined,
     eventStatus: 'https://schema.org/EventScheduled',
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     location: { '@type': 'Place', name: e.location || s.schoolName, address: s.address ? s.address.replace(/\n+/g, ', ') : undefined },
