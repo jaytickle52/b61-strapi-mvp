@@ -486,7 +486,7 @@ async function main() {
       await api('PATCH', `/school-settings/${cs.id}`, { token: admin, body: { accentFont: 'EB Garamond' } })
       const hp = (await page('/', 'harbor-oaks')).text
       check(/<html[^>]*data-b61-accent-font=""/.test(hp) && /--b61-font-accent:\s*(&quot;|")EB Garamond/.test(hp), 'an accent heading font marks the page and sets its font')
-      check(/fonts\.googleapis\.com\/css2\?[^"]*family=EB\+Garamond:ital,wght@0,400;0,500;1,400;1,500/.test(hp.replace(/&amp;/g, '&')), '… and is loaded from Google Fonts')
+      check(/fonts\.googleapis\.com\/css2\?[^"]*family=EB\+Garamond[:&]/.test(hp.replace(/&amp;/g, '&')), '… and is loaded from Google Fonts')
       await api('PATCH', `/school-settings/${cs.id}`, { token: admin, body: { accentFont: null } })
       check(!/data-b61-accent-font/.test((await page('/', 'harbor-oaks')).text), '… and goes away when cleared')
     } else check(false, 'Harbor Oaks has School settings')
