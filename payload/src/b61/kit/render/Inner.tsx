@@ -17,7 +17,7 @@ import B61Form from '../../elements/form/Form'
 import EditMark, { elementName } from '../preview/EditMark'
 import { Fragment } from 'react'
 
-export const INNER: Record<string, (p: { block: any; index?: number }) => any> = {
+export const INNER: Record<string, (p: { block: any; index?: number; nested?: boolean }) => any> = {
   b61Split: B61Split,
   b61Prose: B61Prose,
   b61Cta: B61Cta,
@@ -47,7 +47,7 @@ export default function Inner({ blocks, path }: { blocks?: any[] | null; path?: 
           <Fragment key={b.id ?? i}>
             <WithClass block={b}>
               {path && <EditMark path={`${path}.${i}`} label={elementName(b.blockType)} />}
-              <El block={b} index={i + 1} />
+              <El block={b} index={i + 1} nested />
             </WithClass>
           </Fragment>
         )

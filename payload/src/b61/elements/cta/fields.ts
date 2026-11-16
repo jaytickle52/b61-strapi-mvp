@@ -83,7 +83,7 @@ export const B61Cta = defineElement({
       paddingFields(),
     ],
     color: [
-      { ...surfaceField(), defaultValue: 'soft' } as any,
+      surfaceField({ standalone: 'soft' }),
       dropdown(
         'textPanel',
         'Text panel',

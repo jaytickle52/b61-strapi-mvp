@@ -314,3 +314,13 @@ Same rule as section 16: bigger layout choices are Banner 61-only (Design > Adva
   one colour: grey on light bands, white on dark ones. The logo's alt text is its name.
 - CSS: `styles/patterns.css` sections 10-13. Demo: **More layout ideas** (`/more-layout-ideas`)
   on both demo schools; Element library version 4 adds Logos.
+
+## 18. A Section's colour is shared (Nov 2026)
+
+Elements inside a Section, Tabs or Carousel share the container's background colour unless an
+element sets its own Surface (Jay, 16 Nov 2026). Most elements start at None, so they already do.
+Stats Band and CTA Band have their own colour when they stand alone, so their Surface stores no
+starting value (`surfaceField({ standalone: 'soft' })`): on their own they show Light wash; inside
+a container they show None. The editor highlights the choice in effect (Segmented's `unset`,
+nesting read from the field's path) and the element applies the same rule (`Inner` passes
+`nested`). Picking any Surface stores it and wins in both places.

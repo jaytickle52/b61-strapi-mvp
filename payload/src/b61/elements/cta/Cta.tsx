@@ -11,7 +11,7 @@ export type CtaBlock = Extract<NonNullable<Page['sections']>[number], { blockTyp
  * B61 CTA Band markup, ported from elements/CTA_Band/html.twig (plugin 1.77.1).
  * Same classes and structure, so the plugin's stylesheet styles it unchanged.
  */
-export default function B61Cta({ block, index = 0 }: { block: CtaBlock; index?: number }) {
+export default function B61Cta({ block, index = 0, nested = false }: { block: CtaBlock; index?: number; nested?: boolean }) {
   const ri = revealAttr(block.entrance)
   const rv = block.entrance === 'off' ? 'off' : 'on'
   const Heading = resolveHeadingLevel(block.headingLevel, index)
@@ -28,7 +28,8 @@ export default function B61Cta({ block, index = 0 }: { block: CtaBlock; index?: 
   const panel = block.textPanel ?? 'none'
   const panelled = panel !== 'none'
   const bare = Boolean(bg) && !panelled
-  const choice = block.surface ?? 'soft'
+  // Not chosen: Light wash on its own, None inside a container (shares its colour).
+  const choice = block.surface ?? (nested ? 'none' : 'soft')
   // Copy never sits on a bare photo: no surface (or accent) over a photo reads dark.
   const surface = bare && (choice === 'none' || choice === 'accent') ? 'dark' : choice
   // The overlay is what the editor set (default 70). It used to be raised silently
