@@ -294,7 +294,7 @@ export interface Page {
                 }[]
               | null;
             /**
-             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
+             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
              */
             body?: {
               root: {
@@ -384,7 +384,7 @@ export interface Page {
                 }[]
               | null;
             /**
-             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
+             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
              */
             body?: {
               root: {
@@ -938,7 +938,7 @@ export interface Page {
                                 }[]
                               | null;
                             /**
-                             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
+                             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                              */
                             body?: {
                               root: {
@@ -1028,7 +1028,7 @@ export interface Page {
                                 }[]
                               | null;
                             /**
-                             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
+                             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                              */
                             body?: {
                               root: {
@@ -1263,7 +1263,7 @@ export interface Page {
                                 }[]
                               | null;
                             /**
-                             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
+                             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                              */
                             body?: {
                               root: {
@@ -1353,7 +1353,7 @@ export interface Page {
                                 }[]
                               | null;
                             /**
-                             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
+                             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                              */
                             body?: {
                               root: {
@@ -1459,7 +1459,7 @@ export interface Page {
                           }[]
                         | null;
                       /**
-                       * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
+                       * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                        */
                       body?: {
                         root: {
@@ -1533,7 +1533,7 @@ export interface Page {
                           }[]
                         | null;
                       /**
-                       * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
+                       * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                        */
                       body?: {
                         root: {
@@ -2133,7 +2133,7 @@ export interface Page {
                           }[]
                         | null;
                       /**
-                       * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
+                       * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                        */
                       body?: {
                         root: {
@@ -2360,7 +2360,7 @@ export interface Page {
                           }[]
                         | null;
                       /**
-                       * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
+                       * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                        */
                       body?: {
                         root: {
@@ -2434,7 +2434,7 @@ export interface Page {
                           }[]
                         | null;
                       /**
-                       * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
+                       * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                        */
                       body?: {
                         root: {
@@ -3034,7 +3034,7 @@ export interface Page {
                           }[]
                         | null;
                       /**
-                       * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
+                       * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                        */
                       body?: {
                         root: {
@@ -3237,7 +3237,7 @@ export interface Page {
                 }[]
               | null;
             /**
-             * Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.
+             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
              */
             body?: {
               root: {

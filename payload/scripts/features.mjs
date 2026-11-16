@@ -1,6 +1,6 @@
 // School features test (Thread F): announcements, the events calendar and its
 // subscribe feed, calendar feed import, news categories, drag ordering, page
-// templates, Bunny video links and uploads, branding (colors, fonts, site icon), site tone and custom CSS, style themes and dials. Runs against a site with the demo schools
+// templates, Bunny video links and uploads, branding (colors, fonts, site icon), site tone and custom CSS, style themes and dials, and the Content editor's Button, Callout and Table. Runs against a site with the demo schools
 // and a Banner 61 admin account (the smoke test creates one):
 //
 //   BASE_URL=http://localhost:3000 SMOKE_EMAIL=... SMOKE_PASSWORD=... node scripts/features.mjs
@@ -386,6 +386,43 @@ async function main() {
     await api('PATCH', `/school-settings/${hs2.id}`, { token: admin, body: { style: hs2.style ?? { theme: null }, _status: 'published' } })
     const u2 = (await api('GET', `/users?where[email][equals]=${encodeURIComponent(edEmail2)}&depth=0`, { token: admin })).json?.docs?.[0]
     if (u2) await api('DELETE', `/users/${u2.id}`, { token: admin })
+  }
+
+  // ----- Content editor: Button, Callout, Table -------------------------------
+  console.log('\nContent editor (button, callout, table)')
+  {
+    const t = (text) => ({ type: 'text', text, version: 1, format: 0, detail: 0, mode: 'normal', style: '' })
+    const para = (text) => ({ type: 'paragraph', version: 1, format: '', indent: 0, direction: 'ltr', textFormat: 0, children: [t(text)] })
+    const cell = (text, headerState = 0) => ({ type: 'tablecell', version: 1, headerState, colSpan: 1, rowSpan: 1, format: '', indent: 0, direction: 'ltr', children: [para(text)] })
+    const row = (cells) => ({ type: 'tablerow', version: 1, format: '', indent: 0, direction: 'ltr', children: cells })
+    const blockNode = (blockType, fields) => ({ type: 'block', version: 2, format: '', fields: { id: `t${RUN}${blockType}`.slice(-24), blockName: '', blockType, ...fields } })
+    const body = {
+      root: {
+        type: 'root', version: 1, format: '', indent: 0, direction: 'ltr',
+        children: [
+          para('Tours run every Tuesday.'),
+          blockNode('bodyButton', { label: `Schedule a tour ${RUN}`, variant: 'primary', link: { type: 'url', url: '/inquire', newTab: false } }),
+          blockNode('callout', { tone: 'important', title: `Applications due March 1 ${RUN}`, text: 'Late applications join the waiting list.', linkLabel: 'Start your application', link: { type: 'url', url: '/apply', newTab: false } }),
+          {
+            type: 'table', version: 1, format: '', indent: 0, direction: 'ltr',
+            children: [row([cell('Grade', 1), cell('Tuition', 1)]), row([cell('K-5'), cell(`$9,800 ${RUN}`)]), row([cell('6-8'), cell('$10,900')])],
+          },
+        ],
+      },
+    }
+    const made = await api('POST', '/pages/from-template', { token: admin, body: { template: 'about', school: harbor, title: `Editor ${RUN}` } })
+    const pid = made.json?.id
+    const pr = pid
+      ? await api('PATCH', `/pages/${pid}`, { token: admin, body: { sections: [{ blockType: 'b61Prose', body }], _status: 'published' } })
+      : { status: 0 }
+    check(pr.status === 200, 'a Prose body with a Button, a Callout and a Table saves')
+    const slug = pr.json?.doc?.slug
+    const ed = slug ? visible((await page(`/${slug}`, 'harbor-oaks')).text) : ''
+    check(/class="b61-body-btn b61-block[^"]*"[^>]*>\s*<a class="b61-btn b61-btn--primary" href="\/inquire">Schedule a tour/.test(ed), 'the Button renders inside the text, linked')
+    check(ed.includes('class="b61-callout b61-callout--important') && ed.includes('role="note"') && ed.includes(`Applications due March 1 ${RUN}`) && ed.includes('href="/apply"'), 'the Callout renders with its tone, title and link')
+    check(ed.includes('class="b61-table"') && /<thead><tr><th scope="col">/.test(ed) && ed.includes(`$9,800 ${RUN}`), 'the Table renders with a header row')
+    check(!/<t[dh][^>]*style=/.test(ed), "… and carries no hard-coded colours, so themes and dark sites can style it")
+    if (pid) await api('DELETE', `/pages/${pid}`, { token: admin })
   }
 
   // ----- Tidy up --------------------------------------------------------------
