@@ -21,7 +21,7 @@ export const B61Gallery = defineElement({
   content: [
     panel('Heading', bandHeadFields({ intro: true })),
     panel('Media', [
-      segmented('media', 'Show', [['photo', 'Photo', 'image'], ['gallery', 'Gallery', 'slideshow'], ['video', 'Video', 'video']], { default: 'gallery' }),
+      segmented('media', 'Type', [['photo', 'Photo', 'image'], ['gallery', 'Gallery', 'slideshow'], ['video', 'Video', 'video']], { default: 'gallery' }),
       photo('image', 'Photo', { when: { field: 'media', in: ['photo'] } }),
       { name: 'caption', label: 'Caption', type: 'text', admin: { condition: (_, s) => s?.media === 'photo' } },
       list(
@@ -64,7 +64,7 @@ export const B61Gallery = defineElement({
         segmented(
           'imageShape',
           'Photo shape',
-          [['fixed', 'Fixed'], ['portrait', 'Portrait'], ['square', 'Square'], ['landscape', 'Landscape'], ['wide', 'Wide']],
+          [['fixed', 'Fixed height'], ['portrait', 'Portrait'], ['square', 'Square'], ['landscape', 'Landscape'], ['wide', 'Wide']],
           { default: 'fixed', condition: (_, s) => s?.media !== 'video' && s?.galleryLayout !== 'masonry' },
         ),
       ],

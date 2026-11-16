@@ -3,8 +3,10 @@ import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloa
 import { HeadingCheck as HeadingCheck_78f126e990ba6279bbc15d0061628924 } from '@/b61/kit/admin/HeadingCheck'
 import { Segmented as Segmented_4a8478d6bbe78531e44a79dc8f1686a4 } from '@/b61/kit/admin/Segmented'
 import { LabelRow as LabelRow_0cc688d8d4d520fe6c0589bb23ce8cf3 } from '@/b61/kit/admin/RowLabel'
-import { StepSlider as StepSlider_f8159974f8a8e5772bb18ab914bb2e3a } from '@/b61/kit/admin/StepSlider'
 import { PanelLabel as PanelLabel_822d3fcf1e5733e64d4be91dd548423f } from '@/b61/kit/admin/PanelLabel'
+import { VideoField as VideoField_1c907203a565dafbdb3d125810ce33da } from '@/video/VideoField'
+import { Unit as Unit_57142159af0796baea3c3ebe02764b73 } from '@/b61/kit/admin/Unit'
+import { StepSlider as StepSlider_f8159974f8a8e5772bb18ab914bb2e3a } from '@/b61/kit/admin/StepSlider'
 import { ElementLabel as ElementLabel_8a166f4ae5e614eee4ffba9083ef36c1 } from '@/b61/kit/admin/ElementLabel'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -21,7 +23,6 @@ import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { HeadingFeatureClient as HeadingFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ParagraphFeatureClient as ParagraphFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
-import { VideoField as VideoField_1c907203a565dafbdb3d125810ce33da } from '@/video/VideoField'
 import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { UsagePanel as UsagePanel_8819049e3181a572c0a87beeced76e02 } from '@/usage/UsagePanel'
 import { OverviewComponent as OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
@@ -70,10 +71,10 @@ import { AnalyticsNavLink as AnalyticsNavLink_de3ee0bfb1cb67479b3c8b4bee96e318 }
 import { Welcome as Welcome_ff2f921263b589433fe08bc93d20011e } from '@/brand/Welcome'
 import { BeforeLogin as BeforeLogin_13385b62538c205a089df88fcb53324b } from '@/brand/BeforeLogin'
 import { TenantSelector as TenantSelector_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
-import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 import { TenantSelectionProvider as TenantSelectionProvider_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
 import { AnalyticsView as AnalyticsView_854d8e14c63a6f219fe1972ddfe84975 } from '@/analytics/AnalyticsView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
+import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -82,8 +83,10 @@ export const importMap = {
   "@/b61/kit/admin/HeadingCheck#HeadingCheck": HeadingCheck_78f126e990ba6279bbc15d0061628924,
   "@/b61/kit/admin/Segmented#Segmented": Segmented_4a8478d6bbe78531e44a79dc8f1686a4,
   "@/b61/kit/admin/RowLabel#LabelRow": LabelRow_0cc688d8d4d520fe6c0589bb23ce8cf3,
-  "@/b61/kit/admin/StepSlider#StepSlider": StepSlider_f8159974f8a8e5772bb18ab914bb2e3a,
   "@/b61/kit/admin/PanelLabel#PanelLabel": PanelLabel_822d3fcf1e5733e64d4be91dd548423f,
+  "@/video/VideoField#VideoField": VideoField_1c907203a565dafbdb3d125810ce33da,
+  "@/b61/kit/admin/Unit#Unit": Unit_57142159af0796baea3c3ebe02764b73,
+  "@/b61/kit/admin/StepSlider#StepSlider": StepSlider_f8159974f8a8e5772bb18ab914bb2e3a,
   "@/b61/kit/admin/ElementLabel#ElementLabel": ElementLabel_8a166f4ae5e614eee4ffba9083ef36c1,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -100,7 +103,6 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#HeadingFeatureClient": HeadingFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ParagraphFeatureClient": ParagraphFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
-  "@/video/VideoField#VideoField": VideoField_1c907203a565dafbdb3d125810ce33da,
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/usage/UsagePanel#UsagePanel": UsagePanel_8819049e3181a572c0a87beeced76e02,
   "@payloadcms/plugin-seo/client#OverviewComponent": OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
@@ -149,8 +151,8 @@ export const importMap = {
   "@/brand/Welcome#Welcome": Welcome_ff2f921263b589433fe08bc93d20011e,
   "@/brand/BeforeLogin#BeforeLogin": BeforeLogin_13385b62538c205a089df88fcb53324b,
   "@payloadcms/plugin-multi-tenant/rsc#TenantSelector": TenantSelector_d6d5f193a167989e2ee7d14202901e62,
-  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "@payloadcms/plugin-multi-tenant/rsc#TenantSelectionProvider": TenantSelectionProvider_d6d5f193a167989e2ee7d14202901e62,
   "@/analytics/AnalyticsView#AnalyticsView": AnalyticsView_854d8e14c63a6f219fe1972ddfe84975,
-  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
+  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
+  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e
 }

@@ -3,7 +3,8 @@ import { dropdown, link, segmented } from '../../kit/controls'
 import { entranceField } from '../../kit/groups'
 
 /* B61 BUTTON BAR, port of Banner 61 Elements' B61 Button Bar (plugin 1.77.1): two big half-width links. */
-const COLORS: [string, string][] = [['dark', 'Dark'], ['accent', 'Accent'], ['soft', 'Light wash'], ['plain', 'White']]
+// The kit's colour order: lightest to darkest, then Accent (audit 1.78.0).
+const COLORS: [string, string][] = [['plain', 'White'], ['soft', 'Light wash'], ['dark', 'Dark'], ['accent', 'Accent']]
 export const B61ButtonBar = defineElement({
   slug: 'b61ButtonBar',
   name: 'Button Bar',

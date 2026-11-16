@@ -1,6 +1,6 @@
 import { defineElement, panel } from '../../kit/element'
 import { dropdown, segmented, toggle } from '../../kit/controls'
-import { bandHeadFields, buttonsPanel, entranceField, eyebrowRuleField, list, paddingFields, surfaceField } from '../../kit/groups'
+import { bandHeadFields, buttonsPanel, entranceField, eyebrowRuleField, list, paddingFields, surfaceField, ITEM_SURFACES } from '../../kit/groups'
 
 /*
  * B61 STATS BAND, built on the B61 editing kit (see ../../EDITING-STANDARD.md).
@@ -55,7 +55,7 @@ export const B61StatsBand = defineElement({
     },
     color: [
       { ...surfaceField(), defaultValue: 'soft' } as any,
-      dropdown('itemSurface', 'Stat surface', [['card', 'Card'], ['light', 'Light'], ['soft', 'Soft'], ['dark', 'Dark'], ['accent', 'Accent'], ['outline', 'Outline']], {
+      dropdown('itemSurface', 'Stat surface', ITEM_SURFACES, {
         default: 'card',
         when: { field: 'itemStyle', in: ['boxed'] },
       }),

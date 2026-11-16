@@ -10,7 +10,6 @@ import {
   list,
   onlyImages,
   paddingFields,
-  subheadsField,
   surfaceField,
 } from '../../kit/groups'
 
@@ -49,7 +48,6 @@ export const B61CardGrid = defineElement({
   content: [
     panel('Heading', [
       ...headingFields({ levels: ['h2', 'h3', 'h4'] }),
-      subheadsField(),
       { name: 'intro', label: 'Intro', type: 'richText', editor: simpleEditor() },
     ]),
     panel('Cards', [
@@ -132,7 +130,7 @@ export const B61CardGrid = defineElement({
       ),
       segmented(
         'columns',
-        'Columns (cards in view)',
+        'Columns',
         [
           ['1', 'One'],
           ['2', 'Two'],
@@ -188,7 +186,7 @@ export const B61CardGrid = defineElement({
           ),
           {
             type: 'row',
-            fields: [toggle('showCounter', 'Counter (01 / 04)', { width: '50%' }), toggle('showProgress', 'Progress bar', { width: '50%' })],
+            fields: [toggle('showCounter', 'Slide counter', { width: '50%' }), toggle('showProgress', 'Progress bar', { width: '50%' })],
           },
         ],
         { when: carousel },
@@ -211,21 +209,21 @@ export const B61CardGrid = defineElement({
         ),
         segmented(
           'cardShape',
-          'Card shape',
+          'Photo shape',
           [
             ['portrait', 'Portrait'],
             ['square', 'Square'],
             ['landscape', 'Landscape'],
-            ['custom', 'Custom'],
+            ['custom', 'Custom ratio'],
           ],
           { default: 'portrait', when: overlayImg },
         ),
         segmented(
           'imageShape',
-          'Image shape',
+          'Photo shape',
           [
             ['fixed', 'Fixed height'],
-            ['custom', 'Custom'],
+            ['custom', 'Custom ratio'],
           ],
           { default: 'fixed', when: notOverlayImg },
         ),
@@ -260,6 +258,8 @@ export const B61CardGrid = defineElement({
         toggle('showNumbers', 'Show numbers', { when: { field: 'mediaType', in: ['image', 'none'] } }),
         {
           type: 'row',
+          // Only once a card has link text to style (audit 1.78.0).
+          admin: { condition: (_: unknown, s: any) => Array.isArray(s?.cards) && s.cards.some((c: any) => c?.linkText) && (s?.source ?? 'manual') === 'manual' },
           fields: [
             segmented(
               'ctaCase',
@@ -290,15 +290,15 @@ export const B61CardGrid = defineElement({
         'cardSurface',
         'Card surface',
         [
-          ['light', 'Light'],
-          ['soft', 'Soft'],
-          ['primary', 'Primary'],
+          ['light', 'White'],
+          ['soft', 'Light wash'],
+          ['primary', 'Dark'],
         ],
         { default: 'light', when: { field: 'cardStyle', in: ['flat', 'bordered'] } },
       ),
       segmented(
         'cardOverlay',
-        'Photo shade',
+        'Overlay',
         [
           ['none', 'None'],
           ['gradient', 'Gradient'],

@@ -38,7 +38,8 @@ if (stat?.label) cases.push({ name: 'Stat label (inside a closed row)', text: st
 if (cases.length < 3) throw new Error(`The demo home page changed: only ${cases.length} things to click`)
 
 const browser = await chromium.launch()
-const page = await browser.newPage({ viewport: { width: 1700, height: 1100 } })
+// Reduced motion: entrance animations would keep the clicked words moving.
+const page = await browser.newPage({ viewport: { width: 1700, height: 1100 }, reducedMotion: 'reduce' })
 await page.goto(`${BASE}/admin/login`)
 await page.fill('input[name="email"]', EMAIL)
 await page.fill('input[name="password"]', PASSWORD)
@@ -54,11 +55,11 @@ await frame.locator('main [data-b61-edit-path]').first().waitFor({ state: 'attac
 let failed = 0
 for (const c of cases) {
   // Inside the page's main content, so the header's buttons don't count.
-  const target = frame.locator('main').getByText(c.text, { exact: true }).first()
+  const target = frame.locator('main').getByText(c.text, { exact: true }).filter({ visible: true }).first()
   await target.scrollIntoViewIfNeeded()
   await target.click()
   let id = ''
-  for (let i = 0; i < 40 && !c.field.test(id); i++) {
+  for (let i = 0; i < 100 && !c.field.test(id); i++) {
     await page.waitForTimeout(100)
     id = await page.evaluate(() => document.activeElement?.id ?? '')
   }

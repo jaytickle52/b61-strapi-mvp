@@ -155,7 +155,7 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
       </div>
     ) : null
 
-  const hasHead = Boolean(block.eyebrow || hasHeading || (block.subheads ?? []).some((s) => s?.text) || block.intro)
+  const hasHead = Boolean(block.eyebrow || hasHeading || block.intro)
   const head = hasHead ? (
     <div className="b61-cards__head">
       {block.eyebrow && (
@@ -164,13 +164,6 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
         </span>
       )}
       <HeadingLines as={Heading} id={headingId} className="b61-cards__heading" lineClass="b61-cards__heading-line" lines={lines} ri={ri} />
-      {(block.subheads ?? [])
-        .filter((s) => s?.text)
-        .map((s, i) => (
-          <p key={s.id ?? i} className="b61-cards__subhead" {...ri}>
-            {s.text}
-          </p>
-        ))}
       {Boolean(block.intro) && (
         <div className="b61-cards__intro breakdance-rich-text-styles" {...ri}>
           <RichText data={block.intro as SerializedEditorState} disableContainer converters={b61Converters} />

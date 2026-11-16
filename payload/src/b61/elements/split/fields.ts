@@ -52,7 +52,7 @@ export const B61Split = defineElement({
     panel('Media', [
       segmented(
         'media',
-        'Show',
+        'Type',
         [
           ['photo', 'Photo', 'image'],
           ['gallery', 'Gallery', 'slideshow'],
@@ -87,7 +87,7 @@ export const B61Split = defineElement({
         'imageShape',
         'Photo shape',
         [
-          ['fixed', 'Fixed'],
+          ['fixed', 'Fixed height'],
           ['portrait', 'Portrait'],
           ['square', 'Square'],
           ['landscape', 'Landscape'],
@@ -97,7 +97,7 @@ export const B61Split = defineElement({
       ),
       {
         ...photo('badge', 'Badge'),
-        admin: { description: 'Optional. A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.' },
+        admin: { description: 'A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.' },
       } as any,
     ]),
   ],

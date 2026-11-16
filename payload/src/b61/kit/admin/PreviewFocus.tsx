@@ -221,9 +221,20 @@ export function PreviewFocus() {
       const nums = parts.map((p, i) => (/^\d+$/.test(p) ? i : -1)).filter((i) => i >= 0)
       const last = nums[nums.length - 1]
       const rowEl = () => (last === undefined ? null : document.getElementById(rowId(`${el}.${parts.slice(0, last).join('.')}`, Number(parts[last]))))
+      // The nearest thing on the way to the field that is drawn already: the field's row,
+      // then its list, then outer rows and lists, then the element's own row.
+      const nearest = (): Element | null => {
+        for (let k = nums.length - 1; k >= 0; k--) {
+          const list = `${el}.${parts.slice(0, nums[k]).join('.')}`
+          const found = document.getElementById(rowId(list, Number(parts[nums[k]]))) ?? document.getElementById(`field-${list.split('.').join('__')}`)
+          if (found) return found
+        }
+        const own = el.split('.')
+        return document.getElementById(rowId(own.slice(0, -1).join('.'), Number(own[own.length - 1])))
+      }
       let nudged = 0
       let panelOpened = false
-      for (let tries = 0; tries < 40 && mine === run; tries++) {
+      for (let tries = 0; tries < 60 && mine === run; tries++) {
         // The Content panel that holds the field (closed panels don't render their fields).
         if (!panelOpened) {
           const label = Array.from(document.querySelectorAll<HTMLElement>(`[data-b61-panel-of="${CSS.escape(el)}"]`)).find((l) =>
@@ -237,10 +248,13 @@ export function PreviewFocus() {
         }
         // Rich text editors carry their path as data-field-path instead of an id.
         const field = document.getElementById(id) ?? document.querySelector<HTMLElement>(`[data-field-path="${CSS.escape(`${el}.${rel}`)}"]`)
-        if (!field && tries % 6 === 5 && nudged < 4) {
+        if (!field && tries % 5 === 4 && nudged < 8) {
           // The editor only draws fields near the screen: bring the row (or the panel) into
           // view so the field gets drawn. A long element form can leave it below the fold.
-          const near = rowEl() ?? document.querySelector(`[data-b61-panel-of="${CSS.escape(el)}"]`)?.closest('.collapsible')
+          const near =
+            rowEl() ??
+            (panelOpened ? document.querySelector(`[data-b61-panel-of="${CSS.escape(el)}"][data-b61-holds~="${CSS.escape(parts[0])}"]`)?.closest('.collapsible') : null) ??
+            nearest()
           near?.scrollIntoView({ block: 'center' })
           nudged++
         }

@@ -15,7 +15,7 @@ export const B61Testimonial = defineElement({
       { name: 'eyebrow', label: 'Eyebrow', type: 'text' },
       { name: 'quote', label: 'Quote', type: 'textarea', required: true, admin: { rows: 3 } },
       { name: 'attribution', label: 'Attribution', type: 'text' },
-      { ...photo('watermark', 'Watermark logo'), admin: { description: 'A faint logo behind the quote (optional).' } },
+      { ...photo('watermark', 'Watermark logo'), admin: { description: 'A faint logo behind the quote.' } },
     ]),
   ],
   design: {
@@ -33,7 +33,7 @@ export const B61Testimonial = defineElement({
     accents: [
       eyebrowRuleField(),
       { ...toggle('showMark', 'Show quotation mark'), defaultValue: true } as any,
-      toggle('markRoom', 'Room above quotation mark', { when: { field: 'showMark', in: [true] } }),
+      toggle('markRoom', 'Space above the mark', { when: { field: 'showMark', in: [true] } }),
       entranceField(),
     ],
   },

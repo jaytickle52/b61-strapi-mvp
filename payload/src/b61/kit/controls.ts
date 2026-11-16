@@ -140,3 +140,15 @@ export function link(name = 'link'): Field {
     ],
   }
 }
+
+/** Shows a unit after a number field ("%", "px") instead of in its label. */
+export function unit<T extends Field>(field: T, u: string): T {
+  const f: any = field
+  return {
+    ...f,
+    admin: {
+      ...(f.admin ?? {}),
+      components: { ...(f.admin?.components ?? {}), afterInput: [{ path: '@/b61/kit/admin/Unit#Unit', clientProps: { unit: u } }] },
+    },
+  }
+}

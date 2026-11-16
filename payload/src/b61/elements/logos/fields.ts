@@ -17,7 +17,7 @@ export const B61Logos = defineElement({
     panel('Heading', bandHeadFields()),
     list('logos', 'Logos', 'Logo', [
       { ...photo('image', 'Logo', { required: true }), admin: { description: "The logo's alt text should be the name (e.g. \"Wake Forest University\")." } } as any,
-      { ...link(), label: 'Link (optional)' } as any,
+      { ...link(), label: 'Link' } as any,
     ], { minRows: 0, maxRows: 40 }),
   ],
   design: {

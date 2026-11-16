@@ -1,6 +1,7 @@
 import { bodyField } from '../../kit/body'
 import { defineElement, panel } from '../../kit/element'
-import { dropdown, segmented, step } from '../../kit/controls'
+import { dropdown, segmented, step, unit } from '../../kit/controls'
+import type { NumberField } from 'payload'
 import {
   buttonsPanel,
   entranceField,
@@ -39,9 +40,9 @@ export const B61Cta = defineElement({
     buttonsPanel(),
     panel('Background', [
       photo('image', 'Photo'),
-      {
+      unit({
         name: 'overlayStrength',
-        label: 'Overlay strength (%)',
+        label: 'Overlay strength',
         type: 'number',
         min: 0,
         max: 100,
@@ -51,37 +52,36 @@ export const B61Cta = defineElement({
           condition: (_, s) => Boolean(s?.image),
           description: 'Without a text panel, check the words stay easy to read over the photo (70% is a safe start).',
         },
-      },
+      } as NumberField, '%'),
     ]),
   ],
 
   design: {
     layout: [
-      {
-        type: 'row',
-        fields: [
-          segmented(
-            'textAlign',
-            'Text alignment',
-            [
-              ['left', 'Left', 'align-left'],
-              ['center', 'Center', 'align-center'],
-            ],
-            { default: 'center', iconOnly: true, width: '50%' },
-          ),
-          segmented(
-            'position',
-            'Position',
-            [
-              ['left', 'Left'],
-              ['center', 'Center'],
-            ],
-            { default: 'center', width: '50%' },
-          ),
+      segmented(
+        'textAlign',
+        'Text alignment',
+        [
+          ['left', 'Left', 'align-left'],
+          ['center', 'Center', 'align-center'],
         ],
-      },
+        { default: 'center', iconOnly: true },
+      ),
     ],
-    size: [step('widthStep', 'Width', { low: 'Narrow', high: 'Wide' }), paddingFields()],
+    // Block position sits by Width, which it depends on (audit 1.78.0).
+    size: [
+      step('widthStep', 'Width', { low: 'Narrow', high: 'Wide' }),
+      segmented(
+        'position',
+        'Block position',
+        [
+          ['left', 'Left'],
+          ['center', 'Center'],
+        ],
+        { default: 'center' },
+      ),
+      paddingFields(),
+    ],
     color: [
       { ...surfaceField(), defaultValue: 'soft' } as any,
       dropdown(

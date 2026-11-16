@@ -1,6 +1,7 @@
 import { defineElement, panel } from '../../kit/element'
 import { splitWords } from './words'
-import { segmented, step, type WhenRule } from '../../kit/controls'
+import { segmented, step, unit, type WhenRule } from '../../kit/controls'
+import type { NumberField } from 'payload'
 import {
   buttonsPanel,
   entranceField,
@@ -73,16 +74,18 @@ export const B61Hero = defineElement({
         validate: validateChangingWords,
         admin: {
           placeholder: 'e.g. Learning, Missions, Athletics',
-          description: 'Optional. Two to four words, separated by commas. The first must be in a heading line exactly as typed; the others take its place in turn, once.',
+          description: 'Two to four words, separated by commas. The first must be in a heading line exactly as typed; the others take its place in turn, once.',
         },
       },
       segmented(
         'subheadlineScale',
         'Subheadline style',
+        // Labels say what each stored value does (audit 1.78.0: they read inverted):
+        // body = the body font, display = the heading font, meta = a row of short facts.
         [
-          ['display', 'Normal'],
-          ['body', 'Large'],
-          ['meta', 'Meta line'],
+          ['body', 'Standard'],
+          ['display', 'Display'],
+          ['meta', 'Short facts'],
         ],
         { default: 'body' },
       ),
@@ -92,10 +95,10 @@ export const B61Hero = defineElement({
         type: 'textarea',
         admin: { rows: 2, condition: (_, s) => s?.subheadlineScale !== 'meta' },
       },
-      list('metaItems', 'Subheadline items', 'Item', [{ name: 'text', label: 'Text', type: 'text', required: true }], {
+      list('metaItems', 'Short facts', 'Fact', [{ name: 'text', label: 'Text', type: 'text', required: true }], {
         admin: {
           condition: (_, s) => s?.subheadlineScale === 'meta',
-          description: 'Short facts, e.g. "Grades PK-8", "Est. 1951".',
+          description: 'e.g. "Grades PK-8", "Est. 1951".',
         },
       }),
     ]),
@@ -109,14 +112,14 @@ export const B61Hero = defineElement({
           'backgroundType',
           'Type',
           [
-            ['image', 'Image', 'image'],
+            ['image', 'Photo', 'image'],
             ['slideshow', 'Slideshow', 'slideshow'],
             ['video', 'Video', 'video'],
           ],
           { default: 'image', when: cover },
         ),
         // Split screen uses the same photo field: one photo filling its half.
-        photo('image', 'Image', { condition: (d: unknown, s: any) => coverBg('image')(d, s) || s?.layoutMode === 'split' }),
+        photo('image', 'Photo', { condition: (d: unknown, s: any) => coverBg('image')(d, s) || s?.layoutMode === 'split' }),
         list('slides', 'Slides', 'Slide', [{ name: 'image', type: 'upload', relationTo: 'media', filterOptions: onlyImages, required: true }], {
           minRows: 2,
           admin: { condition: coverBg('slideshow') },
@@ -126,7 +129,7 @@ export const B61Hero = defineElement({
           admin: { condition: coverBg('video') },
           fields: [
             { name: 'video', label: 'Video', type: 'upload', relationTo: 'media', filterOptions: onlyVideos, admin: { width: '50%' } },
-            { name: 'videoWebm', label: 'WebM version (optional)', type: 'upload', relationTo: 'media', filterOptions: onlyVideos, admin: { width: '50%' } },
+            { name: 'videoWebm', label: 'Backup video', type: 'upload', relationTo: 'media', filterOptions: onlyVideos, admin: { width: '50%' } },
           ],
         },
         {
@@ -140,9 +143,9 @@ export const B61Hero = defineElement({
             description: 'Shows while the video loads, if autoplay is blocked, and when motion is turned off.',
           },
         },
-        {
+        unit({
           name: 'overlayStrength',
-          label: 'Overlay strength (%)',
+          label: 'Overlay strength',
           type: 'number',
           min: 0,
           max: 100,
@@ -153,7 +156,7 @@ export const B61Hero = defineElement({
             description: 'Below 80%, check the words stay easy to read over the photo.',
             condition: (_: unknown, s: any) => isCover(s),
           },
-        },
+        } as NumberField, '%'),
       ],
       { when: [cover, split] },
     ),
@@ -230,8 +233,8 @@ export const B61Hero = defineElement({
         'surface',
         'Surface',
         [
-          ['light', 'Light'],
-          ['primary', 'Primary'],
+          ['light', 'White'],
+          ['primary', 'Dark'],
           ['secondary', 'Secondary'],
         ],
         { default: 'primary', when: [onSurface, { field: 'overlay', in: ['wash'] }] },

@@ -31,7 +31,8 @@ without scrolling, and each panel says what is in it.
    A list or editor stands on its own, outside the panels; a group of settings around
    the items (Card Grid's "Fill with") is a panel named for them (Cards).
 4. **Buttons** (`buttonsPanel()`).
-5. **Media**: photos, video, background.
+5. **Media**: photos, video, background. Media comes before Buttons only where it is
+   the element's main content (Gallery), per item 3.
 
 How the kit does it (`defineElement`, nothing per element):
 - Every Content panel starts closed, with what is in it in the header: the heading
@@ -74,12 +75,13 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 
 ## 5. Words
 
-- Terse labels, no parenthetical hints. Help text only when the label cannot
-  carry it, and then one short line.
+- Terse labels, no parenthetical hints, no "Optional." in help text (an empty field
+  already reads as optional). Help text only when the label cannot carry it, and then
+  one short line. Units go after the field with `unit(field, '%')`, never in the label.
 - The same thing has the same name in every element: Eyebrow, Heading lines,
   Subheadline, Intro, Buttons, Surface, Padding, Entrance animation.
-- **One supporting-text field per element, never both** (decided 15 Nov 2026; being
-  applied element by element).
+- **One supporting-text field per element, never both** (decided 15 Nov 2026; applied
+  16 Nov: `bandHeadFields({ intro: true })` leaves Subheadings out).
   - Hero-type elements (Hero, CTA Band) get **Subheadline**: plain text,
     display size, read as part of the heading.
   - Elements with their own items (Card Grid, Accordion, Stats, Pillars, Tabs, Gallery,
@@ -87,7 +89,27 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
   - If an Intro ever needs display size, that is a Design choice (Intro size:
     Normal / Large), not a second field.
 - A control shows only when it does something (Eyebrow rule only with an
-  eyebrow; Column balance only in Band).
+  eyebrow; Column balance only in Band; Prose's Icon list panel only once the text has
+  an Icon list; Card Grid's link text styles only once a card has link text). A Design
+  part panel takes a `condition` for this. Split and Framed Image's Frame color is the
+  accepted exception: a site whose tokens set no frame can't hide it.
+- **One vocabulary** (audit of plugin 1.78.0, applied 16 Nov 2026):
+  - **Fills**: None · White · Light wash · Dark · Accent, in that order (no fill first,
+    lightest to darkest, Accent last). Panels say White card; item fills add Outline
+    (first) and Page (the page's own ground) from `ITEM_SURFACES`. Hero's Secondary is
+    the one extra: a brand colour, not a fill.
+  - **Photo shape**: Fixed height · Portrait · Square · Landscape · Wide · Custom ratio,
+    or the subset that applies. One label even when two stored fields carry it (Card Grid).
+  - **Overlay** for the tint over a photo; **Overlay strength** 0–100 with a % unit.
+  - **Type** for what a media slot holds (Photo · Gallery · Video; Hero: Photo · Slideshow · Video).
+  - **Block position** for where a narrowed text block sits; it lives in Size & spacing
+    beside Width. Text alignment stays in Layout.
+  - Behaviour switches (First item open, One open at a time) live in Content.
+- **Stored values never change with a label.** Rename the words freely; to rename or
+  move a stored value, ship a migration that rewrites old data, the defaults and the
+  demo content in the same PR. CI catches a structure change without a migration, but
+  not a renamed option value. Where a label disagreed with its value (Hero's
+  Subheadline style), fix the label.
 
 ## 6. Photos
 

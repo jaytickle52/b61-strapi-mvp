@@ -16,7 +16,7 @@ type DesignPanels = {
   layout?: Field[]
   size?: Field[]
   /** The element's own part, e.g. { label: 'Cards', fields } */
-  part?: { label: string; fields: Field[] }
+  part?: { label: string; fields: Field[]; /** Show the panel only when it can matter (e.g. Prose's Icon list). */ condition?: Condition }
   color?: Field[]
   accents?: Field[]
   /**
@@ -159,7 +159,7 @@ function contentPanels(fields: Field[], open?: string): Field[] {
   })
 }
 
-function designPanel(label: string, fields: Field[] | undefined, open: boolean): Field[] {
+function designPanel(label: string, fields: Field[] | undefined, open: boolean, condition?: Condition): Field[] {
   if (!fields?.length) return []
   return [
     {
@@ -167,6 +167,7 @@ function designPanel(label: string, fields: Field[] | undefined, open: boolean):
       label,
       fields,
       admin: {
+        ...(condition ? { condition } : {}),
         initCollapsed: !open,
         className: 'b61-panel',
         components: {
@@ -248,7 +249,7 @@ export function defineElement(spec: ElementSpec): Block {
             fields: [
               ...designPanel('Layout', d.layout, true),
               ...designPanel('Size & spacing', d.size, false),
-              ...(d.part ? designPanel(d.part.label, d.part.fields, false) : []),
+              ...(d.part ? designPanel(d.part.label, d.part.fields, false, d.part.condition) : []),
               ...designPanel('Color', d.color, false),
               ...designPanel('Accents', d.accents, false),
               ...advancedPanel(d.advanced),

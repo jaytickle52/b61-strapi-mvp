@@ -18,7 +18,7 @@ export const B61Carousel = defineElement({
       { name: 'label', label: 'Name for screen readers', type: 'text', admin: { description: 'Used only when there is no heading.', condition: (_, s) => !(s?.lines ?? []).length } },
     ]),
     list('slides', 'Slides', 'Slide', [
-      { name: 'label', label: 'Name for screen readers (optional)', type: 'text' },
+      { name: 'label', label: 'Name for screen readers', type: 'text' },
       innerField('content', 'Slide content', { only: slideBlocks }),
     ]),
   ],
@@ -38,7 +38,7 @@ export const B61Carousel = defineElement({
         {
           type: 'row',
           fields: [
-            { ...toggle('showCounter', 'Counter (01 / 04)', { width: '50%' }), defaultValue: true } as any,
+            { ...toggle('showCounter', 'Slide counter', { width: '50%' }), defaultValue: true } as any,
             { ...toggle('showProgress', 'Progress bar', { width: '50%' }), defaultValue: true } as any,
           ],
         },
