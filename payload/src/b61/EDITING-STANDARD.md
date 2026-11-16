@@ -10,17 +10,38 @@ build elements with `defineElement()` and the shared field groups, never by hand
   items to show). Heading level stays here, because it shapes the page outline.
 - **Design**: arrangement and finish (spacing, widths, colour, accents).
   School staff see both tabs. Defaults must be good enough to leave alone.
+- No third tab. A tab has to match a separate reason for opening the element
+  (change the words, change the look). Buttons and media stay with the words they
+  belong to; length is handled by panels (section 2), not more tabs.
+- Element-wide settings (like the CSS class) go in a panel at the end of Design
+  (Advanced), not a new tab.
 
-## 2. Content order
+## 2. Content panels, in this order, with these names
 
-1. **Shape choice first.** If one choice changes what the editor is asked to
-   supply (Cover vs Band, Image vs Video, Text vs Meta line), it goes at the
-   top of its panel, before the fields it switches.
-2. **Heading**: eyebrow, heading lines, heading level (Automatic by default).
-3. **Supporting text**: subheadline / intro / body.
-4. **The element's own items**: cards, stats, slides, panels.
-5. **Buttons.**
-6. **Media**: photos, video, background.
+Content uses closed panels like Design, so an editor sees the whole element
+without scrolling, and each panel says what is in it.
+
+1. **Shape choice first, above the panels.** If one choice changes what the editor
+   is asked to supply (Cover vs Band, Image vs Video, Text vs Meta line), it sits
+   at the top, because it decides which fields and panels appear.
+2. **Heading**: eyebrow, heading lines, heading level (Automatic by default), and the
+   element's one supporting-text field (Subheadline or Intro, section 5).
+3. **The element's main content**: the items list (cards, stats, slides, questions),
+   the Content editor (Split, Prose, CTA Band) or the column of elements (Section).
+   A list or editor stands on its own, outside the panels; a group of settings around
+   the items (Card Grid's "Fill with") is a panel named for them (Cards).
+4. **Buttons** (`buttonsPanel()`).
+5. **Media**: photos, video, background.
+
+How the kit does it (`defineElement`, nothing per element):
+- Every Content panel starts closed, with what is in it in the header: the heading
+  text, the button labels ("Buttons · Schedule a tour, Apply now"), the photo's alt
+  text, or a count ("6 photos").
+- **One panel opens first.** If the main content sits outside the panels (a list, the
+  Content editor, a column of elements), it is already in view and every panel starts
+  closed. Otherwise the first panel opens. An element can name it with `open`
+  (Hero: Heading; Card Grid: Cards; Gallery: Media).
+- Panels only arrange the form; stored data does not change (section 7).
 
 ## 3. Design panels, in this order, with these names
 
@@ -48,13 +69,23 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
   Page links survive slug changes, so they come first.
 - **Repeater rows are named by their content** ("Schedule a tour"), not "Button 01".
 - **A list is not wrapped in a panel of the same name.** The list is the section.
+  The exception is Buttons, which sits in a closed panel so it can say what it holds;
+  the list's own title is hidden there, so the name shows once.
 
 ## 5. Words
 
 - Terse labels, no parenthetical hints. Help text only when the label cannot
   carry it, and then one short line.
 - The same thing has the same name in every element: Eyebrow, Heading lines,
-  Subheadline, Buttons, Surface, Padding, Entrance animation.
+  Subheadline, Intro, Buttons, Surface, Padding, Entrance animation.
+- **One supporting-text field per element, never both** (decided 15 Nov 2026; being
+  applied element by element).
+  - Hero-type elements (Hero, CTA Band) get **Subheadline**: plain text,
+    display size, read as part of the heading.
+  - Elements with their own items (Card Grid, Accordion, Stats, Pillars, Tabs, Gallery,
+    Carousel) get **Intro**: the short editor (section 10), body size, setting up the items.
+  - If an Intro ever needs display size, that is a Design choice (Intro size:
+    Normal / Large), not a second field.
 - A control shows only when it does something (Eyebrow rule only with an
   eyebrow; Column balance only in Band).
 
@@ -136,6 +167,10 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 - Nothing to do per element: `Sections` and `Inner` add the markers. Code in
   `src/b61/kit/preview/` (EditMark, EditOverlay) and `src/b61/kit/admin/PreviewFocus.tsx`.
   The markers are `<template>` tags, only in the preview, which the plugin CSS already ignores.
+- **Click to the field (planned).** Clicking a part of an element (its heading, subheadline
+  or intro, a button, the photo, one card / question / stat) opens the element, switches to
+  the tab that holds that part, opens that panel (and that item's row), scrolls to the field
+  and puts the cursor in it. Clicking empty space in the element still opens the element.
 
 ## 13. Site tone and custom CSS
 

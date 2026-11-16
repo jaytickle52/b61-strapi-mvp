@@ -2,7 +2,7 @@ import { bodyField } from '../../kit/body'
 import { defineElement, panel } from '../../kit/element'
 import { dropdown, segmented, step, toggle, type WhenRule } from '../../kit/controls'
 import {
-  buttonsField,
+  buttonsPanel,
   entranceField,
   eyebrowRuleField,
   headingFields,
@@ -39,7 +39,7 @@ export const B61Prose = defineElement({
   content: [
     panel('Heading', [...headingFields({ levels: ['h1', 'h2', 'h3', 'h4'] }), subheadsField()]),
     bodyField({ emphasisScale: true, dividers: true }),
-    buttonsField(),
+    buttonsPanel(),
   ],
 
   design: {

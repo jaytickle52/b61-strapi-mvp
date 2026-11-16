@@ -1,7 +1,7 @@
 import { simpleEditor } from '../../kit/editors'
 import { defineElement, panel } from '../../kit/element'
 import { dropdown, segmented, step, toggle } from '../../kit/controls'
-import { bandHeadFields, buttonsField, entranceField, eyebrowRuleField, headingAlignField, list, paddingFields, surfaceField } from '../../kit/groups'
+import { bandHeadFields, buttonsPanel, entranceField, eyebrowRuleField, headingAlignField, list, paddingFields, surfaceField } from '../../kit/groups'
 
 /* B61 ACCORDION, port of Banner 61 Elements' B61 Accordion (Sport_Accordion, plugin 1.77.1). */
 export const B61Accordion = defineElement({
@@ -22,7 +22,7 @@ export const B61Accordion = defineElement({
     ]),
     // Marks the items as questions and answers for search engines (schema.org FAQPage).
     { ...toggle('faq', 'These are questions and answers'), admin: { description: 'Search engines and AI tools read each title as a question and its body as the answer.' } } as any,
-    buttonsField(),
+    buttonsPanel(),
   ],
   design: {
     layout: [headingAlignField()],

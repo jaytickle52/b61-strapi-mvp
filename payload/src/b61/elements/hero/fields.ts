@@ -1,7 +1,7 @@
 import { defineElement, panel } from '../../kit/element'
 import { segmented, step, type WhenRule } from '../../kit/controls'
 import {
-  buttonsField,
+  buttonsPanel,
   entranceField,
   eyebrowRuleField,
   headingFields,
@@ -20,7 +20,7 @@ import {
  * Differences from the Breakdance form, on purpose:
  * - Cover / Band is the first choice on Content, because it decides what the
  *   editor supplies (background vs collage).
- * - Subheadline Scale comes before the text it switches.
+ * - Subheadline style comes before the text it switches; the subheadline sits in the Heading panel.
  * - Column balance sits in Layout (it is arrangement, and Band only).
  * - Heading level defaults to Automatic (H1 first on the page, H2 after).
  */
@@ -37,6 +37,7 @@ export const B61Hero = defineElement({
   slug: 'b61Hero',
   name: 'Hero',
   plural: 'Heroes',
+  open: 'Heading',
   mode: { field: 'layoutMode', labels: { cover: 'Cover', band: 'Band', split: 'Split', type: 'Big headline' } },
 
   content: [
@@ -52,12 +53,11 @@ export const B61Hero = defineElement({
       { default: 'cover' },
     ),
 
-    panel('Heading', headingFields()),
-
-    panel('Subheadline', [
+    panel('Heading', [
+      ...headingFields(),
       segmented(
         'subheadlineScale',
-        'Scale',
+        'Subheadline style',
         [
           ['display', 'Normal'],
           ['body', 'Large'],
@@ -67,11 +67,11 @@ export const B61Hero = defineElement({
       ),
       {
         name: 'subheadline',
-        label: 'Text',
+        label: 'Subheadline',
         type: 'textarea',
         admin: { rows: 2, condition: (_, s) => s?.subheadlineScale !== 'meta' },
       },
-      list('metaItems', 'Items', 'Item', [{ name: 'text', label: 'Text', type: 'text', required: true }], {
+      list('metaItems', 'Subheadline items', 'Item', [{ name: 'text', label: 'Text', type: 'text', required: true }], {
         admin: {
           condition: (_, s) => s?.subheadlineScale === 'meta',
           description: 'Short facts, e.g. "Grades PK-8", "Est. 1951".',
@@ -79,7 +79,7 @@ export const B61Hero = defineElement({
       }),
     ]),
 
-    buttonsField(),
+    buttonsPanel(),
 
     panel(
       'Background',

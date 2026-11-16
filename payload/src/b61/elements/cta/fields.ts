@@ -2,7 +2,7 @@ import { bodyField } from '../../kit/body'
 import { defineElement, panel } from '../../kit/element'
 import { dropdown, segmented, step } from '../../kit/controls'
 import {
-  buttonsField,
+  buttonsPanel,
   entranceField,
   eyebrowRuleField,
   headingFields,
@@ -36,7 +36,7 @@ export const B61Cta = defineElement({
   content: [
     panel('Heading', [...headingFields({ levels: ['h2', 'h3', 'h4'] }), subheadsField()]),
     bodyField({ quotePhoto: false }),
-    buttonsField(),
+    buttonsPanel(),
     panel('Background', [
       photo('image', 'Photo'),
       {

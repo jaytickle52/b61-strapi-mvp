@@ -1,7 +1,7 @@
 import { defineElement, panel } from '../../kit/element'
 import { videoLinkField } from '../../kit/video'
 import { dropdown, segmented, step, type WhenRule } from '../../kit/controls'
-import { bandHeadFields, buttonsField, entranceField, eyebrowRuleField, headingAlignField, list, onlyImages, paddingFields, photo, surfaceField } from '../../kit/groups'
+import { bandHeadFields, buttonsPanel, entranceField, eyebrowRuleField, headingAlignField, list, onlyImages, paddingFields, photo, surfaceField } from '../../kit/groups'
 
 /*
  * B61 GALLERY, port of Banner 61 Elements' B61 Gallery (plugin 1.77.1).
@@ -16,6 +16,7 @@ export const B61Gallery = defineElement({
   slug: 'b61Gallery',
   name: 'Gallery',
   plural: 'Galleries',
+  open: 'Media',
   mode: { field: 'galleryLayout', labels: { strip: 'Strip', grid: 'Grid', masonry: 'Masonry' } },
   content: [
     panel('Heading', bandHeadFields({ intro: true })),
@@ -42,7 +43,7 @@ export const B61Gallery = defineElement({
       },
       videoLinkField((s) => s?.media === 'video'),
     ]),
-    buttonsField(),
+    buttonsPanel(),
   ],
   design: {
     layout: [

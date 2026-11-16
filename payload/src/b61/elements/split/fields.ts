@@ -2,7 +2,7 @@ import { defineElement, panel } from '../../kit/element'
 import { videoLinkField } from '../../kit/video'
 import { segmented, step, toggle, type WhenRule } from '../../kit/controls'
 import {
-  buttonsField,
+  buttonsPanel,
   entranceField,
   eyebrowRuleField,
   frameColorField,
@@ -47,7 +47,7 @@ export const B61Split = defineElement({
 
     bodyField(),
 
-    buttonsField(),
+    buttonsPanel(),
 
     panel('Media', [
       segmented(

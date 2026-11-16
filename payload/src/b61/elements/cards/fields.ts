@@ -2,7 +2,7 @@ import { simpleEditor } from '../../kit/editors'
 import { defineElement, panel } from '../../kit/element'
 import { dropdown, link, segmented, toggle, type WhenRule } from '../../kit/controls'
 import {
-  buttonsField,
+  buttonsPanel,
   entranceField,
   eyebrowRuleField,
   headingFields,
@@ -43,6 +43,7 @@ export const B61CardGrid = defineElement({
   slug: 'b61CardGrid',
   name: 'Card Grid',
   plural: 'Card Grids',
+  open: 'Cards',
   mode: { field: 'source', labels: { manual: 'Cards', programs: 'Programs', 'upcoming-events': 'Events', 'latest-news': 'News', staff: 'Staff', 'school-facts': 'School facts' } },
 
   content: [
@@ -115,7 +116,7 @@ export const B61CardGrid = defineElement({
         { admin: { condition: (_, s) => (s?.source ?? 'manual') === 'manual' } },
       ),
     ]),
-    buttonsField(),
+    buttonsPanel(),
   ],
 
   design: {

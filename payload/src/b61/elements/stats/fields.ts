@@ -1,6 +1,6 @@
 import { defineElement, panel } from '../../kit/element'
 import { dropdown, segmented, toggle } from '../../kit/controls'
-import { bandHeadFields, buttonsField, entranceField, eyebrowRuleField, list, paddingFields, surfaceField } from '../../kit/groups'
+import { bandHeadFields, buttonsPanel, entranceField, eyebrowRuleField, list, paddingFields, surfaceField } from '../../kit/groups'
 
 /*
  * B61 STATS BAND, built on the B61 editing kit (see ../../EDITING-STANDARD.md).
@@ -28,7 +28,7 @@ export const B61StatsBand = defineElement({
         { name: 'note', label: 'Note', type: 'text' },
       ],
     ),
-    buttonsField(),
+    buttonsPanel(),
   ],
   design: {
     layout: [
