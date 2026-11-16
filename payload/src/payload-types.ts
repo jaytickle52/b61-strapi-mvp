@@ -601,6 +601,8 @@ export interface Page {
             bleed?: boolean | null;
             hoverReveal?: boolean | null;
             altTint?: boolean | null;
+            featureMiddle?: boolean | null;
+            duotone?: boolean | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -774,6 +776,7 @@ export interface Page {
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            duotone?: boolean | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -1149,6 +1152,156 @@ export interface Page {
                             blockName?: string | null;
                             blockType: 'b61Prose';
                           }
+                        | {
+                            eyebrow?: string | null;
+                            lines?:
+                              | {
+                                  text: string;
+                                  emphasize?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            intro?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            source?:
+                              | ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts')
+                              | null;
+                            limit?: number | null;
+                            mediaType?: ('image' | 'icon' | 'none') | null;
+                            cards?:
+                              | {
+                                  image?: (number | null) | Media;
+                                  icon?:
+                                    | (
+                                        | 'check'
+                                        | 'email'
+                                        | 'phone'
+                                        | 'location'
+                                        | 'calendar'
+                                        | 'clock'
+                                        | 'link'
+                                        | 'star'
+                                        | 'heart'
+                                        | 'book'
+                                        | 'people'
+                                        | 'cross'
+                                        | 'school'
+                                      )
+                                    | null;
+                                  eyebrow?: string | null;
+                                  title?: string | null;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  link?: {
+                                    type?: ('page' | 'document' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    document?: (number | null) | Document;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  /**
+                                   * Shows a "Read more"-style link. Leave empty to link the title.
+                                   */
+                                  linkText?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  action?: ('link' | 'video') | null;
+                                  link?: {
+                                    type?: ('page' | 'document' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    document?: (number | null) | Document;
+                                    url?: string | null;
+                                    newTab?: boolean | null;
+                                  };
+                                  /**
+                                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                                   */
+                                  video?: string | null;
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            arrangement?: ('grid' | 'carousel') | null;
+                            columns?: ('1' | '2' | '3' | '4') | null;
+                            textAlign?: ('left' | 'center') | null;
+                            advance?: ('one' | 'view') | null;
+                            peek?: ('none' | 'small' | 'medium' | 'large') | null;
+                            controlsPosition?:
+                              | ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden')
+                              | null;
+                            showCounter?: boolean | null;
+                            showProgress?: boolean | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            cardStyle?: ('plain' | 'flat' | 'bordered' | 'overlay') | null;
+                            cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
+                            imageShape?: ('fixed' | 'custom') | null;
+                            ratioW?: number | null;
+                            ratioH?: number | null;
+                            cardTextPosition?: ('top' | 'center' | 'bottom') | null;
+                            mediaRound?: boolean | null;
+                            iconSize?: ('sm' | 'md' | 'lg') | null;
+                            showNumbers?: boolean | null;
+                            ctaCase?: ('upper' | 'normal') | null;
+                            ctaSize?: ('sm' | 'md' | 'lg') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            cardSurface?: ('light' | 'soft' | 'primary') | null;
+                            cardOverlay?: ('none' | 'gradient' | 'wash') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            headBeside?: boolean | null;
+                            stagger?: boolean | null;
+                            bleed?: boolean | null;
+                            hoverReveal?: boolean | null;
+                            altTint?: boolean | null;
+                            featureMiddle?: boolean | null;
+                            duotone?: boolean | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61CardGrid';
+                          }
                       )[]
                     | null;
                   id?: string | null;
@@ -1236,6 +1389,7 @@ export interface Page {
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            scrollStory?: boolean | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -1836,6 +1990,8 @@ export interface Page {
                       bleed?: boolean | null;
                       hoverReveal?: boolean | null;
                       altTint?: boolean | null;
+                      featureMiddle?: boolean | null;
+                      duotone?: boolean | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -2009,6 +2165,7 @@ export interface Page {
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      duotone?: boolean | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -2227,6 +2384,7 @@ export interface Page {
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      scrollStory?: boolean | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -2400,6 +2558,55 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Divider';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      logos?:
+                        | {
+                            /**
+                             * The logo's alt text should be the name (e.g. "Wake Forest University").
+                             */
+                            image: number | Media;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            id?: string | null;
+                          }[]
+                        | null;
+                      motion?: ('still' | 'scroll') | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      logoStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      oneColour?: boolean | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Logos';
                     }
                 )[]
               | null;
@@ -2788,6 +2995,8 @@ export interface Page {
                       bleed?: boolean | null;
                       hoverReveal?: boolean | null;
                       altTint?: boolean | null;
+                      featureMiddle?: boolean | null;
+                      duotone?: boolean | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -2961,6 +3170,7 @@ export interface Page {
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      duotone?: boolean | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -3179,6 +3389,7 @@ export interface Page {
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      scrollStory?: boolean | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -3352,6 +3563,55 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Divider';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      lines?:
+                        | {
+                            text: string;
+                            emphasize?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      logos?:
+                        | {
+                            /**
+                             * The logo's alt text should be the name (e.g. "Wake Forest University").
+                             */
+                            image: number | Media;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                              newTab?: boolean | null;
+                            };
+                            id?: string | null;
+                          }[]
+                        | null;
+                      motion?: ('still' | 'scroll') | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      logoStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      oneColour?: boolean | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Logos';
                     }
                 )[]
               | null;
@@ -3582,6 +3842,55 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Divider';
+          }
+        | {
+            eyebrow?: string | null;
+            lines?:
+              | {
+                  text: string;
+                  emphasize?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            logos?:
+              | {
+                  /**
+                   * The logo's alt text should be the name (e.g. "Wake Forest University").
+                   */
+                  image: number | Media;
+                  link?: {
+                    type?: ('page' | 'document' | 'url') | null;
+                    page?: (number | null) | Page;
+                    document?: (number | null) | Document;
+                    url?: string | null;
+                    newTab?: boolean | null;
+                  };
+                  id?: string | null;
+                }[]
+              | null;
+            motion?: ('still' | 'scroll') | null;
+            headingAlign?: ('left' | 'center') | null;
+            logoStep?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            oneColour?: boolean | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Logos';
           }
       )[]
     | null;
@@ -4750,6 +5059,35 @@ export interface SchoolSetting {
       )
     | null;
   /**
+   * Optional. A second font for heading lines marked Emphasize, e.g. an italic serif beside capitals. Those lines keep their letters as typed.
+   */
+  accentFont?:
+    | (
+        | 'Fraunces'
+        | 'Playfair Display'
+        | 'Merriweather'
+        | 'EB Garamond'
+        | 'Lora'
+        | 'Libre Baskerville'
+        | 'Cormorant Garamond'
+        | 'Crimson Pro'
+        | 'Roboto Slab'
+        | 'Montserrat'
+        | 'Poppins'
+        | 'Inter'
+        | 'Source Sans 3'
+        | 'Lato'
+        | 'Open Sans'
+        | 'Raleway'
+        | 'Nunito Sans'
+        | 'Work Sans'
+        | 'DM Sans'
+        | 'Roboto'
+        | 'Josefin Sans'
+        | 'Oswald'
+      )
+    | null;
+  /**
    * The shape of the site. Pick a theme, then move any dial to override it; empty dials follow the theme.
    */
   style?: {
@@ -5693,6 +6031,8 @@ export interface PagesSelect<T extends boolean = true> {
               bleed?: T;
               hoverReveal?: T;
               altTint?: T;
+              featureMiddle?: T;
+              duotone?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -5823,6 +6163,7 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              duotone?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -6085,6 +6426,104 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          b61CardGrid?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                lines?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      emphasize?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                intro?: T;
+                                source?: T;
+                                limit?: T;
+                                mediaType?: T;
+                                cards?:
+                                  | T
+                                  | {
+                                      image?: T;
+                                      icon?: T;
+                                      eyebrow?: T;
+                                      title?: T;
+                                      body?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            document?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      linkText?: T;
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      action?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            document?: T;
+                                            url?: T;
+                                            newTab?: T;
+                                          };
+                                      video?: T;
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                arrangement?: T;
+                                columns?: T;
+                                textAlign?: T;
+                                advance?: T;
+                                peek?: T;
+                                controlsPosition?: T;
+                                showCounter?: T;
+                                showProgress?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                cardStyle?: T;
+                                cardShape?: T;
+                                imageShape?: T;
+                                ratioW?: T;
+                                ratioH?: T;
+                                cardTextPosition?: T;
+                                mediaRound?: T;
+                                iconSize?: T;
+                                showNumbers?: T;
+                                ctaCase?: T;
+                                ctaSize?: T;
+                                surface?: T;
+                                cardSurface?: T;
+                                cardOverlay?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                headBeside?: T;
+                                stagger?: T;
+                                bleed?: T;
+                                hoverReveal?: T;
+                                altTint?: T;
+                                featureMiddle?: T;
+                                duotone?: T;
+                                cssClass?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                         };
                     id?: T;
                   };
@@ -6137,6 +6576,7 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              scrollStory?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -6558,6 +6998,8 @@ export interface PagesSelect<T extends boolean = true> {
                           bleed?: T;
                           hoverReveal?: T;
                           altTint?: T;
+                          featureMiddle?: T;
+                          duotone?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -6688,6 +7130,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          duotone?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -6829,6 +7272,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          scrollStory?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -6957,6 +7401,52 @@ export interface PagesSelect<T extends boolean = true> {
                           widthStep?: T;
                           weight?: T;
                           lineColor?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Logos?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          logos?:
+                            | T
+                            | {
+                                image?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                id?: T;
+                              };
+                          motion?: T;
+                          headingAlign?: T;
+                          logoStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          oneColour?: T;
+                          eyebrowRule?: T;
                           entrance?: T;
                           cssClass?: T;
                           id?: T;
@@ -7230,6 +7720,8 @@ export interface PagesSelect<T extends boolean = true> {
                           bleed?: T;
                           hoverReveal?: T;
                           altTint?: T;
+                          featureMiddle?: T;
+                          duotone?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7360,6 +7852,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          duotone?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7501,6 +7994,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          scrollStory?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7629,6 +8123,52 @@ export interface PagesSelect<T extends boolean = true> {
                           widthStep?: T;
                           weight?: T;
                           lineColor?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Logos?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          lines?:
+                            | T
+                            | {
+                                text?: T;
+                                emphasize?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          logos?:
+                            | T
+                            | {
+                                image?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                      newTab?: T;
+                                    };
+                                id?: T;
+                              };
+                          motion?: T;
+                          headingAlign?: T;
+                          logoStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          oneColour?: T;
+                          eyebrowRule?: T;
                           entrance?: T;
                           cssClass?: T;
                           id?: T;
@@ -7800,6 +8340,52 @@ export interface PagesSelect<T extends boolean = true> {
               widthStep?: T;
               weight?: T;
               lineColor?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Logos?:
+          | T
+          | {
+              eyebrow?: T;
+              lines?:
+                | T
+                | {
+                    text?: T;
+                    emphasize?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              logos?:
+                | T
+                | {
+                    image?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                          newTab?: T;
+                        };
+                    id?: T;
+                  };
+              motion?: T;
+              headingAlign?: T;
+              logoStep?: T;
+              padTop?: T;
+              padBottom?: T;
+              surface?: T;
+              oneColour?: T;
+              eyebrowRule?: T;
               entrance?: T;
               cssClass?: T;
               id?: T;
@@ -8456,6 +9042,7 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   headingFont?: T;
   bodyFont?: T;
   uiFont?: T;
+  accentFont?: T;
   style?:
     | T
     | {

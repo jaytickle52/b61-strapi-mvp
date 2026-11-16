@@ -3,7 +3,7 @@ import type { School } from './payload-types'
 import { syncElementLibrary } from './b61/library'
 import { ensureStandardForms } from './forms/standard'
 import { ensureFeatureDemo } from './b61/features-demo'
-import { ensurePatternsDemo } from './b61/patterns-demo'
+import { ensurePatternsDemo, ensurePatternsDemo2 } from './b61/patterns-demo'
 import { demoChrome } from './b61/chrome/demo'
 import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, statsFrom } from './b61/demo'
 
@@ -250,5 +250,6 @@ export async function seedDemoSchools(payload: Payload) {
     if (school) await syncElementLibrary(payload, school).catch((e) => payload.logger.error(`[b61] Element library: ${e.message}`))
     if (school) await ensureFeatureDemo(payload, school).catch((e) => payload.logger.error(`[b61] School features demo: ${e.message}`))
     if (school) await ensurePatternsDemo(payload, school).catch((e) => payload.logger.error(`[b61] Layout ideas demo: ${e.message}`))
+    if (school) await ensurePatternsDemo2(payload, school).catch((e) => payload.logger.error(`[b61] More layout ideas demo: ${e.message}`))
   }
 }

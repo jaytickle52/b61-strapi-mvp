@@ -8,6 +8,7 @@ import { B61Testimonial } from './b61/elements/testimonial/fields'
 import { B61Gallery } from './b61/elements/gallery/fields'
 import { B61FramedImage } from './b61/elements/framed/fields'
 import { B61Divider } from './b61/elements/divider/fields'
+import { B61Logos } from './b61/elements/logos/fields'
 import { B61ButtonBar } from './b61/elements/buttonbar/fields'
 import { B61Accordion } from './b61/elements/accordion/fields'
 import { B61Pillars } from './b61/elements/pillars/fields'
@@ -36,4 +37,5 @@ export const sectionBlocks = [
   B61FramedImage,
   B61ButtonBar,
   B61Divider,
+  B61Logos,
 ]

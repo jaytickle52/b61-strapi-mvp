@@ -135,6 +135,17 @@ export const SchoolSettings: CollectionConfig = {
                 { name: 'uiFont', label: 'Buttons and labels font', type: 'select', defaultValue: 'Montserrat', options: UI_FONTS },
               ],
             },
+            {
+              name: 'accentFont',
+              label: 'Accent heading font',
+              type: 'select',
+              options: HEADING_FONTS,
+              admin: {
+                isClearable: true,
+                placeholder: 'Same as headings',
+                description: 'Optional. A second font for heading lines marked Emphasize, e.g. an italic serif beside capitals. Those lines keep their letters as typed.',
+              },
+            },
             styleGroup(),
             {
               type: 'collapsible',

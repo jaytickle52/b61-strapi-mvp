@@ -138,7 +138,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     // The B61 palette goes on <html>: tokens.css derives its role tokens on
     // :root, so the raw values have to be set there to flow through.
-    <html lang="en" className="h-full antialiased" data-b61-tone={toneOf(settings)} {...style.attrs} style={{ ...b61Theme(settings), ...style.vars }}>
+    <html lang="en" className="h-full antialiased" data-b61-tone={toneOf(settings)} {...((settings as any).accentFont ? { 'data-b61-accent-font': '' } : {})} {...style.attrs} style={{ ...b61Theme(settings), ...style.vars }}>
       <head>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         {fontsCss ? (

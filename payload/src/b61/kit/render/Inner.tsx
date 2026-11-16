@@ -8,6 +8,7 @@ import B61Testimonial from '../../elements/testimonial/Testimonial'
 import B61Gallery from '../../elements/gallery/Gallery'
 import B61FramedImage from '../../elements/framed/FramedImage'
 import B61Divider from '../../elements/divider/Divider'
+import B61Logos from '../../elements/logos/Logos'
 import B61ButtonBar from '../../elements/buttonbar/ButtonBar'
 import B61Accordion from '../../elements/accordion/Accordion'
 import B61Pillars from '../../elements/pillars/Pillars'
@@ -26,6 +27,7 @@ export const INNER: Record<string, (p: { block: any; index?: number }) => any> =
   b61Gallery: B61Gallery,
   b61FramedImage: B61FramedImage,
   b61Divider: B61Divider,
+  b61Logos: B61Logos,
   b61ButtonBar: B61ButtonBar,
   b61Accordion: B61Accordion,
   b61Pillars: B61Pillars,

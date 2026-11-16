@@ -9,7 +9,7 @@ import { cardsFrom, ensureDemoImages, statsFrom } from './demo'
  * Rebuilt on start whenever LIBRARY_VERSION changes; edits made to the page
  * by hand survive until the next version bump.
  */
-const LIBRARY_VERSION = 3
+const LIBRARY_VERSION = 4
 
 const para = (text: string) => ({
   root: {
@@ -113,6 +113,8 @@ export async function syncElementLibrary(payload: Payload, school: School) {
     { blockType: 'b61FramedImage', image: pic(0), imageShape: 'fixed', imageHeight: '460px', frameColor: 'secondary', widthStep: 4 },
     label('Divider', 'A short rule or an ornament between sections.'),
     { blockType: 'b61Divider', alignment: 'center', weight: 'regular', lineColor: 'accent' },
+    label('Logos', 'A row of logos (colleges, accreditations, partners), still or slowly scrolling.'),
+    { blockType: 'b61Logos', eyebrow: 'Accredited by', motion: 'still', oneColour: true, logoStep: 3, logos: [0, 1, 2].map((i) => ({ image: pic(i) })) },
     ...(contactForm
       ? [
           label('Form', 'One of the school\u2019s forms (Forms > Forms). Questions, emails and the thank-you are edited there.'),

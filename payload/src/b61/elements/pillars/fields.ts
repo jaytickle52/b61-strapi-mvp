@@ -27,5 +27,8 @@ export const B61Pillars = defineElement({
     size: [paddingFields()],
     color: [surfaceField()],
     accents: [eyebrowRuleField(), entranceField()],
+    advanced: [
+      toggle('scrollStory', 'Scroll story'),
+    ],
   },
 })

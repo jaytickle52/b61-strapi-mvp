@@ -9,6 +9,7 @@ import B61Testimonial from "@/b61/elements/testimonial/Testimonial";
 import B61Gallery from "@/b61/elements/gallery/Gallery";
 import B61FramedImage from "@/b61/elements/framed/FramedImage";
 import B61Divider from "@/b61/elements/divider/Divider";
+import B61Logos from "@/b61/elements/logos/Logos";
 import B61ButtonBar from "@/b61/elements/buttonbar/ButtonBar";
 import B61Accordion from "@/b61/elements/accordion/Accordion";
 import B61Pillars from "@/b61/elements/pillars/Pillars";
@@ -31,6 +32,7 @@ const ELEMENTS: Record<string, (p: { block: any; index?: number; path?: string }
   b61Gallery: B61Gallery,
   b61FramedImage: B61FramedImage,
   b61Divider: B61Divider,
+  b61Logos: B61Logos,
   b61ButtonBar: B61ButtonBar,
   b61Accordion: B61Accordion,
   b61Pillars: B61Pillars,

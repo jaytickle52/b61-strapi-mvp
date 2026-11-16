@@ -264,3 +264,31 @@ arrangement choices are Banner 61-only; content a school updates stays where sta
   editor only draws fields near the screen, so on a long element form the field never appeared.
 - CSS for all of these: `src/b61/styles/patterns.css`. Demo: the **Layout ideas** page
   (`/layout-ideas`) on both demo schools; Cedar Ridge also has Side buttons.
+
+## 17. Options from the Canterbury review (Nov 2026)
+
+Same rule as section 16: bigger layout choices are Banner 61-only (Design > Advanced).
+
+- **School settings > Look > Accent heading font** (optional): heading lines marked Emphasize, and
+  the Hero's changing word, use this second font and keep their letters as typed, even when
+  Heading letters is Capitals ("AN EDUCATION THAT'S *personal*"). Loaded from Google Fonts with
+  the others (400/500, upright and italic). `[data-b61-accent-font]` in `styles/style.css`.
+- **Tabs can hold a Card Grid** (`tabBlocks` in `inner.ts`): a set of cards per tab. Carousel
+  slides keep the short set (Testimonial, Split, Prose).
+- **Card Grid > Advanced > Larger middle card** (3 columns): the middle column is wider, so its
+  card is taller; side cards sit centred.
+- **Duotone photos** (Card Grid and Gallery > Advanced): photos in greys, tinted with the
+  primary colour. With words on the photo (overlay cards) the tint multiplies (darkens, so
+  contrast holds); otherwise it screens (colour in the shadows, pale highlights).
+- **Scroll story** (`kit/render/ScrollStory.tsx` + `ScrollStoryInit.tsx`; Pillars > Advanced): a
+  shared arrangement, not an element. Titles stay in view on one side as a list of links with a
+  progress line; each item (photo + words on a card) scrolls past on the other side and its
+  title lights up at mid-screen. Every item is in the page and readable without a script;
+  phones stack the items. Other elements with titled items (Tabs, Accordion) can adopt it by
+  passing their items to `<ScrollStory>`.
+- **Logos** element (Payload-only): a row of logos, Still (wraps, lines up with the heading) or
+  Scrolling (loops slowly; a Pause button comes first in tab order; it stops on hover and
+  keyboard focus; no motion for visitors who ask for less, where the row wraps instead). Logos in
+  one colour: grey on light bands, white on dark ones. The logo's alt text is its name.
+- CSS: `styles/patterns.css` sections 10-13. Demo: **More layout ideas** (`/more-layout-ideas`)
+  on both demo schools; Element library version 4 adds Logos.

@@ -314,6 +314,8 @@ export const B61CardGrid = defineElement({
       toggle('bleed', 'Run off the screen edge', { when: { all: [carousel, { field: 'headBeside', in: [true] }] } }),
       toggle('hoverReveal', 'Show card text on hover', { when: overlayImg }),
       toggle('altTint', 'Accent tint on every other photo', { when: overlayImg }),
+      toggle('featureMiddle', 'Larger middle card', { when: { all: [{ field: 'arrangement', in: ['grid', null] }, { field: 'columns', in: ['3'] }] } }),
+      toggle('duotone', 'Duotone photos', { when: { field: 'mediaType', in: ['image', null] } }),
     ],
   },
 })

@@ -115,6 +115,7 @@ export default function B61Gallery({ block, index = 0 }: { block: GalleryBlock; 
           'b61-gallery__region--ratio-even',
           `b61-gallery__region--pt-${block.padTop ?? 'normal'}`,
           `b61-gallery__region--pb-${block.padBottom ?? 'normal'}`,
+          (block as any).duotone && media === 'image' && 'b61-gallery__region--duotone b61-duotone--light',
         ]
           .filter(Boolean)
           .join(' ')}

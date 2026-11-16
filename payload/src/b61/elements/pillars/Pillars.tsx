@@ -6,6 +6,7 @@ import { asMedia, focusOf, imgProps } from '../../lib/media'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { BandHead, eruleClass, revealAttr } from '../../kit/render/parts'
 import PillarsInit from './PillarsInit'
+import ScrollStory from '../../kit/render/ScrollStory'
 
 /* Ported from elements/Pillars/html.twig (plugin 1.77.1). */
 export default function B61Pillars({ block, index = 0 }: { block: any; index?: number }) {
@@ -22,6 +23,8 @@ export default function B61Pillars({ block, index = 0 }: { block: any; index?: n
   const items = (block.items ?? []).filter((i: any) => i?.title)
   const label = lines.map((l: any) => l.text).join(' ') || 'Pillars'
   const ha = block.headingAlign ?? 'left'
+  // Design > Advanced (Banner 61): every pillar shown, scrolling past with its title list in view.
+  const story = Boolean(block.scrollStory) && items.length > 0
   return (
     <div className={['b61-pillars', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
       <Wrap
@@ -30,6 +33,7 @@ export default function B61Pillars({ block, index = 0 }: { block: any; index?: n
           `b61-surface--${surface}`,
           surface !== 'none' && `b61-band--${surface}`,
           `b61-pillars__region--tabs-${pos}`,
+          story && 'b61-pillars__region--story',
           pos === 'top' && `b61-pillars__region--align-${talign}`,
           `b61-pillars__region--pt-${block.padTop ?? 'normal'}`,
           `b61-pillars__region--pb-${block.padBottom ?? 'normal'}`,
@@ -40,7 +44,21 @@ export default function B61Pillars({ block, index = 0 }: { block: any; index?: n
         {...(lines.length ? { 'aria-labelledby': `${id}-heading` } : {})}
       >
         <BandHead block={block} prefix="b61-pillars" as={as} headingId={`${id}-heading`} ri={ri} headClass={`b61-halign-${ha} b61-headw-${ha}`} itemClass="b61-block" />
-        {items.length > 0 && (
+        {story && (
+          <ScrollStory
+            id={id}
+            label={label}
+            side={pos === 'right' ? 'right' : 'left'}
+            titleAs={as === 'h2' ? 'h3' : 'h4'}
+            items={items.map((it: any, i: number) => ({
+              key: it.id ?? i,
+              title: it.title,
+              image: it.image,
+              body: it.body ? <RichText data={it.body as SerializedEditorState} disableContainer converters={b61Converters} /> : null,
+            }))}
+          />
+        )}
+        {!story && items.length > 0 && (
           <div className="b61-pillars__layout" style={{ '--b61-pillars-rows': items.length * 2 } as CSSProperties}>
             <div className="b61-pillars__tabs" {...ri} role="tablist" aria-orientation={pos === 'top' ? 'horizontal' : 'vertical'} aria-label={label}>
               {items.map((it: any, i: number) => {
@@ -91,11 +109,11 @@ export default function B61Pillars({ block, index = 0 }: { block: any; index?: n
             </div>
           </div>
         )}
-        <noscript>
+        {!story && <noscript>
           <style>{'.b61-pillars__panel{grid-area:auto;grid-template-rows:1fr;visibility:visible}.b61-pillars__panel .b61-pillars__panel-body{opacity:1;translate:none}'}</style>
-        </noscript>
+        </noscript>}
       </Wrap>
-      <PillarsInit openFirst={openFirst} />
+      {!story && <PillarsInit openFirst={openFirst} />}
     </div>
   )
 }
