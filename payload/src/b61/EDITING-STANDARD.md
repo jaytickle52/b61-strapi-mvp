@@ -167,10 +167,17 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 - Nothing to do per element: `Sections` and `Inner` add the markers. Code in
   `src/b61/kit/preview/` (EditMark, EditOverlay) and `src/b61/kit/admin/PreviewFocus.tsx`.
   The markers are `<template>` tags, only in the preview, which the plugin CSS already ignores.
-- **Click to the field (planned).** Clicking a part of an element (its heading, subheadline
-  or intro, a button, the photo, one card / question / stat) opens the element, switches to
-  the tab that holds that part, opens that panel (and that item's row), scrolls to the field
-  and puts the cursor in it. Clicking empty space in the element still opens the element.
+- **Click to the field.** Clicking a part of an element (a heading line, the subheadline or
+  intro, a button, a stat, a card title, words in the Content editor, a photo) opens the
+  element, then the item's row and the Content panel that holds the field, scrolls to it and
+  puts the cursor in it. Clicking the element's padding, or a part filled from elsewhere
+  (cards from Programs), opens the element as before. Accordion questions, tabs and carousel
+  arrows keep working when clicked, so they don't jump to the form; click beside them.
+- How: the preview sends what was clicked (its words, or the photo's address) with the
+  element's path; `PreviewFocus` matches the words against the element's own values (exact
+  words first), or the photo by file name. Each Content panel's header lists the fields it
+  holds (`data-b61-holds`), so the right closed panel can be opened. Nothing per element.
+  Checked in a real browser by `scripts/click-to-field.mjs` (CI).
 
 ## 13. Site tone and custom CSS
 
