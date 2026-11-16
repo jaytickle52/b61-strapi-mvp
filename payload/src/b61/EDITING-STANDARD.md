@@ -145,3 +145,19 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 - Overlay strength on Hero, CTA Band and Section is exactly what the editor sets (0-100%); the old
   hidden floors (80% on Hero, 70-75% elsewhere) are gone, and the help text asks editors to check
   readability. Section patterns have a Strength (default 6%, the plugin's value).
+
+## 14. Style: themes and dials (Banner 61)
+
+- School settings > Look > **Style (Banner 61)**: a **Theme** (Classic, Modern, Bold, Soft, Editorial) and
+  15 dials: corners, button shape and letters, heading letters, weight, spacing and sizes, accent heading
+  line, eyebrow line and letters, photo frames, section spacing, page width, hero edge line, entrance motion.
+  An empty dial follows the theme; a set dial overrides it. Classic is the original B61 look and emits nothing.
+- Banner 61 admins only (group access + hidden for school staff). School staff keep colours, fonts and every
+  element's Design tab, as before.
+- Definitions live in `src/b61/lib/style.ts` (DIALS, THEMES, `b61Style`): each position sets tokens the
+  elements already read, or one `data-b61-*` attribute on `<html>` that `src/b61/styles/style.css` keys on.
+  Admin fields are generated from DIALS (`style-fields.ts`), so a new dial or theme is one edit there.
+- Payload owns its element CSS (decided 15 Nov 2026; no Breakdance parity). Element CSS should read tokens,
+  not literals, so the dials reach it: e.g. the accent heading line reads `--b61-emph-style`,
+  `--b61-emph-decoration`, `--b61-emph-offset`.
+- Heading weight snaps to the nearest weight the heading font has, and that weight is loaded with the font.

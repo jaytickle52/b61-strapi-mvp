@@ -1,6 +1,6 @@
 // School features test (Thread F): announcements, the events calendar and its
 // subscribe feed, calendar feed import, news categories, drag ordering, page
-// templates, Bunny video links and uploads, branding (colors, fonts, site icon), site tone and custom CSS. Runs against a site with the demo schools
+// templates, Bunny video links and uploads, branding (colors, fonts, site icon), site tone and custom CSS, style themes and dials. Runs against a site with the demo schools
 // and a Banner 61 admin account (the smoke test creates one):
 //
 //   BASE_URL=http://localhost:3000 SMOKE_EMAIL=... SMOKE_PASSWORD=... node scripts/features.mjs
@@ -340,6 +340,30 @@ async function main() {
     await api('PATCH', `/school-settings/${hs.id}`, { token: admin, body: { siteTone: hs.siteTone ?? 'light', customCss: hs.customCss ?? null, _status: 'published' } })
     const ed = (await api('GET', `/users?where[email][equals]=${encodeURIComponent(edEmail)}&depth=0`, { token: admin })).json?.docs?.[0]
     if (ed) await api('DELETE', `/users/${ed.id}`, { token: admin })
+  }
+
+  // ----- Style: themes and dials ---------------------------------------------------
+  console.log('\nStyle (themes and dials)')
+  const hs2 = (await api('GET', `/school-settings?where[school][equals]=${harbor}&depth=0`, { token: admin })).json?.docs?.[0]
+  if (hs2) {
+    const before = (await page('/', 'harbor-oaks')).text
+    check(!before.includes('data-b61-hcase') && !before.includes('--b61-radius-btn'), 'Classic (no theme) adds no style to the page')
+    await api('PATCH', `/school-settings/${hs2.id}`, { token: admin, body: { style: { theme: 'bold' }, _status: 'published' } })
+    const bold = (await page('/', 'harbor-oaks')).text
+    check(bold.includes('data-b61-hcase="upper"') && bold.includes('--b61-radius-btn:0px'), 'the Bold theme sets capitals and square buttons')
+    check(!(await page('/', 'cedar-ridge')).text.includes('data-b61-hcase'), "another school's style is untouched")
+    await api('PATCH', `/school-settings/${hs2.id}`, { token: admin, body: { style: { theme: 'bold', buttons: 'pill', headingCase: 'typed' }, _status: 'published' } })
+    const mixed = (await page('/', 'harbor-oaks')).text
+    check(!mixed.includes('data-b61-hcase') && !mixed.includes('--b61-radius-btn') && mixed.includes('--b61-radius:0px'), "a school's own dial overrides its theme; the rest follow the theme")
+    const edEmail2 = `feat-style-${RUN}@example.com`
+    await api('POST', '/users', { token: admin, body: { email: edEmail2, password: PASSWORD, name: 'Style editor', role: 'editor', tenants: [{ tenant: harbor, role: 'schoolAdmin' }] } })
+    const ed2 = await login(edEmail2, PASSWORD)
+    await api('PATCH', `/school-settings/${hs2.id}`, { token: ed2, body: { style: { theme: 'soft' }, _status: 'published' } })
+    const kept2 = (await api('GET', `/school-settings/${hs2.id}?depth=0`, { token: admin })).json
+    check(kept2?.style?.theme === 'bold', 'a School Admin cannot change the style (Banner 61 only)')
+    await api('PATCH', `/school-settings/${hs2.id}`, { token: admin, body: { style: hs2.style ?? { theme: null }, _status: 'published' } })
+    const u2 = (await api('GET', `/users?where[email][equals]=${encodeURIComponent(edEmail2)}&depth=0`, { token: admin })).json?.docs?.[0]
+    if (u2) await api('DELETE', `/users/${u2.id}`, { token: admin })
   }
 
   // ----- Tidy up --------------------------------------------------------------

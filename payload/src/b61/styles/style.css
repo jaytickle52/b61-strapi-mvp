@@ -1,0 +1,29 @@
+/*
+ * Site style hooks (School settings > Look > Style, lib/style.ts).
+ *
+ * Most dials only set a token the elements already read (radius, frame, width,
+ * padding, type sizes, motion). The few below have no token in the element CSS,
+ * so they key on a data attribute on <html>, set only when the dial is moved
+ * off its Classic position. Without the attribute nothing here applies.
+ */
+
+/* Heading letters: Capitals. Display headings only (h1-h3 and the elements'
+   own heading lines); small headings inside cards keep their case. */
+[data-b61-hcase='upper'] :is(h1, h2, h3, [class*='__heading-line']) {
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Heading spacing. Placed after the capitals rule so a chosen spacing wins. */
+[data-b61-htrack='tight'] :is(h1, h2, h3, [class*='__heading-line']) {
+  letter-spacing: -0.03em;
+}
+[data-b61-htrack='wide'] :is(h1, h2, h3, [class*='__heading-line']) {
+  letter-spacing: 0.04em;
+}
+
+/* Button letters: Capitals. */
+[data-b61-btn-case='upper'] :is(.b61-btn, .b61-hdr__cta) {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}

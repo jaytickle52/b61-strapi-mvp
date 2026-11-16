@@ -138,7 +138,9 @@
    and it keeps working so no existing band changes. */
 .b61-acc__heading-line--em,
 .b61-acc__heading em {
-  font-style: italic;
+  font-style: var(--b61-emph-style, italic);
+  text-decoration: var(--b61-emph-decoration, none);
+  text-underline-offset: var(--b61-emph-offset, auto);
   color: var(--acc-accent);
 }
 

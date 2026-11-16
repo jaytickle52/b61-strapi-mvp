@@ -90,10 +90,15 @@ function weightsFor(spec: FontSpec, want: number[]): number[] {
  * The Google Fonts stylesheet for a school's heading, body and buttons fonts,
  * asking only for weights each family has. Unknown names fall back to defaults.
  */
-export function fontsHref(s: { headingFont?: string | null; bodyFont?: string | null; uiFont?: string | null }): string {
+export function fontsHref(
+  s: { headingFont?: string | null; bodyFont?: string | null; uiFont?: string | null },
+  opts: { headingWeight?: number | null } = {},
+): string {
   const pick = (name: string | null | undefined, fallback: string) => (name && FONTS[name] ? name : fallback)
+  // Style > Heading weight may ask the heading font for one more weight (lib/style.ts).
+  const hw = opts.headingWeight ? [opts.headingWeight] : []
   const roles: [string, number[], number[]][] = [
-    [pick(s.headingFont, 'Fraunces'), [400, 600, 700], [400, 600]],
+    [pick(s.headingFont, 'Fraunces'), [400, 600, 700, ...hw], [400, 600, ...hw]],
     [pick(s.bodyFont, 'Inter'), [400, 600], [400]],
     [pick(s.uiFont, 'Montserrat'), [500, 600, 700], []],
   ]

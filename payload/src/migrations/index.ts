@@ -12,6 +12,7 @@ import * as migration_20261115_121541_theme_dark_css from './20261115_121541_the
 import * as migration_20261115_123520_structured_data from './20261115_123520_structured_data';
 import * as migration_20261115_124153_domains_ai_crawlers from './20261115_124153_domains_ai_crawlers';
 import * as migration_20261115_211611_merge_seo_stack from './20261115_211611_merge_seo_stack';
+import * as migration_20261115_235935_style_themes from './20261115_235935_style_themes';
 
 export const migrations = [
   {
@@ -82,6 +83,11 @@ export const migrations = [
   {
     up: migration_20261115_211611_merge_seo_stack.up,
     down: migration_20261115_211611_merge_seo_stack.down,
-    name: '20261115_211611_merge_seo_stack'
+    name: '20261115_211611_merge_seo_stack',
+  },
+  {
+    up: migration_20261115_235935_style_themes.up,
+    down: migration_20261115_235935_style_themes.down,
+    name: '20261115_235935_style_themes'
   },
 ];
