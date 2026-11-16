@@ -94,3 +94,9 @@
 
 /* Click-to-field: the field opened from the preview flashes once. */
 .b61-field-flash { animation: b61-row-flash 1.8s ease-out; border-radius: var(--style-radius-m, 4px); }
+
+/* A number field's unit, after the input (kit `unit()`). */
+.field-type.number:has(.b61-unit) .field-type__wrap { display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; }
+.field-type.number:has(.b61-unit) .field-type__wrap > input { flex: 0 1 140px; }
+.field-type.number:has(.b61-unit) .field-description { flex-basis: 100%; }
+.b61-unit { color: var(--theme-elevation-500); font-size: 13px; white-space: nowrap; }

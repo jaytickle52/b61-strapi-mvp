@@ -17,7 +17,7 @@ import { profileUrl } from '../../school/fields'
 const navLink = (o: { description?: boolean } = {}): Field[] => [
   { name: 'label', label: 'Label', type: 'text', required: true },
   link(),
-  ...(o.description ? [{ name: 'description', label: 'Short description (optional)', type: 'text' } as Field] : []),
+  ...(o.description ? [{ name: 'description', label: 'Short description', type: 'text' } as Field] : []),
 ]
 
 const is = (k: string) => (_: unknown, s: any) => (s?.kind ?? 'link') === k
@@ -48,7 +48,7 @@ export const headerFields: Field[] = [
       ),
       {
         name: 'feature',
-        label: 'Featured card (optional)',
+        label: 'Featured card',
         type: 'group',
         admin: { condition: is('mega'), description: 'A photo card at the right of the mega menu, e.g. "Schedule a visit".' },
         fields: [

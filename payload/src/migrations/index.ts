@@ -17,6 +17,7 @@ import * as migration_20261116_012643_layouts_l2 from './20261116_012643_layouts
 import * as migration_20261116_023152_wake_patterns from './20261116_023152_wake_patterns';
 import * as migration_20261116_031341_changing_words_text from './20261116_031341_changing_words_text';
 import * as migration_20261116_113637_canterbury_patterns from './20261116_113637_canterbury_patterns';
+import * as migration_20261116_153825_drop_intro_subheadings from './20261116_153825_drop_intro_subheadings';
 
 export const migrations = [
   {
@@ -112,6 +113,11 @@ export const migrations = [
   {
     up: migration_20261116_113637_canterbury_patterns.up,
     down: migration_20261116_113637_canterbury_patterns.down,
-    name: '20261116_113637_canterbury_patterns'
+    name: '20261116_113637_canterbury_patterns',
+  },
+  {
+    up: migration_20261116_153825_drop_intro_subheadings.up,
+    down: migration_20261116_153825_drop_intro_subheadings.down,
+    name: '20261116_153825_drop_intro_subheadings'
   },
 ];

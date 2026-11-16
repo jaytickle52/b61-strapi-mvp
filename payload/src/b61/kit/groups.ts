@@ -91,6 +91,22 @@ export const ICON_OPTIONS: [string, string][] = [
   ['school', 'School'],
 ]
 
+/**
+ * Fills for an element's items (Accordion items, boxed stats), in the kit's one
+ * colour vocabulary: no fill first, then lightest to darkest. Stored values are
+ * the plugin's (card, light, soft...); only the words changed (audit 1.78.0).
+ * Page = the page's own ground (white on a light site); White card = always
+ * white with a border.
+ */
+export const ITEM_SURFACES: [string, string][] = [
+  ['outline', 'Outline'],
+  ['light', 'Page'],
+  ['card', 'White card'],
+  ['soft', 'Light wash'],
+  ['dark', 'Dark'],
+  ['accent', 'Accent'],
+]
+
 /** The band surface: the shared four, from utilities.css. */
 export function surfaceField(): Field {
   return segmented(
@@ -244,7 +260,7 @@ export function textAlignField(): Field {
 export function bandHeadFields(o: { levels?: ('h1' | 'h2' | 'h3' | 'h4')[]; intro?: boolean } = {}): Field[] {
   return [
     ...headingFields({ levels: o.levels ?? ['h2', 'h3', 'h4'] }),
-    subheadsField(),
-    ...(o.intro ? [{ name: 'intro', label: 'Intro', type: 'richText', editor: simpleEditor() } as Field] : []),
+    // One supporting-text field (EDITING-STANDARD.md section 5): Intro on elements with items, else Subheadings.
+    ...(o.intro ? [{ name: 'intro', label: 'Intro', type: 'richText', editor: simpleEditor() } as Field] : [subheadsField()]),
   ]
 }

@@ -3,11 +3,13 @@ import { defineElement, panel } from '../../kit/element'
 import { segmented, toggle } from '../../kit/controls'
 import { bandHeadFields, entranceField, eyebrowRuleField, headingAlignField, list, paddingFields, photo, surfaceField } from '../../kit/groups'
 
-/* B61 PILLARS (Feature Tabs), port of Banner 61 Elements' B61 Pillars (plugin 1.77.1). */
+/* B61 PILLARS (Feature Tabs), port of Banner 61 Elements' B61 Pillars (plugin 1.77.1).
+ * Shown to editors as "Tabbed Features" (audit 1.78.0): tabs with a photo each,
+ * so it reads apart from Tabs (tabs that hold any elements). The slug stays. */
 export const B61Pillars = defineElement({
   slug: 'b61Pillars',
-  name: 'Pillars',
-  plural: 'Pillars',
+  name: 'Tabbed Features',
+  plural: 'Tabbed Features',
   mode: { field: 'tabPosition', labels: { left: 'Tabs left', right: 'Tabs right', top: 'Tabs on top' } },
   content: [
     panel('Heading', bandHeadFields({ intro: true })),

@@ -30,7 +30,7 @@ export const B61Rail: Block = defineElement({
       toggle('sticky', 'Stick on scroll'),
     ],
     color: [
-      dropdown('surface', 'Panel', [['plain', 'White card'], ['soft', 'Light wash'], ['dark', 'Dark'], ['accent', 'Accent'], ['none', 'No panel']], { default: 'plain' }),
+      dropdown('surface', 'Panel', [['none', 'None'], ['plain', 'White card'], ['soft', 'Light wash'], ['dark', 'Dark'], ['accent', 'Accent']], { default: 'plain' }),
     ],
   },
 })

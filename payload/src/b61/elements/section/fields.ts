@@ -1,5 +1,5 @@
 import { defineElement, panel } from '../../kit/element'
-import { dropdown, segmented, step, toggle, type WhenRule } from '../../kit/controls'
+import { dropdown, segmented, step, toggle, unit, type WhenRule } from '../../kit/controls'
 import { entranceField, paddingFields, photo } from '../../kit/groups'
 import { innerField } from '../../inner'
 
@@ -25,7 +25,7 @@ export const B61Section = defineElement({
     }),
     panel('Background photo', [
       photo('image', 'Photo'),
-      { name: 'overlayStrength', label: 'Overlay strength (%)', type: 'number', min: 0, max: 100, admin: { step: 5, placeholder: '70', description: 'Check the words stay easy to read over the photo (70% is a safe start).', condition: (_, s) => Boolean(s?.image) } },
+      unit({ name: 'overlayStrength', label: 'Overlay strength', type: 'number', min: 0, max: 100, admin: { step: 5, placeholder: '70', description: 'Check the words stay easy to read over the photo (70% is a safe start).', condition: (_, s) => Boolean(s?.image) } }, '%'),
     ]),
   ],
   design: {
@@ -44,13 +44,13 @@ export const B61Section = defineElement({
       label: 'Background',
       fields: [
         toggle('patternOn', 'Pattern'),
-        photo('patternImage', 'Tile image (optional)', { when: { field: 'patternOn', in: [true] } }),
+        photo('patternImage', 'Tile image', { when: { field: 'patternOn', in: [true] } }),
         {
           type: 'row',
           admin: { condition: (_: unknown, s: any) => Boolean(s?.patternOn) },
           fields: [
-            { name: 'tileSize', label: 'Tile size (px)', type: 'number', min: 4, max: 600, admin: { width: '50%' } },
-            { name: 'patternStrength', label: 'Strength (%)', type: 'number', min: 1, max: 100, admin: { width: '50%', placeholder: '6', step: 1 } },
+            unit({ name: 'tileSize', label: 'Tile size', type: 'number', min: 4, max: 600, admin: { width: '50%' } }, 'px'),
+            unit({ name: 'patternStrength', label: 'Strength', type: 'number', min: 1, max: 100, admin: { width: '50%', placeholder: '6', step: 1 } }, '%'),
           ],
         },
         toggle('watermarkOn', 'Watermark'),
@@ -59,8 +59,8 @@ export const B61Section = defineElement({
           type: 'row',
           admin: { condition: (_: unknown, s: any) => Boolean(s?.watermarkOn) },
           fields: [
-            { name: 'watermarkSize', label: 'Size (% of width)', type: 'number', min: 5, max: 100, admin: { width: '50%' } },
-            { name: 'watermarkStrength', label: 'Strength (%)', type: 'number', min: 0, max: 30, admin: { width: '50%' } },
+            unit({ name: 'watermarkSize', label: 'Size', type: 'number', min: 5, max: 100, admin: { width: '50%' } }, '% of width'),
+            unit({ name: 'watermarkStrength', label: 'Strength', type: 'number', min: 0, max: 30, admin: { width: '50%' } }, '%'),
           ],
         },
       ],

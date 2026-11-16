@@ -201,13 +201,13 @@ export interface Page {
               | null;
             headingLevel?: ('auto' | 'h1' | 'h2' | 'h3') | null;
             /**
-             * Optional. Two to four words, separated by commas. The first must be in a heading line exactly as typed; the others take its place in turn, once.
+             * Two to four words, separated by commas. The first must be in a heading line exactly as typed; the others take its place in turn, once.
              */
             changingWords?: string | null;
-            subheadlineScale?: ('display' | 'body' | 'meta') | null;
+            subheadlineScale?: ('body' | 'display' | 'meta') | null;
             subheadline?: string | null;
             /**
-             * Short facts, e.g. "Grades PK-8", "Est. 1951".
+             * e.g. "Grades PK-8", "Est. 1951".
              */
             metaItems?:
               | {
@@ -360,7 +360,7 @@ export interface Page {
             video?: string | null;
             imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
             /**
-             * Optional. A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+             * A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
              */
             badge?: (number | null) | Media;
             imageSide?: ('left' | 'right') | null;
@@ -442,11 +442,8 @@ export interface Page {
             headPosition?: ('above' | 'beside') | null;
             columnBalance?: number | null;
             textAlign?: ('left' | 'center') | null;
-            /**
-             * Where the text column sits in the band.
-             */
-            position?: ('left' | 'center') | null;
             measureStep?: number | null;
+            position?: ('left' | 'center') | null;
             headingWidth?: ('text' | 'full') | null;
             padTop?: ('normal' | 'tight' | 'none') | null;
             padBottom?: ('normal' | 'tight' | 'none') | null;
@@ -474,12 +471,6 @@ export interface Page {
                 }[]
               | null;
             headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-            subheads?:
-              | {
-                  text: string;
-                  id?: string | null;
-                }[]
-              | null;
             intro?: {
               root: {
                 type: string;
@@ -621,12 +612,6 @@ export interface Page {
                 }[]
               | null;
             headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-            subheads?:
-              | {
-                  text: string;
-                  id?: string | null;
-                }[]
-              | null;
             intro?: {
               root: {
                 type: string;
@@ -679,7 +664,7 @@ export interface Page {
             flushEdges?: boolean | null;
             figureScale?: ('large' | 'medium' | 'small') | null;
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
-            itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+            itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             bandWidth?: ('full' | 'right' | 'left') | null;
@@ -702,12 +687,6 @@ export interface Page {
                 }[]
               | null;
             headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-            subheads?:
-              | {
-                  text: string;
-                  id?: string | null;
-                }[]
-              | null;
             intro?: {
               root: {
                 type: string;
@@ -790,7 +769,7 @@ export interface Page {
             quote: string;
             attribution?: string | null;
             /**
-             * A faint logo behind the quote (optional).
+             * A faint logo behind the quote.
              */
             watermark?: (number | null) | Media;
             textAlign?: ('left' | 'center') | null;
@@ -821,12 +800,6 @@ export interface Page {
                 }[]
               | null;
             headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-            subheads?:
-              | {
-                  text: string;
-                  id?: string | null;
-                }[]
-              | null;
             intro?: {
               root: {
                 type: string;
@@ -868,6 +841,8 @@ export interface Page {
              * Search engines and AI tools read each title as a question and its body as the answer.
              */
             faq?: boolean | null;
+            firstItemOpen?: boolean | null;
+            singleOpen?: boolean | null;
             buttons?:
               | {
                   label: string;
@@ -894,11 +869,9 @@ export interface Page {
             padBottom?: ('normal' | 'tight' | 'none') | null;
             itemStyle?: ('divided' | 'boxed' | 'separated') | null;
             iconStyle?: ('chevron' | 'plusminus') | null;
-            singleOpen?: boolean | null;
-            firstItemOpen?: boolean | null;
             showNumbers?: boolean | null;
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
-            itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+            itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
@@ -919,12 +892,6 @@ export interface Page {
                 }[]
               | null;
             headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-            subheads?:
-              | {
-                  text: string;
-                  id?: string | null;
-                }[]
-              | null;
             intro?: {
               root: {
                 type: string;
@@ -953,7 +920,7 @@ export interface Page {
                             quote: string;
                             attribution?: string | null;
                             /**
-                             * A faint logo behind the quote (optional).
+                             * A faint logo behind the quote.
                              */
                             watermark?: (number | null) | Media;
                             textAlign?: ('left' | 'center') | null;
@@ -1048,7 +1015,7 @@ export interface Page {
                             video?: string | null;
                             imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
                             /**
-                             * Optional. A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+                             * A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
                              */
                             badge?: (number | null) | Media;
                             imageSide?: ('left' | 'right') | null;
@@ -1130,11 +1097,8 @@ export interface Page {
                             headPosition?: ('above' | 'beside') | null;
                             columnBalance?: number | null;
                             textAlign?: ('left' | 'center') | null;
-                            /**
-                             * Where the text column sits in the band.
-                             */
-                            position?: ('left' | 'center') | null;
                             measureStep?: number | null;
+                            position?: ('left' | 'center') | null;
                             headingWidth?: ('text' | 'full') | null;
                             padTop?: ('normal' | 'tight' | 'none') | null;
                             padBottom?: ('normal' | 'tight' | 'none') | null;
@@ -1162,12 +1126,6 @@ export interface Page {
                                 }[]
                               | null;
                             headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-                            subheads?:
-                              | {
-                                  text: string;
-                                  id?: string | null;
-                                }[]
-                              | null;
                             intro?: {
                               root: {
                                 type: string;
@@ -1334,12 +1292,6 @@ export interface Page {
                 }[]
               | null;
             headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-            subheads?:
-              | {
-                  text: string;
-                  id?: string | null;
-                }[]
-              | null;
             intro?: {
               root: {
                 type: string;
@@ -1408,12 +1360,6 @@ export interface Page {
                 }[]
               | null;
             headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-            subheads?:
-              | {
-                  text: string;
-                  id?: string | null;
-                }[]
-              | null;
             intro?: {
               root: {
                 type: string;
@@ -1443,7 +1389,7 @@ export interface Page {
                             quote: string;
                             attribution?: string | null;
                             /**
-                             * A faint logo behind the quote (optional).
+                             * A faint logo behind the quote.
                              */
                             watermark?: (number | null) | Media;
                             textAlign?: ('left' | 'center') | null;
@@ -1538,7 +1484,7 @@ export interface Page {
                             video?: string | null;
                             imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
                             /**
-                             * Optional. A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+                             * A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
                              */
                             badge?: (number | null) | Media;
                             imageSide?: ('left' | 'right') | null;
@@ -1620,11 +1566,8 @@ export interface Page {
                             headPosition?: ('above' | 'beside') | null;
                             columnBalance?: number | null;
                             textAlign?: ('left' | 'center') | null;
-                            /**
-                             * Where the text column sits in the band.
-                             */
-                            position?: ('left' | 'center') | null;
                             measureStep?: number | null;
+                            position?: ('left' | 'center') | null;
                             headingWidth?: ('text' | 'full') | null;
                             padTop?: ('normal' | 'tight' | 'none') | null;
                             padBottom?: ('normal' | 'tight' | 'none') | null;
@@ -1731,11 +1674,8 @@ export interface Page {
                       headPosition?: ('above' | 'beside') | null;
                       columnBalance?: number | null;
                       textAlign?: ('left' | 'center') | null;
-                      /**
-                       * Where the text column sits in the band.
-                       */
-                      position?: ('left' | 'center') | null;
                       measureStep?: number | null;
+                      position?: ('left' | 'center') | null;
                       headingWidth?: ('text' | 'full') | null;
                       padTop?: ('normal' | 'tight' | 'none') | null;
                       padBottom?: ('normal' | 'tight' | 'none') | null;
@@ -1827,7 +1767,7 @@ export interface Page {
                       video?: string | null;
                       imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
                       /**
-                       * Optional. A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+                       * A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
                        */
                       badge?: (number | null) | Media;
                       imageSide?: ('left' | 'right') | null;
@@ -1862,12 +1802,6 @@ export interface Page {
                           }[]
                         | null;
                       headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-                      subheads?:
-                        | {
-                            text: string;
-                            id?: string | null;
-                          }[]
-                        | null;
                       intro?: {
                         root: {
                           type: string;
@@ -2010,12 +1944,6 @@ export interface Page {
                           }[]
                         | null;
                       headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-                      subheads?:
-                        | {
-                            text: string;
-                            id?: string | null;
-                          }[]
-                        | null;
                       intro?: {
                         root: {
                           type: string;
@@ -2068,7 +1996,7 @@ export interface Page {
                       flushEdges?: boolean | null;
                       figureScale?: ('large' | 'medium' | 'small') | null;
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
-                      itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+                      itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       bandWidth?: ('full' | 'right' | 'left') | null;
@@ -2091,12 +2019,6 @@ export interface Page {
                           }[]
                         | null;
                       headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-                      subheads?:
-                        | {
-                            text: string;
-                            id?: string | null;
-                          }[]
-                        | null;
                       intro?: {
                         root: {
                           type: string;
@@ -2179,7 +2101,7 @@ export interface Page {
                       quote: string;
                       attribution?: string | null;
                       /**
-                       * A faint logo behind the quote (optional).
+                       * A faint logo behind the quote.
                        */
                       watermark?: (number | null) | Media;
                       textAlign?: ('left' | 'center') | null;
@@ -2231,12 +2153,6 @@ export interface Page {
                           }[]
                         | null;
                       headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-                      subheads?:
-                        | {
-                            text: string;
-                            id?: string | null;
-                          }[]
-                        | null;
                       intro?: {
                         root: {
                           type: string;
@@ -2278,6 +2194,8 @@ export interface Page {
                        * Search engines and AI tools read each title as a question and its body as the answer.
                        */
                       faq?: boolean | null;
+                      firstItemOpen?: boolean | null;
+                      singleOpen?: boolean | null;
                       buttons?:
                         | {
                             label: string;
@@ -2304,11 +2222,9 @@ export interface Page {
                       padBottom?: ('normal' | 'tight' | 'none') | null;
                       itemStyle?: ('divided' | 'boxed' | 'separated') | null;
                       iconStyle?: ('chevron' | 'plusminus') | null;
-                      singleOpen?: boolean | null;
-                      firstItemOpen?: boolean | null;
                       showNumbers?: boolean | null;
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
-                      itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+                      itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
@@ -2329,12 +2245,6 @@ export interface Page {
                           }[]
                         | null;
                       headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-                      subheads?:
-                        | {
-                            text: string;
-                            id?: string | null;
-                          }[]
-                        | null;
                       intro?: {
                         root: {
                           type: string;
@@ -2456,8 +2366,8 @@ export interface Page {
                        */
                       overlayStrength?: number | null;
                       textAlign?: ('left' | 'center') | null;
-                      position?: ('left' | 'center') | null;
                       widthStep?: number | null;
+                      position?: ('left' | 'center') | null;
                       padTop?: ('normal' | 'tight' | 'none') | null;
                       padBottom?: ('normal' | 'tight' | 'none') | null;
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
@@ -2529,8 +2439,8 @@ export interface Page {
                         newTab?: boolean | null;
                       };
                       size?: ('standard' | 'large') | null;
-                      firstColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
-                      secondColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
+                      firstColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
+                      secondColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
@@ -2670,7 +2580,7 @@ export interface Page {
                         | null;
                       actionsPosition?: ('top' | 'bottom') | null;
                       sticky?: boolean | null;
-                      surface?: ('plain' | 'soft' | 'dark' | 'accent' | 'none') | null;
+                      surface?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -2736,11 +2646,8 @@ export interface Page {
                       headPosition?: ('above' | 'beside') | null;
                       columnBalance?: number | null;
                       textAlign?: ('left' | 'center') | null;
-                      /**
-                       * Where the text column sits in the band.
-                       */
-                      position?: ('left' | 'center') | null;
                       measureStep?: number | null;
+                      position?: ('left' | 'center') | null;
                       headingWidth?: ('text' | 'full') | null;
                       padTop?: ('normal' | 'tight' | 'none') | null;
                       padBottom?: ('normal' | 'tight' | 'none') | null;
@@ -2832,7 +2739,7 @@ export interface Page {
                       video?: string | null;
                       imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
                       /**
-                       * Optional. A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+                       * A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
                        */
                       badge?: (number | null) | Media;
                       imageSide?: ('left' | 'right') | null;
@@ -2867,12 +2774,6 @@ export interface Page {
                           }[]
                         | null;
                       headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-                      subheads?:
-                        | {
-                            text: string;
-                            id?: string | null;
-                          }[]
-                        | null;
                       intro?: {
                         root: {
                           type: string;
@@ -3015,12 +2916,6 @@ export interface Page {
                           }[]
                         | null;
                       headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-                      subheads?:
-                        | {
-                            text: string;
-                            id?: string | null;
-                          }[]
-                        | null;
                       intro?: {
                         root: {
                           type: string;
@@ -3073,7 +2968,7 @@ export interface Page {
                       flushEdges?: boolean | null;
                       figureScale?: ('large' | 'medium' | 'small') | null;
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
-                      itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+                      itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       bandWidth?: ('full' | 'right' | 'left') | null;
@@ -3096,12 +2991,6 @@ export interface Page {
                           }[]
                         | null;
                       headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-                      subheads?:
-                        | {
-                            text: string;
-                            id?: string | null;
-                          }[]
-                        | null;
                       intro?: {
                         root: {
                           type: string;
@@ -3184,7 +3073,7 @@ export interface Page {
                       quote: string;
                       attribution?: string | null;
                       /**
-                       * A faint logo behind the quote (optional).
+                       * A faint logo behind the quote.
                        */
                       watermark?: (number | null) | Media;
                       textAlign?: ('left' | 'center') | null;
@@ -3236,12 +3125,6 @@ export interface Page {
                           }[]
                         | null;
                       headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-                      subheads?:
-                        | {
-                            text: string;
-                            id?: string | null;
-                          }[]
-                        | null;
                       intro?: {
                         root: {
                           type: string;
@@ -3283,6 +3166,8 @@ export interface Page {
                        * Search engines and AI tools read each title as a question and its body as the answer.
                        */
                       faq?: boolean | null;
+                      firstItemOpen?: boolean | null;
+                      singleOpen?: boolean | null;
                       buttons?:
                         | {
                             label: string;
@@ -3309,11 +3194,9 @@ export interface Page {
                       padBottom?: ('normal' | 'tight' | 'none') | null;
                       itemStyle?: ('divided' | 'boxed' | 'separated') | null;
                       iconStyle?: ('chevron' | 'plusminus') | null;
-                      singleOpen?: boolean | null;
-                      firstItemOpen?: boolean | null;
                       showNumbers?: boolean | null;
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
-                      itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
+                      itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
@@ -3334,12 +3217,6 @@ export interface Page {
                           }[]
                         | null;
                       headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-                      subheads?:
-                        | {
-                            text: string;
-                            id?: string | null;
-                          }[]
-                        | null;
                       intro?: {
                         root: {
                           type: string;
@@ -3461,8 +3338,8 @@ export interface Page {
                        */
                       overlayStrength?: number | null;
                       textAlign?: ('left' | 'center') | null;
-                      position?: ('left' | 'center') | null;
                       widthStep?: number | null;
+                      position?: ('left' | 'center') | null;
                       padTop?: ('normal' | 'tight' | 'none') | null;
                       padBottom?: ('normal' | 'tight' | 'none') | null;
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
@@ -3534,8 +3411,8 @@ export interface Page {
                         newTab?: boolean | null;
                       };
                       size?: ('standard' | 'large') | null;
-                      firstColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
-                      secondColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
+                      firstColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
+                      secondColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
@@ -3719,8 +3596,8 @@ export interface Page {
              */
             overlayStrength?: number | null;
             textAlign?: ('left' | 'center') | null;
-            position?: ('left' | 'center') | null;
             widthStep?: number | null;
+            position?: ('left' | 'center') | null;
             padTop?: ('normal' | 'tight' | 'none') | null;
             padBottom?: ('normal' | 'tight' | 'none') | null;
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
@@ -3813,8 +3690,8 @@ export interface Page {
               newTab?: boolean | null;
             };
             size?: ('standard' | 'large') | null;
-            firstColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
-            secondColor?: ('dark' | 'accent' | 'soft' | 'plain') | null;
+            firstColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
+            secondColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
             entrance?: ('on' | 'off') | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
@@ -3958,8 +3835,6 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4025,7 +3900,6 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4859,8 +4733,6 @@ export interface FormSubmission {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -5924,8 +5796,8 @@ export interface PagesSelect<T extends boolean = true> {
               headPosition?: T;
               columnBalance?: T;
               textAlign?: T;
-              position?: T;
               measureStep?: T;
+              position?: T;
               headingWidth?: T;
               padTop?: T;
               padBottom?: T;
@@ -5951,12 +5823,6 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               headingLevel?: T;
-              subheads?:
-                | T
-                | {
-                    text?: T;
-                    id?: T;
-                  };
               intro?: T;
               source?: T;
               limit?: T;
@@ -6049,12 +5915,6 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               headingLevel?: T;
-              subheads?:
-                | T
-                | {
-                    text?: T;
-                    id?: T;
-                  };
               intro?: T;
               stats?:
                 | T
@@ -6113,12 +5973,6 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               headingLevel?: T;
-              subheads?:
-                | T
-                | {
-                    text?: T;
-                    id?: T;
-                  };
               intro?: T;
               media?: T;
               image?: T;
@@ -6201,12 +6055,6 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               headingLevel?: T;
-              subheads?:
-                | T
-                | {
-                    text?: T;
-                    id?: T;
-                  };
               intro?: T;
               items?:
                 | T
@@ -6217,6 +6065,8 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               faq?: T;
+              firstItemOpen?: T;
+              singleOpen?: T;
               buttons?:
                 | T
                 | {
@@ -6242,8 +6092,6 @@ export interface PagesSelect<T extends boolean = true> {
               padBottom?: T;
               itemStyle?: T;
               iconStyle?: T;
-              singleOpen?: T;
-              firstItemOpen?: T;
               showNumbers?: T;
               surface?: T;
               itemSurface?: T;
@@ -6265,12 +6113,6 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               headingLevel?: T;
-              subheads?:
-                | T
-                | {
-                    text?: T;
-                    id?: T;
-                  };
               intro?: T;
               tabs?:
                 | T
@@ -6411,8 +6253,8 @@ export interface PagesSelect<T extends boolean = true> {
                                 headPosition?: T;
                                 columnBalance?: T;
                                 textAlign?: T;
-                                position?: T;
                                 measureStep?: T;
+                                position?: T;
                                 headingWidth?: T;
                                 padTop?: T;
                                 padBottom?: T;
@@ -6438,12 +6280,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       id?: T;
                                     };
                                 headingLevel?: T;
-                                subheads?:
-                                  | T
-                                  | {
-                                      text?: T;
-                                      id?: T;
-                                    };
                                 intro?: T;
                                 source?: T;
                                 limit?: T;
@@ -6552,12 +6388,6 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               headingLevel?: T;
-              subheads?:
-                | T
-                | {
-                    text?: T;
-                    id?: T;
-                  };
               intro?: T;
               items?:
                 | T
@@ -6593,12 +6423,6 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               headingLevel?: T;
-              subheads?:
-                | T
-                | {
-                    text?: T;
-                    id?: T;
-                  };
               intro?: T;
               label?: T;
               slides?:
@@ -6740,8 +6564,8 @@ export interface PagesSelect<T extends boolean = true> {
                                 headPosition?: T;
                                 columnBalance?: T;
                                 textAlign?: T;
-                                position?: T;
                                 measureStep?: T;
+                                position?: T;
                                 headingWidth?: T;
                                 padTop?: T;
                                 padBottom?: T;
@@ -6821,8 +6645,8 @@ export interface PagesSelect<T extends boolean = true> {
                           headPosition?: T;
                           columnBalance?: T;
                           textAlign?: T;
-                          position?: T;
                           measureStep?: T;
+                          position?: T;
                           headingWidth?: T;
                           padTop?: T;
                           padBottom?: T;
@@ -6918,12 +6742,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                           headingLevel?: T;
-                          subheads?:
-                            | T
-                            | {
-                                text?: T;
-                                id?: T;
-                              };
                           intro?: T;
                           source?: T;
                           limit?: T;
@@ -7016,12 +6834,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                           headingLevel?: T;
-                          subheads?:
-                            | T
-                            | {
-                                text?: T;
-                                id?: T;
-                              };
                           intro?: T;
                           stats?:
                             | T
@@ -7080,12 +6892,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                           headingLevel?: T;
-                          subheads?:
-                            | T
-                            | {
-                                text?: T;
-                                id?: T;
-                              };
                           intro?: T;
                           media?: T;
                           image?: T;
@@ -7184,12 +6990,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                           headingLevel?: T;
-                          subheads?:
-                            | T
-                            | {
-                                text?: T;
-                                id?: T;
-                              };
                           intro?: T;
                           items?:
                             | T
@@ -7200,6 +7000,8 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                           faq?: T;
+                          firstItemOpen?: T;
+                          singleOpen?: T;
                           buttons?:
                             | T
                             | {
@@ -7225,8 +7027,6 @@ export interface PagesSelect<T extends boolean = true> {
                           padBottom?: T;
                           itemStyle?: T;
                           iconStyle?: T;
-                          singleOpen?: T;
-                          firstItemOpen?: T;
                           showNumbers?: T;
                           surface?: T;
                           itemSurface?: T;
@@ -7248,12 +7048,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                           headingLevel?: T;
-                          subheads?:
-                            | T
-                            | {
-                                text?: T;
-                                id?: T;
-                              };
                           intro?: T;
                           items?:
                             | T
@@ -7318,8 +7112,8 @@ export interface PagesSelect<T extends boolean = true> {
                           image?: T;
                           overlayStrength?: T;
                           textAlign?: T;
-                          position?: T;
                           widthStep?: T;
+                          position?: T;
                           padTop?: T;
                           padBottom?: T;
                           surface?: T;
@@ -7543,8 +7337,8 @@ export interface PagesSelect<T extends boolean = true> {
                           headPosition?: T;
                           columnBalance?: T;
                           textAlign?: T;
-                          position?: T;
                           measureStep?: T;
+                          position?: T;
                           headingWidth?: T;
                           padTop?: T;
                           padBottom?: T;
@@ -7640,12 +7434,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                           headingLevel?: T;
-                          subheads?:
-                            | T
-                            | {
-                                text?: T;
-                                id?: T;
-                              };
                           intro?: T;
                           source?: T;
                           limit?: T;
@@ -7738,12 +7526,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                           headingLevel?: T;
-                          subheads?:
-                            | T
-                            | {
-                                text?: T;
-                                id?: T;
-                              };
                           intro?: T;
                           stats?:
                             | T
@@ -7802,12 +7584,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                           headingLevel?: T;
-                          subheads?:
-                            | T
-                            | {
-                                text?: T;
-                                id?: T;
-                              };
                           intro?: T;
                           media?: T;
                           image?: T;
@@ -7906,12 +7682,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                           headingLevel?: T;
-                          subheads?:
-                            | T
-                            | {
-                                text?: T;
-                                id?: T;
-                              };
                           intro?: T;
                           items?:
                             | T
@@ -7922,6 +7692,8 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                           faq?: T;
+                          firstItemOpen?: T;
+                          singleOpen?: T;
                           buttons?:
                             | T
                             | {
@@ -7947,8 +7719,6 @@ export interface PagesSelect<T extends boolean = true> {
                           padBottom?: T;
                           itemStyle?: T;
                           iconStyle?: T;
-                          singleOpen?: T;
-                          firstItemOpen?: T;
                           showNumbers?: T;
                           surface?: T;
                           itemSurface?: T;
@@ -7970,12 +7740,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                           headingLevel?: T;
-                          subheads?:
-                            | T
-                            | {
-                                text?: T;
-                                id?: T;
-                              };
                           intro?: T;
                           items?:
                             | T
@@ -8040,8 +7804,8 @@ export interface PagesSelect<T extends boolean = true> {
                           image?: T;
                           overlayStrength?: T;
                           textAlign?: T;
-                          position?: T;
                           widthStep?: T;
+                          position?: T;
                           padTop?: T;
                           padBottom?: T;
                           surface?: T;
@@ -8241,8 +8005,8 @@ export interface PagesSelect<T extends boolean = true> {
               image?: T;
               overlayStrength?: T;
               textAlign?: T;
-              position?: T;
               widthStep?: T;
+              position?: T;
               padTop?: T;
               padBottom?: T;
               surface?: T;
@@ -8565,7 +8329,6 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
   credit?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8641,8 +8404,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
-  prefix?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8946,8 +8707,6 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

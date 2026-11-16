@@ -1,4 +1,4 @@
-import { bodyField } from '../../kit/body'
+import { bodyField, hasBodyBlock } from '../../kit/body'
 import { defineElement, panel } from '../../kit/element'
 import { dropdown, segmented, step, toggle, type WhenRule } from '../../kit/controls'
 import {
@@ -54,32 +54,28 @@ export const B61Prose = defineElement({
         { default: 'above' },
       ),
       step('columnBalance', 'Column balance', { low: 'Wider heading', high: 'Wider text', when: beside }),
-      {
-        type: 'row',
-        fields: [
-          segmented(
-            'textAlign',
-            'Text alignment',
-            [
-              ['left', 'Left', 'align-left'],
-              ['center', 'Center', 'align-center'],
-            ],
-            { default: 'left', iconOnly: true, width: '50%' },
-          ),
-          segmented(
-            'position',
-            'Position',
-            [
-              ['left', 'Left'],
-              ['center', 'Center'],
-            ],
-            { default: 'center', width: '50%', description: 'Where the text column sits in the band.' },
-          ),
+      segmented(
+        'textAlign',
+        'Text alignment',
+        [
+          ['left', 'Left', 'align-left'],
+          ['center', 'Center', 'align-center'],
         ],
-      },
+        { default: 'left', iconOnly: true },
+      ),
     ],
+    // Block position sits by Width, which it depends on (audit 1.78.0).
     size: [
       step('measureStep', 'Width', { low: 'Narrow', high: 'Wide' }),
+      segmented(
+        'position',
+        'Block position',
+        [
+          ['left', 'Left'],
+          ['center', 'Center'],
+        ],
+        { default: 'center' },
+      ),
       segmented(
         'headingWidth',
         'Heading width',
@@ -93,6 +89,8 @@ export const B61Prose = defineElement({
     ],
     part: {
       label: 'Icon list',
+      // Only once the text has an Icon list in it (audit 1.78.0).
+      condition: (_: unknown, s: any) => hasBodyBlock(s?.body, 'iconList'),
       fields: [
         segmented(
           'iconlistStyle',

@@ -39,7 +39,10 @@ export function PanelLabel(props: Spec) {
         const ok = rules.some(test)
         if (!ok) return null
       }
-      const v = fields[`${prefix}${s.name}`]?.value
+      const state = fields[`${prefix}${s.name}`] as any
+      // A control hidden by its own condition (e.g. Card Grid's link text styles) says nothing.
+      if (state?.passesCondition === false) return null
+      const v = state?.value
       if (v === null || v === undefined || v === '') return s.unset ?? null
       // "Site default" says nothing about this element, so it stays out of the header.
       if (v === 'site') return null

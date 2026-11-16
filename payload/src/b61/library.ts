@@ -83,7 +83,7 @@ export async function syncElementLibrary(payload: Payload, school: School) {
         { label: 'Logic School', content: [{ blockType: 'b61Split', headingLevel: 'h3', lines: [{ text: 'Asking why' }], media: 'photo', image: pic(2), body: toBody([{ type: 'body', body: para('Students learn to reason, argue fairly and follow an idea to its source.') }]), padTop: 'none', padBottom: 'none' }] },
       ],
     },
-    label('Pillars', 'Feature tabs with a photo for each.'),
+    label('Tabbed Features', 'Tabs with a photo for each.'),
     {
       blockType: 'b61Pillars', lines: [{ text: 'What makes us different' }], tabPosition: 'left',
       items: [

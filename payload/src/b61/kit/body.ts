@@ -266,3 +266,10 @@ export function fromBody(state: any): BodyItem[] {
   flush()
   return out
 }
+
+/** True when a Content editor value holds one of its cards (e.g. 'iconList'); used to show that card's Design settings only when it exists. */
+export function hasBodyBlock(body: unknown, blockType: string): boolean {
+  const walk = (n: any): boolean =>
+    Boolean(n) && typeof n === 'object' && ((n.type === 'block' && n.fields?.blockType === blockType) || (Array.isArray(n.children) && n.children.some(walk)))
+  return walk((body as any)?.root)
+}
