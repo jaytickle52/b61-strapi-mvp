@@ -108,8 +108,8 @@ export const ITEM_SURFACES: [string, string][] = [
 ]
 
 /** The band surface: the shared four, from utilities.css. */
-export function surfaceField(): Field {
-  return segmented(
+export function surfaceField(o: { standalone?: string } = {}): Field {
+  const f = segmented(
     'surface',
     'Surface',
     [
@@ -120,6 +120,21 @@ export function surfaceField(): Field {
     ],
     { default: 'none' },
   )
+  if (!o.standalone) return f
+  // An element that has its own colour when it stands alone (Stats Band, CTA Band) stores no
+  // starting value: on its own it shows `standalone`; inside a Section, Tabs or Carousel it shows
+  // None, so it shares the container's colour until someone picks one. The editor highlights
+  // whichever applies (Segmented's `unset`); the element applies the same rule (Inner's `nested`).
+  const { defaultValue: _d, ...rest } = f as any
+  const field = rest.admin.components.Field
+  return {
+    ...rest,
+    admin: {
+      ...rest.admin,
+      description: 'Inside a Section, Tabs or a Carousel this starts as None, so it shares that colour.',
+      components: { ...rest.admin.components, Field: { ...field, clientProps: { ...field.clientProps, unset: { top: o.standalone, nested: 'none' } } } },
+    },
+  } as Field
 }
 
 export function headingAlignField(): Field {

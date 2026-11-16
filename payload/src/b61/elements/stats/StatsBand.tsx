@@ -6,10 +6,11 @@ import { BandHead, Buttons, eruleClass, revealAttr } from '../../kit/render/part
 export type StatsBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61StatsBand' }>
 
 /* Ported from elements/Stats_Band/html.twig (plugin 1.77.1). */
-export default function B61StatsBand({ block, index = 0 }: { block: StatsBlock; index?: number }) {
+export default function B61StatsBand({ block, index = 0, nested = false }: { block: StatsBlock; index?: number; nested?: boolean }) {
   const ri = revealAttr(block.entrance)
   const rv = block.entrance === 'off' ? 'off' : 'on'
-  const surface = block.surface ?? 'soft'
+  // Not chosen: Light wash on its own, None inside a container (shares its colour).
+  const surface = block.surface ?? (nested ? 'none' : 'soft')
   const align = block.textAlign ?? 'center'
   const cols = block.columns ?? '3'
   const istyle = block.itemStyle ?? 'plain'

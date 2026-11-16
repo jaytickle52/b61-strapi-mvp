@@ -492,6 +492,30 @@ async function main() {
     } else check(false, 'Harbor Oaks has School settings')
   }
 
+  // ----- Section colour is shared --------------------------------------------------
+  console.log('\nSection colour')
+  {
+    const stats = (label) => ({ blockType: 'b61StatsBand', eyebrow: label, stats: [{ value: '12', label: 'Teams' }, { value: '9', label: 'Clubs' }] })
+    const cta = (label) => ({ blockType: 'b61Cta', lines: [{ text: label }] })
+    const made = await api('POST', '/pages', {
+      token: admin,
+      body: {
+        school: harbor, title: `Colour ${RUN}`, slug: `colour-${RUN}`, _status: 'published',
+        sections: [
+          stats(`Alone ${RUN}`),
+          { blockType: 'b61Section', surface: 'dark', content: [stats(`Inside ${RUN}`), cta(`Inside CTA ${RUN}`), { ...stats(`Chosen ${RUN}`), surface: 'soft' }] },
+        ],
+      },
+    })
+    const cp = visible((await page(`/colour-${RUN}`, 'harbor-oaks')).text)
+    const region = (label) => (cp.match(new RegExp(`class="b61-stats__region ([^"]*)"[^>]*>(?:(?!b61-stats__region)[\\s\\S])*?${label}`)) ?? [])[1] ?? ''
+    check(made.status < 300 && region(`Alone ${RUN}`).startsWith('b61-surface--soft'), 'a Stats Band on its own keeps its Light wash')
+    check(region(`Inside ${RUN}`).startsWith('b61-surface--none'), "… and inside a Section shares the Section's colour")
+    check(/class="b61-cta__region b61-surface--none/.test(cp), '… as does a CTA Band')
+    check(region(`Chosen ${RUN}`).startsWith('b61-surface--soft'), '… unless it picks its own')
+    if (made.json?.doc?.id) await api('DELETE', `/pages/${made.json.doc.id}`, { token: admin })
+  }
+
   // ----- Tidy up --------------------------------------------------------------
   const mine = await api('GET', `/announcements?where[title][like]=${RUN}&limit=50&depth=0&draft=true`, { token: admin })
   for (const a of mine.json?.docs ?? []) await api('DELETE', `/announcements/${a.id}`, { token: admin })

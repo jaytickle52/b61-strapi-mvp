@@ -663,6 +663,9 @@ export interface Page {
             itemStyle?: ('plain' | 'divided' | 'boxed' | 'inline') | null;
             flushEdges?: boolean | null;
             figureScale?: ('large' | 'medium' | 'small') | null;
+            /**
+             * Inside a Section, Tabs or a Carousel this starts as None, so it shares that colour.
+             */
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
@@ -1995,6 +1998,9 @@ export interface Page {
                       itemStyle?: ('plain' | 'divided' | 'boxed' | 'inline') | null;
                       flushEdges?: boolean | null;
                       figureScale?: ('large' | 'medium' | 'small') | null;
+                      /**
+                       * Inside a Section, Tabs or a Carousel this starts as None, so it shares that colour.
+                       */
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
@@ -2370,6 +2376,9 @@ export interface Page {
                       position?: ('left' | 'center') | null;
                       padTop?: ('normal' | 'tight' | 'none') | null;
                       padBottom?: ('normal' | 'tight' | 'none') | null;
+                      /**
+                       * Inside a Section, Tabs or a Carousel this starts as None, so it shares that colour.
+                       */
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
@@ -2967,6 +2976,9 @@ export interface Page {
                       itemStyle?: ('plain' | 'divided' | 'boxed' | 'inline') | null;
                       flushEdges?: boolean | null;
                       figureScale?: ('large' | 'medium' | 'small') | null;
+                      /**
+                       * Inside a Section, Tabs or a Carousel this starts as None, so it shares that colour.
+                       */
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
@@ -3342,6 +3354,9 @@ export interface Page {
                       position?: ('left' | 'center') | null;
                       padTop?: ('normal' | 'tight' | 'none') | null;
                       padBottom?: ('normal' | 'tight' | 'none') | null;
+                      /**
+                       * Inside a Section, Tabs or a Carousel this starts as None, so it shares that colour.
+                       */
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
@@ -3600,6 +3615,9 @@ export interface Page {
             position?: ('left' | 'center') | null;
             padTop?: ('normal' | 'tight' | 'none') | null;
             padBottom?: ('normal' | 'tight' | 'none') | null;
+            /**
+             * Inside a Section, Tabs or a Carousel this starts as None, so it shares that colour.
+             */
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;

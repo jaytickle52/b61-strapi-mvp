@@ -11,10 +11,18 @@ import { Icon } from './icons'
  */
 export const Segmented: RadioFieldClientComponent = (props) => {
   const { field, path, readOnly } = props
-  const { icons = {}, iconOnly = false } = props as typeof props & { icons?: Record<string, string>; iconOnly?: boolean }
+  const { icons = {}, iconOnly = false, unset } = props as typeof props & {
+    icons?: Record<string, string>
+    iconOnly?: boolean
+    /** No stored value: show this choice as the one in effect (top level / inside a container). */
+    unset?: { top: string; nested: string }
+  }
   const { value, setValue, showError } = useField<string>({ path })
   const options = (field.options ?? []).map((o) => (typeof o === 'string' ? { label: o, value: o } : o))
-  const current = value ?? undefined
+  // Inside a container (Section, Tabs, Carousel) the path has two or more row numbers:
+  // "sections.3.content.0.surface", against "sections.3.surface" at the top level.
+  const nested = (String(path).match(/\.\d+(?=\.)/g) ?? []).length >= 2
+  const current = value ?? (unset ? (nested ? unset.nested : unset.top) : undefined)
   const label = typeof field.label === 'string' ? field.label : field.name
 
   const move = (dir: number) => {

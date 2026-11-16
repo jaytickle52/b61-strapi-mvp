@@ -54,7 +54,7 @@ export const B61StatsBand = defineElement({
       ],
     },
     color: [
-      { ...surfaceField(), defaultValue: 'soft' } as any,
+      surfaceField({ standalone: 'soft' }),
       dropdown('itemSurface', 'Stat surface', ITEM_SURFACES, {
         default: 'card',
         when: { field: 'itemStyle', in: ['boxed'] },
