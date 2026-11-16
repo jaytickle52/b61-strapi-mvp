@@ -190,7 +190,7 @@ export interface Page {
   sections?:
     | (
         | {
-            layoutMode?: ('cover' | 'band') | null;
+            layoutMode?: ('cover' | 'band' | 'split' | 'type') | null;
             eyebrow?: string | null;
             lines?:
               | {
@@ -258,6 +258,7 @@ export interface Page {
               | null;
             height?: ('short' | 'medium' | 'tall' | 'full') | null;
             bandSize?: ('compact' | 'standard') | null;
+            splitSide?: ('right' | 'left') | null;
             verticalPosition?: ('top' | 'center' | 'bottom') | null;
             textAlign?: ('left' | 'center') | null;
             columnBalance?: number | null;
@@ -3467,8 +3468,6 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -3534,7 +3533,6 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4360,8 +4358,6 @@ export interface FormSubmission {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -4564,9 +4560,14 @@ export interface SchoolSetting {
    */
   style?: {
     /**
-     * Classic: The original B61 look: rounded corners, pill buttons, italic accent lines, offset photo frames. Modern: Clean and open: soft corners, no frames or eyebrow lines, colour accents, wide and airy. Bold: Poster-like: square corners and buttons, heavy capital headings, dramatic sizes. Soft: Warm and friendly: round corners, regular-weight headings, close frames, a slow float. Editorial: Like a magazine: square, light large headings, airy spacing, no frames.
+     * Classic: The original B61 look: rounded corners, pill buttons, italic accent lines, offset photo frames. Modern: Clean and open: header over the hero, soft corners, no frames or eyebrow lines, colour accents, wide and airy. Bold: Poster-like: square corners and buttons, heavy capital headings, dramatic sizes, a big wordmark footer. Soft: Warm and friendly: round corners, regular-weight headings, close frames, a slow float. Editorial: Like a magazine: centred logo, square, light large headings, airy spacing, no frames.
      */
     theme?: ('classic' | 'modern' | 'bold' | 'soft' | 'editorial') | null;
+    /**
+     * Over the hero: transparent over a dark first hero, solid once the page scrolls.
+     */
+    header?: ('classic' | 'centred' | 'overlay') | null;
+    footer?: ('classic' | 'wordmark') | null;
     corners?: ('square' | 'soft' | 'rounded' | 'round') | null;
     buttons?: ('pill' | 'rounded' | 'square') | null;
     buttonCase?: ('typed' | 'capitals') | null;
@@ -5225,6 +5226,7 @@ export interface PagesSelect<T extends boolean = true> {
                   };
               height?: T;
               bandSize?: T;
+              splitSide?: T;
               verticalPosition?: T;
               textAlign?: T;
               columnBalance?: T;
@@ -7662,7 +7664,6 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
   credit?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -7738,8 +7739,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
-  prefix?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8043,8 +8042,6 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -8143,6 +8140,8 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
     | T
     | {
         theme?: T;
+        header?: T;
+        footer?: T;
         corners?: T;
         buttons?: T;
         buttonCase?: T;

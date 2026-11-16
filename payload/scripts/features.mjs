@@ -361,6 +361,28 @@ async function main() {
     await api('PATCH', `/school-settings/${hs2.id}`, { token: ed2, body: { style: { theme: 'soft' }, _status: 'published' } })
     const kept2 = (await api('GET', `/school-settings/${hs2.id}?depth=0`, { token: admin })).json
     check(kept2?.style?.theme === 'bold', 'a School Admin cannot change the style (Banner 61 only)')
+    // Header and footer layouts (L2).
+    await api('PATCH', `/school-settings/${hs2.id}`, { token: admin, body: { style: { header: 'overlay', footer: 'wordmark' }, _status: 'published' } })
+    const lay = (await page('/', 'harbor-oaks')).text
+    check(lay.includes('data-b61-header="overlay"') && lay.includes('data-b61-footer="wordmark"'), 'header and footer layouts reach the page')
+    check(lay.includes('class="b61-ftr__wordmark"'), 'the wordmark footer carries the school name')
+    check(!(await page('/', 'cedar-ridge')).text.includes('data-b61-header'), "another school's header is untouched")
+
+    // Hero layouts (L2): Split screen and Big headline, and the over-the-hero marker.
+    const hhp = (await api('GET', `/pages?where[school][equals]=${harbor}&where[slug][equals]=home&depth=0`, { token: admin })).json?.docs?.[0]
+    const hi = hhp?.sections?.findIndex((x) => x.blockType === 'b61Hero') ?? -1
+    if (hi === 0) {
+      const withKind = (k, extra = {}) => hhp.sections.map((x, i) => (i === hi ? { ...x, layoutMode: k, ...extra } : x))
+      await api('PATCH', `/pages/${hhp.id}`, { token: admin, body: { sections: withKind('split', { splitSide: 'left', surface: 'primary' }), _status: 'published' } })
+      const sp = (await page('/', 'harbor-oaks')).text
+      check(sp.includes('b61-hero--split-left') && sp.includes('b61-hero__split-media'), 'a Split screen hero renders its photo half')
+      check(!sp.includes('data-b61-over-ok'), '… and never lets the header lie over it')
+      await api('PATCH', `/pages/${hhp.id}`, { token: admin, body: { sections: withKind('type', { surface: 'primary' }), _status: 'published' } })
+      const ty = (await page('/', 'harbor-oaks')).text
+      check(ty.includes('b61-hero--type') && ty.includes('data-b61-over-ok'), 'a Big headline hero renders, dark enough for the header to lie over')
+      await api('PATCH', `/pages/${hhp.id}`, { token: admin, body: { sections: hhp.sections, _status: 'published' } })
+    }
+
     await api('PATCH', `/school-settings/${hs2.id}`, { token: admin, body: { style: hs2.style ?? { theme: null }, _status: 'published' } })
     const u2 = (await api('GET', `/users?where[email][equals]=${encodeURIComponent(edEmail2)}&depth=0`, { token: admin })).json?.docs?.[0]
     if (u2) await api('DELETE', `/users/${u2.id}`, { token: admin })

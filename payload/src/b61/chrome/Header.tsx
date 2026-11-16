@@ -9,7 +9,8 @@ import type { NavItem, NavLink } from './resolve'
  * menu on phones. Accessible by default: real buttons with aria-expanded,
  * Escape closes and returns focus, the phone menu is a modal <dialog>.
  */
-type Brand = { name: string; logo?: { src: string; width?: number; height?: number } | null }
+type Logo = { src: string; width?: number; height?: number }
+type Brand = { name: string; logo?: Logo | null; logoOnDark?: Logo | null }
 
 const Chevron = () => (
   <svg className="b61-hdr__chev" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false">
@@ -83,16 +84,37 @@ export default function Header({ brand, items, utility, button }: { brand: Brand
     return () => ro.disconnect()
   }, [])
 
+  // Header layout "Over the hero" (School settings > Style): the header is
+  // transparent while it sits over a dark first hero (CSS, keyed on the hero's
+  // data-b61-over-ok, so there is no flash), and turns solid once the page scrolls.
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => {
+    if (document.documentElement.dataset.b61Header !== 'overlay') return
+    const on = () => setScrolled(window.scrollY > 8)
+    on()
+    window.addEventListener('scroll', on, { passive: true })
+    return () => window.removeEventListener('scroll', on)
+  }, [])
+
   const openMobile = () => {
     dialog.current?.showModal()
     document.documentElement.classList.add('b61-hdr-lock')
   }
   const closeMobile = () => dialog.current?.close()
 
-  const logo = brand.logo ? <img src={brand.logo.src} width={brand.logo.width} height={brand.logo.height} alt="" className="b61-hdr__logo" /> : <span className="b61-hdr__mark" aria-hidden="true">{brand.name.charAt(0)}</span>
+  // The light-ground logo, plus the logo for dark grounds when the school has one
+  // (shown only while the header sits over a dark hero; see chrome.css).
+  const logo = brand.logo ? (
+    <>
+      <img src={brand.logo.src} width={brand.logo.width} height={brand.logo.height} alt="" className="b61-hdr__logo" />
+      {brand.logoOnDark && <img src={brand.logoOnDark.src} width={brand.logoOnDark.width} height={brand.logoOnDark.height} alt="" className="b61-hdr__logo b61-hdr__logo--on-dark" />}
+    </>
+  ) : (
+    <span className="b61-hdr__mark" aria-hidden="true">{brand.name.charAt(0)}</span>
+  )
 
   return (
-    <header ref={bar} className="b61-hdr">
+    <header ref={bar} className="b61-hdr" data-scrolled={scrolled ? '' : undefined}>
       <div className="b61-hdr__bar">
         <Link href="/" className="b61-hdr__brand">
           {logo}

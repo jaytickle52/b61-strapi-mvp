@@ -158,7 +158,14 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         {preview && <EditOverlay />}
         <Announcements notices={notices} />
         {preview && <EditMark tab="Header" label="Header" />}
-        <Header brand={{ name: settings.schoolName, logo: logo?.url ? { src: logo.url, width: logo.width ?? undefined, height: logo.height ?? undefined } : null }} {...resolveMenu(settings)} />
+        <Header
+          brand={{
+            name: settings.schoolName,
+            logo: logo?.url ? { src: logo.url, width: logo.width ?? undefined, height: logo.height ?? undefined } : null,
+            logoOnDark: logo?.url && logoOnDark?.url ? { src: logoOnDark.url, width: logoOnDark.width ?? undefined, height: logoOnDark.height ?? undefined } : null,
+          }}
+          {...resolveMenu(settings)}
+        />
         <main id="main" tabIndex={-1} className="flex-1">{children}</main>
         {preview && <EditMark tab="Footer" label="Footer" />}
         <Footer s={settings} logo={logoOnDark?.url ?? logo?.url} />

@@ -13,7 +13,11 @@ export type HeroBlock = Extract<NonNullable<Page['sections']>[number], { blockTy
  * plugin's own stylesheet (hero.css, copied unchanged) styles it.
  */
 export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?: number }) {
-  const mode = block.layoutMode === 'band' ? 'band' : 'cover'
+  // Four kinds. Split screen and Big headline are Payload-only layouts (L2) and
+  // render on the band structure: a coloured surface carrying the text.
+  const kind = block.layoutMode === 'band' || block.layoutMode === 'split' || block.layoutMode === 'type' ? block.layoutMode : 'cover'
+  const mode = kind === 'cover' ? 'cover' : 'band'
+  const side = block.splitSide === 'left' ? 'left' : 'right'
   const bgtype = block.backgroundType ?? 'image'
   const overlay = block.overlay ?? 'gradient'
   const surface = block.surface ?? 'primary'
@@ -44,7 +48,11 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
 
   const hasMotion = (bgtype === 'video' && video?.url) || (bgtype === 'slideshow' && slides.length > 0)
   const hasMedia =
-    mode === 'band'
+    kind === 'type'
+      ? false
+      : kind === 'split'
+        ? Boolean(bgImage)
+        : mode === 'band'
       ? collage.length > 0
       : bgtype === 'video'
         ? Boolean(video?.url || poster?.url)
@@ -54,11 +62,15 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
 
   // Per-instance rules (css.twig in the plugin) become modifier classes.
   const iStep = block.subheadlineWidth ? Math.min(Math.max(Math.round(block.subheadlineWidth), 1), 7) : null
-  const bStep = mode === 'band' && block.columnBalance ? Math.min(Math.max(Math.round(block.columnBalance), 1), 7) : null
+  const bStep = kind === 'band' && block.columnBalance ? Math.min(Math.max(Math.round(block.columnBalance), 1), 7) : null
   const rootClass = [
     'b61-hero',
     `b61-hero--${mode}`,
     !hasMedia && 'b61-hero--no-media',
+    kind === 'split' && `b61-hero--split b61-hero--split-${side}`,
+    kind === 'type' && `b61-hero--type b61-hero--type-${block.bandSize === 'compact' ? 'compact' : 'standard'}`,
+    // Split's surface is painted on the root, behind both halves.
+    kind === 'split' && `b61-hero__band--${surface}`,
     hasMedia && mode === 'band' && `b61-hero--band-${block.bandSize === 'compact' ? 'compact' : 'standard'}`,
     hasMedia && mode === 'cover' && `b61-hero--h-${block.height ?? 'tall'}`,
     `b61-hero--ta-${talign}`,
@@ -78,9 +90,12 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
   const headingId = `b61-hero-${block.id ?? index}-title`
   const Root = lines.length > 0 ? 'section' : 'div'
   const isFirst = index === 0
+  // First on the page and dark enough for white header text: a header set to
+  // "Over the hero" (School settings > Style) may sit on it (chrome.css).
+  const overOk = isFirst && (kind === 'cover' ? scheme === 'gradient' || scheme === 'primary' : kind !== 'split' && surface === 'primary')
 
   const bgStyle: CSSProperties = {}
-  const focus = bgtype === 'image' ? focusOf(block.image) : undefined
+  const focus = bgtype === 'image' || kind === 'split' ? focusOf(block.image) : undefined
   if (focus) (bgStyle as any)['--b61-photo-focus'] = focus
   if (bgtype === 'video' && poster?.url) {
     bgStyle.backgroundImage = `url("${encodeURI(poster.url)}")`
@@ -96,7 +111,7 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
     `b61-hero__inner--v${valign}`,
     `b61-hero__inner--t${talign}`,
     `b61-hero__inner--on-${scheme}`,
-    mode === 'band' && `b61-hero__band--${surface}`,
+    mode === 'band' && kind !== 'split' && `b61-hero__band--${surface}`,
     mode === 'band' && block.bandSize === 'compact' && 'b61-hero__inner--band-compact',
   ]
     .filter(Boolean)
@@ -136,7 +151,7 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
   )
 
   return (
-    <Root className={rootClass} style={rootStyle} data-b61-hero="" {...(Root === 'section' ? { 'aria-labelledby': headingId } : {})}>
+    <Root className={rootClass} style={rootStyle} data-b61-hero="" {...(overOk ? { 'data-b61-over-ok': '' } : {})} {...(Root === 'section' ? { 'aria-labelledby': headingId } : {})}>
       {mode !== 'band' && (
         <>
           <div className={`b61-hero__bg b61-hero__bg--${bgtype}`} aria-hidden="true" style={bgStyle}>
@@ -176,8 +191,18 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
         </>
       )}
 
+      {kind === 'split' && bgImage && (
+        <div className={`b61-hero__split-media b61-hero__split-media--${side}`} style={bgStyle}>
+          <img {...imgProps(block.image, '(max-width: 767px) 100vw, 50vw')!} alt={asMedia(block.image)?.alt ?? ''} {...(isFirst ? { fetchPriority: 'high' as const } : { loading: 'lazy' as const })} />
+        </div>
+      )}
+
       <div data-b61-reveal={rv} className={innerClass}>
-        {mode === 'band' ? (
+        {kind === 'split' ? (
+          <div className={`b61-hero__grid b61-hero__grid--split b61-hero__grid--split-${side}`}>
+            <div className="b61-hero__text">{text}</div>
+          </div>
+        ) : mode === 'band' ? (
           <div className={`b61-hero__grid${collage.length === 0 ? ' b61-hero__grid--text-only' : ''}`}>
             <div className="b61-hero__text">{text}</div>
             {collage.length > 0 && (

@@ -75,3 +75,73 @@
 /* ---- Step sliders: the component sets --b61-hero-istep / --b61-hero-bstep ---- */
 .b61-hero.b61-hero--istep .b61-hero__subhead.b61-hero__subhead { max-width: var(--b61-hero-istep); }
 .b61-hero.b61-hero--bstep { --b61-hero-band-text: var(--b61-hero-bstep); --b61-hero-band-media: 1fr; }
+
+/* ---- Split screen (Payload-only, L2) ----------------------------------------
+ * The surface is painted on the root; one photo fills half the hero from the
+ * screen edge, and the text takes the other half of the measure. On phones the
+ * photo stacks above the text. */
+.b61-hero.b61-hero--split {
+  min-height: var(--b61-hero-split-min, 560px);
+  align-items: stretch;
+}
+.b61-hero.b61-hero--split.b61-hero--band-compact { min-height: var(--b61-hero-split-min-compact, 460px); }
+.b61-hero__split-media {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 1;
+  overflow: hidden;
+}
+.b61-hero__split-media--right { right: 0; }
+.b61-hero__split-media--left { left: 0; }
+.b61-hero__split-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--b61-photo-focus, var(--b61-bg-position, center));
+  display: block;
+  border-radius: 0;
+}
+.b61-hero--split .b61-hero__inner { position: relative; z-index: 2; background: none; }
+.b61-hero__grid--split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.b61-hero__grid--split-left .b61-hero__text { grid-column: 2; }
+
+@media (max-width: 767px) {
+  .b61-hero.b61-hero--split {
+    flex-direction: column;
+    min-height: 0;
+  }
+  .b61-hero__split-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+  }
+  .b61-hero__grid--split,
+  .b61-hero__grid--split-left { grid-template-columns: minmax(0, 1fr); }
+  .b61-hero__grid--split-left .b61-hero__text { grid-column: 1; }
+}
+
+/* ---- Big headline (Payload-only, L2) -----------------------------------------
+ * No photo: the words are the picture. A very large title on the surface,
+ * vertically centred, with the subheadline set a step larger than usual. */
+.b61-hero.b61-hero--type { align-items: stretch; }
+.b61-hero.b61-hero--type-standard { min-height: var(--b61-hero-type-min, 560px); }
+.b61-hero.b61-hero--type-compact { min-height: var(--b61-hero-type-min-compact, 420px); }
+.b61-hero--type .b61-hero__inner--band .b61-hero__title {
+  font-size: var(--b61-hero-type-size, clamp(3rem, 1.2rem + 6.6vw, 8.5rem));
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+  max-width: 15ch;
+  text-wrap: balance;
+}
+.b61-hero--type.b61-hero--ta-center .b61-hero__title { margin-inline: auto; }
+.b61-hero--type .b61-hero__subhead {
+  font-size: var(--b61-hero-type-subhead, clamp(1.125rem, 1rem + 0.5vw, 1.375rem));
+  max-width: 46ch;
+}
+.b61-hero--type.b61-hero--ta-center .b61-hero__subhead { margin-inline: auto; }
+@media (max-width: 767px) {
+  .b61-hero.b61-hero--type-standard,
+  .b61-hero.b61-hero--type-compact { min-height: 0; }
+}

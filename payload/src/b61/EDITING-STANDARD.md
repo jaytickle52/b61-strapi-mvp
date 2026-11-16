@@ -161,3 +161,17 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
   not literals, so the dials reach it: e.g. the accent heading line reads `--b61-emph-style`,
   `--b61-emph-decoration`, `--b61-emph-offset`.
 - Heading weight snaps to the nearest weight the heading font has, and that weight is loaded with the font.
+
+## 15. Header, footer and hero layouts (L2)
+
+- Style (Banner 61) has **Header layout** (Classic, Centred logo, Over the hero) and **Footer layout**
+  (Classic, Big wordmark). They set `data-b61-header` / `data-b61-footer` on `<html>`; the layouts are
+  CSS in `chrome.css`. Modern uses Over the hero, Editorial Centred logo, Bold Big wordmark.
+- **Over the hero** only applies when the page opens on a hero dark enough for white words: the hero
+  marks itself `data-b61-over-ok` on the server (Cover with the Gradient or a Primary wash; Band or Big
+  headline on Primary; never Split screen), so there is no flash. Elsewhere the header stays solid. It
+  turns solid once the page scrolls. "Logo on dark" (School settings > School) shows while it is over.
+- **Hero type** adds **Split screen** (one photo filling half the hero from the screen edge, Photo side
+  left/right, text on the surface; stacks photo-first on phones) and **Big headline** (no photo, a very
+  large title on the surface). Both use the Background photo field, Height and Surface the band uses.
+  School editors choose them like the other hero types.
