@@ -81,7 +81,7 @@ export const seoPlugins: Plugin[] = [
       // Redirects work the moment they're saved: Editors and School Admins only.
       access: { read: () => true, create: publishersOnly, update: publishersOnly, delete: publishersOnly },
       admin: {
-        group: 'Website',
+        group: 'Settings',
         description: 'Send visitors from an old address (e.g. from the WordPress site) to a page here. Used only when nothing else lives at the old address.',
         defaultColumns: ['from', 'to', 'type', 'updatedAt'],
       },
@@ -119,7 +119,7 @@ export const seoPlugins: Plugin[] = [
     searchOverrides: {
       labels: { singular: 'Search result', plural: 'Search index' },
       admin: {
-        group: 'Website',
+        group: 'Settings',
         description: 'Kept up to date automatically from pages, programs, events and news.',
         hidden: ({ user }) => !isB61Admin(user),
       },

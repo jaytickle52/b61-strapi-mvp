@@ -68,24 +68,24 @@ export interface Config {
   blocks: {};
   collections: {
     pages: Page;
+    announcements: Announcement;
     events: Event;
     'calendar-feeds': CalendarFeed;
     news: News;
-    announcements: Announcement;
     programs: Program;
     staff: Staff;
-    'news-categories': NewsCategory;
     media: Media;
     documents: Document;
+    forms: Form;
+    'form-submissions': FormSubmission;
     'form-uploads': FormUpload;
     'email-log': EmailLog;
     'school-settings': SchoolSetting;
-    schools: School;
-    users: User;
-    forms: Form;
-    'form-submissions': FormSubmission;
     redirects: Redirect;
     search: Search;
+    users: User;
+    schools: School;
+    'news-categories': NewsCategory;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-folders': FolderInterface;
@@ -100,24 +100,24 @@ export interface Config {
   };
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
+    announcements: AnnouncementsSelect<false> | AnnouncementsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     'calendar-feeds': CalendarFeedsSelect<false> | CalendarFeedsSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
-    announcements: AnnouncementsSelect<false> | AnnouncementsSelect<true>;
     programs: ProgramsSelect<false> | ProgramsSelect<true>;
     staff: StaffSelect<false> | StaffSelect<true>;
-    'news-categories': NewsCategoriesSelect<false> | NewsCategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
+    forms: FormsSelect<false> | FormsSelect<true>;
+    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'form-uploads': FormUploadsSelect<false> | FormUploadsSelect<true>;
     'email-log': EmailLogSelect<false> | EmailLogSelect<true>;
     'school-settings': SchoolSettingsSelect<false> | SchoolSettingsSelect<true>;
-    schools: SchoolsSelect<false> | SchoolsSelect<true>;
-    users: UsersSelect<false> | UsersSelect<true>;
-    forms: FormsSelect<false> | FormsSelect<true>;
-    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     search: SearchSelect<false> | SearchSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
+    schools: SchoolsSelect<false> | SchoolsSelect<true>;
+    'news-categories': NewsCategoriesSelect<false> | NewsCategoriesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
@@ -4023,6 +4023,48 @@ export interface Form {
   createdAt: string;
 }
 /**
+ * A short message across the top of the website between two dates: closings, deadlines, big news.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "announcements".
+ */
+export interface Announcement {
+  id: number;
+  school?: (number | null) | School;
+  /**
+   * Shown in bold, e.g. "School closed Monday".
+   */
+  title: string;
+  /**
+   * One or two short sentences. Optional.
+   */
+  message?: string | null;
+  button?: {
+    label?: string | null;
+    link?: {
+      type?: ('page' | 'document' | 'url') | null;
+      page?: (number | null) | Page;
+      document?: (number | null) | Document;
+      url?: string | null;
+      newTab?: boolean | null;
+    };
+  };
+  style: 'standard' | 'urgent' | 'celebrate';
+  startsAt: string;
+  /**
+   * Leave empty to keep it up until you unpublish it.
+   */
+  endsAt?: string | null;
+  showOn: 'all' | 'home';
+  /**
+   * Once closed, it stays closed on that visitor's browser.
+   */
+  dismissible?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * Enter an event once: it shows on the website, the calendar, the subscribe feed and the parent feed.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -4136,7 +4178,7 @@ export interface News {
   date: string;
   audience: 'public' | 'parents';
   /**
-   * Visitors can filter the News page by these.
+   * Visitors can filter the News page by these. Use + to add a new category; reorder them from "Manage categories" above the News list.
    */
   categories?: (number | NewsCategory)[] | null;
   summary?: string | null;
@@ -4196,48 +4238,6 @@ export interface NewsCategory {
   slug: string;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * A short message across the top of the website between two dates: closings, deadlines, big news.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "announcements".
- */
-export interface Announcement {
-  id: number;
-  school?: (number | null) | School;
-  /**
-   * Shown in bold, e.g. "School closed Monday".
-   */
-  title: string;
-  /**
-   * One or two short sentences. Optional.
-   */
-  message?: string | null;
-  button?: {
-    label?: string | null;
-    link?: {
-      type?: ('page' | 'document' | 'url') | null;
-      page?: (number | null) | Page;
-      document?: (number | null) | Document;
-      url?: string | null;
-      newTab?: boolean | null;
-    };
-  };
-  style: 'standard' | 'urgent' | 'celebrate';
-  startsAt: string;
-  /**
-   * Leave empty to keep it up until you unpublish it.
-   */
-  endsAt?: string | null;
-  showOn: 'all' | 'home';
-  /**
-   * Once closed, it stays closed on that visitor's browser.
-   */
-  dismissible?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * Drag the handle at the start of each row to change the order on the website.
@@ -4319,6 +4319,37 @@ export interface Staff {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * What families sent through the website forms. Download a form's submissions as a spreadsheet from the form.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-submissions".
+ */
+export interface FormSubmission {
+  id: number;
+  school?: (number | null) | School;
+  summary?: string | null;
+  form: number | Form;
+  submissionData?:
+    | {
+        field: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  submissionUploads?:
+    | {
+        field: string;
+        value: {
+          relationTo: 'form-uploads';
+          value: number | FormUpload;
+        }[];
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Files sent through website forms. Open them from the submission.
@@ -4763,76 +4794,6 @@ export interface SchoolSetting {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * People who can sign in to edit the website. Use "Invite someone" to add a person; they get an email to choose their password.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  name?: string | null;
-  role: 'editor' | 'admin';
-  invitedAt?: string | null;
-  lastSignInAt?: string | null;
-  tenants?:
-    | {
-        tenant: number | School;
-        role: 'schoolAdmin' | 'editor' | 'contributor';
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  resetPasswordRequestedAt?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
-}
-/**
- * What families sent through the website forms. Download a form's submissions as a spreadsheet from the form.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-submissions".
- */
-export interface FormSubmission {
-  id: number;
-  school?: (number | null) | School;
-  summary?: string | null;
-  form: number | Form;
-  submissionData?:
-    | {
-        field: string;
-        value: string;
-        id?: string | null;
-      }[]
-    | null;
-  submissionUploads?:
-    | {
-        field: string;
-        value: {
-          relationTo: 'form-uploads';
-          value: number | FormUpload;
-        }[];
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * Send visitors from an old address (e.g. from the WordPress site) to a page here. Used only when nothing else lives at the old address.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -4906,6 +4867,45 @@ export interface Search {
   text?: string | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * People who can sign in to edit the website. Use "Invite someone" to add a person; they get an email to choose their password.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name?: string | null;
+  role: 'editor' | 'admin';
+  invitedAt?: string | null;
+  lastSignInAt?: string | null;
+  tenants?:
+    | {
+        tenant: number | School;
+        role: 'schoolAdmin' | 'editor' | 'contributor';
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -5037,6 +5037,10 @@ export interface PayloadLockedDocument {
         value: number | Page;
       } | null)
     | ({
+        relationTo: 'announcements';
+        value: number | Announcement;
+      } | null)
+    | ({
         relationTo: 'events';
         value: number | Event;
       } | null)
@@ -5049,10 +5053,6 @@ export interface PayloadLockedDocument {
         value: number | News;
       } | null)
     | ({
-        relationTo: 'announcements';
-        value: number | Announcement;
-      } | null)
-    | ({
         relationTo: 'programs';
         value: number | Program;
       } | null)
@@ -5061,16 +5061,20 @@ export interface PayloadLockedDocument {
         value: number | Staff;
       } | null)
     | ({
-        relationTo: 'news-categories';
-        value: number | NewsCategory;
-      } | null)
-    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
     | ({
         relationTo: 'documents';
         value: number | Document;
+      } | null)
+    | ({
+        relationTo: 'forms';
+        value: number | Form;
+      } | null)
+    | ({
+        relationTo: 'form-submissions';
+        value: number | FormSubmission;
       } | null)
     | ({
         relationTo: 'form-uploads';
@@ -5085,28 +5089,24 @@ export interface PayloadLockedDocument {
         value: number | SchoolSetting;
       } | null)
     | ({
-        relationTo: 'schools';
-        value: number | School;
-      } | null)
-    | ({
-        relationTo: 'users';
-        value: number | User;
-      } | null)
-    | ({
-        relationTo: 'forms';
-        value: number | Form;
-      } | null)
-    | ({
-        relationTo: 'form-submissions';
-        value: number | FormSubmission;
-      } | null)
-    | ({
         relationTo: 'redirects';
         value: number | Redirect;
       } | null)
     | ({
         relationTo: 'search';
         value: number | Search;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'schools';
+        value: number | School;
+      } | null)
+    | ({
+        relationTo: 'news-categories';
+        value: number | NewsCategory;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -7505,6 +7505,37 @@ export interface PagesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "announcements_select".
+ */
+export interface AnnouncementsSelect<T extends boolean = true> {
+  school?: T;
+  title?: T;
+  message?: T;
+  button?:
+    | T
+    | {
+        label?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              page?: T;
+              document?: T;
+              url?: T;
+              newTab?: T;
+            };
+      };
+  style?: T;
+  startsAt?: T;
+  endsAt?: T;
+  showOn?: T;
+  dismissible?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "events_select".
  */
 export interface EventsSelect<T extends boolean = true> {
@@ -7579,37 +7610,6 @@ export interface NewsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "announcements_select".
- */
-export interface AnnouncementsSelect<T extends boolean = true> {
-  school?: T;
-  title?: T;
-  message?: T;
-  button?:
-    | T
-    | {
-        label?: T;
-        link?:
-          | T
-          | {
-              type?: T;
-              page?: T;
-              document?: T;
-              url?: T;
-              newTab?: T;
-            };
-      };
-  style?: T;
-  startsAt?: T;
-  endsAt?: T;
-  showOn?: T;
-  dismissible?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "programs_select".
  */
 export interface ProgramsSelect<T extends boolean = true> {
@@ -7652,19 +7652,6 @@ export interface StaffSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "news-categories_select".
- */
-export interface NewsCategoriesSelect<T extends boolean = true> {
-  _order?: T;
-  school?: T;
-  name?: T;
-  generateSlug?: T;
-  slug?: T;
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -7765,339 +7752,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-uploads_select".
- */
-export interface FormUploadsSelect<T extends boolean = true> {
-  school?: T;
-  prefix?: T;
-  _objectKey?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "email-log_select".
- */
-export interface EmailLogSelect<T extends boolean = true> {
-  subject?: T;
-  to?: T;
-  status?: T;
-  kind?: T;
-  detail?: T;
-  school?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "school-settings_select".
- */
-export interface SchoolSettingsSelect<T extends boolean = true> {
-  school?: T;
-  schoolName?: T;
-  tagline?: T;
-  logo?: T;
-  logoOnDark?: T;
-  siteIcon?: T;
-  phone?: T;
-  email?: T;
-  street?: T;
-  city?: T;
-  state?: T;
-  postalCode?: T;
-  address?: T;
-  latitude?: T;
-  longitude?: T;
-  officeDays?: T;
-  officeOpens?: T;
-  officeCloses?: T;
-  shortName?: T;
-  grades?: T;
-  foundedYear?: T;
-  enrollment?: T;
-  studentTeacherRatio?: T;
-  denomination?: T;
-  transportation?: T;
-  churchName?: T;
-  churchUrl?: T;
-  beforeAfterCare?: T;
-  accreditations?:
-    | T
-    | {
-        name?: T;
-        url?: T;
-        id?: T;
-      };
-  memberships?:
-    | T
-    | {
-        name?: T;
-        url?: T;
-        id?: T;
-      };
-  profiles?:
-    | T
-    | {
-        name?: T;
-        url?: T;
-        id?: T;
-      };
-  siteTone?: T;
-  backgroundColor?: T;
-  textColor?: T;
-  primaryColor?: T;
-  secondaryColor?: T;
-  accentColor?: T;
-  paperColor?: T;
-  primaryDeep?: T;
-  secondarySoft?: T;
-  accentStrong?: T;
-  accentDeep?: T;
-  headingFont?: T;
-  bodyFont?: T;
-  uiFont?: T;
-  style?:
-    | T
-    | {
-        theme?: T;
-        corners?: T;
-        buttons?: T;
-        buttonCase?: T;
-        headingCase?: T;
-        headingWeight?: T;
-        headingTracking?: T;
-        typeScale?: T;
-        emphasis?: T;
-        eyebrow?: T;
-        eyebrowCase?: T;
-        frames?: T;
-        spacing?: T;
-        width?: T;
-        heroEdge?: T;
-        motion?: T;
-      };
-  customCss?: T;
-  menu?:
-    | T
-    | {
-        label?: T;
-        kind?: T;
-        link?:
-          | T
-          | {
-              type?: T;
-              page?: T;
-              document?: T;
-              url?: T;
-              newTab?: T;
-            };
-        links?:
-          | T
-          | {
-              label?: T;
-              link?:
-                | T
-                | {
-                    type?: T;
-                    page?: T;
-                    document?: T;
-                    url?: T;
-                    newTab?: T;
-                  };
-              id?: T;
-            };
-        columns?:
-          | T
-          | {
-              heading?: T;
-              links?:
-                | T
-                | {
-                    label?: T;
-                    link?:
-                      | T
-                      | {
-                          type?: T;
-                          page?: T;
-                          document?: T;
-                          url?: T;
-                          newTab?: T;
-                        };
-                    description?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
-        feature?:
-          | T
-          | {
-              image?: T;
-              title?: T;
-              text?: T;
-              link?:
-                | T
-                | {
-                    type?: T;
-                    page?: T;
-                    document?: T;
-                    url?: T;
-                    newTab?: T;
-                  };
-            };
-        id?: T;
-      };
-  utilityLinks?:
-    | T
-    | {
-        label?: T;
-        link?:
-          | T
-          | {
-              type?: T;
-              page?: T;
-              document?: T;
-              url?: T;
-              newTab?: T;
-            };
-        id?: T;
-      };
-  headerButton?:
-    | T
-    | {
-        label?: T;
-        link?:
-          | T
-          | {
-              type?: T;
-              page?: T;
-              document?: T;
-              url?: T;
-              newTab?: T;
-            };
-      };
-  footerColumns?:
-    | T
-    | {
-        heading?: T;
-        links?:
-          | T
-          | {
-              label?: T;
-              link?:
-                | T
-                | {
-                    type?: T;
-                    page?: T;
-                    document?: T;
-                    url?: T;
-                    newTab?: T;
-                  };
-              id?: T;
-            };
-        id?: T;
-      };
-  footerShowContact?: T;
-  social?:
-    | T
-    | {
-        platform?: T;
-        url?: T;
-        id?: T;
-      };
-  footerNote?: T;
-  legalLinks?:
-    | T
-    | {
-        label?: T;
-        link?:
-          | T
-          | {
-              type?: T;
-              page?: T;
-              document?: T;
-              url?: T;
-              newTab?: T;
-            };
-        id?: T;
-      };
-  copyright?: T;
-  formRecipients?: T;
-  emailFromName?: T;
-  emailReplyTo?: T;
-  emailFromAddress?: T;
-  shareImage?: T;
-  googleVerification?: T;
-  bingVerification?: T;
-  allowAiTraining?: T;
-  hideFromSearch?: T;
-  gaMeasurementId?: T;
-  gaPropertyId?: T;
-  parentPassword?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "schools_select".
- */
-export interface SchoolsSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  domains?:
-    | T
-    | {
-        domain?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
- */
-export interface UsersSelect<T extends boolean = true> {
-  name?: T;
-  role?: T;
-  invitedAt?: T;
-  lastSignInAt?: T;
-  tenants?:
-    | T
-    | {
-        tenant?: T;
-        role?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  resetPasswordRequestedAt?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -8385,6 +8039,289 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-uploads_select".
+ */
+export interface FormUploadsSelect<T extends boolean = true> {
+  school?: T;
+  prefix?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-log_select".
+ */
+export interface EmailLogSelect<T extends boolean = true> {
+  subject?: T;
+  to?: T;
+  status?: T;
+  kind?: T;
+  detail?: T;
+  school?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "school-settings_select".
+ */
+export interface SchoolSettingsSelect<T extends boolean = true> {
+  school?: T;
+  schoolName?: T;
+  tagline?: T;
+  logo?: T;
+  logoOnDark?: T;
+  siteIcon?: T;
+  phone?: T;
+  email?: T;
+  street?: T;
+  city?: T;
+  state?: T;
+  postalCode?: T;
+  address?: T;
+  latitude?: T;
+  longitude?: T;
+  officeDays?: T;
+  officeOpens?: T;
+  officeCloses?: T;
+  shortName?: T;
+  grades?: T;
+  foundedYear?: T;
+  enrollment?: T;
+  studentTeacherRatio?: T;
+  denomination?: T;
+  transportation?: T;
+  churchName?: T;
+  churchUrl?: T;
+  beforeAfterCare?: T;
+  accreditations?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        id?: T;
+      };
+  memberships?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        id?: T;
+      };
+  profiles?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        id?: T;
+      };
+  siteTone?: T;
+  backgroundColor?: T;
+  textColor?: T;
+  primaryColor?: T;
+  secondaryColor?: T;
+  accentColor?: T;
+  paperColor?: T;
+  primaryDeep?: T;
+  secondarySoft?: T;
+  accentStrong?: T;
+  accentDeep?: T;
+  headingFont?: T;
+  bodyFont?: T;
+  uiFont?: T;
+  style?:
+    | T
+    | {
+        theme?: T;
+        corners?: T;
+        buttons?: T;
+        buttonCase?: T;
+        headingCase?: T;
+        headingWeight?: T;
+        headingTracking?: T;
+        typeScale?: T;
+        emphasis?: T;
+        eyebrow?: T;
+        eyebrowCase?: T;
+        frames?: T;
+        spacing?: T;
+        width?: T;
+        heroEdge?: T;
+        motion?: T;
+      };
+  customCss?: T;
+  menu?:
+    | T
+    | {
+        label?: T;
+        kind?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              page?: T;
+              document?: T;
+              url?: T;
+              newTab?: T;
+            };
+        links?:
+          | T
+          | {
+              label?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    page?: T;
+                    document?: T;
+                    url?: T;
+                    newTab?: T;
+                  };
+              id?: T;
+            };
+        columns?:
+          | T
+          | {
+              heading?: T;
+              links?:
+                | T
+                | {
+                    label?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                          newTab?: T;
+                        };
+                    description?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+        feature?:
+          | T
+          | {
+              image?: T;
+              title?: T;
+              text?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    page?: T;
+                    document?: T;
+                    url?: T;
+                    newTab?: T;
+                  };
+            };
+        id?: T;
+      };
+  utilityLinks?:
+    | T
+    | {
+        label?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              page?: T;
+              document?: T;
+              url?: T;
+              newTab?: T;
+            };
+        id?: T;
+      };
+  headerButton?:
+    | T
+    | {
+        label?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              page?: T;
+              document?: T;
+              url?: T;
+              newTab?: T;
+            };
+      };
+  footerColumns?:
+    | T
+    | {
+        heading?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    page?: T;
+                    document?: T;
+                    url?: T;
+                    newTab?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
+  footerShowContact?: T;
+  social?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  footerNote?: T;
+  legalLinks?:
+    | T
+    | {
+        label?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              page?: T;
+              document?: T;
+              url?: T;
+              newTab?: T;
+            };
+        id?: T;
+      };
+  copyright?: T;
+  formRecipients?: T;
+  emailFromName?: T;
+  emailReplyTo?: T;
+  emailFromAddress?: T;
+  shareImage?: T;
+  googleVerification?: T;
+  bingVerification?: T;
+  allowAiTraining?: T;
+  hideFromSearch?: T;
+  gaMeasurementId?: T;
+  gaPropertyId?: T;
+  parentPassword?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects_select".
  */
 export interface RedirectsSelect<T extends boolean = true> {
@@ -8413,6 +8350,69 @@ export interface SearchSelect<T extends boolean = true> {
   url?: T;
   summary?: T;
   text?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  invitedAt?: T;
+  lastSignInAt?: T;
+  tenants?:
+    | T
+    | {
+        tenant?: T;
+        role?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "schools_select".
+ */
+export interface SchoolsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  domains?:
+    | T
+    | {
+        domain?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news-categories_select".
+ */
+export interface NewsCategoriesSelect<T extends boolean = true> {
+  _order?: T;
+  school?: T;
+  name?: T;
+  generateSlug?: T;
+  slug?: T;
   updatedAt?: T;
   createdAt?: T;
 }

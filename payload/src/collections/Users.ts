@@ -146,7 +146,7 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
     defaultColumns: ['email', 'name', 'tenants', 'lastSignInAt'],
-    group: 'People',
+    group: 'Users & access',
     description:
       'People who can sign in to edit the website. Use "Invite someone" to add a person; they get an email to choose their password.',
     // Editors and Contributors manage only their own account (top-right menu).

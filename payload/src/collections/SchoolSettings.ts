@@ -17,6 +17,7 @@ export const SchoolSettings: CollectionConfig = {
   slug: 'school-settings',
   labels: { singular: 'School settings', plural: 'School settings' },
   admin: {
+    group: 'Settings',
     useAsTitle: 'schoolName',
     description: 'Name, contact details, colors, fonts, header menu and footer for this school.',
     livePreview: { url: ({ data }) => previewUrl('/', (data as any)?.school) },

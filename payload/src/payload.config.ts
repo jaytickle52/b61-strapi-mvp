@@ -32,6 +32,7 @@ import { formBuilderConfig, replaceSubmissionHooks } from './forms/config'
 import { FormUploads } from './collections/FormUploads'
 import { EmailLog } from './collections/EmailLog'
 import { emailAdapter } from './email/adapter'
+import { sidebarOrder } from './admin/sidebarOrder'
 import { managesAnySchool, SCHOOL_ROLES } from './access'
 
 const filename = fileURLToPath(import.meta.url)
@@ -196,6 +197,8 @@ export default buildConfig({
     // Clears a school's cached public pages when staff change its content
     // (src/cache). Last, so it also sees the plugin collections above.
     cacheInvalidation,
+    // The sidebar's order (src/admin/sidebarOrder.ts). Display only.
+    sidebarOrder,
   ],
   onInit: async (payload) => {
     // On Vercel the demo is seeded during the build (scripts/seed.ts), not on every cold start.
