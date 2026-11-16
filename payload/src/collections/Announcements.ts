@@ -16,6 +16,7 @@ export const Announcements: CollectionConfig = {
   slug: 'announcements',
   labels: { singular: 'Announcement', plural: 'Announcements' },
   admin: {
+    group: 'Website',
     useAsTitle: 'title',
     defaultColumns: ['title', 'style', 'startsAt', 'endsAt', '_status'],
     description: 'A short message across the top of the website between two dates: closings, deadlines, big news.',

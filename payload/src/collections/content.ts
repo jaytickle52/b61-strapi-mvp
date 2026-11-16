@@ -52,6 +52,7 @@ const audience = {
 export const Pages: CollectionConfig = {
   slug: 'pages',
   admin: {
+    group: 'Website',
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
     livePreview: livePreview((d) => (d.slug === 'home' || !d.slug ? '/' : `/${d.slug}`)),
@@ -99,6 +100,7 @@ const allDayToMidnight: CollectionBeforeChangeHook = ({ data }) => {
 export const Events: CollectionConfig = {
   slug: 'events',
   admin: {
+    group: 'News & events',
     useAsTitle: 'title',
     defaultColumns: ['title', 'startsAt', 'audience', 'importedFrom', '_status'],
     description: 'Enter an event once: it shows on the website, the calendar, the subscribe feed and the parent feed.',
@@ -165,6 +167,8 @@ export const News: CollectionConfig = {
   slug: 'news',
   labels: { singular: 'News post', plural: 'News' },
   admin: {
+    group: 'News & events',
+    components: { beforeListTable: ['@/admin/CategoryLinks#ManageCategories'] },
     useAsTitle: 'title',
     defaultColumns: ['title', 'date', 'categories', 'audience', '_status'],
     livePreview: livePreview((d) => (d.audience === 'parents' ? '/parents' : `/news/${d.slug ?? ''}`)),
@@ -184,7 +188,7 @@ export const News: CollectionConfig = {
       type: 'relationship',
       relationTo: 'news-categories',
       hasMany: true,
-      admin: { position: 'sidebar', description: 'Visitors can filter the News page by these.' },
+      admin: { position: 'sidebar', description: 'Visitors can filter the News page by these. Use + to add a new category; reorder them from "Manage categories" above the News list.' },
     },
     { name: 'summary', type: 'textarea', maxLength: 200 },
     { name: 'body', type: 'richText' },
@@ -195,6 +199,7 @@ export const News: CollectionConfig = {
 export const Programs: CollectionConfig = {
   slug: 'programs',
   admin: {
+    group: 'Programs & staff',
     useAsTitle: 'name',
     defaultColumns: ['name', 'grades', '_status'],
     description: 'Drag the handle at the start of each row to change the order on the website.',
@@ -225,6 +230,7 @@ export const Staff: CollectionConfig = {
   slug: 'staff',
   labels: { singular: 'Staff member', plural: 'Staff' },
   admin: {
+    group: 'Programs & staff',
     useAsTitle: 'name',
     defaultColumns: ['name', 'role', 'department'],
     description: 'Drag the handle at the start of each row to change the order on the website.',

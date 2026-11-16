@@ -16,6 +16,7 @@ export const Documents: CollectionConfig = {
   access: { read: () => true, delete: publishersOnly },
   folders: true,
   admin: {
+    group: 'Files',
     useAsTitle: 'title',
     defaultColumns: ['title', 'filename', 'folder', 'updatedAt'],
     description:

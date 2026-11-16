@@ -47,6 +47,7 @@ export const Media: CollectionConfig = {
   access: { read: () => true, delete: publishersOnly },
   folders: true,
   admin: {
+    group: 'Files',
     description:
       'Photos and videos for the website. Add alt text so screen readers can describe each photo. PDFs go in Documents.',
     defaultColumns: ['filename', 'alt', 'folder', 'updatedAt'],

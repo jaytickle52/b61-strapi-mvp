@@ -42,23 +42,25 @@ import { SuperscriptFeatureClient as SuperscriptFeatureClient_e70f5e05f09f93e00b
 import { SubscriptFeatureClient as SubscriptFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { StrikethroughFeatureClient as StrikethroughFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ImportNowButton as ImportNowButton_33853075840b642aa7120f0a458e5f01 } from '@/events/ImportNowButton'
+import { ManageCategories as ManageCategories_ae430fd4103f3d388c847198199894b5 } from '@/admin/CategoryLinks'
 import { SuggestAlt as SuggestAlt_6b067041defabe0edf7fa7ea34db3026 } from '@/media/SuggestAlt'
 import { FolderTableCell as FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { FolderField as FolderField_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
+import { FieldPicker as FieldPicker_9ea8c2d18fb87511fa1afdb6adc070a8 } from '@/forms/FieldPicker'
+import { EmailRowLabel as EmailRowLabel_5968a7d5cc5b18b8bb4f5a521219c0fd } from '@/forms/EmailRowLabel'
+import { SubmissionsLink as SubmissionsLink_c6910aaaae4c22ec3cd3bf920ceab3d4 } from '@/forms/SubmissionsLink'
 import { NameRowLabel as NameRowLabel_e36725be6ff8505e19d4c20e56311f67 } from '@/school/NameRowLabel'
 import { BrandPreview as BrandPreview_5603fa09eeacaaf6bbe10269c8021dc9 } from '@/branding/BrandPreview'
 import { ColorField as ColorField_24680dcb25a0ebe6de30467deef58e4e } from '@/branding/ColorField'
 import { TestEmailButton as TestEmailButton_9efb266fe7741fea6a447ccc8b6dfc05 } from '@/email/TestEmailButton'
 import { HiddenNote as HiddenNote_e7cf3b3dfec20e5639861c1de043d742 } from '@/seo/HiddenNote'
 import { SetupNote as SetupNote_ad3208fc0d6a1f0e5094f01910836258 } from '@/analytics/SetupNote'
-import { WatchTenantCollection as WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a } from '@payloadcms/plugin-multi-tenant/client'
-import { InviteStatus as InviteStatus_347c307375689c3154b14532242e9bc9 } from '@/users/InviteStatus'
-import { InviteForm as InviteForm_3d308d2e6080724a74ef0384d9cf30a9 } from '@/users/InviteForm'
-import { FieldPicker as FieldPicker_9ea8c2d18fb87511fa1afdb6adc070a8 } from '@/forms/FieldPicker'
-import { EmailRowLabel as EmailRowLabel_5968a7d5cc5b18b8bb4f5a521219c0fd } from '@/forms/EmailRowLabel'
-import { SubmissionsLink as SubmissionsLink_c6910aaaae4c22ec3cd3bf920ceab3d4 } from '@/forms/SubmissionsLink'
 import { LinkToDoc as LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
 import { ReindexButton as ReindexButton_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
+import { InviteStatus as InviteStatus_347c307375689c3154b14532242e9bc9 } from '@/users/InviteStatus'
+import { InviteForm as InviteForm_3d308d2e6080724a74ef0384d9cf30a9 } from '@/users/InviteForm'
+import { WatchTenantCollection as WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a } from '@payloadcms/plugin-multi-tenant/client'
+import { BackToNews as BackToNews_ae430fd4103f3d388c847198199894b5 } from '@/admin/CategoryLinks'
 import { FolderTypeField as FolderTypeField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
 import { Icon as Icon_bc915ec787340c93699e0fbd50bf9eef } from '@/brand/Logo'
 import { Logo as Logo_bc915ec787340c93699e0fbd50bf9eef } from '@/brand/Logo'
@@ -118,23 +120,25 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#SubscriptFeatureClient": SubscriptFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#StrikethroughFeatureClient": StrikethroughFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/events/ImportNowButton#ImportNowButton": ImportNowButton_33853075840b642aa7120f0a458e5f01,
+  "@/admin/CategoryLinks#ManageCategories": ManageCategories_ae430fd4103f3d388c847198199894b5,
   "@/media/SuggestAlt#SuggestAlt": SuggestAlt_6b067041defabe0edf7fa7ea34db3026,
   "@payloadcms/next/rsc#FolderTableCell": FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/next/rsc#FolderField": FolderField_f9c02e79a4aed9a3924487c0cd4cafb1,
+  "@/forms/FieldPicker#FieldPicker": FieldPicker_9ea8c2d18fb87511fa1afdb6adc070a8,
+  "@/forms/EmailRowLabel#EmailRowLabel": EmailRowLabel_5968a7d5cc5b18b8bb4f5a521219c0fd,
+  "@/forms/SubmissionsLink#SubmissionsLink": SubmissionsLink_c6910aaaae4c22ec3cd3bf920ceab3d4,
   "@/school/NameRowLabel#NameRowLabel": NameRowLabel_e36725be6ff8505e19d4c20e56311f67,
   "@/branding/BrandPreview#BrandPreview": BrandPreview_5603fa09eeacaaf6bbe10269c8021dc9,
   "@/branding/ColorField#ColorField": ColorField_24680dcb25a0ebe6de30467deef58e4e,
   "@/email/TestEmailButton#TestEmailButton": TestEmailButton_9efb266fe7741fea6a447ccc8b6dfc05,
   "@/seo/HiddenNote#HiddenNote": HiddenNote_e7cf3b3dfec20e5639861c1de043d742,
   "@/analytics/SetupNote#SetupNote": SetupNote_ad3208fc0d6a1f0e5094f01910836258,
-  "@payloadcms/plugin-multi-tenant/client#WatchTenantCollection": WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a,
-  "@/users/InviteStatus#InviteStatus": InviteStatus_347c307375689c3154b14532242e9bc9,
-  "@/users/InviteForm#InviteForm": InviteForm_3d308d2e6080724a74ef0384d9cf30a9,
-  "@/forms/FieldPicker#FieldPicker": FieldPicker_9ea8c2d18fb87511fa1afdb6adc070a8,
-  "@/forms/EmailRowLabel#EmailRowLabel": EmailRowLabel_5968a7d5cc5b18b8bb4f5a521219c0fd,
-  "@/forms/SubmissionsLink#SubmissionsLink": SubmissionsLink_c6910aaaae4c22ec3cd3bf920ceab3d4,
   "@payloadcms/plugin-search/client#LinkToDoc": LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634,
   "@payloadcms/plugin-search/client#ReindexButton": ReindexButton_aead06e4cbf6b2620c5c51c9ab283634,
+  "@/users/InviteStatus#InviteStatus": InviteStatus_347c307375689c3154b14532242e9bc9,
+  "@/users/InviteForm#InviteForm": InviteForm_3d308d2e6080724a74ef0384d9cf30a9,
+  "@payloadcms/plugin-multi-tenant/client#WatchTenantCollection": WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a,
+  "@/admin/CategoryLinks#BackToNews": BackToNews_ae430fd4103f3d388c847198199894b5,
   "@payloadcms/next/client#FolderTypeField": FolderTypeField_2b8867833a34864a02ddf429b0728a40,
   "@/brand/Logo#Icon": Icon_bc915ec787340c93699e0fbd50bf9eef,
   "@/brand/Logo#Logo": Logo_bc915ec787340c93699e0fbd50bf9eef,

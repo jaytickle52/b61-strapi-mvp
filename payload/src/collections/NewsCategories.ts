@@ -12,6 +12,9 @@ export const NewsCategories: CollectionConfig = {
   labels: { singular: 'News category', plural: 'News categories' },
   orderable: true,
   admin: {
+    // Not in the sidebar: reached from the News list and a post's Categories field.
+    group: false,
+    components: { beforeListTable: ['@/admin/CategoryLinks#BackToNews'] },
     useAsTitle: 'name',
     defaultColumns: ['name', 'slug'],
     description: 'Drag to set the order the categories appear on the News page.',

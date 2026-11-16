@@ -22,7 +22,7 @@ export const CalendarFeeds: CollectionConfig = {
   labels: { singular: 'Calendar feed', plural: 'Calendar feeds' },
   admin: {
     useAsTitle: 'name',
-    group: 'Website',
+    group: 'News & events',
     defaultColumns: ['name', 'audience', 'active', 'lastImportedAt', 'lastResult'],
     description:
       'Copy events in from another calendar (Google, Outlook, athletics). Imported once a day; use "Import now" after adding one.',
