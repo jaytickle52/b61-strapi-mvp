@@ -15,6 +15,7 @@ import * as migration_20261115_211611_merge_seo_stack from './20261115_211611_me
 import * as migration_20261115_235935_style_themes from './20261115_235935_style_themes';
 import * as migration_20261116_012643_layouts_l2 from './20261116_012643_layouts_l2';
 import * as migration_20261116_023152_wake_patterns from './20261116_023152_wake_patterns';
+import * as migration_20261116_031341_changing_words_text from './20261116_031341_changing_words_text';
 
 export const migrations = [
   {
@@ -100,6 +101,11 @@ export const migrations = [
   {
     up: migration_20261116_023152_wake_patterns.up,
     down: migration_20261116_023152_wake_patterns.down,
-    name: '20261116_023152_wake_patterns'
+    name: '20261116_023152_wake_patterns',
+  },
+  {
+    up: migration_20261116_031341_changing_words_text.up,
+    down: migration_20261116_031341_changing_words_text.down,
+    name: '20261116_031341_changing_words_text'
   },
 ];

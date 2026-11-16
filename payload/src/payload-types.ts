@@ -201,14 +201,9 @@ export interface Page {
               | null;
             headingLevel?: ('auto' | 'h1' | 'h2' | 'h3') | null;
             /**
-             * Optional. Type the first word exactly as it is in a heading line; the others take its place in turn, once.
+             * Optional. Two to four words, separated by commas. The first must be in a heading line exactly as typed; the others take its place in turn, once.
              */
-            changingWords?:
-              | {
-                  text: string;
-                  id?: string | null;
-                }[]
-              | null;
+            changingWords?: string | null;
             subheadlineScale?: ('display' | 'body' | 'meta') | null;
             subheadline?: string | null;
             /**
@@ -5417,12 +5412,7 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               headingLevel?: T;
-              changingWords?:
-                | T
-                | {
-                    text?: T;
-                    id?: T;
-                  };
+              changingWords?: T;
               subheadlineScale?: T;
               subheadline?: T;
               metaItems?:

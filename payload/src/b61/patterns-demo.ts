@@ -35,7 +35,7 @@ export async function ensurePatternsDemo(payload: Payload, school: School) {
       blockType: 'b61Hero', layoutMode: 'cover', backgroundType: 'image', image: pic(0), overlay: 'gradient', height: 'tall',
       eyebrow: `${school.name}`,
       lines: [{ text: 'Excellence in Learning.' }, { text: 'Christ in everything.', emphasize: true }],
-      changingWords: [{ text: 'Learning' }, { text: 'Missions' }, { text: 'Athletics' }],
+      changingWords: 'Learning, Missions, Athletics',
       buttons: [
         { label: 'Request information', variant: 'light', action: 'link', link: go('inquire') },
         { label: 'Watch our story', variant: 'link', action: 'video', video },

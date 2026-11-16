@@ -246,8 +246,9 @@ arrangement choices are Banner 61-only; content a school updates stays where sta
   - Stats Band: **Band width** Full / Right part / Left part (wide screens) and **Pull up over the
     band above** (same hook as Section's pull-up, so the band above makes room).
 - **For school staff (Content):**
-  - Hero > Heading > **Changing words** (2-4). The first must appear exactly in a heading line
-    (checked on save). It plays once, ending on the first word, inside five seconds (WCAG 2.2.2),
+  - Hero > Heading > **Changing words**: one text box, 2-4 words separated by commas. The first
+    must appear exactly in a heading line (checked on save). A text box, not a list, keeps the
+    Heading panel short. It plays once, ending on the first word, inside five seconds (WCAG 2.2.2),
     and not at all for visitors who ask for less motion. The page text is the line as typed.
     Styled by the Accent heading line dial.
   - Every Buttons list: **Opens: A link / A video**. A video plays in a pop-up over the page
@@ -259,5 +260,7 @@ arrangement choices are Banner 61-only; content a school updates stays where sta
     time, never again for that visitor once closed.
 - **Style (Banner 61) > Menu on wide screens:** Menu bar / Slide-in panel (desktop uses the
   phone's slide-in menu, larger).
+- Click-to-field now scrolls the row (or panel) holding the field into view while it waits: the
+  editor only draws fields near the screen, so on a long element form the field never appeared.
 - CSS for all of these: `src/b61/styles/patterns.css`. Demo: the **Layout ideas** page
   (`/layout-ideas`) on both demo schools; Cedar Ridge also has Side buttons.

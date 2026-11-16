@@ -442,7 +442,7 @@ async function main() {
     // Changing words: the first must be in a heading line.
     const bad = await api('POST', '/pages', {
       token: admin,
-      body: { school: harbor, title: `Words ${RUN}`, slug: `words-${RUN}`, _status: 'published', sections: [{ blockType: 'b61Hero', lines: [{ text: 'A place to grow' }], changingWords: [{ text: 'Learning' }, { text: 'Faith' }] }] },
+      body: { school: harbor, title: `Words ${RUN}`, slug: `words-${RUN}`, _status: 'published', sections: [{ blockType: 'b61Hero', lines: [{ text: 'A place to grow' }], changingWords: 'Learning, Faith' }] },
     })
     check(bad.status >= 400, 'changing words whose first word is not in the heading are refused')
 
