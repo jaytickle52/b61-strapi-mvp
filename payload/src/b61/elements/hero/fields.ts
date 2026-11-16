@@ -55,6 +55,22 @@ export const B61Hero = defineElement({
 
     panel('Heading', [
       ...headingFields(),
+      list('changingWords', 'Changing words', 'Word', [{ name: 'text', label: 'Word', type: 'text', required: true }], {
+        maxRows: 4,
+        validate: (rows: unknown, { siblingData }: any) => {
+          const words = ((rows as any[]) ?? []).map((r) => r?.text?.trim()).filter(Boolean)
+          if (words.length === 1) return 'Add at least one more word to take turns with the first.'
+          if (!words.length) return true
+          const lines: any[] = siblingData?.lines ?? []
+          return lines.some((l) => typeof l?.text === 'string' && l.text.includes(words[0]))
+            ? true
+            : `The first word ("${words[0]}") must appear exactly as typed in a heading line.`
+        },
+        admin: {
+          initCollapsed: false,
+          description: 'Optional. Type the first word exactly as it is in a heading line; the others take its place in turn, once.',
+        },
+      }),
       segmented(
         'subheadlineScale',
         'Subheadline style',

@@ -126,7 +126,15 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
         </span>
       )}
 
-      <HeadingLines as={Heading} id={headingId} className="b61-hero__title" lineClass="b61-hero__title-line" lines={lines} ri={ri} />
+      <HeadingLines
+        as={Heading}
+        id={headingId}
+        className="b61-hero__title"
+        lineClass="b61-hero__title-line"
+        lines={lines}
+        ri={ri}
+        rotate={((block as any).changingWords ?? []).map((w: any) => w?.text ?? '')}
+      />
 
       {introStyle === 'meta' ? (
         metaItems.length > 0 && (

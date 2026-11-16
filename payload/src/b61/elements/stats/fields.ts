@@ -61,5 +61,9 @@ export const B61StatsBand = defineElement({
       }),
     ],
     accents: [eyebrowRuleField(), entranceField()],
+    advanced: [
+      segmented('bandWidth', 'Band width', [['full', 'Full'], ['right', 'Right part'], ['left', 'Left part']], { default: 'full' }),
+      toggle('pullUp', 'Pull up over the band above'),
+    ],
   },
 })

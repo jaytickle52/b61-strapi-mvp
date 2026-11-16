@@ -1,6 +1,6 @@
 // School features test (Thread F): announcements, the events calendar and its
 // subscribe feed, calendar feed import, news categories, drag ordering, page
-// templates, Bunny video links and uploads, branding (colors, fonts, site icon), site tone and custom CSS, style themes and dials, and the Content editor's Button, Callout and Table. Runs against a site with the demo schools
+// templates, Bunny video links and uploads, branding (colors, fonts, site icon), site tone and custom CSS, style themes and dials, the Content editor's Button, Callout and Table, and the layout options (Hero changing words, video buttons, Card Grid / Section / Stats Band / Split options, Side buttons, pop-up announcements). Runs against a site with the demo schools
 // and a Banner 61 admin account (the smoke test creates one):
 //
 //   BASE_URL=http://localhost:3000 SMOKE_EMAIL=... SMOKE_PASSWORD=... node scripts/features.mjs
@@ -423,6 +423,49 @@ async function main() {
     check(ed.includes('class="b61-table"') && /<thead><tr><th scope="col">/.test(ed) && ed.includes(`$9,800 ${RUN}`), 'the Table renders with a header row')
     check(!/<t[dh][^>]*style=/.test(ed), "… and carries no hard-coded colours, so themes and dark sites can style it")
     if (pid) await api('DELETE', `/pages/${pid}`, { token: admin })
+  }
+
+  // ----- Layout options (Wake patterns) ------------------------------------------
+  console.log('\nLayout options')
+  {
+    const li = visible((await page('/layout-ideas', 'cedar-ridge')).text)
+    check(/data-b61-rotate="\[&quot;Learning&quot;,&quot;Missions&quot;,&quot;Athletics&quot;\]"/.test(li), 'the hero carries its changing words')
+    check(/<h1[^>]*>[\s\S]*Excellence in <span class="b61-rotate"[^>]*><span class="b61-rotate__word">Learning<\/span><\/span>\./.test(li), '… and its heading reads as typed')
+    check(/class="b61-link b61-btn--video" href="https:\/\/www\.youtube\.com\/watch\?v=[^"]+" data-b61-video=/.test(li), 'a button set to a video links to it and opens the pop-up player')
+    check(li.includes('b61-stats--part b61-stats--part-right') && li.includes('b61-stats--pull'), 'a Stats Band can sit on the right and pull up')
+    check(li.includes('class="b61-split__badge"'), 'a Split shows its corner badge')
+    check(li.includes('b61-bg b61-bg--duotone'), 'a Section photo can be duotone')
+    check(['b61-cards__region--beside', 'b61-cards__region--stagger', 'b61-cards__region--reveal', 'b61-cards__region--alt-tint', 'b61-cards__region--bleed'].every((c) => li.includes(c)), 'Card Grid layout options render')
+    check(li.includes('aria-label="Quick links"') && li.includes('b61-quick__label">Apply<'), 'Side buttons show on Cedar Ridge')
+    check(!visible((await page('/layout-ideas', 'harbor-oaks')).text).includes('aria-label="Quick links"'), '… and not at a school without them')
+
+    // Changing words: the first must be in a heading line.
+    const bad = await api('POST', '/pages', {
+      token: admin,
+      body: { school: harbor, title: `Words ${RUN}`, slug: `words-${RUN}`, _status: 'published', sections: [{ blockType: 'b61Hero', lines: [{ text: 'A place to grow' }], changingWords: [{ text: 'Learning' }, { text: 'Faith' }] }] },
+    })
+    check(bad.status >= 400, 'changing words whose first word is not in the heading are refused')
+
+    // Banner 61-only options: a school Contributor's save keeps them.
+    const lp = (await api('GET', `/pages?where[school][equals]=${cedar}&where[slug][equals]=layout-ideas&depth=0&draft=true`, { token: admin })).json?.docs?.[0]
+    const si = (lp?.sections ?? []).findIndex((x) => x.blockType === 'b61StatsBand')
+    if (lp && si >= 0) {
+      const edited = lp.sections.map((x, i) => (i === si ? { ...x, eyebrow: `Contrib ${RUN}`, pullUp: false, bandWidth: 'full' } : x))
+      await api('PATCH', `/pages/${lp.id}?draft=true`, { token: contrib, body: { sections: edited, _status: 'draft' } })
+      const got = (await api('GET', `/pages/${lp.id}?depth=0&draft=true`, { token: admin })).json?.sections?.[si]
+      check(got?.eyebrow === `Contrib ${RUN}`, "a Contributor's draft of the page is saved")
+      check(got?.pullUp === true && got?.bandWidth === 'right', '… but keeps the Banner 61-only layout options')
+      await api('PATCH', `/pages/${lp.id}`, { token: admin, body: { sections: lp.sections, _status: 'published' } })
+    } else check(false, 'the Layout ideas demo page exists')
+
+    // A pop-up announcement renders as a dialog, closed until the page has loaded.
+    await api('POST', '/announcements', {
+      token: admin,
+      body: { school: harbor, title: `Pop-up ${RUN}`, display: 'popup', style: 'standard', showOn: 'all', startsAt: new Date(Date.now() - 60000).toISOString(), _status: 'published' },
+    })
+    const hp2 = visible((await page('/', 'harbor-oaks')).text)
+    check(/<dialog class="b61-popup b61-popup--standard"[^>]*>[\s\S]*?Pop-up /.test(hp2) && !/<dialog class="b61-popup[^"]*" open/.test(hp2), 'a pop-up announcement is a closed dialog on load')
+    check(!new RegExp(`b61-notice__title">Pop-up ${RUN}`).test(hp2), '… and not a bar')
   }
 
   // ----- Tidy up --------------------------------------------------------------

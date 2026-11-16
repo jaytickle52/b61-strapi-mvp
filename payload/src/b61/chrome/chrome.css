@@ -518,3 +518,18 @@ html.b61-hdr-lock { overflow: hidden; }
   user-select: none;
 }
 [data-b61-footer='wordmark'] .b61-ftr__name { display: none; }
+
+/* Menu on wide screens: Slide-in panel (Style dial "menu", data-b61-menu).
+   The desktop menu bar gives way to the Menu button, which opens the same
+   slide-in menu phones use, a little wider and with larger type. */
+@media (min-width: 1024px) {
+  [data-b61-menu='panel'] .b61-hdr__nav { display: none; }
+  [data-b61-menu='panel'] .b61-hdr__end { margin-left: auto; }
+  [data-b61-menu='panel'] .b61-hdr__burger { display: inline-flex; }
+  [data-b61-menu='panel'] .b61-hdr__panel { width: min(520px, 100%); }
+  [data-b61-menu='panel'] .b61-hdr__panel-inner { padding-inline: var(--b61-space-xl, 40px); }
+  [data-b61-menu='panel'] .b61-hdr__mtop { font-size: 1.6rem; padding-block: 18px; }
+  [data-b61-menu='panel'] .b61-hdr__mlink { font-size: 1.05rem; }
+  /* Centred logo keeps its centred brand; the Menu button sits at the right. */
+  [data-b61-menu='panel'][data-b61-header='centred'] .b61-hdr__bar { grid-template-areas: '. brand end'; padding-bottom: 12px; }
+}

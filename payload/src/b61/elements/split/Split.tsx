@@ -57,6 +57,8 @@ export default function B61Split({ block, index = 0 }: { block: SplitBlock; inde
 
   const frameKind = media === 'video' ? 'video' : media === 'gallery' ? 'grid' : 'single'
   const focus = media === 'photo' ? focusOf(block.image) : undefined
+  // A seal or award on the photo's outer corner (away from the text).
+  const badge = imgProps((block as any).badge, '160px')
 
   return (
     <div className={rootClass} style={rootStyle}>
@@ -81,6 +83,7 @@ export default function B61Split({ block, index = 0 }: { block: SplitBlock; inde
             !hasMedia && 'b61-split__inner--nomedia',
             panelled && 'b61-split__inner--panel',
             overlap && 'b61-split__inner--overlap',
+            badge && hasMedia && 'b61-split__inner--badge',
             `b61-split__inner--h${colHeight}`,
             'b61-split--half',
             `b61-split--img-${side}`,
@@ -132,6 +135,7 @@ export default function B61Split({ block, index = 0 }: { block: SplitBlock; inde
                   ) : null}
                 </div>
               </div>
+              {badge && <img className="b61-split__badge" {...badge} alt={asMedia(block.badge as any)?.alt ?? ''} loading="lazy" />}
             </div>
           )}
         </div>

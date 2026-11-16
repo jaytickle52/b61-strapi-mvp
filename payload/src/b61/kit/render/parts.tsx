@@ -4,6 +4,7 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { imgProps, resolveLink } from '../../lib/media'
 import { B61Icon } from './icons'
+import { parseVideo } from '../video'
 
 /*
  * Shared front-end parts. Same markup and classes as the plugin's twig, so the
@@ -23,6 +24,7 @@ export function HeadingLines({
   lineClass,
   lines,
   ri,
+  rotate,
 }: {
   as: 'h1' | 'h2' | 'h3' | 'h4'
   id?: string
@@ -30,20 +32,43 @@ export function HeadingLines({
   lineClass: string
   lines: Line[]
   ri: RevealAttr
+  /** Changing words (Hero): the first must appear in a line; the others take turns with it. */
+  rotate?: string[] | null
 }) {
   const shown = lines.filter((l) => l?.text)
   if (!shown.length) return null
+  const words = (rotate ?? []).map((w) => w.trim()).filter(Boolean)
+  const at = words.length > 1 ? shown.findIndex((l) => l.text!.includes(words[0])) : -1
   return (
     <Tag className={className} id={id}>
       {shown.map((l, i) => (
         <Fragment key={l.id ?? i}>
           {i > 0 && ' '}
           <span className={`${lineClass}${l.emphasize ? ` ${lineClass}--em` : ''}`} {...ri}>
-            {l.text}
+            {i === at ? <RotatingWord text={l.text!} words={words} /> : l.text}
           </span>
         </Fragment>
       ))}
     </Tag>
+  )
+}
+
+/**
+ * The line with its first changing word marked up. The page's text (what
+ * search engines and screen readers get) is the line as typed; the other
+ * words ride in a data attribute, and the hero's behaviour script shows them
+ * in turn for a few seconds before settling back on the first.
+ */
+function RotatingWord({ text, words }: { text: string; words: string[] }) {
+  const i = text.indexOf(words[0])
+  return (
+    <>
+      {text.slice(0, i)}
+      <span className="b61-rotate" data-b61-rotate={JSON.stringify(words)}>
+        <span className="b61-rotate__word">{words[0]}</span>
+      </span>
+      {text.slice(i + words[0].length)}
+    </>
   )
 }
 
@@ -53,9 +78,15 @@ type Btn = {
   variant?: string | null
   fullWidth?: boolean | null
   link?: Parameters<typeof resolveLink>[0]
+  action?: string | null
+  video?: string | null
 }
 
-/** The shared four button styles. Renders nothing when there are no buttons. */
+/**
+ * The shared four button styles. Renders nothing when there are no buttons.
+ * A button set to open a video links to it and carries data-b61-video; the
+ * VideoDialog (mounted once in the layout) plays it in a pop-up instead.
+ */
 export function Buttons({ buttons, className = 'b61-btn-group', ri }: { buttons?: Btn[] | null; className?: string; ri: RevealAttr }) {
   const shown = (buttons ?? []).filter((b) => b?.label)
   if (!shown.length) return null
@@ -65,6 +96,19 @@ export function Buttons({ buttons, className = 'b61-btn-group', ri }: { buttons?
         const variant = b.variant ?? 'primary'
         const full = variant !== 'link' && b.fullWidth
         const cls = variant === 'link' ? 'b61-link' : `b61-btn b61-btn--${variant}${full ? ' b61-btn--block' : ''}`
+        if (b.action === 'video' && b.video && parseVideo(b.video)) {
+          return (
+            <a key={b.id ?? i} className={`${cls} b61-btn--video`} href={b.video} data-b61-video={b.video} data-b61-video-title={b.label ?? undefined}>
+              <span className="b61-btn__play" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" focusable="false">
+                  <circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+                  <path d="M10 8.2v7.6l6-3.8z" fill="currentColor" />
+                </svg>
+              </span>
+              {b.label}
+            </a>
+          )
+        }
         const { href, newTab } = resolveLink(b.link)
         return (
           <a key={b.id ?? i} className={cls} href={href ?? undefined} {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>

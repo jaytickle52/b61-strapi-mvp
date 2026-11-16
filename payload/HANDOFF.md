@@ -194,6 +194,17 @@ Ask AI was dropped from this thread at Jay's request (14 Nov 2026).
 - Code: `src/b61/kit/preview/` (EditMark, EditOverlay, withPreviewFocus) and
   `src/b61/kit/admin/PreviewFocus.tsx`. No database change.
 
+## Layout options from the Wake Christian review (wake-patterns branch)
+
+All in one PR. Details and the rules in `src/b61/EDITING-STANDARD.md` section 16; CSS in
+`src/b61/styles/patterns.css`; one additive migration (`*_wake_patterns`). Banner 61-only layout
+choices live in each element's **Design > Advanced** (`defineElement` `design.advanced`,
+`bannerOnly()`): Card Grid heading beside / staggered / run off the edge / text on hover /
+accent tint; Section duotone; Stats Band right or left part + pull up. For school staff: Hero
+changing words, buttons that play a video in a pop-up, Split badge, Side buttons (School
+settings > Header), pop-up announcements. Style dial **Menu on wide screens** (Slide-in panel).
+Demo page `/layout-ideas` on both demo schools (`src/b61/patterns-demo.ts`, created once).
+
 ## Working rules with Jay
 
 - End work replies with a 2-line status: what was done, and the one thing needed from Jay.

@@ -38,6 +38,37 @@ export default function HeroBehavior() {
       cleanups.push(() => btn.removeEventListener('click', onClick))
     }
 
+    // 3. Changing words: each takes the first word's place in turn, once,
+    //    ending back on the first, inside five seconds (WCAG 2.2.2), so no
+    //    pause button is needed. Nothing moves for visitors who ask for less motion.
+    const rot = root.querySelector<HTMLElement>('[data-b61-rotate]')
+    const word = rot?.querySelector<HTMLElement>('.b61-rotate__word')
+    if (rot && word && !reduced) {
+      let words: string[] = []
+      try {
+        words = JSON.parse(rot.dataset.b61Rotate || '[]')
+      } catch {}
+      if (words.length > 1) {
+        const order = [...words.slice(1), words[0]]
+        const gap = Math.max(1150, Math.floor(4800 / order.length))
+        const timers: ReturnType<typeof setTimeout>[] = []
+        order.forEach((w, i) => {
+          timers.push(
+            setTimeout(() => {
+              word.classList.add('is-leaving')
+              timers.push(
+                setTimeout(() => {
+                  word.textContent = w
+                  word.classList.remove('is-leaving')
+                }, 220),
+              )
+            }, 900 + gap * i),
+          )
+        })
+        cleanups.push(() => timers.forEach(clearTimeout))
+      }
+    }
+
     // 2. Fit the first screen
     const fit = () => {
       const top = root.getBoundingClientRect().top + window.scrollY

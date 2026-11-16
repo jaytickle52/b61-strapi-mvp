@@ -1,6 +1,6 @@
 import type { Field } from 'payload'
 import { link, segmented } from '../kit/controls'
-import { list, photo } from '../kit/groups'
+import { ICON_OPTIONS, list, photo } from '../kit/groups'
 import { profileUrl } from '../../school/fields'
 
 /*
@@ -71,6 +71,34 @@ export const headerFields: Field[] = [
     type: 'group',
     fields: [{ name: 'label', label: 'Label', type: 'text' }, link()],
   },
+  list(
+    'quickLinks',
+    'Side buttons',
+    'Side button',
+    [
+      {
+        type: 'row',
+        fields: [
+          { name: 'label', label: 'Label', type: 'text', required: true, maxLength: 18, admin: { width: '60%' } },
+          {
+            name: 'icon',
+            label: 'Icon',
+            type: 'select',
+            defaultValue: 'link',
+            options: ICON_OPTIONS.filter(([v]) => v !== 'dot').map(([value, label]) => ({ value, label })),
+            admin: { width: '40%', isClearable: false },
+          },
+        ],
+      },
+      link(),
+    ],
+    {
+      maxRows: 3,
+      admin: {
+        description: 'Up to three short links that stay on screen at the side (along the bottom on phones), e.g. Inquire, Visit, Apply. Leave empty for none.',
+      },
+    },
+  ),
 ]
 
 const SOCIAL: [string, string][] = [

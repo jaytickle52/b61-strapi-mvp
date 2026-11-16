@@ -34,3 +34,13 @@ export function resolveMenu(s: Partial<SchoolSetting>): { items: NavItem[]; util
   const button = s.headerButton?.label ? nl(s.headerButton) : null
   return { items, utility: (s.utilityLinks ?? []).filter((x) => x?.label).map(nl), button }
 }
+
+/** Header > Side buttons: up to three links that stay on screen. */
+export type QuickLink = NavLink & { icon: string }
+export function resolveQuickLinks(s: Partial<SchoolSetting>): QuickLink[] {
+  return (((s as any).quickLinks ?? []) as any[])
+    .filter((x) => x?.label)
+    .slice(0, 3)
+    .map((x) => ({ ...nl(x), icon: x.icon ?? 'link' }))
+    .filter((x) => x.href)
+}

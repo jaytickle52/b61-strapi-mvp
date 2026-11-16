@@ -50,14 +50,17 @@ import Reveal from '@/b61/reveal/Reveal'
 import { getAnnouncements, getSettings, hiddenFromSearch, isPreview, siteOrigin } from '@/lib/data'
 import AnalyticsTag from '@/analytics/Tag'
 import Announcements, { type Notice } from '@/b61/chrome/Announcements'
+import QuickLinks from '@/b61/chrome/QuickLinks'
+import VideoDialog from '@/b61/kit/render/VideoDialog'
+import '@/b61/styles/patterns.css'
 import JsonLd from '@/seo/JsonLd'
 import { redirectToMainDomain } from '@/seo/domains'
 import { schoolSchema } from '@/seo/schema'
 import { PreviewBanner } from '@/components/SiteChrome'
 import Header from '@/b61/chrome/Header'
 import Footer from '@/b61/chrome/Footer'
-import { resolveMenu } from '@/b61/chrome/resolve'
-import { asMedia, resolveLink } from '@/b61/lib/media'
+import { resolveMenu, resolveQuickLinks } from '@/b61/chrome/resolve'
+import { asMedia, imgProps, resolveLink } from '@/b61/lib/media'
 import LivePreviewListener from '@/components/LivePreviewListener'
 import EditOverlay from '@/b61/kit/preview/EditOverlay'
 import EditMark from '@/b61/kit/preview/EditMark'
@@ -105,6 +108,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       homeOnly: a.showOn === 'home',
       dismissible: a.dismissible !== false,
       version: String(a.updatedAt ?? ''),
+      popup: (a as any).display === 'popup',
+      image: (a as any).display === 'popup' ? (imgProps((a as any).image, '(max-width: 640px) 92vw, 560px') ?? null) : null,
+      imageAlt: asMedia((a as any).image)?.alt ?? '',
     }
   })
   const heading = settings.headingFont ?? 'Fraunces'
@@ -166,10 +172,12 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           }}
           {...resolveMenu(settings)}
         />
+        <QuickLinks links={resolveQuickLinks(settings)} />
         <main id="main" tabIndex={-1} className="flex-1">{children}</main>
         {preview && <EditMark tab="Footer" label="Footer" />}
         <Footer s={settings} logo={logoOnDark?.url ?? logo?.url} />
         <Reveal />
+        <VideoDialog />
         {gaTag && <AnalyticsTag id={gaTag} />}
       </body>
     </html>
