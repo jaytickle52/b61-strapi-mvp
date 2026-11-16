@@ -2,6 +2,7 @@ import type { Block, Field, RichTextField } from 'payload'
 import {
   BlocksFeature,
   BoldFeature,
+  EXPERIMENTAL_TableFeature,
   FixedToolbarFeature,
   HeadingFeature,
   HorizontalRuleFeature,
@@ -22,7 +23,8 @@ import { ICON_OPTIONS, list, onlyImages } from './groups'
  *
  * One editor, typed top to bottom like a document. Besides paragraphs,
  * headings, lists and links, its "+" / slash menu offers the band's own
- * pieces as cards: Pull quote, Icon list and Emphasis. Built-in items that
+ * pieces as cards: Pull quote, Icon list, Emphasis, Button and Callout, plus a
+ * Table (Payload's table feature, still marked experimental). Built-in items that
  * would break the design (Heading 1, uploads, check lists, plain blockquotes)
  * are left out. Prose also gets Divider (a hairline between parts).
  *
@@ -67,6 +69,38 @@ const iconListBlock: Block = {
   ],
 }
 
+// A button inside the text ("Schedule a tour") without a whole CTA Band.
+const buttonBlock: Block = {
+  slug: 'bodyButton',
+  labels: { singular: 'Button', plural: 'Buttons' },
+  fields: [
+    {
+      type: 'row',
+      fields: [
+        { name: 'label', label: 'Label', type: 'text', required: true, admin: { width: '60%' } },
+        dropdown('variant', 'Style', [['primary', 'Primary'], ['secondary', 'Secondary'], ['light', 'Light'], ['link', 'Text link']], { default: 'primary', width: '40%' }),
+      ],
+    },
+    link() as Field,
+  ],
+}
+
+// A notice set apart from the text: "Applications due March 1".
+const calloutBlock: Block = {
+  slug: 'callout',
+  labels: { singular: 'Callout', plural: 'Callouts' },
+  fields: [
+    segmented('tone', 'Tone', [['note', 'Note'], ['important', 'Important'], ['celebrate', 'Celebrate']], { default: 'note' }) as Field,
+    { name: 'title', label: 'Title', type: 'text', admin: { placeholder: 'e.g. Applications due March 1' } },
+    { name: 'text', label: 'Text', type: 'textarea', admin: { rows: 2 } },
+    { name: 'linkLabel', label: 'Link text', type: 'text', admin: { placeholder: 'Optional, e.g. Start your application' } },
+    (() => {
+      const l = link('link') as any
+      return { ...l, admin: { ...l.admin, condition: (_: unknown, sib: any) => Boolean(sib?.linkLabel) } } as Field
+    })(),
+  ],
+}
+
 // Separate slugs where an element offers fewer choices, so no card shows a
 // control that would do nothing there.
 export const BODY_BLOCKS = {
@@ -75,6 +109,8 @@ export const BODY_BLOCKS = {
   pullQuote: { slug: 'pullQuote', labels: { singular: 'Pull quote', plural: 'Pull quotes' }, fields: quoteFields(true) } as Block,
   pullQuoteText: { slug: 'pullQuoteText', labels: { singular: 'Pull quote', plural: 'Pull quotes' }, fields: quoteFields(false) } as Block,
   iconList: iconListBlock,
+  bodyButton: buttonBlock,
+  callout: calloutBlock,
 }
 
 const slugs = (o: Opts) => ({
@@ -88,7 +124,7 @@ export function bodyField(o: Opts = {}): RichTextField {
     name: 'body',
     label: 'Content',
     type: 'richText',
-    admin: { description: 'Type as in a document. Use + or / for a Pull quote, Icon list or Emphasis line.' },
+    admin: { description: 'Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.' },
     editor: lexicalEditor({
       features: () => [
         ParagraphFeature(),
@@ -100,7 +136,10 @@ export function bodyField(o: Opts = {}): RichTextField {
         UnorderedListFeature(),
         OrderedListFeature(),
         ...(o.dividers ? [HorizontalRuleFeature()] : []),
-        BlocksFeature({ blocks: [BODY_BLOCKS[s.quote as 'pullQuote'], BODY_BLOCKS.iconList, BODY_BLOCKS[s.emphasis as 'emphasis']] }),
+        EXPERIMENTAL_TableFeature(),
+        BlocksFeature({
+          blocks: [BODY_BLOCKS[s.quote as 'pullQuote'], BODY_BLOCKS.iconList, BODY_BLOCKS[s.emphasis as 'emphasis'], BODY_BLOCKS.bodyButton, BODY_BLOCKS.callout],
+        }),
         FixedToolbarFeature(),
         InlineToolbarFeature(),
       ],
@@ -112,7 +151,7 @@ export function bodyField(o: Opts = {}): RichTextField {
 
 export type BodyItem = {
   id?: string
-  type: 'body' | 'emphasis' | 'quote' | 'iconrow'
+  type: 'body' | 'emphasis' | 'quote' | 'iconrow' | 'button' | 'callout'
   body?: any
   text?: string | null
   scale?: string | null
@@ -122,6 +161,11 @@ export type BodyItem = {
   hasLink?: boolean | null
   link?: any
   divider?: boolean | null
+  label?: string | null
+  variant?: string | null
+  tone?: string | null
+  title?: string | null
+  linkLabel?: string | null
 }
 
 let n = 0
@@ -201,6 +245,12 @@ export function fromBody(state: any): BodyItem[] {
       case 'pullQuote':
       case 'pullQuoteText':
         out.push({ id, type: 'quote', text: f.text, attribution: f.attribution, photo: f.photo, divider: take() })
+        break
+      case 'bodyButton':
+        out.push({ id, type: 'button', label: f.label, variant: f.variant ?? 'primary', link: f.link, divider: take() })
+        break
+      case 'callout':
+        out.push({ id, type: 'callout', tone: f.tone ?? 'note', title: f.title, text: f.text, linkLabel: f.linkLabel, link: f.link, divider: take() })
         break
       case 'iconList': {
         const d = take()

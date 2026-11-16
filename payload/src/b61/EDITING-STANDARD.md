@@ -97,8 +97,18 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 ## 10. Writing (the Content editor)
 
 - Split, Prose and CTA Band have one Content editor, typed like a document.
-- Its + / slash menu offers the band's own pieces as cards: Pull quote, Icon list, Emphasis
-  (and Divider in Prose). One way to make each thing.
+- Its + / slash menu offers the band's own pieces as cards: Pull quote, Icon list, Emphasis,
+  Button, Callout and Table (and Divider in Prose). One way to make each thing.
+- Button: one button in the flow of the text ("Schedule a tour"), same four styles as
+  everywhere else. Reach for a CTA Band only when the button needs a whole band.
+- Callout: a short notice set apart from the text ("Applications due March 1"). Tone is
+  Note, Important or Celebrate; title, a line of text and an optional link. Colours come
+  from role tokens, so it follows the theme and a dark site. Rendered as `role="note"`.
+- Table: Payload's built-in table (still marked experimental). We render it ourselves
+  (`render/converters.tsx`) without Payload's inline grey borders, so themes and dark
+  sites style it; a top row of header cells becomes `<thead>`. It scrolls sideways on a
+  phone. Adding a Lexical feature that has an editor piece means running
+  `npm run generate:importmap` and committing `importMap.js`, or the editor breaks.
 - Built-in items that break the design are left out: Heading 1, uploads, relationships,
   check lists, plain blockquotes. Headings are H2-H4.
 - Intros and item bodies (accordion, pillars, cards) use a short editor: paragraphs,

@@ -93,6 +93,11 @@ type Block = {
   scale?: string | null
   divider?: boolean | null
   link?: Parameters<typeof resolveLink>[0]
+  label?: string | null
+  variant?: string | null
+  tone?: string | null
+  title?: string | null
+  linkLabel?: string | null
 }
 
 /**
@@ -166,6 +171,34 @@ export function ContentBlocks({
             {b.attribution && <figcaption>{b.attribution}</figcaption>}
           </QuoteText>
         </figure>,
+      )
+    } else if (type === 'button' && b.label) {
+      // A single button inside the text (Content editor > Button).
+      out.push(
+        <Buttons
+          key={key}
+          buttons={[{ id: key, label: b.label, variant: (b.variant as any) ?? 'primary', link: b.link, fullWidth: false } as any]}
+          className={`b61-body-btn b61-block${dv}`}
+          ri={ri}
+        />,
+      )
+    } else if (type === 'callout' && (b.title || b.text)) {
+      // A notice set apart from the text (Content editor > Callout).
+      const tone = b.tone === 'important' || b.tone === 'celebrate' ? b.tone : 'note'
+      const { href, newTab } = b.linkLabel ? resolveLink(b.link) : { href: null, newTab: false }
+      out.push(
+        <div key={key} role="note" className={`b61-callout b61-callout--${tone} b61-block${dv}`} {...ri}>
+          {b.title && <p className="b61-callout__title">{b.title}</p>}
+          {b.text && <p className="b61-callout__text">{b.text}</p>}
+          {href && b.linkLabel && (
+            <a className="b61-link b61-callout__link" href={href} {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+              {b.linkLabel}
+              <span className="b61-link-arrow" aria-hidden="true">
+                &rarr;
+              </span>
+            </a>
+          )}
+        </div>,
       )
     } else if (type === 'iconrow' && b.text) {
       const { href, newTab } = b.hasLink ? resolveLink(b.link) : { href: null, newTab: false }

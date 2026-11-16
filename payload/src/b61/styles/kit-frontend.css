@@ -36,3 +36,98 @@
 .b61-lite-video:hover .b61-lite-video__play,
 .b61-lite-video:focus-visible .b61-lite-video__play { background: var(--b61-primary, #000); }
 .b61-lite-video:focus-visible { outline: var(--b61-focus-width, 3px) solid var(--b61-focus, #000); outline-offset: 2px; }
+
+/* ---------------------------------------------------------------------------
+   CONTENT EDITOR: BUTTON, CALLOUT, TABLE (+ / slash menu)
+
+   Three pieces that sit in a text column alongside Emphasis, Quote and List.
+   All colours come from role tokens, so they follow the site's palette, its
+   theme (corners via --b61-radius-card) and a dark site (tone.css retunes the
+   same tokens). :where() keeps every rule at zero specificity so a custom-CSS
+   rule wins without !important.
+   --------------------------------------------------------------------------- */
+
+/* Button: one button in the flow of the text, no band around it. */
+:where(.b61-body-btn) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--b61-space-sm, 0.75rem);
+}
+
+/* Callout: a short notice set apart from the text. */
+:where(.b61-callout) {
+  --b61-callout-bg: var(--b61-surface-soft);
+  --b61-callout-ink: var(--b61-on-surface-soft);
+  --b61-callout-rule: var(--b61-border-strong);
+  padding: 1.1em 1.35em;
+  border-left: 4px solid var(--b61-callout-rule);
+  border-radius: var(--b61-radius-card, var(--b61-radius, 6px));
+  background: var(--b61-callout-bg);
+  color: var(--b61-callout-ink);
+}
+:where(.b61-callout--important) {
+  --b61-callout-bg: var(--b61-surface-mid);
+  --b61-callout-ink: var(--b61-on-surface-mid);
+  --b61-callout-rule: var(--b61-accent-text);
+}
+:where(.b61-callout--celebrate) {
+  --b61-callout-bg: var(--b61-surface-dark);
+  --b61-callout-ink: var(--b61-on-surface-dark);
+  --b61-callout-rule: var(--b61-secondary);
+}
+:where(.b61-callout) > * { margin: 0; }
+:where(.b61-callout) > * + * { margin-top: 0.4em; }
+:where(.b61-callout__title) {
+  font-family: var(--b61-font-display, inherit);
+  font-weight: 700;
+  font-size: 1.1em;
+  line-height: 1.3;
+}
+:where(.b61-callout__text) { line-height: 1.55; }
+:where(.b61-callout) .b61-callout__link { margin-top: 0.15em; padding-inline: 0; color: inherit; }
+:where(.b61-callout--celebrate) .b61-callout__link:focus-visible {
+  outline-color: var(--b61-focus-on-dark, currentColor);
+}
+
+/* Table: tuition, bell schedules, uniform prices. Scrolls sideways on a phone. */
+:where(.b61-table) {
+  max-width: 100%;
+  overflow-x: auto;
+  margin-block: 1em;
+  border: 1px solid var(--b61-border);
+  border-radius: var(--b61-radius-card, var(--b61-radius, 6px));
+}
+:where(.b61-table):first-child { margin-top: 0; }
+:where(.b61-table):last-child { margin-bottom: 0; }
+:where(.b61-table):focus-visible {
+  outline: var(--b61-focus-width, 3px) solid var(--b61-focus);
+  outline-offset: 2px;
+}
+:where(.b61-table) table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+}
+:where(.b61-table) :is(th, td) {
+  padding: 0.7em 1em;
+  text-align: left;
+  vertical-align: top;
+  border-top: 1px solid var(--b61-border);
+}
+:where(.b61-table) tr:first-child > :is(th, td) { border-top: 0; }
+:where(.b61-table) :is(th, td) + :is(th, td) { border-left: 1px solid var(--b61-border); }
+:where(.b61-table) th {
+  font-weight: 700;
+  color: var(--b61-on-surface-soft);
+  background: var(--b61-surface-soft);
+}
+:where(.b61-table) thead th { border-bottom: 1px solid var(--b61-border-strong); }
+:where(.b61-table) tbody tr:nth-child(even) > td {
+  background: color-mix(in srgb, var(--b61-surface-soft) 55%, transparent);
+}
+/* Real specificity here, on purpose: each element's body sets paragraph
+   spacing (.b61-prose__body p and friends), which would make every row tall. */
+.b61-table :is(th, td) > p { margin: 0; }
+.b61-table :is(th, td) > p + p { margin-top: 0.4em; }
