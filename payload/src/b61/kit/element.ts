@@ -28,10 +28,16 @@ export type ElementSpec = {
   /** Which field, if any, picks the element's variant (shown in the section label). */
   mode?: { field: string; labels: Record<string, string> }
   content: Field[]
+  /**
+   * The Content panel that opens first (by its label). Without it: the first
+   * panel, unless the element's main content (a list, the Content editor, a
+   * column of elements) sits outside the panels, in which case all start closed.
+   */
+  open?: string
   design: DesignPanels
 }
 
-/** A Content panel (open by default). */
+/** A Content panel. defineElement decides which one opens first and adds its header summary. */
 export function panel(label: string, fields: Field[], o: { condition?: Condition; when?: When; open?: boolean } = {}): Field {
   return {
     type: 'collapsible',
@@ -69,6 +75,74 @@ function summarise(fields: Field[]): Summary[] {
     }
   }
   return out
+}
+
+type ContentSummary = { name: string; kind: 'text' | 'rich' | 'list' | 'upload' | 'choice'; one?: string; many?: string; labels?: Record<string, string> }
+
+/**
+ * What a closed Content panel says about itself: the first thing filled in,
+ * e.g. "Heading · A place to grow in faith", "Buttons · Schedule a tour, Apply now",
+ * "Media · Students in the library". Heading lines come before the eyebrow.
+ */
+function summariseContent(fields: Field[]): ContentSummary[] {
+  const out: ContentSummary[] = []
+  // Choices ("Fill with: Programs") only speak when nothing has been typed.
+  const choices: ContentSummary[] = []
+  const walk = (list: Field[]) => {
+    for (const f of list) {
+      if (f.type === 'row' || f.type === 'collapsible') {
+        walk(f.fields)
+        continue
+      }
+      if (!('name' in f)) continue
+      if (f.type === 'text' || f.type === 'textarea') out.push({ name: f.name, kind: 'text' })
+      else if (f.type === 'richText') out.push({ name: f.name, kind: 'rich' })
+      else if (f.type === 'upload') out.push({ name: f.name, kind: 'upload' })
+      else if ((f.type === 'select' || f.type === 'radio') && f.name !== 'headingLevel') {
+        const labels = Object.fromEntries(
+          (f.options ?? []).map((o) => (typeof o === 'string' ? [o, o] : [o.value, typeof o.label === 'string' ? o.label : o.value])),
+        )
+        choices.push({ name: f.name, kind: 'choice', labels })
+      }
+      else if (f.type === 'array') {
+        const labels = (f as any).labels ?? {}
+        out.push({
+          name: f.name,
+          kind: 'list',
+          one: typeof labels.singular === 'string' ? labels.singular.toLowerCase() : 'item',
+          many: typeof labels.plural === 'string' ? labels.plural.toLowerCase() : 'items',
+        })
+      }
+    }
+  }
+  walk(fields)
+  const lead = out.findIndex((s) => s.name === 'lines')
+  if (lead > 0) out.unshift(...out.splice(lead, 1))
+  return [...out, ...choices]
+}
+
+const MAIN_TYPES = new Set(['array', 'blocks', 'richText'])
+
+/** Content panels start closed with a summary in the header; one opens first (see ElementSpec.open). */
+function contentPanels(fields: Field[], open?: string): Field[] {
+  const firstPanel = fields.find((f) => f.type === 'collapsible') as any
+  const mainOutside = fields.some((f) => MAIN_TYPES.has(f.type))
+  const openLabel = open ?? (mainOutside ? null : firstPanel?.label)
+  return fields.map((f) => {
+    if (f.type !== 'collapsible') return f
+    const label = typeof f.label === 'string' ? f.label : ''
+    return {
+      ...f,
+      admin: {
+        ...f.admin,
+        initCollapsed: label !== openLabel,
+        components: {
+          ...(f.admin?.components ?? {}),
+          Label: { path: '@/b61/kit/admin/PanelLabel#PanelLabel', clientProps: { label, content: summariseContent(f.fields) } },
+        },
+      },
+    } as Field
+  })
 }
 
 function designPanel(label: string, fields: Field[] | undefined, open: boolean): Field[] {
@@ -139,7 +213,7 @@ export function defineElement(spec: ElementSpec): Block {
       {
         type: 'tabs',
         tabs: [
-          { label: 'Content', fields: spec.content },
+          { label: 'Content', fields: contentPanels(spec.content, spec.open) },
           {
             label: 'Design',
             fields: [

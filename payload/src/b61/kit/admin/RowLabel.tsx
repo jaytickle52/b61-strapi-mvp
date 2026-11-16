@@ -1,5 +1,6 @@
 'use client'
 import { useRowLabel } from '@payloadcms/ui'
+import { usePhotoName } from './photoName'
 
 const TYPE_NAMES: Record<string, string> = { body: 'Body copy', emphasis: 'Emphasis', quote: 'Pull quote', iconrow: 'Icon row' }
 
@@ -9,10 +10,11 @@ function firstWords(rich: any): string {
   return walk(rich?.root).trim().slice(0, 60)
 }
 
-/** Names a repeater row after what was typed in it ("Schedule a tour"), not "Button 01". */
+/** Names a repeater row after what was typed in it ("Schedule a tour"), or its photo, not "Button 01". */
 export function LabelRow() {
   const { data, rowNumber } = useRowLabel<Record<string, any>>()
-  const typed = data?.label || data?.text || firstWords(data?.body)
+  const photo = usePhotoName(data?.image)
+  const typed = data?.label || data?.text || data?.title || data?.caption || firstWords(data?.body) || photo
   const kind = data?.type && TYPE_NAMES[data.type]
   const fallback = `Item ${String((rowNumber ?? 0) + 1).padStart(2, '0')}`
   if (kind) {

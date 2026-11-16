@@ -1,6 +1,7 @@
 import { simpleEditor } from './editors'
 import type { ArrayField, Condition, Field, FilterOptions, UploadField } from 'payload'
 import { dropdown, link, segmented, toggle, whenCondition, type When } from './controls'
+import { panel } from './element'
 
 /*
  * B61 editing kit: field groups shared by every element. Same names, same
@@ -12,7 +13,11 @@ export const onlyVideos: FilterOptions = { mimeType: { contains: 'video' } }
 
 const ROW_LABEL = '@/b61/kit/admin/RowLabel#LabelRow'
 
-/** A list whose rows are named by their content and carry no second header. */
+/**
+ * A list whose rows are named by their content and carry no second header.
+ * Rows start closed, so a long list reads as its names; a list of one-line rows
+ * (Heading lines) passes `admin.initCollapsed: false`.
+ */
 export function list(name: string, label: string, singular: string, fields: Field[], o: Partial<ArrayField> = {}): ArrayField {
   return {
     name,
@@ -20,7 +25,12 @@ export function list(name: string, label: string, singular: string, fields: Fiel
     type: 'array',
     labels: { singular, plural: label },
     ...o,
-    admin: { ...(o.admin ?? {}), className: 'b61-list', components: { RowLabel: ROW_LABEL, ...(o.admin?.components ?? {}) } },
+    admin: {
+      initCollapsed: true,
+      ...(o.admin ?? {}),
+      className: ['b61-list', o.admin?.className].filter(Boolean).join(' '),
+      components: { RowLabel: ROW_LABEL, ...(o.admin?.components ?? {}) },
+    },
     fields,
   } as ArrayField
 }
@@ -44,7 +54,7 @@ export function headingFields(o: { levels?: Level[] } = {}): Field[] {
           { ...toggle('emphasize', 'Emphasize'), admin: { width: '30%', style: { alignSelf: 'flex-end', paddingBottom: 10 } } },
         ],
       },
-    ]),
+    ], { admin: { initCollapsed: false } }),
     dropdown('headingLevel', 'Heading level', [['auto', 'Automatic'], ...levels.map((l) => [l, l.toUpperCase()] as [string, string])], {
       default: 'auto',
     }),
@@ -144,6 +154,15 @@ export function buttonsField(): ArrayField {
     // A full-width text link is a hit area with no visible edges.
     toggle('fullWidth', 'Full width', { condition: (_, s) => s?.variant !== 'link' }),
   ])
+}
+
+/**
+ * The Buttons panel: closed, its header listing the button labels. The list's own
+ * title is hidden so the name isn't said twice (EDITING-STANDARD.md section 4).
+ */
+export function buttonsPanel(): Field {
+  const f = buttonsField()
+  return panel('Buttons', [{ ...f, admin: { ...f.admin, className: 'b61-list b61-list--bare' } } as Field])
 }
 
 /** A photo field. Focal point and crop live on the photo itself, in Media. */
