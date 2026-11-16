@@ -12,6 +12,8 @@ const paths: Record<string, string> = {
   'side-right': 'M11 4h7v12h-7zM2 6h6M2 10h6M2 14h4',
   cover: 'M2 4h16v12H2zM2 12l5-4 4 3 3-2 4 3M5 13h6',
   band: 'M2 4h16v12H2zM4 8h5M4 11h4M11 6h5v8h-5z',
+  split: 'M2 4h16v12H2zM10 4v12M4 8h4M4 11h3M10 13l3-3 2 2 3-3',
+  type: 'M2 4h16v12H2zM5 8h10M5 11.5h7',
 }
 
 export function Icon({ name, size = 18 }: { name: string; size?: number }) {

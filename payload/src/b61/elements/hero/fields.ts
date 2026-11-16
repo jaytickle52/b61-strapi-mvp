@@ -27,13 +27,17 @@ import {
 
 const cover: WhenRule = { field: 'layoutMode', in: ['cover'] }
 const band: WhenRule = { field: 'layoutMode', in: ['band'] }
-const coverBg = (t: string) => (_: unknown, s: any) => s?.layoutMode !== 'band' && (s?.backgroundType ?? 'image') === t
+const split: WhenRule = { field: 'layoutMode', in: ['split'] }
+// Split, Big headline and Band sit on a coloured surface; Cover on a photo.
+const onSurface: WhenRule = { field: 'layoutMode', in: ['band', 'split', 'type'] }
+const isCover = (s: any) => (s?.layoutMode ?? 'cover') === 'cover'
+const coverBg = (t: string) => (_: unknown, s: any) => isCover(s) && (s?.backgroundType ?? 'image') === t
 
 export const B61Hero = defineElement({
   slug: 'b61Hero',
   name: 'Hero',
   plural: 'Heroes',
-  mode: { field: 'layoutMode', labels: { cover: 'Cover', band: 'Band' } },
+  mode: { field: 'layoutMode', labels: { cover: 'Cover', band: 'Band', split: 'Split', type: 'Big headline' } },
 
   content: [
     segmented(
@@ -42,6 +46,8 @@ export const B61Hero = defineElement({
       [
         ['cover', 'Cover photo', 'cover'],
         ['band', 'Band with collage', 'band'],
+        ['split', 'Split screen', 'split'],
+        ['type', 'Big headline', 'type'],
       ],
       { default: 'cover' },
     ),
@@ -86,9 +92,10 @@ export const B61Hero = defineElement({
             ['slideshow', 'Slideshow', 'slideshow'],
             ['video', 'Video', 'video'],
           ],
-          { default: 'image' },
+          { default: 'image', when: cover },
         ),
-        photo('image', 'Image', { condition: coverBg('image') }),
+        // Split screen uses the same photo field: one photo filling its half.
+        photo('image', 'Image', { condition: (d: unknown, s: any) => coverBg('image')(d, s) || s?.layoutMode === 'split' }),
         list('slides', 'Slides', 'Slide', [{ name: 'image', type: 'upload', relationTo: 'media', filterOptions: onlyImages, required: true }], {
           minRows: 2,
           admin: { condition: coverBg('slideshow') },
@@ -118,10 +125,16 @@ export const B61Hero = defineElement({
           type: 'number',
           min: 0,
           max: 100,
-          admin: { step: 5, placeholder: 'Default', width: '50%', description: 'Below 80%, check the words stay easy to read over the photo.' },
+          admin: {
+            step: 5,
+            placeholder: 'Default',
+            width: '50%',
+            description: 'Below 80%, check the words stay easy to read over the photo.',
+            condition: (_: unknown, s: any) => isCover(s),
+          },
         },
       ],
-      { when: cover },
+      { when: [cover, split] },
     ),
 
     list('collage', 'Collage', 'Photo', [{ name: 'image', type: 'upload', relationTo: 'media', filterOptions: onlyImages, required: true }], {
@@ -145,12 +158,21 @@ export const B61Hero = defineElement({
       ),
       segmented(
         'bandSize',
-        'Band height',
+        'Height',
         [
           ['compact', 'Compact'],
           ['standard', 'Standard'],
         ],
-        { default: 'standard', when: band },
+        { default: 'standard', when: onSurface },
+      ),
+      segmented(
+        'splitSide',
+        'Photo side',
+        [
+          ['right', 'Right', 'side-right'],
+          ['left', 'Left', 'side-left'],
+        ],
+        { default: 'right', when: split },
       ),
       {
         type: 'row',
@@ -191,7 +213,7 @@ export const B61Hero = defineElement({
           ['primary', 'Primary'],
           ['secondary', 'Secondary'],
         ],
-        { default: 'primary', when: [band, { field: 'overlay', in: ['wash'] }] },
+        { default: 'primary', when: [onSurface, { field: 'overlay', in: ['wash'] }] },
       ),
     ],
     accents: [eyebrowRuleField(), entranceField()],

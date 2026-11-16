@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import Link from 'next/link'
 import type { SchoolSetting } from '@/payload-types'
 import { resolveLink } from '../lib/media'
@@ -82,6 +83,11 @@ export default function Footer({ s, logo }: { s: Partial<SchoolSetting> & { scho
           ))}
         </div>
       </div>
+      {/* Footer layout "Wordmark" (School settings > Style): the school's name set
+          across the whole footer. Hidden otherwise; decorative (the name is above). */}
+      <p className="b61-ftr__wordmark" aria-hidden="true" style={{ '--b61-wm-len': Math.max(s.schoolName.length, 6) } as CSSProperties}>
+        {s.schoolName}
+      </p>
     </footer>
   )
 }

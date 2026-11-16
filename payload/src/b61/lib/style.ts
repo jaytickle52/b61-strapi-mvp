@@ -32,6 +32,24 @@ type Dial = {
 }
 
 export const DIALS = {
+  header: {
+    label: 'Header layout',
+    base: 'classic',
+    description: 'Over the hero: transparent over a dark first hero, solid once the page scrolls.',
+    options: [
+      { value: 'classic', label: 'Classic' },
+      { value: 'centred', label: 'Centred logo', attrs: { 'data-b61-header': 'centred' } },
+      { value: 'overlay', label: 'Over the hero', attrs: { 'data-b61-header': 'overlay' } },
+    ],
+  },
+  footer: {
+    label: 'Footer layout',
+    base: 'classic',
+    options: [
+      { value: 'classic', label: 'Classic' },
+      { value: 'wordmark', label: 'Big wordmark', attrs: { 'data-b61-footer': 'wordmark' } },
+    ],
+  },
   corners: {
     label: 'Corners',
     base: 'rounded',
@@ -209,17 +227,17 @@ export const THEMES: Record<ThemeName, { label: string; description: string; dia
   },
   modern: {
     label: 'Modern',
-    description: 'Clean and open: soft corners, no frames or eyebrow lines, colour accents, wide and airy.',
+    description: 'Clean and open: header over the hero, soft corners, no frames or eyebrow lines, colour accents, wide and airy.',
     dials: {
-      corners: 'soft', buttons: 'rounded', headingWeight: 'semibold', headingTracking: 'tight', emphasis: 'colour',
+      header: 'overlay', corners: 'soft', buttons: 'rounded', headingWeight: 'semibold', headingTracking: 'tight', emphasis: 'colour',
       eyebrow: 'none', frames: 'none', spacing: 'airy', width: 'wide', heroEdge: 'hidden', motion: 'fade',
     },
   },
   bold: {
     label: 'Bold',
-    description: 'Poster-like: square corners and buttons, heavy capital headings, dramatic sizes.',
+    description: 'Poster-like: square corners and buttons, heavy capital headings, dramatic sizes, a big wordmark footer.',
     dials: {
-      corners: 'square', buttons: 'square', buttonCase: 'capitals', headingCase: 'capitals', headingWeight: 'heavy',
+      footer: 'wordmark', corners: 'square', buttons: 'square', buttonCase: 'capitals', headingCase: 'capitals', headingWeight: 'heavy',
       typeScale: 'dramatic', emphasis: 'colour', motion: 'rise',
     },
   },
@@ -233,9 +251,9 @@ export const THEMES: Record<ThemeName, { label: string; description: string; dia
   },
   editorial: {
     label: 'Editorial',
-    description: 'Like a magazine: square, light large headings, airy spacing, no frames.',
+    description: 'Like a magazine: centred logo, square, light large headings, airy spacing, no frames.',
     dials: {
-      corners: 'square', buttons: 'square', buttonCase: 'capitals', headingWeight: 'light', headingTracking: 'tight',
+      header: 'centred', corners: 'square', buttons: 'square', buttonCase: 'capitals', headingWeight: 'light', headingTracking: 'tight',
       typeScale: 'dramatic', spacing: 'airy', frames: 'none', heroEdge: 'hidden', motion: 'fade',
     },
   },

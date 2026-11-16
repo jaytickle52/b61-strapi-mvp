@@ -435,3 +435,86 @@ html.b61-hdr-lock { overflow: hidden; }
 .b61-notice__close:hover { background: rgba(255, 255, 255, 0.16); }
 .b61-notice__close:focus-visible,
 .b61-notice__link:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+
+/* ---------- Header and footer layouts (School settings > Style, L2) ----------
+ * Chosen by Style dials that set data-b61-header / data-b61-footer on <html>
+ * (lib/style.ts). Without the attribute, the classic header and footer above. */
+
+/* The logo for dark grounds only shows over a dark hero (below). */
+.b61-hdr__logo--on-dark { display: none; }
+
+/* Centred logo: logo and name centred on top, the menu centred under them,
+   search and button at the top right. Desktop only; phones keep the classic bar. */
+@media (min-width: 1024px) {
+  [data-b61-header='centred'] .b61-hdr__bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-areas: '. brand end' 'nav nav nav';
+    align-items: center;
+    row-gap: 2px;
+    padding-top: 16px;
+  }
+  [data-b61-header='centred'] .b61-hdr__brand { grid-area: brand; flex-direction: column; gap: 8px; text-align: center; }
+  [data-b61-header='centred'] .b61-hdr__logo { height: 56px; }
+  [data-b61-header='centred'] .b61-hdr__name { font-size: 1.375rem; }
+  [data-b61-header='centred'] .b61-hdr__end { grid-area: end; justify-self: end; margin-left: 0; }
+  [data-b61-header='centred'] .b61-hdr__nav { grid-area: nav; justify-self: center; margin: 0; padding-bottom: 6px; }
+}
+
+/* Over the hero: when the page opens on a dark hero (the hero marks itself
+   data-b61-over-ok on the server), the header lies over it, transparent, with
+   light words, until the page scrolls ([data-scrolled], set by Header.tsx). */
+[data-b61-header='overlay'] .b61-hdr:has(+ #main [data-b61-over-ok]) {
+  margin-bottom: calc(-1 * var(--b61-sticky-h, 76px));
+  transition: background-color 0.25s var(--b61-ease, ease), border-color 0.25s var(--b61-ease, ease);
+}
+[data-b61-header='overlay'] .b61-hdr:not([data-scrolled]):has(+ #main [data-b61-over-ok]) {
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0.34), rgb(0 0 0 / 0));
+  border-bottom-color: transparent;
+  color: var(--b61-white, #fff);
+  --b61-focus: var(--b61-white, #fff);
+  --b61-btn-bg: var(--b61-white, #fff);
+  --b61-btn-text: var(--b61-black, #111);
+  --b61-btn-bg-hover: rgb(255 255 255 / 0.86);
+  --b61-btn-text-hover: var(--b61-black, #111);
+  --b61-btn-border: var(--b61-white, #fff);
+}
+[data-b61-header='overlay'] .b61-hdr:not([data-scrolled]):has(+ #main [data-b61-over-ok]) :is(.b61-hdr__top, .b61-hdr__search, .b61-hdr__util) {
+  color: inherit;
+}
+[data-b61-header='overlay'] .b61-hdr:not([data-scrolled]):has(+ #main [data-b61-over-ok]) :is(.b61-hdr__top:hover, .b61-hdr__top[aria-expanded='true'], .b61-hdr__search:hover) {
+  color: inherit;
+  background: rgb(255 255 255 / 0.14);
+}
+[data-b61-header='overlay'] .b61-hdr:not([data-scrolled]):has(+ #main [data-b61-over-ok]) .b61-hdr__burger {
+  color: inherit;
+  border-color: rgb(255 255 255 / 0.6);
+}
+[data-b61-header='overlay'] .b61-hdr:not([data-scrolled]):has(+ #main [data-b61-over-ok]) .b61-hdr__logo:not(.b61-hdr__logo--on-dark):has(+ .b61-hdr__logo--on-dark) { display: none; }
+[data-b61-header='overlay'] .b61-hdr:not([data-scrolled]):has(+ #main [data-b61-over-ok]) .b61-hdr__logo--on-dark { display: block; }
+/* The hero makes room for the header lying over it. */
+[data-b61-header='overlay'] .b61-hdr + #main [data-b61-over-ok] { padding-top: var(--b61-sticky-h, 76px); }
+@media (prefers-reduced-motion: reduce) {
+  [data-b61-header='overlay'] .b61-hdr { transition: none; }
+}
+
+/* Big wordmark footer: the school's name across the full footer, cropped at
+   the bottom edge. Sized from the name's length so it fills the width. */
+.b61-ftr__wordmark { display: none; }
+[data-b61-footer='wordmark'] .b61-ftr { overflow: hidden; }
+[data-b61-footer='wordmark'] .b61-ftr__wordmark {
+  display: block;
+  max-width: var(--b61-width);
+  margin: var(--b61-space-lg) auto -0.14em;
+  padding: 0 var(--b61-pad-inline, 20px);
+  font-family: var(--b61-font-display);
+  font-weight: var(--b61-weight-display, 700);
+  font-size: clamp(2.75rem, calc(min(100vw, var(--b61-width)) / (var(--b61-wm-len, 20) * 0.56)), 13rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  color: var(--b61-on-surface-dark);
+  opacity: 0.92;
+  user-select: none;
+}
+[data-b61-footer='wordmark'] .b61-ftr__name { display: none; }
