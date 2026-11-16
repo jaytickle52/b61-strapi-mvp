@@ -140,7 +140,9 @@
    keep working exactly as before. */
 .b61-gallery__heading-line--em,
 .b61-gallery__heading em {
-  font-style: italic;
+  font-style: var(--b61-emph-style, italic);
+  text-decoration: var(--b61-emph-decoration, none);
+  text-underline-offset: var(--b61-emph-offset, auto);
   color: var(--gal-accent);
 }
 

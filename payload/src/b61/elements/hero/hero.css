@@ -542,7 +542,9 @@
  * things it was supposed to do are here now, and it is out of that list. */
 .b61-hero__title-line--em,
 .b61-hero__title em {
-  font-style: italic;
+  font-style: var(--b61-emph-style, italic);
+  text-decoration: var(--b61-emph-decoration, none);
+  text-underline-offset: var(--b61-emph-offset, auto);
   color: var(--hero-accent, var(--b61-heading-accent));
 }
 

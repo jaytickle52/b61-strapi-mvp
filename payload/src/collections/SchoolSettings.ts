@@ -6,6 +6,7 @@ import { testEmailEndpoint } from '../email/endpoints'
 import { colorField } from '../branding/fields'
 import { BODY_FONTS, HEADING_FONTS, UI_FONTS } from '../b61/lib/theme'
 import { CUSTOM_CSS_MAX } from '../b61/lib/custom-css'
+import { styleGroup } from '../b61/lib/style-fields'
 import { addressFields, factFields, withJoinedAddress } from '../school/fields'
 
 /**
@@ -133,6 +134,7 @@ export const SchoolSettings: CollectionConfig = {
                 { name: 'uiFont', label: 'Buttons and labels font', type: 'select', defaultValue: 'Montserrat', options: UI_FONTS },
               ],
             },
+            styleGroup(),
             {
               type: 'collapsible',
               label: 'Custom CSS (Banner 61)',

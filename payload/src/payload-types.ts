@@ -4528,6 +4528,42 @@ export interface SchoolSetting {
         | 'Oswald'
       )
     | null;
+  /**
+   * The shape of the site. Pick a theme, then move any dial to override it; empty dials follow the theme.
+   */
+  style?: {
+    /**
+     * Classic: The original B61 look: rounded corners, pill buttons, italic accent lines, offset photo frames. Modern: Clean and open: soft corners, no frames or eyebrow lines, colour accents, wide and airy. Bold: Poster-like: square corners and buttons, heavy capital headings, dramatic sizes. Soft: Warm and friendly: round corners, regular-weight headings, close frames, a slow float. Editorial: Like a magazine: square, light large headings, airy spacing, no frames.
+     */
+    theme?: ('classic' | 'modern' | 'bold' | 'soft' | 'editorial') | null;
+    corners?: ('square' | 'soft' | 'rounded' | 'round') | null;
+    buttons?: ('pill' | 'rounded' | 'square') | null;
+    buttonCase?: ('typed' | 'capitals') | null;
+    headingCase?: ('typed' | 'capitals') | null;
+    /**
+     * Uses the nearest weight the heading font has.
+     */
+    headingWeight?: ('light' | 'regular' | 'semibold' | 'bold' | 'heavy') | null;
+    headingTracking?: ('tight' | 'normal' | 'wide') | null;
+    typeScale?: ('compact' | 'standard' | 'dramatic') | null;
+    /**
+     * How a heading line marked Emphasize is set.
+     */
+    emphasis?: ('italic' | 'colour' | 'underline') | null;
+    /**
+     * Elements set to "Site default" follow this.
+     */
+    eyebrow?: ('line' | 'none') | null;
+    eyebrowCase?: ('capitals' | 'typed') | null;
+    frames?: ('offset' | 'close' | 'none') | null;
+    spacing?: ('compact' | 'standard' | 'airy') | null;
+    width?: ('narrow' | 'standard' | 'wide') | null;
+    heroEdge?: ('shown' | 'hidden') | null;
+    /**
+     * Elements with Entrance animation on. Visitors who ask for less motion get none.
+     */
+    motion?: ('rise' | 'fade' | 'float' | 'off') | null;
+  };
   customCss?: string | null;
   /**
    * The main menu. Order here is the order on the site.
@@ -7832,6 +7868,26 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   headingFont?: T;
   bodyFont?: T;
   uiFont?: T;
+  style?:
+    | T
+    | {
+        theme?: T;
+        corners?: T;
+        buttons?: T;
+        buttonCase?: T;
+        headingCase?: T;
+        headingWeight?: T;
+        headingTracking?: T;
+        typeScale?: T;
+        emphasis?: T;
+        eyebrow?: T;
+        eyebrowCase?: T;
+        frames?: T;
+        spacing?: T;
+        width?: T;
+        heroEdge?: T;
+        motion?: T;
+      };
   customCss?: T;
   menu?:
     | T

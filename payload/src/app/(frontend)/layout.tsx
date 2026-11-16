@@ -41,8 +41,10 @@ import '@/b61/styles/kit-frontend.css'
 import '@/b61/chrome/chrome.css'
 import '@/b61/styles/calendar.css'
 import '@/b61/styles/tone.css'
+import '@/b61/styles/style.css'
 import { b61Theme, FONT_STACKS, fontsHref, toneOf } from '@/b61/lib/theme'
 import { customCssTag } from '@/b61/lib/custom-css'
+import { b61Style, headingWeightFor } from '@/b61/lib/style'
 import { inlineFontCss } from '@/b61/lib/fonts'
 import Reveal from '@/b61/reveal/Reveal'
 import { getAnnouncements, getSettings, hiddenFromSearch, isPreview, siteOrigin } from '@/lib/data'
@@ -111,7 +113,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const logo = asMedia(settings.logo)
   // A separate logo for the dark footer, when the school has one.
   const logoOnDark = asMedia((settings as any).logoOnDark)
-  const fontsUrl = fontsHref(settings)
+  // Style > Heading weight may need one more weight of the heading font.
+  const fontsUrl = fontsHref(settings, { headingWeight: headingWeightFor(settings) })
+  // Style (theme + dials): CSS variables and data attributes on <html> (lib/style.ts).
+  const style = b61Style(settings)
   const customCss = customCssTag(settings.customCss)
   // Inlined so the first paint doesn't wait on Google (src/b61/lib/fonts.ts); a <link> if Google is unreachable.
   const fontsCss = await inlineFontCss(fontsUrl)
@@ -127,7 +132,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     // The B61 palette goes on <html>: tokens.css derives its role tokens on
     // :root, so the raw values have to be set there to flow through.
-    <html lang="en" className="h-full antialiased" data-b61-tone={toneOf(settings)} style={b61Theme(settings)}>
+    <html lang="en" className="h-full antialiased" data-b61-tone={toneOf(settings)} {...style.attrs} style={{ ...b61Theme(settings), ...style.vars }}>
       <head>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         {fontsCss ? (

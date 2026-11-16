@@ -167,7 +167,9 @@
 .b61-cards__heading-line--em,
 .b61-cards__heading em,
 .b61-cards__title em {
-  font-style: italic;
+  font-style: var(--b61-emph-style, italic);
+  text-decoration: var(--b61-emph-decoration, none);
+  text-underline-offset: var(--b61-emph-offset, auto);
   color: var(--cards-heading-accent);
 }
 
