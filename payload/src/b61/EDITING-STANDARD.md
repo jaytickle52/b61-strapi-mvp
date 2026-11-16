@@ -84,7 +84,7 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
   16 Nov: `bandHeadFields({ intro: true })` leaves Subheadings out).
   - Hero-type elements (Hero, CTA Band) get **Subheadline**: plain text,
     display size, read as part of the heading.
-  - Elements with their own items (Card Grid, Accordion, Stats, Pillars, Tabs, Gallery,
+  - Elements with their own items (Card Grid, Accordion, Stats, Tabbed Features, Tabs, Gallery,
     Carousel) get **Intro**: the short editor (section 10), body size, setting up the items.
   - If an Intro ever needs display size, that is a Design choice (Intro size:
     Normal / Large), not a second field.
@@ -302,7 +302,7 @@ Same rule as section 16: bigger layout choices are Banner 61-only (Design > Adva
 - **Duotone photos** (Card Grid and Gallery > Advanced): photos in greys, tinted with the
   primary colour. With words on the photo (overlay cards) the tint multiplies (darkens, so
   contrast holds); otherwise it screens (colour in the shadows, pale highlights).
-- **Scroll story** (`kit/render/ScrollStory.tsx` + `ScrollStoryInit.tsx`; Pillars > Advanced): a
+- **Scroll story** (`kit/render/ScrollStory.tsx` + `ScrollStoryInit.tsx`; Tabbed Features > Advanced): a
   shared arrangement, not an element. Titles stay in view on one side as a list of links with a
   progress line; each item (photo + words on a card) scrolls past on the other side and its
   title lights up at mid-screen. Every item is in the page and readable without a script;
