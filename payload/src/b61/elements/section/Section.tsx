@@ -54,7 +54,7 @@ export default function B61Section({ block, path }: { block: any; index?: number
         style={Object.keys(style).length ? (style as CSSProperties) : undefined}
       >
         {bg && (
-          <div className="b61-bg" aria-hidden="true">
+          <div className={`b61-bg${block.duotone ? ' b61-bg--duotone' : ''}`} aria-hidden="true">
             <img className="b61-bg__media" {...bg} alt="" loading="lazy" decoding="async" style={focus ? ({ '--b61-photo-focus': focus } as CSSProperties) : undefined} />
             {surface !== 'none' && <div className="b61-bg__scrim" style={{ opacity: shade / 100 }} />}
           </div>

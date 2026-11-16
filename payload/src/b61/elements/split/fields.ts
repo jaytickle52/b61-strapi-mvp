@@ -95,6 +95,10 @@ export const B61Split = defineElement({
         ],
         { default: 'fixed', when: anyImage },
       ),
+      {
+        ...photo('badge', 'Badge'),
+        admin: { description: 'Optional. A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.' },
+      } as any,
     ]),
   ],
 

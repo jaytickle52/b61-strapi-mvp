@@ -217,6 +217,11 @@ export function PreviewFocus() {
         if (/^\d+$/.test(p)) expand(`${el}.${parts.slice(0, i).join('.')}`, Number(p))
       })
       const id = `field-${`${el}.${rel}`.split('.').join('__')}`
+      // The innermost row on the way to the field ("sections-0-buttons-row-1"), if any.
+      const nums = parts.map((p, i) => (/^\d+$/.test(p) ? i : -1)).filter((i) => i >= 0)
+      const last = nums[nums.length - 1]
+      const rowEl = () => (last === undefined ? null : document.getElementById(rowId(`${el}.${parts.slice(0, last).join('.')}`, Number(parts[last]))))
+      let nudged = 0
       let panelOpened = false
       for (let tries = 0; tries < 40 && mine === run; tries++) {
         // The Content panel that holds the field (closed panels don't render their fields).
@@ -232,6 +237,13 @@ export function PreviewFocus() {
         }
         // Rich text editors carry their path as data-field-path instead of an id.
         const field = document.getElementById(id) ?? document.querySelector<HTMLElement>(`[data-field-path="${CSS.escape(`${el}.${rel}`)}"]`)
+        if (!field && tries % 6 === 5 && nudged < 4) {
+          // The editor only draws fields near the screen: bring the row (or the panel) into
+          // view so the field gets drawn. A long element form can leave it below the fold.
+          const near = rowEl() ?? document.querySelector(`[data-b61-panel-of="${CSS.escape(el)}"]`)?.closest('.collapsible')
+          near?.scrollIntoView({ block: 'center' })
+          nudged++
+        }
         if (field) {
           await wait(300)
           const box = (field.closest('.field-type') as HTMLElement | null) ?? field

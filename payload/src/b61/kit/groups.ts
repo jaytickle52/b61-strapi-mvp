@@ -2,6 +2,7 @@ import { simpleEditor } from './editors'
 import type { ArrayField, Condition, Field, FilterOptions, UploadField } from 'payload'
 import { dropdown, link, segmented, toggle, whenCondition, type When } from './controls'
 import { panel } from './element'
+import { videoLinkField } from './video'
 
 /*
  * B61 editing kit: field groups shared by every element. Same names, same
@@ -150,7 +151,10 @@ export function buttonsField(): ArrayField {
         ),
       ],
     },
-    link(),
+    // Opens a page or address, or plays a video in a pop-up over the page.
+    segmented('action', 'Opens', [['link', 'A link'], ['video', 'A video']], { default: 'link' }),
+    { ...link(), admin: { hideGutter: true, condition: (_: unknown, s: any) => s?.action !== 'video' } } as Field,
+    videoLinkField((s) => s?.action === 'video'),
     // A full-width text link is a hit area with no visible edges.
     toggle('fullWidth', 'Full width', { condition: (_, s) => s?.variant !== 'link' }),
   ])

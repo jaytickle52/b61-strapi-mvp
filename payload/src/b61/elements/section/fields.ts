@@ -67,5 +67,8 @@ export const B61Section = defineElement({
     },
     color: [segmented('surface', 'Surface', [['none', 'None'], ['plain', 'White'], ['soft', 'Light wash'], ['dark', 'Dark'], ['accent', 'Accent']], { default: 'none' })],
     accents: [entranceField()],
+    advanced: [
+      toggle('duotone', 'Duotone photo', { when: hasPhoto }),
+    ],
   },
 })

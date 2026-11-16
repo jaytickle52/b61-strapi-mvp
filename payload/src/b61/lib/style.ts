@@ -42,6 +42,15 @@ export const DIALS = {
       { value: 'overlay', label: 'Over the hero', attrs: { 'data-b61-header': 'overlay' } },
     ],
   },
+  menu: {
+    label: 'Menu on wide screens',
+    base: 'bar',
+    description: 'Slide-in panel: a Menu button opens the full menu from the side, as on phones.',
+    options: [
+      { value: 'bar', label: 'Menu bar' },
+      { value: 'panel', label: 'Slide-in panel', attrs: { 'data-b61-menu': 'panel' } },
+    ],
+  },
   footer: {
     label: 'Footer layout',
     base: 'classic',

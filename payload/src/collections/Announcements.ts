@@ -48,6 +48,32 @@ export const Announcements: CollectionConfig = {
       fields: [{ name: 'label', type: 'text', admin: { placeholder: 'e.g. Read more' } }, link()],
     },
     {
+      name: 'display',
+      label: 'Show as',
+      type: 'select',
+      required: true,
+      defaultValue: 'bar',
+      options: [
+        { label: 'Bar above the header', value: 'bar' },
+        { label: 'Pop-up (once per visitor)', value: 'popup' },
+      ],
+      admin: {
+        position: 'sidebar',
+        description: 'A pop-up opens over the page a moment after it loads and stays closed once the visitor closes it. Keep pop-ups rare.',
+      },
+    },
+    {
+      name: 'image',
+      label: 'Pop-up photo or graphic (optional)',
+      type: 'upload',
+      relationTo: 'media',
+      filterOptions: { mimeType: { contains: 'image' } },
+      admin: {
+        condition: (_, s) => s?.display === 'popup',
+        description: 'Shown above the headline. Put the important words in the headline and message too: words inside a graphic can\'t be read by everyone.',
+      },
+    },
+    {
       name: 'style',
       type: 'select',
       required: true,

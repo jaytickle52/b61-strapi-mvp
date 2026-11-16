@@ -3,6 +3,7 @@ import type { Page } from '@/payload-types'
 import { asMedia, focusOf, imgProps } from '../../lib/media'
 import { Buttons, HeadingLines, revealAttr } from '../../kit/render/parts'
 import HeroBehavior from './HeroBehavior'
+import { splitWords } from './words'
 import { resolveHeadingLevel } from '../../kit/groups'
 
 export type HeroBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Hero' }>
@@ -126,7 +127,15 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
         </span>
       )}
 
-      <HeadingLines as={Heading} id={headingId} className="b61-hero__title" lineClass="b61-hero__title-line" lines={lines} ri={ri} />
+      <HeadingLines
+        as={Heading}
+        id={headingId}
+        className="b61-hero__title"
+        lineClass="b61-hero__title-line"
+        lines={lines}
+        ri={ri}
+        rotate={splitWords((block as any).changingWords)}
+      />
 
       {introStyle === 'meta' ? (
         metaItems.length > 0 && (

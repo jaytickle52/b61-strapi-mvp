@@ -1,0 +1,290 @@
+/* ===========================================================================
+   PATTERNS (Nov 2026, from the Wake Christian review)
+
+   Payload-owned CSS for options added across elements and the site chrome.
+   Everything reads role tokens, so themes, dials and dark sites reach it.
+     1. Hero: changing words
+     2. Buttons: play a video (+ the video pop-up)
+     3. Card Grid: heading beside, staggered, run off the edge, text on hover,
+        accent tint on every other photo
+     4. Section: duotone photo
+     5. Stats Band: right/left part, pull up
+     6. Split: corner badge
+     7. Side buttons (School settings > Header)
+     8. Pop-up announcement
+   =========================================================================== */
+
+/* 1. Hero: changing words ---------------------------------------------------
+   The page's text is the line as typed; the script swaps the word in turn and
+   settles back on it within five seconds. Accent-heading-line tokens style it,
+   so the Style dial "Accent heading line" decides italic / colour / underline. */
+.b61-rotate { display: inline; }
+.b61-rotate__word {
+  display: inline-block;
+  font-style: var(--b61-emph-style, italic);
+  text-decoration: var(--b61-emph-decoration, underline 0.06em);
+  text-underline-offset: var(--b61-emph-offset, 0.14em);
+  transition: opacity 0.22s var(--b61-ease, ease), translate 0.22s var(--b61-ease, ease);
+}
+.b61-rotate__word.is-leaving { opacity: 0; translate: 0 0.18em; }
+@media (prefers-reduced-motion: reduce) {
+  .b61-rotate__word { transition: none; }
+}
+
+/* 2. Buttons: play a video -------------------------------------------------- */
+.b61-btn__play { display: inline-flex; margin-right: 0.5em; margin-left: -0.15em; }
+.b61-link .b61-btn__play { margin-left: 0; }
+.b61-btn--video .b61-btn__play svg { display: block; }
+
+.b61-vdialog {
+  width: min(1100px, 94vw);
+  max-width: 94vw;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+}
+.b61-vdialog::backdrop { background: rgb(0 0 0 / 0.82); }
+.b61-vdialog__inner { position: relative; padding-top: 52px; }
+.b61-vdialog__frame { aspect-ratio: 16 / 9; background: #000; border-radius: var(--b61-radius-sm, 4px); overflow: hidden; }
+.b61-vdialog__frame iframe { display: block; width: 100%; height: 100%; border: 0; }
+.b61-vdialog__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgb(255 255 255 / 0.5);
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.4);
+  color: #fff;
+  cursor: pointer;
+}
+.b61-vdialog__close:hover { background: rgb(255 255 255 / 0.16); }
+.b61-vdialog__close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* 3. Card Grid ---------------------------------------------------------------
+   Heading beside the cards: head, carousel arrows and buttons in a side
+   column; the cards in the main column. Phones stack them. */
+.b61-cards__beside {
+  display: grid;
+  gap: var(--b61-space-xl, 40px);
+  max-width: var(--b61-width);
+  margin-inline: auto;
+}
+.b61-cards__side { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b61-space-lg, 28px); min-width: 0; }
+.b61-cards__side > .b61-cards__head { margin: 0; }
+.b61-cards__side > .b61-car__controls { margin: 0; }
+.b61-cards__side > .b61-cards__actions { margin: 0; }
+.b61-halign-center .b61-cards__side { align-items: center; text-align: center; }
+.b61-cards__main { min-width: 0; }
+.b61-cards__main > .b61-cards__grid,
+.b61-cards__main > .b61-cards__viewport { max-width: none; margin-inline: 0; }
+@media (min-width: 1024px) {
+  .b61-cards__beside { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); align-items: center; }
+  .b61-cards__region--beside.b61-cards__region--stagger .b61-cards__beside { align-items: start; }
+  .b61-cards__region--beside.b61-cards__region--stagger .b61-cards__side { position: sticky; top: calc(var(--b61-sticky-h, 76px) + 24px); padding-top: var(--b61-space-xl, 40px); }
+}
+
+/* Run off the screen edge: the carousel's track reaches the right edge of the
+   screen, so the next cards show past the page width. Top-level bands only
+   (inside a Section column it stops at the column). */
+.b61-cards:has(.b61-cards__region--bleed) { overflow-x: clip; }
+@media (min-width: 1024px) {
+  .b61-cards__region--bleed .b61-cards__main {
+    margin-right: calc((min(100vw - 2 * var(--b61-pad-inline, 20px), var(--b61-width)) - 100vw) / 2);
+  }
+}
+
+/* Staggered: every other column sits lower. Wide screens only; narrower
+   screens step the columns down and drop the offset. Moved with `top`, not
+   translate or transform: the entrance animation owns `translate` and the
+   hover lift owns `transform`. */
+@media (min-width: 1024px) {
+  .b61-cards__region--stagger { --b61-cards-stagger: clamp(40px, 5vw, 72px); }
+  .b61-cards__region--stagger .b61-cards__grid { padding-bottom: var(--b61-cards-stagger); }
+  .b61-cards__region--stagger .b61-cards__grid--c2 > :nth-child(2n),
+  .b61-cards__region--stagger .b61-cards__grid--c4 > :nth-child(2n),
+  .b61-cards__region--stagger .b61-cards__grid--c3 > :nth-child(3n + 2) {
+    position: relative;
+    top: var(--b61-cards-stagger);
+  }
+}
+
+/* Show card text on hover (overlay cards): the title always shows; the text
+   and link open on hover or keyboard focus. Touch screens, which can't hover,
+   always show them. The text stays in the page for screen readers. */
+@media (hover: hover) and (pointer: fine) {
+  .b61-cards__region--reveal .b61-cards__card :is(.b61-cards__body, .b61-cards__cta) {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.35s var(--b61-ease, ease), opacity 0.25s var(--b61-ease, ease);
+  }
+  .b61-cards__region--reveal .b61-cards__card:is(:hover, :focus-within) :is(.b61-cards__body, .b61-cards__cta) {
+    max-height: 18em;
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .b61-cards__region--reveal .b61-cards__card :is(.b61-cards__body, .b61-cards__cta) { transition: none; }
+}
+
+/* Accent tint on every other photo: the photo goes grey and takes the accent
+   colour by multiplying, which only ever darkens it, so the text over it
+   keeps (or gains) contrast. */
+.b61-cards__region--alt-tint .b61-cards__card:nth-child(even) .b61-cards__media img { filter: grayscale(1) contrast(1.05); }
+.b61-cards__region--alt-tint .b61-cards__card:nth-child(even) .b61-cards__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--b61-accent);
+  mix-blend-mode: multiply;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* 4. Section: duotone photo --------------------------------------------------
+   The background photo in greys, so the Section's colour wash tints it as one
+   colour. Lightness is kept, so the wash's contrast for the words is unchanged. */
+.b61-bg--duotone .b61-bg__media { filter: grayscale(1) contrast(1.06); }
+
+/* 5. Stats Band: right/left part and pull up --------------------------------- */
+@media (min-width: 1024px) {
+  .b61-stats--part > .b61-stats__region { width: min(100%, 64%); }
+  .b61-stats--part-right > .b61-stats__region { margin-left: auto; }
+  .b61-stats--part-left > .b61-stats__region { margin-right: auto; }
+  .b61-stats--part > .b61-stats__region { --band-pt: var(--b61-pad-block-tight); --band-pb: var(--b61-pad-block-tight); }
+}
+.b61-stats.b61-stats--pull {
+  margin-top: calc(-1 * var(--b61-overlap-y));
+  position: relative;
+  z-index: var(--b61-overlap-z, 1);
+}
+
+/* 6. Split: corner badge -----------------------------------------------------
+   A seal or award on the photo's outer corner, away from the text. */
+.b61-split__inner--badge .b61-split__media { position: relative; }
+.b61-split__badge {
+  position: absolute;
+  z-index: 3;
+  bottom: calc(-1 * clamp(16px, 2.4vw, 32px));
+  width: clamp(72px, 9vw, 132px);
+  height: auto;
+  filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.18));
+  pointer-events: none;
+}
+.b61-split--side-left .b61-split__badge { left: calc(-1 * clamp(8px, 2vw, 28px)); }
+.b61-split--side-right .b61-split__badge { right: calc(-1 * clamp(8px, 2vw, 28px)); }
+@media (max-width: 767px) {
+  .b61-split--side-left .b61-split__badge,
+  .b61-split--side-right .b61-split__badge { left: auto; right: 12px; }
+}
+
+/* 7. Side buttons -------------------------------------------------------------
+   Docked at the right edge, in the middle of the screen; along the bottom on
+   phones. Each shows its icon and its words. */
+.b61-quick {
+  position: fixed;
+  z-index: 35;
+  right: 0;
+  top: 50%;
+  translate: 0 -50%;
+  font-family: var(--b61-font-ui, inherit);
+}
+.b61-quick__list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-radius: var(--b61-radius-sm, 6px) 0 0 var(--b61-radius-sm, 6px);
+  overflow: hidden;
+  box-shadow: var(--b61-shadow-lg, 0 10px 30px rgb(0 0 0 / 0.18));
+}
+.b61-quick__list > li + li { border-top: 1px solid rgb(255 255 255 / 0.18); }
+.b61-quick__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 84px;
+  min-height: 76px;
+  padding: 12px 6px;
+  background: var(--b61-surface-dark);
+  color: var(--b61-on-surface-dark, #fff);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-decoration: none;
+}
+.b61-quick__link:hover { background: color-mix(in srgb, var(--b61-surface-dark) 84%, #fff); }
+.b61-quick__link:focus-visible { outline: 2px solid var(--b61-on-surface-dark, #fff); outline-offset: -5px; }
+.b61-quick__icon { display: grid; place-items: center; width: 24px; height: 24px; }
+.b61-quick__icon svg { width: 22px; height: 22px; }
+@media (max-width: 639px) {
+  .b61-quick { top: auto; bottom: 0; left: 0; translate: none; }
+  .b61-quick__list { flex-direction: row; border-radius: 0; }
+  .b61-quick__list > li { flex: 1; }
+  .b61-quick__list > li + li { border-top: 0; border-left: 1px solid rgb(255 255 255 / 0.18); }
+  .b61-quick__link { width: 100%; min-height: 58px; padding: 8px 4px; gap: 3px; }
+  body:has(.b61-quick) { padding-bottom: 58px; }
+}
+@media print { .b61-quick { display: none; } }
+
+/* 8. Pop-up announcement ------------------------------------------------------ */
+.b61-popup {
+  width: min(560px, 92vw);
+  max-width: 92vw;
+  max-height: 90vh;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--b61-radius, 12px);
+  background: var(--b61-surface, #fff);
+  color: var(--b61-ink);
+  box-shadow: var(--b61-shadow-lg, 0 20px 60px rgb(0 0 0 / 0.3));
+  overflow: auto;
+}
+.b61-popup::backdrop { background: rgb(0 0 0 / 0.55); }
+.b61-popup[open] { animation: b61-popup-in 0.25s var(--b61-ease, ease) both; }
+@keyframes b61-popup-in { from { opacity: 0; translate: 0 12px; } to { opacity: 1; translate: none; } }
+@media (prefers-reduced-motion: reduce) { .b61-popup[open] { animation: none; } }
+.b61-popup__inner { position: relative; }
+.b61-popup--urgent { border-top: 6px solid #a32020; }
+.b61-popup--celebrate { border-top: 6px solid var(--b61-secondary); }
+.b61-popup__media img { display: block; width: 100%; height: auto; }
+.b61-popup__body { padding: var(--b61-space-lg, 28px); }
+.b61-popup__title {
+  margin: 0 0 8px;
+  padding-right: 40px;
+  font-family: var(--b61-font-display);
+  font-size: clamp(1.4rem, 1.2rem + 0.8vw, 1.75rem);
+  line-height: 1.2;
+}
+.b61-popup__media + .b61-popup__body .b61-popup__title { padding-right: 0; }
+.b61-popup__msg { margin: 0; color: var(--b61-muted); }
+.b61-popup__btn { margin-top: var(--b61-space-md, 20px); }
+.b61-popup__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.9);
+  color: #111;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+  cursor: pointer;
+}
+.b61-popup__close:focus-visible { outline: 2px solid var(--b61-focus, #111); outline-offset: 2px; }

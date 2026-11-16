@@ -1,4 +1,5 @@
 import { defineElement, panel } from '../../kit/element'
+import { splitWords } from './words'
 import { segmented, step, type WhenRule } from '../../kit/controls'
 import {
   buttonsPanel,
@@ -24,6 +25,16 @@ import {
  * - Column balance sits in Layout (it is arrangement, and Band only).
  * - Heading level defaults to Automatic (H1 first on the page, H2 after).
  */
+
+function validateChangingWords(value: unknown, { siblingData }: any): true | string {
+  const words = splitWords(value)
+  if (!words.length) return true
+  if (words.length < 2) return 'Add at least one more word, separated by a comma.'
+  const lines: any[] = siblingData?.lines ?? []
+  return lines.some((l) => typeof l?.text === 'string' && l.text.includes(words[0]))
+    ? true
+    : `The first word ("${words[0]}") must appear exactly as typed in a heading line.`
+}
 
 const cover: WhenRule = { field: 'layoutMode', in: ['cover'] }
 const band: WhenRule = { field: 'layoutMode', in: ['band'] }
@@ -55,6 +66,16 @@ export const B61Hero = defineElement({
 
     panel('Heading', [
       ...headingFields(),
+      {
+        name: 'changingWords',
+        label: 'Changing words',
+        type: 'text',
+        validate: validateChangingWords,
+        admin: {
+          placeholder: 'e.g. Learning, Missions, Athletics',
+          description: 'Optional. Two to four words, separated by commas. The first must be in a heading line exactly as typed; the others take its place in turn, once.',
+        },
+      },
       segmented(
         'subheadlineScale',
         'Subheadline style',

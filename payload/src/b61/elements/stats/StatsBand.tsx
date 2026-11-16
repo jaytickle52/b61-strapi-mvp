@@ -19,7 +19,18 @@ export default function B61StatsBand({ block, index = 0 }: { block: StatsBlock; 
   const Wrap = hasHeading ? 'section' : 'div'
   const stats = (block.stats ?? []).filter((s) => s?.figure || s?.label)
   return (
-    <div className={['b61-stats', `b61-stats--ta-${align}`, eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
+    <div
+      className={[
+        'b61-stats',
+        `b61-stats--ta-${align}`,
+        eruleClass(block.eyebrowRule),
+        ['right', 'left'].includes((block as any).bandWidth) && `b61-stats--part b61-stats--part-${(block as any).bandWidth}`,
+        // Same hook as Section's pull-up, so the band above makes room (components.css).
+        (block as any).pullUp && 'b61-section--pull b61-stats--pull',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
       <Wrap
         className={[
           'b61-stats__region',

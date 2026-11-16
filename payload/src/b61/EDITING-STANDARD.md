@@ -227,3 +227,40 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
   left/right, text on the surface; stacks photo-first on phones) and **Big headline** (no photo, a very
   large title on the surface). Both use the Background photo field, Height and Surface the band uses.
   School editors choose them like the other hero types.
+
+## 16. Banner 61 layout options and the Wake patterns (Nov 2026)
+
+Added after reviewing wakechristianacademy.com. Rule: **school staff keep a short form**. Bigger
+arrangement choices are Banner 61-only; content a school updates stays where staff already work.
+
+- **Design > Advanced (Banner 61 only).** `defineElement({ design: { advanced: [...] } })` puts
+  fields above the CSS class in the Advanced panel, which school staff never see. `bannerOnly()`
+  (kit/element.ts) gives each one create/update access for Banner 61 admins only, so a staff save
+  keeps what Banner 61 set. Use it for layout, not for words or photos.
+  - Card Grid: **Heading beside the cards** (head, carousel arrows and buttons in a side column),
+    **Staggered cards** (every other column lower, wide screens), **Run off the screen edge**
+    (carousel + heading beside; top-level bands only), **Show card text on hover** (overlay cards;
+    touch screens always show it; keyboard focus opens it), **Accent tint on every other photo**
+    (grey photo multiplied by the accent, so contrast only improves).
+  - Section: **Duotone photo** (the background photo in greys, so the wash tints it one colour).
+  - Stats Band: **Band width** Full / Right part / Left part (wide screens) and **Pull up over the
+    band above** (same hook as Section's pull-up, so the band above makes room).
+- **For school staff (Content):**
+  - Hero > Heading > **Changing words**: one text box, 2-4 words separated by commas. The first
+    must appear exactly in a heading line (checked on save). A text box, not a list, keeps the
+    Heading panel short. It plays once, ending on the first word, inside five seconds (WCAG 2.2.2),
+    and not at all for visitors who ask for less motion. The page text is the line as typed.
+    Styled by the Accent heading line dial.
+  - Every Buttons list: **Opens: A link / A video**. A video plays in a pop-up over the page
+    (`kit/render/VideoDialog.tsx`, mounted once in the layout); without JavaScript it is a link.
+  - Split > Media > **Badge**: a seal or award on the photo's outer corner.
+  - School settings > Header > **Side buttons** (up to 3, icon + words): docked at the right
+    edge, along the bottom on phones. Empty = none.
+  - Announcements > **Show as: Pop-up** (+ optional graphic): opens 1.5 s after load, one at a
+    time, never again for that visitor once closed.
+- **Style (Banner 61) > Menu on wide screens:** Menu bar / Slide-in panel (desktop uses the
+  phone's slide-in menu, larger).
+- Click-to-field now scrolls the row (or panel) holding the field into view while it waits: the
+  editor only draws fields near the screen, so on a long element form the field never appeared.
+- CSS for all of these: `src/b61/styles/patterns.css`. Demo: the **Layout ideas** page
+  (`/layout-ideas`) on both demo schools; Cedar Ridge also has Side buttons.

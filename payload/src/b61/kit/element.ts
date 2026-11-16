@@ -19,6 +19,12 @@ type DesignPanels = {
   part?: { label: string; fields: Field[] }
   color?: Field[]
   accents?: Field[]
+  /**
+   * Banner 61 layout options (Advanced panel, Banner 61 admins only): bigger
+   * arrangement choices school staff never see, so their form stays short.
+   * Stored like any other field; school staff saving the page keep them as set.
+   */
+  advanced?: Field[]
 }
 
 export type ElementSpec = {
@@ -177,7 +183,7 @@ function designPanel(label: string, fields: Field[] | undefined, open: boolean):
  * staff never see it. The class goes on a wrapper around the element (see
  * kit/render/custom-class.tsx), so no element's own markup changes.
  */
-function advancedPanel(): Field[] {
+function advancedPanel(extra: Field[] = []): Field[] {
   return [
     {
       type: 'collapsible',
@@ -188,6 +194,7 @@ function advancedPanel(): Field[] {
         condition: (_data: unknown, _sibling: unknown, ctx: any) => isB61Admin(ctx?.user),
       },
       fields: [
+        ...bannerOnly(extra),
         {
           name: 'cssClass',
           label: 'CSS class',
@@ -202,6 +209,20 @@ function advancedPanel(): Field[] {
       ],
     } as Field,
   ]
+}
+
+const b61Write = ({ req }: { req: { user?: unknown } }) => isB61Admin(req.user)
+
+/**
+ * Marks fields as Banner 61-only: school staff can't set them (their saves keep
+ * what Banner 61 chose). Walks rows and collapsibles to the named fields.
+ */
+export function bannerOnly(fields: Field[]): Field[] {
+  return fields.map((f) => {
+    if (f.type === 'row' || f.type === 'collapsible') return { ...f, fields: bannerOnly(f.fields) } as Field
+    if (!('name' in f)) return f
+    return { ...f, access: { ...((f as any).access ?? {}), create: b61Write, update: b61Write } } as Field
+  })
 }
 
 export function defineElement(spec: ElementSpec): Block {
@@ -230,7 +251,7 @@ export function defineElement(spec: ElementSpec): Block {
               ...(d.part ? designPanel(d.part.label, d.part.fields, false) : []),
               ...designPanel('Color', d.color, false),
               ...designPanel('Accents', d.accents, false),
-              ...advancedPanel(),
+              ...advancedPanel(d.advanced),
             ],
           },
         ],

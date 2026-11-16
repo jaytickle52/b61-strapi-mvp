@@ -112,6 +112,13 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
   const showCount = Boolean(block.showCounter)
   const showProg = Boolean(block.showProgress)
   const headingId = `b61-cards-${block.id ?? index}-heading`
+  // Banner 61 layout options (Design > Advanced).
+  const bx = block as any
+  const beside = Boolean(bx.headBeside)
+  const stagger = !car && Boolean(bx.stagger) && cols !== '1'
+  const bleed = car && beside && Boolean(bx.bleed)
+  const reveal = ov && Boolean(bx.hoverReveal)
+  const altTint = ov && Boolean(bx.altTint)
   const Wrap = hasHeading ? 'section' : 'div'
 
   const controls = car ? (
@@ -187,6 +194,11 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
     `b61-cards__region--pt-${pt}`,
     `b61-cards__region--pb-${pb}`,
     car && `b61-cards__region--carousel js-b61-car b61-car--ctl-${cpos}`,
+    beside && 'b61-cards__region--beside',
+    stagger && 'b61-cards__region--stagger',
+    bleed && 'b61-cards__region--bleed',
+    reveal && 'b61-cards__region--reveal',
+    altTint && 'b61-cards__region--alt-tint',
   ]
     .filter(Boolean)
     .join(' ')
@@ -257,6 +269,44 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
   ) : null
 
   const carTop = car && cpos === 'top-right'
+  const buttons = <Buttons buttons={block.buttons as any} className="b61-cards__actions b61-btn-group" ri={ri} />
+
+  // Heading beside the cards: the head (with a carousel's arrows and the
+  // buttons under it) in a side column, the cards in the main one.
+  if (beside) {
+    return (
+      <div className={`b61-cards b61-halign-${talign}${block.eyebrowRule && block.eyebrowRule !== 'site' ? ` b61-erule-${block.eyebrowRule}` : ''}`}>
+        <Wrap
+          className={regionClass}
+          style={customRatio ? ({ '--cards-ratio': `${rw} / ${rh}` } as CSSProperties) : undefined}
+          data-b61-reveal={rv}
+          {...(car ? { 'data-b61-car-noun': 'Card' } : {})}
+          {...(hasHeading ? { 'aria-labelledby': headingId } : car ? { 'data-b61-car-name': block.eyebrow || 'Cards' } : {})}
+        >
+          <div className="b61-cards__beside">
+            <div className="b61-cards__side">
+              {head}
+              {car && cpos !== 'hidden' && controls}
+              {buttons}
+            </div>
+            <div className="b61-cards__main">
+              {grid &&
+                (car ? (
+                  <>
+                    <div className="b61-car__viewport b61-cards__viewport">{grid}</div>
+                    <p className="b61-car__status js-b61-car-status" aria-live="polite" />
+                    <CarouselInit />
+                  </>
+                ) : (
+                  grid
+                ))}
+            </div>
+          </div>
+        </Wrap>
+      </div>
+    )
+  }
+
   return (
     <div className={`b61-cards b61-halign-${talign}${block.eyebrowRule && block.eyebrowRule !== 'site' ? ` b61-erule-${block.eyebrowRule}` : ''}`}>
       <Wrap
@@ -289,7 +339,7 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
           ) : (
             grid
           ))}
-        <Buttons buttons={block.buttons as any} className="b61-cards__actions b61-btn-group" ri={ri} />
+        {buttons}
       </Wrap>
     </div>
   )

@@ -200,6 +200,10 @@ export interface Page {
                 }[]
               | null;
             headingLevel?: ('auto' | 'h1' | 'h2' | 'h3') | null;
+            /**
+             * Optional. Two to four words, separated by commas. The first must be in a heading line exactly as typed; the others take its place in turn, once.
+             */
+            changingWords?: string | null;
             subheadlineScale?: ('display' | 'body' | 'meta') | null;
             subheadline?: string | null;
             /**
@@ -215,6 +219,7 @@ export interface Page {
               | {
                   label: string;
                   variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
                   link?: {
                     type?: ('page' | 'document' | 'url') | null;
                     page?: (number | null) | Page;
@@ -222,6 +227,10 @@ export interface Page {
                     url?: string | null;
                     newTab?: boolean | null;
                   };
+                  /**
+                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
                   fullWidth?: boolean | null;
                   id?: string | null;
                 }[]
@@ -315,6 +324,7 @@ export interface Page {
               | {
                   label: string;
                   variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
                   link?: {
                     type?: ('page' | 'document' | 'url') | null;
                     page?: (number | null) | Page;
@@ -322,6 +332,10 @@ export interface Page {
                     url?: string | null;
                     newTab?: boolean | null;
                   };
+                  /**
+                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
                   fullWidth?: boolean | null;
                   id?: string | null;
                 }[]
@@ -345,6 +359,10 @@ export interface Page {
              */
             video?: string | null;
             imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+            /**
+             * Optional. A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+             */
+            badge?: (number | null) | Media;
             imageSide?: ('left' | 'right') | null;
             verticalPosition?: ('top' | 'center') | null;
             stackOrder?: ('text' | 'media') | null;
@@ -405,6 +423,7 @@ export interface Page {
               | {
                   label: string;
                   variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
                   link?: {
                     type?: ('page' | 'document' | 'url') | null;
                     page?: (number | null) | Page;
@@ -412,6 +431,10 @@ export interface Page {
                     url?: string | null;
                     newTab?: boolean | null;
                   };
+                  /**
+                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
                   fullWidth?: boolean | null;
                   id?: string | null;
                 }[]
@@ -530,6 +553,7 @@ export interface Page {
               | {
                   label: string;
                   variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
                   link?: {
                     type?: ('page' | 'document' | 'url') | null;
                     page?: (number | null) | Page;
@@ -537,6 +561,10 @@ export interface Page {
                     url?: string | null;
                     newTab?: boolean | null;
                   };
+                  /**
+                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
                   fullWidth?: boolean | null;
                   id?: string | null;
                 }[]
@@ -568,6 +596,11 @@ export interface Page {
             cardOverlay?: ('none' | 'gradient' | 'wash') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            headBeside?: boolean | null;
+            stagger?: boolean | null;
+            bleed?: boolean | null;
+            hoverReveal?: boolean | null;
+            altTint?: boolean | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -619,6 +652,7 @@ export interface Page {
               | {
                   label: string;
                   variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
                   link?: {
                     type?: ('page' | 'document' | 'url') | null;
                     page?: (number | null) | Page;
@@ -626,6 +660,10 @@ export interface Page {
                     url?: string | null;
                     newTab?: boolean | null;
                   };
+                  /**
+                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
                   fullWidth?: boolean | null;
                   id?: string | null;
                 }[]
@@ -642,6 +680,8 @@ export interface Page {
             itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            bandWidth?: ('full' | 'right' | 'left') | null;
+            pullUp?: boolean | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -703,6 +743,7 @@ export interface Page {
               | {
                   label: string;
                   variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
                   link?: {
                     type?: ('page' | 'document' | 'url') | null;
                     page?: (number | null) | Page;
@@ -710,6 +751,10 @@ export interface Page {
                     url?: string | null;
                     newTab?: boolean | null;
                   };
+                  /**
+                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
                   fullWidth?: boolean | null;
                   id?: string | null;
                 }[]
@@ -824,6 +869,7 @@ export interface Page {
               | {
                   label: string;
                   variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
                   link?: {
                     type?: ('page' | 'document' | 'url') | null;
                     page?: (number | null) | Page;
@@ -831,6 +877,10 @@ export interface Page {
                     url?: string | null;
                     newTab?: boolean | null;
                   };
+                  /**
+                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
                   fullWidth?: boolean | null;
                   id?: string | null;
                 }[]
@@ -959,6 +1009,7 @@ export interface Page {
                               | {
                                   label: string;
                                   variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  action?: ('link' | 'video') | null;
                                   link?: {
                                     type?: ('page' | 'document' | 'url') | null;
                                     page?: (number | null) | Page;
@@ -966,6 +1017,10 @@ export interface Page {
                                     url?: string | null;
                                     newTab?: boolean | null;
                                   };
+                                  /**
+                                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                                   */
+                                  video?: string | null;
                                   fullWidth?: boolean | null;
                                   id?: string | null;
                                 }[]
@@ -989,6 +1044,10 @@ export interface Page {
                              */
                             video?: string | null;
                             imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                            /**
+                             * Optional. A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+                             */
+                            badge?: (number | null) | Media;
                             imageSide?: ('left' | 'right') | null;
                             verticalPosition?: ('top' | 'center') | null;
                             stackOrder?: ('text' | 'media') | null;
@@ -1049,6 +1108,7 @@ export interface Page {
                               | {
                                   label: string;
                                   variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  action?: ('link' | 'video') | null;
                                   link?: {
                                     type?: ('page' | 'document' | 'url') | null;
                                     page?: (number | null) | Page;
@@ -1056,6 +1116,10 @@ export interface Page {
                                     url?: string | null;
                                     newTab?: boolean | null;
                                   };
+                                  /**
+                                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                                   */
+                                  video?: string | null;
                                   fullWidth?: boolean | null;
                                   id?: string | null;
                                 }[]
@@ -1284,6 +1348,7 @@ export interface Page {
                               | {
                                   label: string;
                                   variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  action?: ('link' | 'video') | null;
                                   link?: {
                                     type?: ('page' | 'document' | 'url') | null;
                                     page?: (number | null) | Page;
@@ -1291,6 +1356,10 @@ export interface Page {
                                     url?: string | null;
                                     newTab?: boolean | null;
                                   };
+                                  /**
+                                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                                   */
+                                  video?: string | null;
                                   fullWidth?: boolean | null;
                                   id?: string | null;
                                 }[]
@@ -1314,6 +1383,10 @@ export interface Page {
                              */
                             video?: string | null;
                             imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                            /**
+                             * Optional. A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+                             */
+                            badge?: (number | null) | Media;
                             imageSide?: ('left' | 'right') | null;
                             verticalPosition?: ('top' | 'center') | null;
                             stackOrder?: ('text' | 'media') | null;
@@ -1374,6 +1447,7 @@ export interface Page {
                               | {
                                   label: string;
                                   variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  action?: ('link' | 'video') | null;
                                   link?: {
                                     type?: ('page' | 'document' | 'url') | null;
                                     page?: (number | null) | Page;
@@ -1381,6 +1455,10 @@ export interface Page {
                                     url?: string | null;
                                     newTab?: boolean | null;
                                   };
+                                  /**
+                                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                                   */
+                                  video?: string | null;
                                   fullWidth?: boolean | null;
                                   id?: string | null;
                                 }[]
@@ -1480,6 +1558,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -1487,6 +1566,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -1554,6 +1637,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -1561,6 +1645,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -1584,6 +1672,10 @@ export interface Page {
                        */
                       video?: string | null;
                       imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                      /**
+                       * Optional. A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+                       */
+                      badge?: (number | null) | Media;
                       imageSide?: ('left' | 'right') | null;
                       verticalPosition?: ('top' | 'center') | null;
                       stackOrder?: ('text' | 'media') | null;
@@ -1696,6 +1788,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -1703,6 +1796,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -1734,6 +1831,11 @@ export interface Page {
                       cardOverlay?: ('none' | 'gradient' | 'wash') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      headBeside?: boolean | null;
+                      stagger?: boolean | null;
+                      bleed?: boolean | null;
+                      hoverReveal?: boolean | null;
+                      altTint?: boolean | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -1785,6 +1887,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -1792,6 +1895,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -1808,6 +1915,8 @@ export interface Page {
                       itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      bandWidth?: ('full' | 'right' | 'left') | null;
+                      pullUp?: boolean | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -1869,6 +1978,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -1876,6 +1986,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -2011,6 +2125,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -2018,6 +2133,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -2154,6 +2273,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -2161,6 +2281,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -2289,6 +2413,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -2296,6 +2421,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -2381,6 +2510,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -2388,6 +2518,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -2455,6 +2589,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -2462,6 +2597,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -2485,6 +2624,10 @@ export interface Page {
                        */
                       video?: string | null;
                       imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                      /**
+                       * Optional. A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+                       */
+                      badge?: (number | null) | Media;
                       imageSide?: ('left' | 'right') | null;
                       verticalPosition?: ('top' | 'center') | null;
                       stackOrder?: ('text' | 'media') | null;
@@ -2597,6 +2740,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -2604,6 +2748,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -2635,6 +2783,11 @@ export interface Page {
                       cardOverlay?: ('none' | 'gradient' | 'wash') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      headBeside?: boolean | null;
+                      stagger?: boolean | null;
+                      bleed?: boolean | null;
+                      hoverReveal?: boolean | null;
+                      altTint?: boolean | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -2686,6 +2839,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -2693,6 +2847,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -2709,6 +2867,8 @@ export interface Page {
                       itemSurface?: ('card' | 'light' | 'soft' | 'dark' | 'accent' | 'outline') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      bandWidth?: ('full' | 'right' | 'left') | null;
+                      pullUp?: boolean | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -2770,6 +2930,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -2777,6 +2938,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -2912,6 +3077,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -2919,6 +3085,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -3055,6 +3225,7 @@ export interface Page {
                         | {
                             label: string;
                             variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -3062,6 +3233,10 @@ export interface Page {
                               url?: string | null;
                               newTab?: boolean | null;
                             };
+                            /**
+                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
                             fullWidth?: boolean | null;
                             id?: string | null;
                           }[]
@@ -3212,6 +3387,7 @@ export interface Page {
             watermarkStrength?: number | null;
             surface?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
             entrance?: ('on' | 'off') | null;
+            duotone?: boolean | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -3258,6 +3434,7 @@ export interface Page {
               | {
                   label: string;
                   variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
                   link?: {
                     type?: ('page' | 'document' | 'url') | null;
                     page?: (number | null) | Page;
@@ -3265,6 +3442,10 @@ export interface Page {
                     url?: string | null;
                     newTab?: boolean | null;
                   };
+                  /**
+                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
                   fullWidth?: boolean | null;
                   id?: string | null;
                 }[]
@@ -4050,6 +4231,14 @@ export interface Announcement {
       newTab?: boolean | null;
     };
   };
+  /**
+   * A pop-up opens over the page a moment after it loads and stays closed once the visitor closes it. Keep pop-ups rare.
+   */
+  display: 'bar' | 'popup';
+  /**
+   * Shown above the headline. Put the important words in the headline and message too: words inside a graphic can't be read by everyone.
+   */
+  image?: (number | null) | Media;
   style: 'standard' | 'urgent' | 'celebrate';
   startsAt: string;
   /**
@@ -4572,6 +4761,10 @@ export interface SchoolSetting {
      * Over the hero: transparent over a dark first hero, solid once the page scrolls.
      */
     header?: ('classic' | 'centred' | 'overlay') | null;
+    /**
+     * Slide-in panel: a Menu button opens the full menu from the side, as on phones.
+     */
+    menu?: ('bar' | 'panel') | null;
     footer?: ('classic' | 'wordmark') | null;
     corners?: ('square' | 'soft' | 'rounded' | 'round') | null;
     buttons?: ('pill' | 'rounded' | 'square') | null;
@@ -4699,6 +4892,39 @@ export interface SchoolSetting {
       newTab?: boolean | null;
     };
   };
+  /**
+   * Up to three short links that stay on screen at the side (along the bottom on phones), e.g. Inquire, Visit, Apply. Leave empty for none.
+   */
+  quickLinks?:
+    | {
+        label: string;
+        icon?:
+          | (
+              | 'check'
+              | 'email'
+              | 'phone'
+              | 'location'
+              | 'calendar'
+              | 'clock'
+              | 'link'
+              | 'star'
+              | 'heart'
+              | 'book'
+              | 'people'
+              | 'cross'
+              | 'school'
+            )
+          | null;
+        link?: {
+          type?: ('page' | 'document' | 'url') | null;
+          page?: (number | null) | Page;
+          document?: (number | null) | Document;
+          url?: string | null;
+          newTab?: boolean | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
   footerColumns?:
     | {
         heading?: string | null;
@@ -5186,6 +5412,7 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               headingLevel?: T;
+              changingWords?: T;
               subheadlineScale?: T;
               subheadline?: T;
               metaItems?:
@@ -5199,6 +5426,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     label?: T;
                     variant?: T;
+                    action?: T;
                     link?:
                       | T
                       | {
@@ -5208,6 +5436,7 @@ export interface PagesSelect<T extends boolean = true> {
                           url?: T;
                           newTab?: T;
                         };
+                    video?: T;
                     fullWidth?: T;
                     id?: T;
                   };
@@ -5270,6 +5499,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     label?: T;
                     variant?: T;
+                    action?: T;
                     link?:
                       | T
                       | {
@@ -5279,6 +5509,7 @@ export interface PagesSelect<T extends boolean = true> {
                           url?: T;
                           newTab?: T;
                         };
+                    video?: T;
                     fullWidth?: T;
                     id?: T;
                   };
@@ -5295,6 +5526,7 @@ export interface PagesSelect<T extends boolean = true> {
               columns?: T;
               video?: T;
               imageShape?: T;
+              badge?: T;
               imageSide?: T;
               verticalPosition?: T;
               stackOrder?: T;
@@ -5337,6 +5569,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     label?: T;
                     variant?: T;
+                    action?: T;
                     link?:
                       | T
                       | {
@@ -5346,6 +5579,7 @@ export interface PagesSelect<T extends boolean = true> {
                           url?: T;
                           newTab?: T;
                         };
+                    video?: T;
                     fullWidth?: T;
                     id?: T;
                   };
@@ -5414,6 +5648,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     label?: T;
                     variant?: T;
+                    action?: T;
                     link?:
                       | T
                       | {
@@ -5423,6 +5658,7 @@ export interface PagesSelect<T extends boolean = true> {
                           url?: T;
                           newTab?: T;
                         };
+                    video?: T;
                     fullWidth?: T;
                     id?: T;
                   };
@@ -5452,6 +5688,11 @@ export interface PagesSelect<T extends boolean = true> {
               cardOverlay?: T;
               eyebrowRule?: T;
               entrance?: T;
+              headBeside?: T;
+              stagger?: T;
+              bleed?: T;
+              hoverReveal?: T;
+              altTint?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -5488,6 +5729,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     label?: T;
                     variant?: T;
+                    action?: T;
                     link?:
                       | T
                       | {
@@ -5497,6 +5739,7 @@ export interface PagesSelect<T extends boolean = true> {
                           url?: T;
                           newTab?: T;
                         };
+                    video?: T;
                     fullWidth?: T;
                     id?: T;
                   };
@@ -5512,6 +5755,8 @@ export interface PagesSelect<T extends boolean = true> {
               itemSurface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              bandWidth?: T;
+              pullUp?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -5552,6 +5797,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     label?: T;
                     variant?: T;
+                    action?: T;
                     link?:
                       | T
                       | {
@@ -5561,6 +5807,7 @@ export interface PagesSelect<T extends boolean = true> {
                           url?: T;
                           newTab?: T;
                         };
+                    video?: T;
                     fullWidth?: T;
                     id?: T;
                   };
@@ -5634,6 +5881,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     label?: T;
                     variant?: T;
+                    action?: T;
                     link?:
                       | T
                       | {
@@ -5643,6 +5891,7 @@ export interface PagesSelect<T extends boolean = true> {
                           url?: T;
                           newTab?: T;
                         };
+                    video?: T;
                     fullWidth?: T;
                     id?: T;
                   };
@@ -5734,6 +5983,7 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       variant?: T;
+                                      action?: T;
                                       link?:
                                         | T
                                         | {
@@ -5743,6 +5993,7 @@ export interface PagesSelect<T extends boolean = true> {
                                             url?: T;
                                             newTab?: T;
                                           };
+                                      video?: T;
                                       fullWidth?: T;
                                       id?: T;
                                     };
@@ -5759,6 +6010,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 columns?: T;
                                 video?: T;
                                 imageShape?: T;
+                                badge?: T;
                                 imageSide?: T;
                                 verticalPosition?: T;
                                 stackOrder?: T;
@@ -5801,6 +6053,7 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       variant?: T;
+                                      action?: T;
                                       link?:
                                         | T
                                         | {
@@ -5810,6 +6063,7 @@ export interface PagesSelect<T extends boolean = true> {
                                             url?: T;
                                             newTab?: T;
                                           };
+                                      video?: T;
                                       fullWidth?: T;
                                       id?: T;
                                     };
@@ -5959,6 +6213,7 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       variant?: T;
+                                      action?: T;
                                       link?:
                                         | T
                                         | {
@@ -5968,6 +6223,7 @@ export interface PagesSelect<T extends boolean = true> {
                                             url?: T;
                                             newTab?: T;
                                           };
+                                      video?: T;
                                       fullWidth?: T;
                                       id?: T;
                                     };
@@ -5984,6 +6240,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 columns?: T;
                                 video?: T;
                                 imageShape?: T;
+                                badge?: T;
                                 imageSide?: T;
                                 verticalPosition?: T;
                                 stackOrder?: T;
@@ -6026,6 +6283,7 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       variant?: T;
+                                      action?: T;
                                       link?:
                                         | T
                                         | {
@@ -6035,6 +6293,7 @@ export interface PagesSelect<T extends boolean = true> {
                                             url?: T;
                                             newTab?: T;
                                           };
+                                      video?: T;
                                       fullWidth?: T;
                                       id?: T;
                                     };
@@ -6105,6 +6364,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -6114,6 +6374,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -6159,6 +6420,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -6168,6 +6430,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -6184,6 +6447,7 @@ export interface PagesSelect<T extends boolean = true> {
                           columns?: T;
                           video?: T;
                           imageShape?: T;
+                          badge?: T;
                           imageSide?: T;
                           verticalPosition?: T;
                           stackOrder?: T;
@@ -6249,6 +6513,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -6258,6 +6523,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -6287,6 +6553,11 @@ export interface PagesSelect<T extends boolean = true> {
                           cardOverlay?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          headBeside?: T;
+                          stagger?: T;
+                          bleed?: T;
+                          hoverReveal?: T;
+                          altTint?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -6323,6 +6594,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -6332,6 +6604,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -6347,6 +6620,8 @@ export interface PagesSelect<T extends boolean = true> {
                           itemSurface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          bandWidth?: T;
+                          pullUp?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -6387,6 +6662,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -6396,6 +6672,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -6485,6 +6762,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -6494,6 +6772,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -6578,6 +6857,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -6587,6 +6867,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -6693,6 +6974,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -6702,6 +6984,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -6753,6 +7036,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -6762,6 +7046,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -6807,6 +7092,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -6816,6 +7102,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -6832,6 +7119,7 @@ export interface PagesSelect<T extends boolean = true> {
                           columns?: T;
                           video?: T;
                           imageShape?: T;
+                          badge?: T;
                           imageSide?: T;
                           verticalPosition?: T;
                           stackOrder?: T;
@@ -6897,6 +7185,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -6906,6 +7195,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -6935,6 +7225,11 @@ export interface PagesSelect<T extends boolean = true> {
                           cardOverlay?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          headBeside?: T;
+                          stagger?: T;
+                          bleed?: T;
+                          hoverReveal?: T;
+                          altTint?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -6971,6 +7266,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -6980,6 +7276,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -6995,6 +7292,8 @@ export interface PagesSelect<T extends boolean = true> {
                           itemSurface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          bandWidth?: T;
+                          pullUp?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7035,6 +7334,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -7044,6 +7344,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -7133,6 +7434,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -7142,6 +7444,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -7226,6 +7529,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 variant?: T;
+                                action?: T;
                                 link?:
                                   | T
                                   | {
@@ -7235,6 +7539,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       url?: T;
                                       newTab?: T;
                                     };
+                                video?: T;
                                 fullWidth?: T;
                                 id?: T;
                               };
@@ -7350,6 +7655,7 @@ export interface PagesSelect<T extends boolean = true> {
               watermarkStrength?: T;
               surface?: T;
               entrance?: T;
+              duotone?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -7378,6 +7684,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     label?: T;
                     variant?: T;
+                    action?: T;
                     link?:
                       | T
                       | {
@@ -7387,6 +7694,7 @@ export interface PagesSelect<T extends boolean = true> {
                           url?: T;
                           newTab?: T;
                         };
+                    video?: T;
                     fullWidth?: T;
                     id?: T;
                   };
@@ -7532,6 +7840,8 @@ export interface AnnouncementsSelect<T extends boolean = true> {
               newTab?: T;
             };
       };
+  display?: T;
+  image?: T;
   style?: T;
   startsAt?: T;
   endsAt?: T;
@@ -8151,6 +8461,7 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
     | {
         theme?: T;
         header?: T;
+        menu?: T;
         footer?: T;
         corners?: T;
         buttons?: T;
@@ -8266,6 +8577,22 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
               url?: T;
               newTab?: T;
             };
+      };
+  quickLinks?:
+    | T
+    | {
+        label?: T;
+        icon?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              page?: T;
+              document?: T;
+              url?: T;
+              newTab?: T;
+            };
+        id?: T;
       };
   footerColumns?:
     | T

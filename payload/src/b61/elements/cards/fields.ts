@@ -308,6 +308,13 @@ export const B61CardGrid = defineElement({
       ),
     ],
     accents: [eyebrowRuleField(), entranceField()],
+    advanced: [
+      toggle('headBeside', 'Heading beside the cards'),
+      toggle('stagger', 'Staggered cards', { when: { all: [{ field: 'arrangement', in: ['grid', null] }, { field: 'columns', in: ['2', '3', '4', null] }] } }),
+      toggle('bleed', 'Run off the screen edge', { when: { all: [carousel, { field: 'headBeside', in: [true] }] } }),
+      toggle('hoverReveal', 'Show card text on hover', { when: overlayImg }),
+      toggle('altTint', 'Accent tint on every other photo', { when: overlayImg }),
+    ],
   },
 })
 
