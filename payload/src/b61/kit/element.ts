@@ -127,6 +127,11 @@ function summariseContent(fields: Field[]): ContentSummary[] {
   return [...out, ...choices]
 }
 
+/** The stored names a panel holds, so click-to-field (PreviewFocus) can open the right panel. */
+function fieldNames(fields: Field[]): string[] {
+  return fields.flatMap((f) => (f.type === 'row' || f.type === 'collapsible' ? fieldNames(f.fields) : 'name' in f ? [f.name] : []))
+}
+
 const MAIN_TYPES = new Set(['array', 'blocks', 'richText'])
 
 /** Content panels start closed with a summary in the header; one opens first (see ElementSpec.open). */
@@ -144,7 +149,10 @@ function contentPanels(fields: Field[], open?: string): Field[] {
         initCollapsed: label !== openLabel,
         components: {
           ...(f.admin?.components ?? {}),
-          Label: { path: '@/b61/kit/admin/PanelLabel#PanelLabel', clientProps: { label, content: summariseContent(f.fields) } },
+          Label: {
+            path: '@/b61/kit/admin/PanelLabel#PanelLabel',
+            clientProps: { label, content: summariseContent(f.fields), holds: fieldNames(f.fields) },
+          },
         },
       },
     } as Field

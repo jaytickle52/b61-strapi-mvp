@@ -8,7 +8,8 @@ import './edit-overlay.css'
  * Every element on the page has an invisible marker in front of it
  * (EditMark). Hovering an element outlines it with its name; clicking it asks
  * the editor (the window around the preview) to open that element's settings
- * and scroll to them. Buttons, tabs, accordions and carousels keep working;
+ * and scroll to them. The message also says what was clicked inside it (the
+ * words, or the photo), so the editor can open that exact field. Buttons, tabs, accordions and carousels keep working;
  * links are not followed, since leaving the page would leave the preview.
  *
  * The editor can also ask the preview to show an element (when a section is
@@ -32,6 +33,27 @@ function annotate() {
     el.dataset.b61EditLabel = mark.dataset.b61EditLabel ?? ''
     if (mark.dataset.b61EditTab) el.dataset.b61EditTab = mark.dataset.b61EditTab
   })
+}
+
+const norm = (s: string | null | undefined) => (s ?? '').replace(/\s+/g, ' ').trim()
+
+/**
+ * What exactly was clicked inside the element, so the editor can open that one
+ * field: the photo (its address), or the words of the innermost thing with text.
+ * Nothing when the click landed on the element's own padding.
+ */
+function clickHint(t: Element, el: Element): { text?: string; image?: string } | undefined {
+  const pic = t.closest('img, picture')
+  if (pic && el.contains(pic)) {
+    const img = (pic.tagName === 'IMG' ? pic : pic.querySelector('img')) as HTMLImageElement | null
+    const src = img?.currentSrc || img?.src
+    if (src) return { image: src }
+  }
+  for (let n: Element | null = t; n && n !== el; n = n.parentElement) {
+    const text = norm(n.textContent)
+    if (text) return text.length <= 300 ? { text } : undefined
+  }
+  return undefined
 }
 
 const targetOf = (node: EventTarget | null) =>
@@ -131,7 +153,16 @@ export default function EditOverlay() {
       if (!el) return
       if (!link && (e.target as Element).closest(INTERACTIVE)) return
       pick(el)
-      editor.postMessage({ type: 'b61:edit', path: el.dataset.b61EditPath || undefined, tab: el.dataset.b61EditTab, label: el.dataset.b61EditLabel }, origin)
+      editor.postMessage(
+        {
+          type: 'b61:edit',
+          path: el.dataset.b61EditPath || undefined,
+          tab: el.dataset.b61EditTab,
+          label: el.dataset.b61EditLabel,
+          hint: clickHint(e.target as Element, el),
+        },
+        origin,
+      )
     }
     const onScroll = () => {
       place(hover, hoverEl)

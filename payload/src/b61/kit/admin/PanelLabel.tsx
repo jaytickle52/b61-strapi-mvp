@@ -5,7 +5,7 @@ import { usePhotoName } from './photoName'
 type Rule = { field?: string; in?: (string | boolean | null)[]; filled?: boolean; all?: Rule[] }
 type DesignSummary = { name: string; labels?: Record<string, string>; unset?: string; prefix?: string; when?: Rule | Rule[] }
 type ContentSummary = { name: string; kind: 'text' | 'rich' | 'list' | 'upload' | 'choice'; one?: string; many?: string; labels?: Record<string, string> }
-type Spec = { label: string; summary?: DesignSummary[]; content?: ContentSummary[] }
+type Spec = { label: string; summary?: DesignSummary[]; content?: ContentSummary[]; holds?: string[] }
 
 /** First words of a rich-text value. */
 function firstWords(rich: any): string {
@@ -92,7 +92,7 @@ export function PanelLabel(props: Spec) {
 
   const shown = props.content ? (contentText ? [contentText] : []) : values.filter(Boolean)
   return (
-    <span className="b61-panel-label">
+    <span className="b61-panel-label" data-b61-panel-of={props.holds ? parent : undefined} data-b61-holds={props.holds?.join(' ')}>
       <span>{props.label}</span>
       {shown.length > 0 && <span className="b61-panel-label__sum">{shown.join(' / ')}</span>}
     </span>
