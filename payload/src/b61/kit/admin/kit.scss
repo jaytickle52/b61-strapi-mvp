@@ -91,3 +91,6 @@
 
 /* A list inside a panel of the same name (Buttons): the panel carries the name. */
 .array-field.b61-list--bare .array-field__title { display: none; }
+
+/* Click-to-field: the field opened from the preview flashes once. */
+.b61-field-flash { animation: b61-row-flash 1.8s ease-out; border-radius: var(--style-radius-m, 4px); }
