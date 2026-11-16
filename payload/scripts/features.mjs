@@ -468,6 +468,30 @@ async function main() {
     check(!new RegExp(`b61-notice__title">Pop-up ${RUN}`).test(hp2), '… and not a bar')
   }
 
+  // ----- Layout options (Canterbury patterns) ----------------------------------
+  console.log('\nMore layout options')
+  {
+    const mp = visible((await page('/more-layout-ideas', 'cedar-ridge')).text)
+    check(/class="b61-story b61-story--nav-left" data-b61-story/.test(mp) && (mp.match(/class="b61-story__step"/g) ?? []).length === 4, 'Pillars can be a scroll story, every item in the page')
+    check(/<a class="b61-story__link" href="#b61-pillars-[^"]+-step-1">/.test(mp), '… with its titles as links to the items')
+    check(/b61-tabs[\s\S]*b61-cards__region--feature/.test(mp), 'a tab can hold a Card Grid, with a larger middle card')
+    check(mp.includes('b61-cards__region--duotone b61-duotone--deep') && mp.includes('b61-gallery__region--duotone b61-duotone--light'), 'Card Grid and Gallery photos can be duotone')
+    check(/data-b61-marquee[\s\S]*?aria-pressed="false"[\s\S]*?Pause logos/.test(mp), 'a scrolling Logos row has a pause button')
+    check(/<ul class="b61-logos__list" aria-hidden="true">/.test(mp), '… and its looping copy is hidden from screen readers')
+    check(mp.includes('b61-logos__region--still b61-logos__region--mono'), 'a still Logos row in one colour')
+
+    // Accent heading font: set, the page asks Google for it and marks <html>.
+    const cs = (await api('GET', `/school-settings?where[school][equals]=${harbor}&depth=0`, { token: admin })).json?.docs?.[0]
+    if (cs) {
+      await api('PATCH', `/school-settings/${cs.id}`, { token: admin, body: { accentFont: 'EB Garamond' } })
+      const hp = (await page('/', 'harbor-oaks')).text
+      check(/<html[^>]*data-b61-accent-font=""/.test(hp) && /--b61-font-accent:\s*(&quot;|")EB Garamond/.test(hp), 'an accent heading font marks the page and sets its font')
+      check(/fonts\.googleapis\.com\/css2\?[^"]*family=EB\+Garamond:ital,wght@0,400;0,500;1,400;1,500/.test(hp.replace(/&amp;/g, '&')), '… and is loaded from Google Fonts')
+      await api('PATCH', `/school-settings/${cs.id}`, { token: admin, body: { accentFont: null } })
+      check(!/data-b61-accent-font/.test((await page('/', 'harbor-oaks')).text), '… and goes away when cleared')
+    } else check(false, 'Harbor Oaks has School settings')
+  }
+
   // ----- Tidy up --------------------------------------------------------------
   const mine = await api('GET', `/announcements?where[title][like]=${RUN}&limit=50&depth=0&draft=true`, { token: admin })
   for (const a of mine.json?.docs ?? []) await api('DELETE', `/announcements/${a.id}`, { token: admin })

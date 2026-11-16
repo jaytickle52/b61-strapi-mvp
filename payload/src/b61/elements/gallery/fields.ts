@@ -1,6 +1,6 @@
 import { defineElement, panel } from '../../kit/element'
 import { videoLinkField } from '../../kit/video'
-import { dropdown, segmented, step, type WhenRule } from '../../kit/controls'
+import { dropdown, segmented, step, toggle, type WhenRule } from '../../kit/controls'
 import { bandHeadFields, buttonsPanel, entranceField, eyebrowRuleField, headingAlignField, list, onlyImages, paddingFields, photo, surfaceField } from '../../kit/groups'
 
 /*
@@ -71,5 +71,6 @@ export const B61Gallery = defineElement({
     },
     color: [surfaceField()],
     accents: [eyebrowRuleField(), entranceField()],
+    advanced: [toggle('duotone', 'Duotone photos', { when: { field: 'media', in: ['gallery', 'photo', null] } })],
   },
 })

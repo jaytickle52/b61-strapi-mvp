@@ -205,6 +205,13 @@ changing words, buttons that play a video in a pop-up, Split badge, Side buttons
 settings > Header), pop-up announcements. Style dial **Menu on wide screens** (Slide-in panel).
 Demo page `/layout-ideas` on both demo schools (`src/b61/patterns-demo.ts`, created once).
 
+## Layout options from the Canterbury review (canterbury-patterns branch)
+
+Accent heading font (School settings > Look), Card Grid inside Tabs, Card Grid "Larger middle
+card", duotone photos on Card Grid and Gallery, a shared Scroll story arrangement (first used by
+Pillars > Advanced) and a new Logos element. Rules in `EDITING-STANDARD.md` section 17; one
+additive migration (`*_canterbury_patterns`); demo page `/more-layout-ideas`.
+
 ## Working rules with Jay
 
 - End work replies with a 2-line status: what was done, and the one thing needed from Jay.

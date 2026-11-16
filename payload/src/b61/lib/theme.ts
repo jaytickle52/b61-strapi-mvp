@@ -91,7 +91,7 @@ function weightsFor(spec: FontSpec, want: number[]): number[] {
  * asking only for weights each family has. Unknown names fall back to defaults.
  */
 export function fontsHref(
-  s: { headingFont?: string | null; bodyFont?: string | null; uiFont?: string | null },
+  s: { headingFont?: string | null; bodyFont?: string | null; uiFont?: string | null; accentFont?: string | null },
   opts: { headingWeight?: number | null } = {},
 ): string {
   const pick = (name: string | null | undefined, fallback: string) => (name && FONTS[name] ? name : fallback)
@@ -101,6 +101,8 @@ export function fontsHref(
     [pick(s.headingFont, 'Fraunces'), [400, 600, 700, ...hw], [400, 600, ...hw]],
     [pick(s.bodyFont, 'Inter'), [400, 600], [400]],
     [pick(s.uiFont, 'Montserrat'), [500, 600, 700], []],
+    // Accent heading font (optional): regular and medium, upright and italic.
+    ...(s.accentFont && FONTS[s.accentFont] ? ([[s.accentFont, [400, 500], [400, 500]]] as [string, number[], number[]][]) : []),
   ]
   const merged = new Map<string, { w: Set<number>; i: Set<number> }>()
   for (const [name, w, i] of roles) {
@@ -133,6 +135,7 @@ type Settings = {
   accentStrong?: string | null
   accentDeep?: string | null
   headingFont?: string | null
+  accentFont?: string | null
   bodyFont?: string | null
   uiFont?: string | null
 }
@@ -196,5 +199,6 @@ export function b61Theme(s: Settings): CSSProperties {
     '--b61-font-display': FONT_STACKS[s.headingFont ?? ''] ?? FONT_STACKS.Fraunces,
     '--b61-font-body': FONT_STACKS[s.bodyFont ?? ''] ?? FONT_STACKS.Inter,
     '--b61-font-ui': FONT_STACKS[s.uiFont ?? ''] ?? FONT_STACKS.Montserrat,
+    ...(s.accentFont && FONT_STACKS[s.accentFont] ? { '--b61-font-accent': FONT_STACKS[s.accentFont] } : {}),
   } as CSSProperties
 }

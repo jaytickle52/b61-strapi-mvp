@@ -22,6 +22,18 @@
   letter-spacing: 0.04em;
 }
 
+/* Accent heading font (School settings > Look): heading lines marked Emphasize
+   (and the Hero's changing word) in the second font, letters as typed. After
+   the capitals and spacing rules so it wins over them. */
+[data-b61-accent-font] :is([class*='-line--em'], .b61-rotate__word) {
+  font-family: var(--b61-font-accent);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 1.1em;
+  line-height: 1;
+}
+
 /* Button letters: Capitals. */
 [data-b61-btn-case='upper'] :is(.b61-btn, .b61-hdr__cta) {
   text-transform: uppercase;

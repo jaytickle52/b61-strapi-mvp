@@ -119,6 +119,8 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
   const bleed = car && beside && Boolean(bx.bleed)
   const reveal = ov && Boolean(bx.hoverReveal)
   const altTint = ov && Boolean(bx.altTint)
+  const feature = !car && cols === '3' && Boolean(bx.featureMiddle)
+  const duotone = Boolean(bx.duotone)
   const Wrap = hasHeading ? 'section' : 'div'
 
   const controls = car ? (
@@ -199,6 +201,8 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
     bleed && 'b61-cards__region--bleed',
     reveal && 'b61-cards__region--reveal',
     altTint && 'b61-cards__region--alt-tint',
+    feature && 'b61-cards__region--feature',
+    duotone && `b61-cards__region--duotone b61-duotone--${ov ? 'deep' : 'light'}`,
   ]
     .filter(Boolean)
     .join(' ')
