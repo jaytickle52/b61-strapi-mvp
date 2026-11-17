@@ -19,6 +19,7 @@ import * as migration_20261116_031341_changing_words_text from './20261116_03134
 import * as migration_20261116_113637_canterbury_patterns from './20261116_113637_canterbury_patterns';
 import * as migration_20261116_153825_drop_intro_subheadings from './20261116_153825_drop_intro_subheadings';
 import * as migration_20261116_164538_shared_section_colour from './20261116_164538_shared_section_colour';
+import * as migration_20261117_014843_schoolbox_themes from './20261117_014843_schoolbox_themes';
 
 export const migrations = [
   {
@@ -124,6 +125,11 @@ export const migrations = [
   {
     up: migration_20261116_164538_shared_section_colour.up,
     down: migration_20261116_164538_shared_section_colour.down,
-    name: '20261116_164538_shared_section_colour'
+    name: '20261116_164538_shared_section_colour',
+  },
+  {
+    up: migration_20261117_014843_schoolbox_themes.up,
+    down: migration_20261117_014843_schoolbox_themes.down,
+    name: '20261117_014843_schoolbox_themes'
   },
 ];

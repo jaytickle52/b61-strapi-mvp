@@ -1,5 +1,7 @@
 import { toBody } from '../b61/kit/body'
 import { cardsFrom, statsFrom } from '../b61/demo'
+import type { ThemeName } from '../b61/lib/style'
+import { schoolboxGuidance, schoolboxHome } from './schoolbox'
 
 /*
  * Page templates: ready-made starting layouts for the pages every school site
@@ -18,6 +20,8 @@ export type TemplateContext = {
   phone?: string | null
   email?: string | null
   address?: string | null
+  /** The school's theme (School settings > Look > Style); Classic when none. */
+  theme?: ThemeName
   /** The school's standard forms (Forms > Forms), by title. */
   forms: Record<string, number | string | undefined>
 }
@@ -150,6 +154,14 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
       quote('[A sentence or two from a current parent about what makes your school different.]', '[Parent of a 3rd grader]'),
       cta('See it for yourself', 'The best way to know if we are the right fit is to visit.', [['Schedule a tour', '/schedule-a-tour'], ['Ask a question', '/contact']]),
     ],
+  },
+  {
+    key: 'schoolbox-home',
+    label: 'Home (Schoolbox)',
+    description: 'The Schoolbox home page, laid out for the school\'s theme (Heritage, Warm or Bold): hero, three differentiators, problem and solution, outcomes, a family quote, events, admissions steps and an invitation.',
+    title: 'Home',
+    slug: 'home',
+    sections: (c) => schoolboxHome(c.theme ?? 'classic', schoolboxGuidance(c.schoolName, c.tagline)),
   },
   {
     key: 'about',

@@ -1,0 +1,156 @@
+/*
+ * The Schoolbox themes' own treatment of the elements (lib/style.ts THEMES).
+ * Keyed on <html data-b61-theme="heritage|warm|bold">, set only when a school
+ * picks one of them, so Classic and existing schools are untouched.
+ */
+
+/* Theme preview bar (/next/theme/<name>, demo and preview addresses only). */
+.b61-theme-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #1b1f24;
+  color: #fff;
+  font: 600 14px/1.3 system-ui, sans-serif;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+}
+.b61-theme-bar a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------------------------------------------------------------------------
+   Every theme: a hero followed by a Section pulled up over it keeps its words
+   clear of the cards (Bold's home page does this).
+   --------------------------------------------------------------------------- */
+[data-b61-theme] .b61-hero:has(+ .b61-section--pull) .b61-hero__inner {
+  --b61-hero-pad-bottom: calc(var(--b61-pad-block) + var(--b61-overlap-y));
+}
+
+/* ===========================================================================
+   HERITAGE: traditional and collegiate. Serif headings set with care, thin
+   rules, boxed cards with an inner keyline, quotes between rules.
+   =========================================================================== */
+
+/* A short rule under each element's main heading, centred when the heading is. */
+[data-b61-theme='heritage'] :is(.b61-cards__heading, .b61-cta__heading)::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 1px;
+  margin: 0.45em var(--b61-align-inline, 0) 0;
+  background: currentColor;
+  opacity: 0.45;
+}
+[data-b61-theme='heritage'] .b61-cards__head:has(.b61-cards__heading) { text-align: center; --b61-align-inline: auto; }
+[data-b61-theme='heritage'] .b61-cta__heading::after { margin-inline: auto; }
+
+/* Boxed cards: a hairline border with a keyline set inside it. */
+[data-b61-theme='heritage'] .b61-cards__region--style-bordered .b61-cards__card {
+  box-shadow: none;
+  border: 1px solid var(--b61-hairline);
+  outline: 1px solid color-mix(in srgb, var(--b61-primary) 22%, transparent);
+  outline-offset: -7px;
+  border-top-width: 1px;
+}
+[data-b61-theme='heritage'] .b61-cards__region--style-bordered .b61-cards__card--linked:hover {
+  transform: none;
+  box-shadow: none;
+  outline-color: var(--b61-primary);
+}
+[data-b61-theme='heritage'] .b61-cards__title {
+  font-weight: var(--b61-text-display-weight, 600);
+  letter-spacing: 0.01em;
+}
+
+/* Quotes between two rules, set like a printed page. */
+[data-b61-theme='heritage'] .b61-quote__figure {
+  border-block: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  padding-block: clamp(28px, 4vw, 48px);
+  max-width: 54rem;
+  margin-inline: auto;
+}
+
+/* Buttons and labels: spaced capitals, a little smaller. */
+[data-b61-theme='heritage'] :is(.b61-btn, .b61-hdr__cta) {
+  letter-spacing: 0.14em;
+  font-size: 0.82em;
+}
+
+/* ===========================================================================
+   WARM: friendly and open. A curved hero edge, cards that float softly, icons
+   in coloured circles, generous rounded shapes.
+   =========================================================================== */
+
+/* The cover hero ends in one large curved corner. */
+[data-b61-theme='warm'] .b61-hero--cover {
+  border-end-end-radius: clamp(72px, 12vw, 200px);
+  overflow: hidden;
+}
+[data-b61-theme='warm'] .b61-hero--cover .b61-hero__edge { display: none; }
+
+/* Cards lift off the page with a soft shadow instead of a border. */
+[data-b61-theme='warm'] .b61-cards__region--style-flat .b61-cards__card {
+  box-shadow: 0 10px 30px -12px color-mix(in srgb, var(--b61-primary) 28%, transparent);
+}
+[data-b61-theme='warm'] .b61-cards__region--style-flat .b61-cards__card--linked:hover,
+[data-b61-theme='warm'] .b61-cards__region--style-flat .b61-cards__card--linked:focus-within {
+  box-shadow: 0 18px 40px -14px color-mix(in srgb, var(--b61-primary) 36%, transparent);
+}
+
+/* Icons sit in a soft circle of the secondary colour. */
+[data-b61-theme='warm'] .b61-cards__icon {
+  --cards-icon-size: 26px;
+  box-sizing: content-box;
+  padding: 18px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--b61-secondary) 22%, var(--b61-surface));
+}
+
+/* Photos in cards get the round corners too. */
+[data-b61-theme='warm'] .b61-cards__media { border-radius: var(--b61-radius-sm); overflow: hidden; }
+
+/* The quote mark becomes a filled bubble. */
+[data-b61-theme='warm'] .b61-quote__mark {
+  display: inline-grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  background: var(--b61-secondary);
+  color: var(--b61-on-secondary);
+}
+
+/* ===========================================================================
+   BOLD: poster-like. Thick accent bars, square solid cards, big type.
+   =========================================================================== */
+
+/* A thick accent bar over each bordered card. */
+[data-b61-theme='bold'] .b61-cards__region--style-bordered .b61-cards__card {
+  border-top: 6px solid var(--b61-accent);
+  box-shadow: 0 1px 0 var(--b61-hairline), 0 18px 40px -24px rgb(0 0 0 / 0.35);
+}
+
+/* Plain cards (events) are divided by a heavy rule. */
+[data-b61-theme='bold'] .b61-cards__region--style-plain .b61-cards__card {
+  border-top: 4px solid var(--b61-ink);
+  padding-top: var(--b61-space-md, 16px);
+}
+
+/* Card titles and eyebrows in the heavy capital voice of the headings. */
+[data-b61-theme='bold'] .b61-cards__title {
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  font-weight: var(--b61-text-display-weight, 800);
+}
+
+/* Quotes are set large and straight, without the italic. */
+[data-b61-theme='bold'] .b61-quote__text {
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}

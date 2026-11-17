@@ -4,6 +4,8 @@ import { syncElementLibrary } from './b61/library'
 import { ensureStandardForms } from './forms/standard'
 import { ensureFeatureDemo } from './b61/features-demo'
 import { ensurePatternsDemo, ensurePatternsDemo2 } from './b61/patterns-demo'
+import { ensureSchoolboxDemo, SCHOOLBOX_COPY, schoolboxPhotos } from './b61/schoolbox-demo'
+import { schoolboxHome } from './templates/schoolbox'
 import { demoChrome } from './b61/chrome/demo'
 import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, statsFrom } from './b61/demo'
 
@@ -54,6 +56,41 @@ export const PROFILES: Record<string, Profile> = {
       { name: 'Marcus Lee', role: 'Director of Admissions', department: 'Admissions', bio: 'Marcus helps families find their place at Cedar Ridge.' },
       { name: 'Anna Brooks', role: 'Lower School Principal', department: 'Lower School', bio: 'Anna loves watching young readers discover books.' },
       { name: 'James Ortiz', role: 'Athletic Director', department: 'Athletics', bio: 'James coaches varsity soccer and leads our athletics program.' },
+    ],
+  },
+  // The Schoolbox demo (src/b61/schoolbox-demo.ts adds its theme pages).
+  schoolbox: {
+    settings: {
+      schoolName: 'Hourglass Christian School',
+      tagline: 'Rooted in faith. Ready to lead.',
+      primaryColor: '#1E2D4A',
+      secondaryColor: '#E58E5A',
+      accentColor: '#A3283A',
+      paperColor: '#F6F2EC',
+      uiFont: 'Nunito Sans',
+      headingFont: 'Nunito',
+      bodyFont: 'Nunito Sans',
+      style: { theme: 'warm' },
+      phone: '(864) 555-0161',
+      email: 'hello@hourglass.example',
+      address: '61 Banner Lane\nGreenville, SC 29607',
+    },
+    tagline: 'Rooted in faith. Ready to lead.',
+    mission:
+      'Hourglass Christian School is a K-12 Christian school in Greenville, SC, where students grow in faith, learn to think well and discover the gifts God has given them.',
+    stats: [
+      { value: '14:1', label: 'Student to teacher ratio' },
+      { value: 'K–12', label: 'Grades served' },
+      { value: '1994', label: 'Serving families since' },
+    ],
+    programs: [
+      { name: 'Elementary', grades: 'K–5', summary: 'Strong readers, curious thinkers and a love for learning.' },
+      { name: 'Middle School', grades: '6–8', summary: 'Growing independence with teachers who walk alongside.' },
+      { name: 'High School', grades: '9–12', summary: 'College-prep academics, leadership and service.' },
+    ],
+    staff: [
+      { name: 'Dr. Laura Bennett', role: 'Head of School', department: 'Administration', bio: 'Laura has led Christian schools for fifteen years.' },
+      { name: 'David Park', role: 'Director of Admissions', department: 'Admissions', bio: 'David gives every tour himself.' },
     ],
   },
   'harbor-oaks': {
@@ -206,7 +243,7 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
     {
       title: 'Home', slug: 'home',
       meta: { description: `${name}: ${profile.tagline}` },
-      sections: [
+      sections: key === 'schoolbox' ? schoolboxHome('warm', SCHOOLBOX_COPY, schoolboxPhotos(imgs as number[])) : [
         heroes.home,
         statsFrom({ heading: `${name} at a glance`, tone: 'light', stats: profile.stats }),
         splits.home,
@@ -243,13 +280,14 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
 
 /** Creates every demo school in SEED_SCHOOLS (default: both) and keeps each one's Element library current. */
 export async function seedDemoSchools(payload: Payload) {
-  const keys = (process.env.SEED_SCHOOLS || 'cedar-ridge,harbor-oaks').split(',').map((k) => k.trim()).filter(Boolean)
+  const keys = (process.env.SEED_SCHOOLS || 'cedar-ridge,harbor-oaks,schoolbox').split(',').map((k) => k.trim()).filter(Boolean)
   for (const key of keys) {
     const school = await seedDemoSchool(payload, key)
     if (school) await ensureStandardForms(payload, school).catch((e) => payload.logger.error(`[b61] Standard forms: ${e.message}`))
     if (school) await syncElementLibrary(payload, school).catch((e) => payload.logger.error(`[b61] Element library: ${e.message}`))
     if (school) await ensureFeatureDemo(payload, school).catch((e) => payload.logger.error(`[b61] School features demo: ${e.message}`))
-    if (school) await ensurePatternsDemo(payload, school).catch((e) => payload.logger.error(`[b61] Layout ideas demo: ${e.message}`))
-    if (school) await ensurePatternsDemo2(payload, school).catch((e) => payload.logger.error(`[b61] More layout ideas demo: ${e.message}`))
+    if (school && key !== 'schoolbox') await ensurePatternsDemo(payload, school).catch((e) => payload.logger.error(`[b61] Layout ideas demo: ${e.message}`))
+    if (school && key !== 'schoolbox') await ensurePatternsDemo2(payload, school).catch((e) => payload.logger.error(`[b61] More layout ideas demo: ${e.message}`))
+    if (school && key === 'schoolbox') await ensureSchoolboxDemo(payload, school).catch((e) => payload.logger.error(`[b61] Schoolbox demo: ${e.message}`))
   }
 }

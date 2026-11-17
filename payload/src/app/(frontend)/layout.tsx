@@ -46,6 +46,8 @@ import { b61Theme, FONT_STACKS, fontsHref, toneOf } from '@/b61/lib/theme'
 import { customCssTag } from '@/b61/lib/custom-css'
 import { b61Style, headingWeightFor } from '@/b61/lib/style'
 import { inlineFontCss } from '@/b61/lib/fonts'
+import { themePreview, withTheme } from '@/b61/lib/theme-preview'
+import ThemePreviewBar from '@/b61/chrome/ThemePreviewBar'
 import Reveal from '@/b61/reveal/Reveal'
 import { getAnnouncements, getSettings, hiddenFromSearch, isPreview, siteOrigin } from '@/lib/data'
 import AnalyticsTag from '@/analytics/Tag'
@@ -53,6 +55,8 @@ import Announcements, { type Notice } from '@/b61/chrome/Announcements'
 import QuickLinks from '@/b61/chrome/QuickLinks'
 import VideoDialog from '@/b61/kit/render/VideoDialog'
 import '@/b61/styles/patterns.css'
+// The Schoolbox themes' own element treatment: after every element style so it wins.
+import '@/b61/styles/themes.css'
 import JsonLd from '@/seo/JsonLd'
 import { redirectToMainDomain } from '@/seo/domains'
 import { schoolSchema } from '@/seo/schema'
@@ -92,7 +96,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   // A school's other domains (www, an old domain) go to its main one, page for page.
   await redirectToMainDomain()
-  const [settings, preview, hidden, announcements] = await Promise.all([getSettings(), isPreview(), hiddenFromSearch(), getAnnouncements()])
+  const [ownSettings, preview, hidden, announcements] = await Promise.all([getSettings(), isPreview(), hiddenFromSearch(), getAnnouncements()])
+  // /next/theme/<name> on a demo or preview address shows the school in another theme (lib/theme-preview.ts).
+  const previewTheme = await themePreview(hidden)
+  const settings = withTheme(ownSettings, previewTheme)
   // Count visitors only on the school's live site: not demo/preview addresses, not staff previews.
   const gaTag = !preview && !hidden ? settings.gaMeasurementId : null
   const notices: Notice[] = announcements.map((a) => {
@@ -179,6 +186,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <Reveal />
         <VideoDialog />
         {gaTag && <AnalyticsTag id={gaTag} />}
+        {previewTheme && <ThemePreviewBar theme={previewTheme} />}
       </body>
     </html>
   )

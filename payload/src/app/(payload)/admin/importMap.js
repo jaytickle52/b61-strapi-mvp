@@ -54,6 +54,7 @@ import { SubmissionsLink as SubmissionsLink_c6910aaaae4c22ec3cd3bf920ceab3d4 } f
 import { NameRowLabel as NameRowLabel_e36725be6ff8505e19d4c20e56311f67 } from '@/school/NameRowLabel'
 import { BrandPreview as BrandPreview_5603fa09eeacaaf6bbe10269c8021dc9 } from '@/branding/BrandPreview'
 import { ColorField as ColorField_24680dcb25a0ebe6de30467deef58e4e } from '@/branding/ColorField'
+import { ThemeSelect as ThemeSelect_08add69e25474841b4be5fda9c369270 } from '@/b61/lib/ThemeSelect'
 import { TestEmailButton as TestEmailButton_9efb266fe7741fea6a447ccc8b6dfc05 } from '@/email/TestEmailButton'
 import { HiddenNote as HiddenNote_e7cf3b3dfec20e5639861c1de043d742 } from '@/seo/HiddenNote'
 import { SetupNote as SetupNote_ad3208fc0d6a1f0e5094f01910836258 } from '@/analytics/SetupNote'
@@ -134,6 +135,7 @@ export const importMap = {
   "@/school/NameRowLabel#NameRowLabel": NameRowLabel_e36725be6ff8505e19d4c20e56311f67,
   "@/branding/BrandPreview#BrandPreview": BrandPreview_5603fa09eeacaaf6bbe10269c8021dc9,
   "@/branding/ColorField#ColorField": ColorField_24680dcb25a0ebe6de30467deef58e4e,
+  "@/b61/lib/ThemeSelect#ThemeSelect": ThemeSelect_08add69e25474841b4be5fda9c369270,
   "@/email/TestEmailButton#TestEmailButton": TestEmailButton_9efb266fe7741fea6a447ccc8b6dfc05,
   "@/seo/HiddenNote#HiddenNote": HiddenNote_e7cf3b3dfec20e5639861c1de043d742,
   "@/analytics/SetupNote#SetupNote": SetupNote_ad3208fc0d6a1f0e5094f01910836258,

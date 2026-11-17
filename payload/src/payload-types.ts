@@ -3853,8 +3853,6 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -3920,7 +3918,6 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4754,8 +4751,6 @@ export interface FormSubmission {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -4910,6 +4905,7 @@ export interface SchoolSetting {
         | 'Lato'
         | 'Open Sans'
         | 'Raleway'
+        | 'Nunito'
         | 'Nunito Sans'
         | 'Work Sans'
         | 'DM Sans'
@@ -4974,6 +4970,7 @@ export interface SchoolSetting {
         | 'Lato'
         | 'Open Sans'
         | 'Raleway'
+        | 'Nunito'
         | 'Nunito Sans'
         | 'Work Sans'
         | 'DM Sans'
@@ -4987,9 +4984,9 @@ export interface SchoolSetting {
    */
   style?: {
     /**
-     * Classic: The original B61 look: rounded corners, pill buttons, italic accent lines, offset photo frames. Modern: Clean and open: header over the hero, soft corners, no frames or eyebrow lines, colour accents, wide and airy. Bold: Poster-like: square corners and buttons, heavy capital headings, dramatic sizes, a big wordmark footer. Soft: Warm and friendly: round corners, regular-weight headings, close frames, a slow float. Editorial: Like a magazine: centred logo, square, light large headings, airy spacing, no frames.
+     * Classic: The original B61 look: rounded corners, pill buttons, italic accent lines, offset photo frames. Heritage: Traditional and collegiate: centred logo, serif headings, square corners, thin rules, boxed cards and framed photos. Warm: Friendly and open: header over the hero, a curved hero edge, rounded type and corners, soft colour washes and icon cards. Bold: Poster-like: heavy capital headings at dramatic sizes, square edges, hard colour bands, cards that overlap the hero and a big wordmark footer. Picking Heritage, Warm or Bold also sets its fonts; change them after if you like.
      */
-    theme?: ('classic' | 'modern' | 'bold' | 'soft' | 'editorial') | null;
+    theme?: ('classic' | 'heritage' | 'warm' | 'bold') | null;
     /**
      * Over the hero: transparent over a dark first hero, solid once the page scrolls.
      */
@@ -8352,7 +8349,6 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
   credit?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8428,8 +8424,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
-  prefix?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8733,8 +8727,6 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

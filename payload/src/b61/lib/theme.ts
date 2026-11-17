@@ -53,13 +53,15 @@ export const FONTS: Record<string, FontSpec> = {
   'Crimson Pro': { stack: serif('Crimson Pro'), weights: [400, 500, 600, 700], italic: true },
   'Roboto Slab': { stack: serif('Roboto Slab'), weights: [400, 500, 600, 700], italic: false },
   // Sans
-  Montserrat: { stack: sans('Montserrat'), weights: [400, 500, 600, 700], italic: true },
+  Montserrat: { stack: sans('Montserrat'), weights: [400, 500, 600, 700, 800, 900], italic: true },
   Poppins: { stack: sans('Poppins'), weights: [400, 500, 600, 700], italic: true },
   Inter: { stack: sans('Inter'), weights: [400, 500, 600, 700], italic: true },
   'Source Sans 3': { stack: sans('Source Sans 3'), weights: [400, 500, 600, 700], italic: true },
   Lato: { stack: sans('Lato'), weights: [300, 400, 700, 900], italic: true },
   'Open Sans': { stack: sans('Open Sans'), weights: [400, 500, 600, 700], italic: true },
   Raleway: { stack: sans('Raleway'), weights: [400, 500, 600, 700], italic: true },
+  // Rounded letters: the Warm theme's headings.
+  Nunito: { stack: sans('Nunito'), weights: [400, 600, 700, 800, 900], italic: true },
   'Nunito Sans': { stack: sans('Nunito Sans'), weights: [400, 600, 700], italic: true },
   'Work Sans': { stack: sans('Work Sans'), weights: [400, 500, 600, 700], italic: true },
   'DM Sans': { stack: sans('DM Sans'), weights: [400, 500, 600, 700], italic: true },
@@ -72,7 +74,7 @@ export const FONTS: Record<string, FontSpec> = {
 export const FONT_STACKS: Record<string, string> = Object.fromEntries(Object.entries(FONTS).map(([k, v]) => [k, v.stack]))
 
 const SERIFS = ['Fraunces', 'Playfair Display', 'Merriweather', 'EB Garamond', 'Lora', 'Libre Baskerville', 'Cormorant Garamond', 'Crimson Pro', 'Roboto Slab']
-const SANS = ['Montserrat', 'Poppins', 'Inter', 'Source Sans 3', 'Lato', 'Open Sans', 'Raleway', 'Nunito Sans', 'Work Sans', 'DM Sans', 'Roboto', 'Josefin Sans']
+const SANS = ['Montserrat', 'Poppins', 'Inter', 'Source Sans 3', 'Lato', 'Open Sans', 'Raleway', 'Nunito', 'Nunito Sans', 'Work Sans', 'DM Sans', 'Roboto', 'Josefin Sans']
 
 /** The choices offered in School settings > Look, per role. */
 export const HEADING_FONTS = [...SERIFS, ...SANS, 'Oswald']
