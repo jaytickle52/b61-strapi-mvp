@@ -20,6 +20,7 @@ import * as migration_20261116_113637_canterbury_patterns from './20261116_11363
 import * as migration_20261116_153825_drop_intro_subheadings from './20261116_153825_drop_intro_subheadings';
 import * as migration_20261116_164538_shared_section_colour from './20261116_164538_shared_section_colour';
 import * as migration_20261117_014843_schoolbox_themes from './20261117_014843_schoolbox_themes';
+import * as migration_20261117_104230_side_button_icons from './20261117_104230_side_button_icons';
 
 export const migrations = [
   {
@@ -130,6 +131,11 @@ export const migrations = [
   {
     up: migration_20261117_014843_schoolbox_themes.up,
     down: migration_20261117_014843_schoolbox_themes.down,
-    name: '20261117_014843_schoolbox_themes'
+    name: '20261117_014843_schoolbox_themes',
+  },
+  {
+    up: migration_20261117_104230_side_button_icons.up,
+    down: migration_20261117_104230_side_button_icons.down,
+    name: '20261117_104230_side_button_icons'
   },
 ];

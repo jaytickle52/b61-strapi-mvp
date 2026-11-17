@@ -495,6 +495,7 @@ export interface Page {
                   icon?:
                     | (
                         | 'check'
+                        | 'question'
                         | 'email'
                         | 'phone'
                         | 'location'
@@ -1155,6 +1156,7 @@ export interface Page {
                                   icon?:
                                     | (
                                         | 'check'
+                                        | 'question'
                                         | 'email'
                                         | 'phone'
                                         | 'location'
@@ -1830,6 +1832,7 @@ export interface Page {
                             icon?:
                               | (
                                   | 'check'
+                                  | 'question'
                                   | 'email'
                                   | 'phone'
                                   | 'location'
@@ -2563,6 +2566,7 @@ export interface Page {
                               | (
                                   | 'arrow'
                                   | 'check'
+                                  | 'question'
                                   | 'email'
                                   | 'phone'
                                   | 'location'
@@ -2808,6 +2812,7 @@ export interface Page {
                             icon?:
                               | (
                                   | 'check'
+                                  | 'question'
                                   | 'email'
                                   | 'phone'
                                   | 'location'
@@ -5136,6 +5141,7 @@ export interface SchoolSetting {
         icon?:
           | (
               | 'check'
+              | 'question'
               | 'email'
               | 'phone'
               | 'location'

@@ -293,7 +293,9 @@ arrangement choices are Banner 61-only; content a school updates stays where sta
     (`kit/render/VideoDialog.tsx`, mounted once in the layout); without JavaScript it is a link.
   - Split > Media > **Badge**: a seal or award on the photo's outer corner.
   - School settings > Header > **Side buttons** (up to 3, icon + words): docked at the right
-    edge, along the bottom on phones. Empty = none.
+    edge, along the bottom on phones. Empty = none. Each school picks each button's icon; icons
+    take the button's text colour (white on the dark surface). The icon set includes Question
+    mark (Nov 2026; Cedar Ridge's Inquire uses it).
   - Announcements > **Show as: Pop-up** (+ optional graphic): opens 1.5 s after load, one at a
     time, never again for that visitor once closed.
 - **Style (Banner 61) > Menu on wide screens:** Menu bar / Slide-in panel (desktop uses the
