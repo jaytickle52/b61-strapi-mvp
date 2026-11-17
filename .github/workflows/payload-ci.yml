@@ -9,7 +9,8 @@
 #   6. checks the school features: announcements, calendar + feeds, news
 #      categories, drag ordering, page templates, video links (scripts/features.mjs),
 #   7. checks what search engines get: descriptions, sitemap, robots, the
-#      calendar limit, site icons, the one-H1 rule (scripts/seo.mjs, check-seo-helpers.ts).
+#      calendar limit, site icons, the one-H1 rule (scripts/seo.mjs, check-seo-helpers.ts),
+#   8. checks the MCP connector: keys, drafts only, no deletes (scripts/mcp.mjs).
 # Vercel still deploys main on its own; a red check here means look before you trust that deploy.
 name: Payload checks
 
@@ -144,6 +145,13 @@ jobs:
         run: |
           npx payload run src/scripts/check-seo-helpers.ts
           node scripts/seo.mjs
+
+      - name: MCP connector test (keys, drafts only, no deletes)
+        env:
+          BASE_URL: http://localhost:3000
+          SMOKE_EMAIL: ci@example.com
+          SMOKE_PASSWORD: ci-smoke-password-123
+        run: node scripts/mcp.mjs
 
       - name: Server log
         if: failure()

@@ -34,6 +34,7 @@ import { EmailLog } from './collections/EmailLog'
 import { emailAdapter } from './email/adapter'
 import { sidebarOrder } from './admin/sidebarOrder'
 import { managesAnySchool, SCHOOL_ROLES } from './access'
+import { draftsOnlyOverMcp, mcpConnector } from './mcp/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -197,6 +198,9 @@ export default buildConfig({
     // Clears a school's cached public pages when staff change its content
     // (src/cache). Last, so it also sees the plugin collections above.
     cacheInvalidation,
+    // Claude / MCP clients at /api/mcp (src/mcp). Writes are forced to drafts.
+    draftsOnlyOverMcp,
+    mcpConnector,
     // The sidebar's order (src/admin/sidebarOrder.ts). Display only.
     sidebarOrder,
   ],

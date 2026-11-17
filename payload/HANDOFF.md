@@ -212,6 +212,24 @@ card", duotone photos on Card Grid and Gallery, a shared Scroll story arrangemen
 Pillars > Advanced) and a new Logos element. Rules in `EDITING-STANDARD.md` section 17; one
 additive migration (`*_canterbury_patterns`); demo page `/more-layout-ideas`.
 
+## MCP connector (PR #37)
+
+Claude (or any MCP client) reads and edits school content at `/api/mcp`, like Respira for the
+WordPress sites. Code in `src/mcp/` (`config.ts`, `pages.ts`), checks in `scripts/mcp.mjs` (CI).
+- **Keys:** Banner 61 > MCP keys, Banner 61 admins only; a key acts as the admin who made it
+  (normal access rules + school scoping apply). Every switch on a new key starts off; turn on
+  what the key may do. Delete a key to switch it off.
+- **Drafts only:** writes to pages, news, events, programs, staff, announcements and school
+  settings are forced to drafts (`draftsOnlyOverMcp`); the live site changes only on Publish.
+  No delete tools. Users, form answers, form files and the email log are not offered.
+- **Pages:** the generated page create/update tools were ~170 KB each, so pages use custom
+  `createPage` / `updatePage` (data as JSON) and `pageSections` (compact field outline).
+  `editorLinks` returns the editor address after a change.
+- **Signing in:** `Authorization: Bearer <key>`, or `/api/mcp?key=<key>` for clients that can't
+  send headers (can appear in request logs; prefer the header).
+- Any new collection Claude should see goes in `collections` in `src/mcp/config.ts` (and in
+  `MCP_DRAFT_COLLECTIONS` if it has drafts). Changing it changes the keys table: make a migration.
+
 ## Working rules with Jay
 
 - End work replies with a 2-line status: what was done, and the one thing needed from Jay.
