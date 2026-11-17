@@ -110,7 +110,7 @@ export async function ensurePatternsDemo(payload: Payload, school: School) {
       id: settings.id,
       data: {
         quickLinks: [
-          { label: 'Inquire', icon: 'email', link: go('inquire') },
+          { label: 'Inquire', icon: 'question', link: go('inquire') },
           { label: 'Visit', icon: 'calendar', link: go('schedule-a-tour') },
           { label: 'Apply', icon: 'check', link: go('apply') },
         ],

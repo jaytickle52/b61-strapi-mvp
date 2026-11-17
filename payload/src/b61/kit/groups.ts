@@ -77,6 +77,7 @@ export function subheadsField(): ArrayField {
 export const ICON_OPTIONS: [string, string][] = [
   ['dot', 'Dot'],
   ['check', 'Check'],
+  ['question', 'Question mark'],
   ['email', 'Email'],
   ['phone', 'Phone'],
   ['location', 'Location'],
