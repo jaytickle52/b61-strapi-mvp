@@ -51,7 +51,8 @@ export function styleGroup(): Field {
         options: THEME_OPTIONS,
         admin: {
           placeholder: 'Classic',
-          description: Object.values(THEMES).map((t) => `${t.label}: ${t.description}`).join(' '),
+          description: `${Object.values(THEMES).map((t) => `${t.label}: ${t.description}`).join(' ')} Picking Heritage, Warm or Bold also sets its fonts; change them after if you like.`,
+          components: { Field: '@/b61/lib/ThemeSelect#ThemeSelect' },
         },
       },
       ...dialRows(),

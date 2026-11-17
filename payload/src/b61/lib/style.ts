@@ -225,57 +225,74 @@ export type StyleValues = Partial<Record<DialName, string | null>>
 /** Nominal weights for Heading weight; the font's nearest weight is used. */
 const HEADING_WEIGHTS: Record<string, number> = { light: 300, regular: 400, semibold: 600, bold: 700, heavy: 900 }
 
-export type ThemeName = 'classic' | 'modern' | 'bold' | 'soft' | 'editorial'
+export type ThemeName = 'classic' | 'heritage' | 'warm' | 'bold'
 
-/** The themes: a starting position for every dial. Classic is the original B61 look. */
-export const THEMES: Record<ThemeName, { label: string; description: string; dials: StyleValues }> = {
+export type ThemeFonts = { headingFont: string; bodyFont: string; uiFont: string }
+
+type Theme = {
+  label: string
+  description: string
+  /** Fonts the theme was drawn with. Picking the theme sets them (School settings hook); the school can change them after. */
+  fonts?: ThemeFonts
+  dials: StyleValues
+}
+
+/**
+ * The themes. Heritage, Warm and Bold are the three Schoolbox looks: each sets
+ * its dials and fonts here, and its own treatment of the elements in
+ * styles/themes.css (keyed on data-b61-theme), so the three differ in
+ * arrangement and character, not only in colour. Classic is the original B61
+ * look and the fallback for any school without a theme (it emits nothing).
+ */
+export const THEMES: Record<ThemeName, Theme> = {
   classic: {
     label: 'Classic',
     description: 'The original B61 look: rounded corners, pill buttons, italic accent lines, offset photo frames.',
     dials: {},
   },
-  modern: {
-    label: 'Modern',
-    description: 'Clean and open: header over the hero, soft corners, no frames or eyebrow lines, colour accents, wide and airy.',
+  heritage: {
+    label: 'Heritage',
+    description: 'Traditional and collegiate: centred logo, serif headings, square corners, thin rules, boxed cards and framed photos.',
+    fonts: { headingFont: 'Cormorant Garamond', bodyFont: 'Source Sans 3', uiFont: 'Lato' },
     dials: {
-      header: 'overlay', corners: 'soft', buttons: 'rounded', headingWeight: 'semibold', headingTracking: 'tight', emphasis: 'colour',
-      eyebrow: 'none', frames: 'none', spacing: 'airy', width: 'wide', heroEdge: 'hidden', motion: 'fade',
+      header: 'centred', corners: 'square', buttons: 'square', buttonCase: 'capitals', headingWeight: 'semibold',
+      emphasis: 'italic', frames: 'close', spacing: 'airy', heroEdge: 'hidden', motion: 'fade',
+    },
+  },
+  warm: {
+    label: 'Warm',
+    description: 'Friendly and open: header over the hero, a curved hero edge, rounded type and corners, soft colour washes and icon cards.',
+    fonts: { headingFont: 'Nunito', bodyFont: 'Nunito Sans', uiFont: 'Nunito Sans' },
+    dials: {
+      header: 'overlay', corners: 'round', buttons: 'pill', headingWeight: 'heavy', headingTracking: 'tight', emphasis: 'colour',
+      eyebrow: 'none', eyebrowCase: 'typed', frames: 'none', spacing: 'airy', heroEdge: 'hidden', motion: 'float',
     },
   },
   bold: {
     label: 'Bold',
-    description: 'Poster-like: square corners and buttons, heavy capital headings, dramatic sizes, a big wordmark footer.',
+    description: 'Poster-like: heavy capital headings at dramatic sizes, square edges, hard colour bands, cards that overlap the hero and a big wordmark footer.',
+    fonts: { headingFont: 'Montserrat', bodyFont: 'Inter', uiFont: 'Montserrat' },
     dials: {
       footer: 'wordmark', corners: 'square', buttons: 'square', buttonCase: 'capitals', headingCase: 'capitals', headingWeight: 'heavy',
-      typeScale: 'dramatic', emphasis: 'colour', motion: 'rise',
-    },
-  },
-  soft: {
-    label: 'Soft',
-    description: 'Warm and friendly: round corners, regular-weight headings, close frames, a slow float.',
-    dials: {
-      corners: 'round', headingWeight: 'regular', eyebrow: 'none', eyebrowCase: 'typed', frames: 'close',
-      spacing: 'airy', motion: 'float',
-    },
-  },
-  editorial: {
-    label: 'Editorial',
-    description: 'Like a magazine: centred logo, square, light large headings, airy spacing, no frames.',
-    dials: {
-      header: 'centred', corners: 'square', buttons: 'square', buttonCase: 'capitals', headingWeight: 'light', headingTracking: 'tight',
-      typeScale: 'dramatic', spacing: 'airy', frames: 'none', heroEdge: 'hidden', motion: 'fade',
+      headingTracking: 'tight', typeScale: 'dramatic', emphasis: 'colour', frames: 'none', width: 'wide', motion: 'rise',
     },
   },
 }
 
 export const THEME_OPTIONS = (Object.keys(THEMES) as ThemeName[]).map((value) => ({ label: THEMES[value].label, value }))
 
+/** The theme a school uses (Classic when it has none, or names one that no longer exists). */
+export function themeOf(s: { style?: { theme?: string | null } | null }): ThemeName {
+  const t = s.style?.theme as ThemeName | undefined
+  return t && t in THEMES ? t : 'classic'
+}
+
 type StyleSettings = { style?: ({ theme?: string | null } & StyleValues) | null; headingFont?: string | null }
 
 /** Each dial's position: the school's own, else its theme's, else Classic. */
 export function resolveStyle(s: StyleSettings): Record<DialName, string> {
   const own = s.style ?? {}
-  const theme = THEMES[(own.theme as ThemeName) ?? 'classic'] ?? THEMES.classic
+  const theme = THEMES[themeOf(s)]
   const out = {} as Record<DialName, string>
   for (const name of Object.keys(DIALS) as DialName[]) {
     const dial = DIALS[name] as unknown as Dial
@@ -309,5 +326,8 @@ export function b61Style(s: StyleSettings): { vars: CSSProperties; attrs: Record
   }
   const weight = headingWeightFor(s)
   if (weight) vars['--b61-text-display-weight'] = String(weight)
+  // The theme's own element treatment (styles/themes.css). Classic has none.
+  const theme = themeOf(s)
+  if (theme !== 'classic') attrs['data-b61-theme'] = theme
   return { vars: vars as CSSProperties, attrs }
 }

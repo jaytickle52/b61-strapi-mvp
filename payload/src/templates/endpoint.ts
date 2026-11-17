@@ -1,6 +1,7 @@
 import type { Endpoint } from 'payload'
 import { canUseSchool, idOf } from '../access'
 import { PAGE_TEMPLATES, templateByKey } from './pages'
+import { themeOf } from '../b61/lib/style'
 
 /** GET /api/pages/templates — the list the picker shows. */
 export const listTemplatesEndpoint: Endpoint = {
@@ -58,6 +59,7 @@ export const fromTemplateEndpoint: Endpoint = {
       phone: settings.phone,
       email: settings.email,
       address: settings.address,
+      theme: themeOf(settings),
       forms,
     })
 

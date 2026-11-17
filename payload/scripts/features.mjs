@@ -1,6 +1,6 @@
 // School features test (Thread F): announcements, the events calendar and its
 // subscribe feed, calendar feed import, news categories, drag ordering, page
-// templates, Bunny video links and uploads, branding (colors, fonts, site icon), site tone and custom CSS, style themes and dials, the Content editor's Button, Callout and Table, and the layout options (Hero changing words, video buttons, Card Grid / Section / Stats Band / Split options, Side buttons, pop-up announcements). Runs against a site with the demo schools
+// templates, Bunny video links and uploads, branding (colors, fonts, site icon), site tone and custom CSS, style themes and dials (Schoolbox themes, theme preview links, the Schoolbox demo), the Content editor's Button, Callout and Table, and the layout options (Hero changing words, video buttons, Card Grid / Section / Stats Band / Split options, Side buttons, pop-up announcements). Runs against a site with the demo schools
 // and a Banner 61 admin account (the smoke test creates one):
 //
 //   BASE_URL=http://localhost:3000 SMOKE_EMAIL=... SMOKE_PASSWORD=... node scripts/features.mjs
@@ -352,13 +352,14 @@ async function main() {
     const bold = (await page('/', 'harbor-oaks')).text
     check(bold.includes('data-b61-hcase="upper"') && bold.includes('--b61-radius-btn:0px'), 'the Bold theme sets capitals and square buttons')
     check(!(await page('/', 'cedar-ridge')).text.includes('data-b61-hcase'), "another school's style is untouched")
+    check(bold.includes('data-b61-theme="bold"') && !before.includes('data-b61-theme'), "a Schoolbox theme marks the page for its own element styles; Classic doesn't")
     await api('PATCH', `/school-settings/${hs2.id}`, { token: admin, body: { style: { theme: 'bold', buttons: 'pill', headingCase: 'typed' }, _status: 'published' } })
     const mixed = (await page('/', 'harbor-oaks')).text
     check(!mixed.includes('data-b61-hcase') && !mixed.includes('--b61-radius-btn') && mixed.includes('--b61-radius:0px'), "a school's own dial overrides its theme; the rest follow the theme")
     const edEmail2 = `feat-style-${RUN}@example.com`
     await api('POST', '/users', { token: admin, body: { email: edEmail2, password: PASSWORD, name: 'Style editor', role: 'editor', tenants: [{ tenant: harbor, role: 'schoolAdmin' }] } })
     const ed2 = await login(edEmail2, PASSWORD)
-    await api('PATCH', `/school-settings/${hs2.id}`, { token: ed2, body: { style: { theme: 'soft' }, _status: 'published' } })
+    await api('PATCH', `/school-settings/${hs2.id}`, { token: ed2, body: { style: { theme: 'warm' }, _status: 'published' } })
     const kept2 = (await api('GET', `/school-settings/${hs2.id}?depth=0`, { token: admin })).json
     check(kept2?.style?.theme === 'bold', 'a School Admin cannot change the style (Banner 61 only)')
     // Header and footer layouts (L2).
@@ -384,6 +385,27 @@ async function main() {
     }
 
     await api('PATCH', `/school-settings/${hs2.id}`, { token: admin, body: { style: hs2.style ?? { theme: null }, _status: 'published' } })
+
+    // Theme preview (/next/theme/<name>): demo and preview addresses only, the school's own settings untouched.
+    const pv = await fetch(`${BASE}/next/theme/heritage?to=/about`, { headers: { cookie: `b61-school=harbor-oaks` }, redirect: 'manual' })
+    const pvCookie = (pv.headers.get('set-cookie') ?? '').match(/b61-theme-preview=([^;]*)/)?.[1]
+    check([303, 307, 308].includes(pv.status) && pvCookie === 'heritage' && (pv.headers.get('location') ?? '').endsWith('/about'), 'a theme preview link remembers the theme and opens the page asked for')
+    const viaPv = await fetch(`${BASE}/`, { headers: { cookie: `b61-school=harbor-oaks; b61-theme-preview=heritage` } }).then((r) => r.text())
+    check(viaPv.includes('data-b61-theme="heritage"') && viaPv.includes('data-b61-header="centred"') && viaPv.includes('class="b61-theme-bar"'), '… shows the school in that theme, with the preview bar')
+    check(/Cormorant(\+|\s|&quot;|\\u0026quot;)?Garamond/.test(viaPv) && !/Playfair/.test(viaPv), "… and in the theme's fonts")
+    const still = (await api('GET', `/school-settings/${hs2.id}?depth=0`, { token: admin })).json
+    check((still?.style?.theme ?? null) === (hs2.style?.theme ?? null), "… without changing the school's own settings")
+    check((await fetch(`${BASE}/next/theme/nope`, { redirect: 'manual' })).status === 404, 'an unknown theme name is refused')
+    check((await fetch(`${BASE}/next/theme/warm?to=//evil.example`, { redirect: 'manual' }).then((r) => r.headers.get('location') ?? '')).endsWith('/') , '… and the link never sends visitors to another address')
+
+    // The Schoolbox demo school and its per-theme home pages.
+    for (const t of ['heritage', 'warm', 'bold']) {
+      const sb = await page(`/home-${t}`, 'schoolbox')
+      check(sb.status === 200 && sb.text.includes('Known by name'), `the Schoolbox demo has its ${t} home page`)
+    }
+    const tl = (await api('GET', '/pages/templates', { token: admin })).json?.templates ?? []
+    check(tl.some((x) => x.key === 'schoolbox-home'), 'the Home (Schoolbox) page template is offered')
+
     const u2 = (await api('GET', `/users?where[email][equals]=${encodeURIComponent(edEmail2)}&depth=0`, { token: admin })).json?.docs?.[0]
     if (u2) await api('DELETE', `/users/${u2.id}`, { token: admin })
   }

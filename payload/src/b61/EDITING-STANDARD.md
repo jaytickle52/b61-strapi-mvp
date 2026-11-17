@@ -222,8 +222,8 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 
 ## 14. Style: themes and dials (Banner 61)
 
-- School settings > Look > **Style (Banner 61)**: a **Theme** (Classic, Modern, Bold, Soft, Editorial) and
-  15 dials: corners, button shape and letters, heading letters, weight, spacing and sizes, accent heading
+- School settings > Look > **Style (Banner 61)**: a **Theme** (Classic, Heritage, Warm, Bold) and
+  the dials: corners, button shape and letters, heading letters, weight, spacing and sizes, accent heading
   line, eyebrow line and letters, photo frames, section spacing, page width, hero edge line, entrance motion.
   An empty dial follows the theme; a set dial overrides it. Classic is the original B61 look and emits nothing.
 - Banner 61 admins only (group access + hidden for school staff). School staff keep colours, fonts and every
@@ -235,6 +235,22 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
   not literals, so the dials reach it: e.g. the accent heading line reads `--b61-emph-style`,
   `--b61-emph-decoration`, `--b61-emph-offset`.
 - Heading weight snaps to the nearest weight the heading font has, and that weight is loaded with the font.
+- **Schoolbox themes (Heritage, Warm, Bold; 16 Nov 2026)** replace Modern, Soft and Editorial (the migration
+  maps Soft to Warm, Editorial to Heritage, Modern to Classic). Each sets dials, **fonts** and
+  `data-b61-theme` on `<html>`; `src/b61/styles/themes.css` holds each theme's own element treatment
+  (Heritage: keylined boxed cards, rules under headings, quotes between rules; Warm: curved hero corner, soft
+  card shadows, icons in circles; Bold: accent bars on cards, heavy rules, capital card titles). Rules there
+  key on the theme attribute only, so Classic schools never change. Picking a theme in the admin also sets
+  its three fonts in the form (`ThemeSelect.tsx`); the school can change them after.
+- The **arrangement** of a Schoolbox home page comes from the **Home (Schoolbox)** page template
+  (`src/templates/schoolbox.ts`): the same slots for every theme, laid out with ordinary element options
+  (Heritage: centred photo hero, boxed cards; Warm: curved photo hero, icon cards on a wash; Bold: split hero
+  with cards pulled up over it, overlay outcome cards, colour bands). Changing theme later changes the finish,
+  not a page already made.
+- **Theme preview:** `/next/theme/<heritage|warm|bold|classic|off>` shows the current school in that theme on
+  demo and preview addresses only (never a school's own domain); `?school=<slug>` picks the school,
+  `?to=/path` the page. A bar at the bottom switches themes. The Schoolbox demo school (`schoolbox`,
+  Hourglass Christian School, `src/b61/schoolbox-demo.ts`) has `/home-heritage`, `/home-warm`, `/home-bold`.
 
 ## 15. Header, footer and hero layouts (L2)
 
