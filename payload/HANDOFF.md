@@ -212,7 +212,7 @@ card", duotone photos on Card Grid and Gallery, a shared Scroll story arrangemen
 Pillars > Advanced) and a new Logos element. Rules in `EDITING-STANDARD.md` section 17; one
 additive migration (`*_canterbury_patterns`); demo page `/more-layout-ideas`.
 
-## MCP connector (PR #36)
+## MCP connector (PR #37)
 
 Claude (or any MCP client) reads and edits school content at `/api/mcp`, like Respira for the
 WordPress sites. Code in `src/mcp/` (`config.ts`, `pages.ts`), checks in `scripts/mcp.mjs` (CI).
