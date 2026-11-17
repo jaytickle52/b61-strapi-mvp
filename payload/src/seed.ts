@@ -7,7 +7,7 @@ import { ensurePatternsDemo, ensurePatternsDemo2 } from './b61/patterns-demo'
 import { ensureSchoolboxDemo, SCHOOLBOX_COPY, schoolboxPhotos } from './b61/schoolbox-demo'
 import { schoolboxHome } from './templates/schoolbox'
 import { demoChrome } from './b61/chrome/demo'
-import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, statsFrom } from './b61/demo'
+import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, placeDemoPhotos, statsFrom, swapPlaceholderPhotos } from './b61/demo'
 
 // Fictional demo schools, same content as the Strapi build so the two editors
 // can be compared like for like. SEED_SCHOOLS lists which ones to create.
@@ -282,6 +282,11 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
 export async function seedDemoSchools(payload: Payload) {
   const keys = (process.env.SEED_SCHOOLS || 'cedar-ridge,harbor-oaks,schoolbox').split(',').map((k) => k.trim()).filter(Boolean)
   for (const key of keys) {
+    // Real photos: an older demo school still on generated placeholders gets them swapped (once);
+    // a newly seeded one starts with them. Either way they're spread across its pages at the end.
+    const before = (await payload.find({ collection: 'schools', where: { slug: { equals: key } }, limit: 1, depth: 0 })).docs[0]
+    const swapped = before ? await swapPlaceholderPhotos(payload, before).catch((e) => (payload.logger.error(`[b61] Demo photos: ${e.message}`), false)) : false
+    const fresh = !before || (await payload.find({ collection: 'pages', where: { school: { equals: before.id } }, limit: 1, draft: true, depth: 0 })).totalDocs === 0
     const school = await seedDemoSchool(payload, key)
     if (school) await ensureStandardForms(payload, school).catch((e) => payload.logger.error(`[b61] Standard forms: ${e.message}`))
     if (school) await syncElementLibrary(payload, school).catch((e) => payload.logger.error(`[b61] Element library: ${e.message}`))
@@ -289,5 +294,6 @@ export async function seedDemoSchools(payload: Payload) {
     if (school && key !== 'schoolbox') await ensurePatternsDemo(payload, school).catch((e) => payload.logger.error(`[b61] Layout ideas demo: ${e.message}`))
     if (school && key !== 'schoolbox') await ensurePatternsDemo2(payload, school).catch((e) => payload.logger.error(`[b61] More layout ideas demo: ${e.message}`))
     if (school && key === 'schoolbox') await ensureSchoolboxDemo(payload, school).catch((e) => payload.logger.error(`[b61] Schoolbox demo: ${e.message}`))
+    if (school && (fresh || swapped)) await placeDemoPhotos(payload, school).catch((e) => payload.logger.error(`[b61] Demo photos: ${e.message}`))
   }
 }
