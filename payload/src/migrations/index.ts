@@ -21,6 +21,7 @@ import * as migration_20261116_153825_drop_intro_subheadings from './20261116_15
 import * as migration_20261116_164538_shared_section_colour from './20261116_164538_shared_section_colour';
 import * as migration_20261117_014843_schoolbox_themes from './20261117_014843_schoolbox_themes';
 import * as migration_20261117_104230_side_button_icons from './20261117_104230_side_button_icons';
+import * as migration_20261117_111456_mcp_keys from './20261117_111456_mcp_keys';
 
 export const migrations = [
   {
@@ -136,6 +137,11 @@ export const migrations = [
   {
     up: migration_20261117_104230_side_button_icons.up,
     down: migration_20261117_104230_side_button_icons.down,
-    name: '20261117_104230_side_button_icons'
+    name: '20261117_104230_side_button_icons',
+  },
+  {
+    up: migration_20261117_111456_mcp_keys.up,
+    down: migration_20261117_111456_mcp_keys.down,
+    name: '20261117_111456_mcp_keys'
   },
 ];

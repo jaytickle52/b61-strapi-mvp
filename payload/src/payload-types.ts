@@ -64,6 +64,7 @@ export type SupportedTimezones =
 export interface Config {
   auth: {
     users: UserAuthOperations;
+    'payload-mcp-api-keys': PayloadMcpApiKeyAuthOperations;
   };
   blocks: {};
   collections: {
@@ -86,6 +87,7 @@ export interface Config {
     users: User;
     schools: School;
     'news-categories': NewsCategory;
+    'payload-mcp-api-keys': PayloadMcpApiKey;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-folders': FolderInterface;
@@ -118,6 +120,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     schools: SchoolsSelect<false> | SchoolsSelect<true>;
     'news-categories': NewsCategoriesSelect<false> | NewsCategoriesSelect<true>;
+    'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
@@ -139,7 +142,7 @@ export interface Config {
   widgets: {
     collections: CollectionsWidget;
   };
-  user: User;
+  user: User | PayloadMcpApiKey;
   jobs: {
     tasks: {
       importCalendars: TaskImportCalendars;
@@ -153,6 +156,24 @@ export interface Config {
   };
 }
 export interface UserAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
+  };
+}
+export interface PayloadMcpApiKeyAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -5381,6 +5402,200 @@ export interface User {
   collection: 'users';
 }
 /**
+ * Keys that let Claude (or another MCP client) read and edit school content at /api/mcp. A key acts as you. Edits are saved as drafts; nothing is deleted. Delete a key to switch it off.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-mcp-api-keys".
+ */
+export interface PayloadMcpApiKey {
+  id: number;
+  /**
+   * The user that the API key is associated with.
+   */
+  user: number | User;
+  /**
+   * A useful label for the API key.
+   */
+  label?: string | null;
+  /**
+   * The purpose of the API key.
+   */
+  description?: string | null;
+  schools?: {
+    /**
+     * Allow clients to find schools.
+     */
+    find?: boolean | null;
+  };
+  schoolSettings?: {
+    /**
+     * Allow clients to find school-settings.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to update school-settings.
+     */
+    update?: boolean | null;
+  };
+  pages?: {
+    /**
+     * Allow clients to find pages.
+     */
+    find?: boolean | null;
+  };
+  news?: {
+    /**
+     * Allow clients to find news.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create news.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update news.
+     */
+    update?: boolean | null;
+  };
+  newsCategories?: {
+    /**
+     * Allow clients to find news-categories.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create news-categories.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update news-categories.
+     */
+    update?: boolean | null;
+  };
+  events?: {
+    /**
+     * Allow clients to find events.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create events.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update events.
+     */
+    update?: boolean | null;
+  };
+  programs?: {
+    /**
+     * Allow clients to find programs.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create programs.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update programs.
+     */
+    update?: boolean | null;
+  };
+  staff?: {
+    /**
+     * Allow clients to find staff.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create staff.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update staff.
+     */
+    update?: boolean | null;
+  };
+  announcements?: {
+    /**
+     * Allow clients to find announcements.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create announcements.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update announcements.
+     */
+    update?: boolean | null;
+  };
+  media?: {
+    /**
+     * Allow clients to find media.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to update media.
+     */
+    update?: boolean | null;
+  };
+  documents?: {
+    /**
+     * Allow clients to find documents.
+     */
+    find?: boolean | null;
+  };
+  forms?: {
+    /**
+     * Allow clients to find forms.
+     */
+    find?: boolean | null;
+  };
+  redirects?: {
+    /**
+     * Allow clients to find redirects.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create redirects.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update redirects.
+     */
+    update?: boolean | null;
+  };
+  calendarFeeds?: {
+    /**
+     * Allow clients to find calendar-feeds.
+     */
+    find?: boolean | null;
+  };
+  'payload-mcp-tool'?: {
+    /**
+     * Outline of the section types a page's `sections` can hold (Hero, Split, Prose...) and each one's fields. Pass `type` (e.g. b61Hero) for one section's fields, or leave it out for the list.
+     */
+    pageSections?: boolean | null;
+    /**
+     * Create a page as a DRAFT (not live until a person publishes it). `data` is a JSON object: {"school": <school id>, "title": "...", "slug": "...", "sections": [...]}. Returns the new id; then call editorLinks.
+     */
+    createPage?: boolean | null;
+    /**
+     * Change a page by id, saved as a DRAFT on top of what's live (the live page is untouched until a person publishes). `data` is a JSON object with only the fields to change. `sections` replaces the whole list, so read the page first (findPages with draft: true) and send the full edited list.
+     */
+    updatePage?: boolean | null;
+    /**
+     * Get the editor address for an item (to review a draft and press Publish) and, for pages, the public address. Use after creating or updating something so the person can check it.
+     */
+    editorLinks?: boolean | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  enableAPIKey?: boolean | null;
+  apiKey?: string | null;
+  apiKeyIndex?: string | null;
+  hasAPIKey?: boolean | null;
+  collection: 'payload-mcp-api-keys';
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -5582,14 +5797,23 @@ export interface PayloadLockedDocument {
         value: number | NewsCategory;
       } | null)
     | ({
+        relationTo: 'payload-mcp-api-keys';
+        value: number | PayloadMcpApiKey;
+      } | null)
+    | ({
         relationTo: 'payload-folders';
         value: number | FolderInterface;
       } | null);
   globalSlug?: string | null;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: number | User;
+      }
+    | {
+        relationTo: 'payload-mcp-api-keys';
+        value: number | PayloadMcpApiKey;
+      };
   updatedAt: string;
   createdAt: string;
 }
@@ -5599,10 +5823,15 @@ export interface PayloadLockedDocument {
  */
 export interface PayloadPreference {
   id: number;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: number | User;
+      }
+    | {
+        relationTo: 'payload-mcp-api-keys';
+        value: number | PayloadMcpApiKey;
+      };
   key?: string | null;
   value?:
     | {
@@ -9136,6 +9365,115 @@ export interface NewsCategoriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-mcp-api-keys_select".
+ */
+export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
+  user?: T;
+  label?: T;
+  description?: T;
+  schools?:
+    | T
+    | {
+        find?: T;
+      };
+  schoolSettings?:
+    | T
+    | {
+        find?: T;
+        update?: T;
+      };
+  pages?:
+    | T
+    | {
+        find?: T;
+      };
+  news?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+      };
+  newsCategories?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+      };
+  events?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+      };
+  programs?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+      };
+  staff?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+      };
+  announcements?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+      };
+  media?:
+    | T
+    | {
+        find?: T;
+        update?: T;
+      };
+  documents?:
+    | T
+    | {
+        find?: T;
+      };
+  forms?:
+    | T
+    | {
+        find?: T;
+      };
+  redirects?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+      };
+  calendarFeeds?:
+    | T
+    | {
+        find?: T;
+      };
+  'payload-mcp-tool'?:
+    | T
+    | {
+        pageSections?: T;
+        createPage?: T;
+        updatePage?: T;
+        editorLinks?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  enableAPIKey?: T;
+  apiKey?: T;
+  apiKeyIndex?: T;
+  hasAPIKey?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -9297,10 +9635,15 @@ export interface TaskSchedulePublish {
           value: number | Staff;
         } | null);
     global?: string | null;
-    user?: {
-      relationTo: 'users';
-      value: number | User;
-    } | null;
+    user?:
+      | ({
+          relationTo: 'users';
+          value: number | User;
+        } | null)
+      | ({
+          relationTo: 'payload-mcp-api-keys';
+          value: number | PayloadMcpApiKey;
+        } | null);
   };
   output?: unknown;
 }
