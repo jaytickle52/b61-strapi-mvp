@@ -2,10 +2,10 @@ import type { Endpoint, PayloadRequest } from 'payload'
 import { isB61Admin } from '../access'
 import { siteOrigin } from '../email/school'
 import { themeOf } from '../b61/lib/style'
+import { schoolboxHome } from '../templates/schoolbox'
 import { makePreviewToken } from './preview-token'
 import { BUILDABLE_STAGES } from './stages'
-import { ALL_SPOTS, buildPage, SCHOOLBOX_PAGES, spotById } from './pages'
-import { cleanSpots, photoIds, type SpotValues } from './spots'
+import { cleanSpots, homeCopy, homePhotos, photoIds, SPOTS, type SpotValues } from './spots'
 
 /*
  * Schoolbox setup, the Payload side (build plan step 1). Banner 61 only:
@@ -13,7 +13,7 @@ import { cleanSpots, photoIds, type SpotValues } from './spots'
  *
  *   GET  /api/schools/setup/spots            the spot list (what Base Camp asks for)
  *   POST /api/schools/:id/setup/spots        save spots { spots, replace? }
- *   POST /api/schools/:id/setup/build        build the pages from the spots (drafts) { pages?: keys }
+ *   POST /api/schools/:id/setup/build        build the pages from the spots (drafts)
  *   POST /api/schools/:id/setup/preview-link a signed link to the draft site
  */
 
@@ -31,7 +31,7 @@ async function schoolFor(req: PayloadRequest): Promise<any | Response> {
 export const spotListEndpoint: Endpoint = {
   path: '/setup/spots',
   method: 'get',
-  handler: async (req) => deny(req) ?? Response.json({ pages: SCHOOLBOX_PAGES.map(({ key, title, slug }) => ({ key, title, slug })), spots: ALL_SPOTS }),
+  handler: async (req) => deny(req) ?? Response.json({ spots: SPOTS }),
 }
 
 export const saveSpotsEndpoint: Endpoint = {
@@ -44,7 +44,7 @@ export const saveSpotsEndpoint: Endpoint = {
     if (school instanceof Response) return school
     if (!BUILDABLE_STAGES.includes(school.setupStage)) return Response.json({ message: 'This school isn’t in setup.' }, { status: 409 })
     const body: any = (await req.json?.().catch(() => null)) ?? {}
-    const { spots, problems } = cleanSpots(body.spots, spotById)
+    const { spots, problems } = cleanSpots(body.spots)
     const merged: SpotValues = body.replace ? spots : { ...(school.setupSpots ?? {}), ...spots }
     // An explicit empty value clears a spot.
     if (!body.replace && body.spots && typeof body.spots === 'object')
@@ -60,7 +60,7 @@ async function saveDraftPage(req: PayloadRequest, school: number, slug: string, 
     await req.payload.find({ collection: 'pages', where: { and: [{ school: { equals: school } }, { slug: { equals: slug } }] }, limit: 1, depth: 0, draft: true, overrideAccess: true })
   ).docs[0] as any
   if (existing) {
-    await req.payload.update({ collection: 'pages', id: existing.id, draft: true, data: { title, sections, _status: 'draft' } as any, overrideAccess: true, req })
+    await req.payload.update({ collection: 'pages', id: existing.id, draft: true, data: { sections, _status: 'draft' } as any, overrideAccess: true, req })
     return { slug, id: existing.id, created: false }
   }
   const page = await req.payload.create({
@@ -85,35 +85,25 @@ export const buildEndpoint: Endpoint = {
       return Response.json({ message: 'Pages are only built from spots during setup. After launch the pages are edited directly.' }, { status: 409 })
 
     const { payload } = req
-    const body: any = (await req.json?.().catch(() => null)) ?? {}
     const mine = { school: { equals: school.id } }
     const settings: any = (await payload.find({ collection: 'school-settings', where: mine, limit: 1, depth: 0, overrideAccess: true })).docs[0] ?? {}
     const spots: SpotValues = school.setupSpots ?? {}
 
     // Photos must be this school's own; any other id is dropped and reported.
-    const ids = photoIds(spots, ALL_SPOTS)
+    const ids = photoIds(spots)
     const own = new Set(
       ids.length
         ? (await payload.find({ collection: 'media', where: { and: [mine, { id: { in: ids } }] }, limit: ids.length, depth: 0, overrideAccess: true })).docs.map((m: any) => m.id)
         : [],
     )
-    const problems = [...new Set(ids.filter((i) => !own.has(i)))].map((i) => `Photo ${i} isn't in this school's photos, so it was left out.`)
-    const forms = Object.fromEntries(
-      (await payload.find({ collection: 'forms', where: mine, limit: 50, depth: 0, overrideAccess: true })).docs.map((f: any) => [f.title, f.id]),
-    )
-    const context = {
-      schoolName: settings.schoolName || school.name,
-      theme: themeOf(settings),
-      forms,
-      ownPhoto: (n?: number) => (n != null && own.has(n) ? n : undefined),
-    }
+    const problems = ids.filter((i) => !own.has(i)).map((i) => `Photo ${i} isn't in this school's photos, so it was left out.`)
+    const keep = (n?: number) => (n != null && own.has(n) ? n : undefined)
+    const p = homePhotos(spots)
+    const photos = { hero: keep(p.hero), problem: keep(p.problem), outcomes: (p.outcomes ?? []).map(keep), cta: keep(p.cta) }
 
-    // Only the pages asked for, or all of them.
-    const only: string[] | null = Array.isArray(body.pages) ? body.pages.map(String) : null
-    const pages = SCHOOLBOX_PAGES.filter((p) => !only || only.includes(p.key))
+    const schoolName = settings.schoolName || school.name
     try {
-      const built = []
-      for (const page of pages) built.push({ key: page.key, ...(await saveDraftPage(req, school.id, page.slug, page.title, buildPage(page, spots, context))) })
+      const built = [await saveDraftPage(req, school.id, 'home', 'Home', schoolboxHome(themeOf(settings), homeCopy(spots, schoolName), photos))]
       return Response.json({ ok: true, pages: built, problems })
     } catch (e: any) {
       payload.logger.error(`[b61] Build from spots for ${school.slug}: ${e?.message ?? e}`)
