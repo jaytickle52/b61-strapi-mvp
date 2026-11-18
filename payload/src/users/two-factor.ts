@@ -25,32 +25,10 @@ import { payloadTotp } from 'payload-totp'
  *   user's account page.
  */
 
-/** Strategies that don't need a code: a verified session, or a key. */
-const NO_CODE_NEEDED = new Set(['totp', 'api-key', 'mcp-api-key'])
+import { adminTwoFactorRequired, twoFactorPending } from './two-factor-rules'
+import { notifyTwoFactorChange } from './two-factor-email'
 
-/**
- * Banner 61 admins must use two-factor on the live site. B61_REQUIRE_ADMIN_2FA
- * overrides it either way ('true' anywhere, e.g. the CI two-factor test;
- * 'false' to switch it off in an emergency). Previews, CI and local copies don't
- * require it, so tests and the restore test can sign in with a password.
- */
-export function adminTwoFactorRequired(): boolean {
-  const flag = (process.env.B61_REQUIRE_ADMIN_2FA || '').trim().toLowerCase()
-  if (flag === 'true') return true
-  if (flag === 'false') return false
-  return process.env.VERCEL_ENV === 'production'
-}
-
-/**
- * True when this signed-in user still owes a code: they have two-factor on (or
- * must have it, as a Banner 61 admin) and this session hasn't entered one.
- */
-export function twoFactorPending(user: any): boolean {
-  if (!user || user.collection !== 'users') return false
-  if (NO_CODE_NEEDED.has(user._strategy)) return false
-  if (user.hasTotp) return true
-  return user.role === 'admin' && adminTwoFactorRequired()
-}
+export { adminTwoFactorRequired, twoFactorPending }
 
 const COLLECTION_OPS = ['create', 'read', 'readVersions', 'update', 'delete', 'unlock'] as const
 const GLOBAL_OPS = ['read', 'readVersions', 'update'] as const
@@ -126,13 +104,31 @@ const guardEverything: Plugin = (config: Config): Config => ({
  * payload-totp's (sends a session owing a code to the code page) and ours (sends
  * Banner 61 admins without two-factor to the setup page). Outermost, they redirect
  * before other providers (the school picker etc.) read data the session isn't
- * allowed yet, which would otherwise end in an error page.
+ * allowed yet, which would otherwise end in an error page. Also emails the
+ * account when two-factor is set up.
  */
 const providersFirst: Plugin = (config: Config): Config => {
   const providers = config.admin?.components?.providers || []
+  // Email the account whenever two-factor is turned on (someone else holding the
+  // password could otherwise set it up unnoticed and lock the owner out).
+  const endpoints = (config.endpoints || []).map((e) =>
+    e.path === '/setup-totp' && e.method === 'post'
+      ? {
+          ...e,
+          handler: async (req: any) => {
+            const user = req.user
+            const res = await e.handler(req)
+            const ok = await res.clone().json().then((j: any) => j?.ok === true, () => false)
+            if (ok && user) await notifyTwoFactorChange(req.payload, user, 'on').catch(() => undefined)
+            return res
+          },
+        }
+      : e,
+  )
   const isTotp = (p: any) => (typeof p === 'string' ? p : p?.path)?.startsWith('payload-totp/')
   return {
     ...config,
+    endpoints,
     admin: {
       ...config.admin,
       components: {

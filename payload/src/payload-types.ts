@@ -4808,7 +4808,7 @@ export interface EmailLog {
   subject?: string | null;
   to?: string | null;
   status?: ('sent' | 'failed' | 'logged') | null;
-  kind?: ('form' | 'test' | 'password' | 'invite' | 'other') | null;
+  kind?: ('form' | 'test' | 'password' | 'invite' | 'security' | 'other') | null;
   detail?: string | null;
   school?: (number | null) | School;
   updatedAt: string;

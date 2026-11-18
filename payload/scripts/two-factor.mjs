@@ -13,6 +13,8 @@
 //
 // Creates throwaway accounts named 2fa-*@example.com; run on a test database.
 import { Secret, TOTP } from 'otpauth'
+import fs from 'node:fs'
+import path from 'node:path'
 
 const BASE = (process.env.BASE_URL || 'http://localhost:3000').replace(/\/$/, '')
 const RUN = Date.now().toString(36)
@@ -65,6 +67,16 @@ function session() {
   }
 }
 
+/** Is there an email to this address whose text includes `what`? (EMAIL_PREVIEW_DIR, as the permissions test.) */
+function emailed(to, what) {
+  const dir = process.env.EMAIL_PREVIEW_DIR
+  if (!dir || !fs.existsSync(dir)) return null
+  return fs.readdirSync(dir).some((f) => {
+    const html = fs.readFileSync(path.join(dir, f), 'utf8')
+    return html.includes(to) && html.includes(what)
+  })
+}
+
 const code = (secret) => new TOTP({ secret: Secret.fromBase32(secret), digits: 6, period: 30, algorithm: 'SHA1' }).generate()
 const newSecret = () => new Secret({ size: 20 }).base32
 
@@ -112,6 +124,9 @@ async function main() {
   check(wrong.json?.ok === false, 'setup refuses a wrong code')
   const setup = await editor.req('POST', '/api/setup-totp', { secret, token: code(secret) })
   check(setup.json?.ok === true, 'the editor sets up two-factor with a code from the app')
+  await new Promise((r) => setTimeout(r, 500))
+  const mailOn = emailed(email, 'Two-factor sign-in is on')
+  if (mailOn !== null) check(mailOn, 'they get an email saying two-factor is on')
   a = await staffAccess(editor, cedar, editorId)
   check(a.drafts && a.settings, 'right after setup, that session keeps working (verified)')
 
@@ -155,6 +170,11 @@ async function main() {
   check(selfReset.status === 403, 'a school editor can\'t reset two-factor')
   const reset = await admin.req('POST', `/api/users/${editorId}/reset-two-factor`)
   check(reset.status === 200 && reset.json?.ok === true, 'a Banner 61 admin resets it (lost phone)')
+  const oldSession = await editor.req('GET', '/api/users/me')
+  check(!oldSession.json?.user, 'the reset signs them out everywhere')
+  await new Promise((r) => setTimeout(r, 500))
+  const mailReset = emailed(email, 'Two-factor sign-in was reset')
+  if (mailReset !== null) check(mailReset, 'they get an email saying it was reset')
   const adminMe = await admin.req('GET', '/api/users/me')
   const ownReset = await admin.req('POST', `/api/users/${adminMe.json?.user?.id}/reset-two-factor`)
   check(ownReset.status === 400, 'nobody resets their own')
@@ -178,6 +198,9 @@ async function requiredForAdmins(admin) {
   check(!(drafts.status === 200 && (drafts.json?.docs?.length ?? 0) > 0), 'required: an admin without two-factor is refused draft pages')
   const page = await admin.req('GET', '/admin')
   check([302, 303, 307, 308].includes(page.status) && /setup-totp/.test(page.location || ''), 'required: the editor sends them to the setup page')
+  const logoutPage = await admin.req('GET', '/admin/logout')
+  check(!/setup-totp/.test(logoutPage.location || ''), 'required: signing out is still possible')
+  await admin.login(process.env.SMOKE_EMAIL, process.env.SMOKE_PASSWORD)
   const setupPage = await admin.req('GET', '/admin/setup-totp')
   check(setupPage.status === 200, 'the setup page itself opens')
   const secret = newSecret()
