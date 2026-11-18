@@ -1,4 +1,5 @@
 import { defineElement, panel } from '../../kit/element'
+import { bunnyBackgroundField } from '../../kit/video'
 import { splitWords } from './words'
 import { segmented, step, unit, type WhenRule } from '../../kit/controls'
 import type { NumberField } from 'payload'
@@ -132,6 +133,7 @@ export const B61Hero = defineElement({
             { name: 'videoWebm', label: 'Backup video', type: 'upload', relationTo: 'media', filterOptions: onlyVideos, admin: { width: '50%' } },
           ],
         },
+        bunnyBackgroundField((s: any) => coverBg('video')(undefined, s)),
         {
           name: 'poster',
           label: 'Video poster',

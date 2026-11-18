@@ -5,6 +5,7 @@ import { Buttons, HeadingLines, revealAttr } from '../../kit/render/parts'
 import HeroBehavior from './HeroBehavior'
 import { splitWords } from './words'
 import { resolveHeadingLevel } from '../../kit/groups'
+import { bunnyBackground } from '../../kit/video'
 
 export type HeroBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Hero' }>
 
@@ -42,12 +43,13 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
 
   const video = asMedia(block.video)
   const videoWebm = asMedia(block.videoWebm)
-  const poster = asMedia(block.poster)
+  const bunny = bgtype === 'video' ? bunnyBackground((block as any).bunnyVideo) : null
+  const poster = asMedia(block.poster) ?? (bunny ? { url: bunny.poster } : null)
   const slides = (block.slides ?? []).map((s) => s?.image).filter((m) => asMedia(m)?.url)
   const collage = (block.collage ?? []).map((c) => c?.image).filter((m) => asMedia(m)?.url).slice(0, 3)
   const bgImage = imgProps(block.image)
 
-  const hasMotion = (bgtype === 'video' && video?.url) || (bgtype === 'slideshow' && slides.length > 0)
+  const hasMotion = (bgtype === 'video' && (bunny || video?.url)) || (bgtype === 'slideshow' && slides.length > 0)
   const hasMedia =
     kind === 'type'
       ? false
@@ -56,7 +58,7 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
         : mode === 'band'
       ? collage.length > 0
       : bgtype === 'video'
-        ? Boolean(video?.url || poster?.url)
+        ? Boolean(bunny || video?.url || poster?.url)
         : bgtype === 'slideshow'
           ? slides.length > 0
           : Boolean(bgImage)
@@ -164,7 +166,13 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
       {mode !== 'band' && (
         <>
           <div className={`b61-hero__bg b61-hero__bg--${bgtype}`} aria-hidden="true" style={bgStyle}>
-            {bgtype === 'video' && video?.url ? (
+            {bgtype === 'video' && bunny ? (
+              <video className="b61-hero__video" autoPlay muted loop playsInline preload="metadata" poster={poster?.url ?? undefined}>
+                {bunny.sources.map((src) => (
+                  <source key={src} src={src} type="video/mp4" />
+                ))}
+              </video>
+            ) : bgtype === 'video' && video?.url ? (
               <video className="b61-hero__video" autoPlay muted loop playsInline preload="metadata" poster={poster?.url ?? undefined}>
                 {videoWebm?.url && <source src={videoWebm.url} type="video/webm" />}
                 <source src={video.url} type={video.mimeType ?? undefined} />
