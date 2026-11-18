@@ -80,16 +80,19 @@ export const suggestAltEndpoint: Endpoint = {
           ],
         }),
       })
-      const out: any = await res.json()
-      if (!res.ok) throw new Error(out?.error?.message ?? `status ${res.status}`)
+      const out: any = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(`Anthropic ${res.status}: ${out?.error?.message ?? 'no details'}`)
       const alt = String(out?.content?.find((c: any) => c.type === 'text')?.text ?? '')
         .trim()
         .replace(/^["']|["']$/g, '')
+      if (!alt) throw new Error(`Empty reply (stop: ${out?.stop_reason ?? 'unknown'}, model: ${MODEL})`)
       return Response.json({ alt })
     } catch (err: any) {
-      req.payload.logger.error({ err, msg: 'Alt text suggestion failed' })
+      // console.error reaches Vercel's runtime log reliably; Payload's logger may not flush there.
+      console.error('Alt text suggestion failed:', err?.message ?? err)
+      // Staff-only endpoint: show the reason, so a wrong key or model name is easy to spot.
       return Response.json(
-        { error: 'No suggestion this time. Please write it yourself.' },
+        { error: `No suggestion this time (${String(err?.message ?? 'unknown error').slice(0, 160)}). Please write it yourself.` },
         { status: 502 },
       )
     }
