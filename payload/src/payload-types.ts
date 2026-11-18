@@ -3901,8 +3901,6 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -3972,7 +3970,6 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4804,8 +4801,6 @@ export interface FormSubmission {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -5625,6 +5620,10 @@ export interface PayloadMcpApiKey {
      * Add a photo to a school's photo library from a public https address (a school's shared photo, or a licensed stock photo's download link). Give `school` (id), `url` and `alt` (what the photo shows, one sentence); `credit` and `caption` are optional. Returns the new photo's id, to use as `image` in page sections.
      */
     uploadPhoto?: boolean | null;
+    /**
+     * Get a signed preview link for a school in Setup or Review: it shows that school's draft pages, without signing in, for 14 days. Give `school` (id). Share it only with that school's leaders.
+     */
+    previewLink?: boolean | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -8628,7 +8627,6 @@ export interface MediaSelect<T extends boolean = true> {
   altAuto?: T;
   caption?: T;
   credit?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8704,8 +8702,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
-  prefix?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -9009,8 +9005,6 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -9517,6 +9511,7 @@ export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
         updatePage?: T;
         editorLinks?: T;
         uploadPhoto?: T;
+        previewLink?: T;
       };
   updatedAt?: T;
   createdAt?: T;

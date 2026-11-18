@@ -234,6 +234,8 @@ WordPress sites. Code in `src/mcp/` (`config.ts`, `pages.ts`), checks in `script
   The server fetches it, so only public addresses are allowed: every connection (redirects too) is
   checked at connect time against private, loopback and link-local ranges; max 3 redirects, 25 MB,
   30 s; JPEG, PNG, WebP, GIF or AVIF only. Then the normal Media rules apply.
+- **Preview links (`previewLink`, `src/mcp/preview.ts`):** the signed setup preview link for a school
+  in Setup or Review (Banner 61 admins' keys only), so Claude can hand it over after a build.
 - **Pages:** the generated page create/update tools were ~170 KB each, so pages use custom
   `createPage` / `updatePage` (data as JSON) and `pageSections` (compact field outline).
   `editorLinks` returns the editor address after a change.
