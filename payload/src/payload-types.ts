@@ -270,6 +270,10 @@ export interface Page {
             video?: (number | null) | Media;
             videoWebm?: (number | null) | Media;
             /**
+             * Plays from Bunny Stream instead of the Video above: cheaper and faster for big files. Used when filled in.
+             */
+            bunnyVideo?: string | null;
+            /**
              * Shows while the video loads, if autoplay is blocked, and when motion is turned off.
              */
             poster?: (number | null) | Media;
@@ -3879,8 +3883,6 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -3946,7 +3948,6 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4780,8 +4781,6 @@ export interface FormSubmission {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -5920,6 +5919,7 @@ export interface PagesSelect<T extends boolean = true> {
                   };
               video?: T;
               videoWebm?: T;
+              bunnyVideo?: T;
               poster?: T;
               overlayStrength?: T;
               collage?:
@@ -8589,7 +8589,6 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
   credit?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8665,8 +8664,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
-  prefix?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8970,8 +8967,6 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
