@@ -18,8 +18,13 @@ type Phase =
  * a YouTube, Vimeo or Bunny link still works the same.
  */
 export const VideoField: TextFieldClientComponent = (props) => {
+  // uploadFirst (Hero background): one upload box that sends the file to
+  // Bunny; pasting a link is tucked behind "Paste a Bunny link instead".
+  const uploadFirst = Boolean((props as any).uploadFirst)
   const path = props.path ?? props.field.name
-  const { setValue } = useField<string>({ path })
+  const { value, setValue } = useField<string>({ path })
+  const [showLink, setShowLink] = useState(false)
+  const [over, setOver] = useState(false)
   const school = useFormFields(([f]) => f?.school?.value as number | string | undefined)
   const [enabled, setEnabled] = useState(false)
   const [phase, setPhase] = useState<Phase>({ kind: 'idle' })
@@ -99,6 +104,107 @@ export const VideoField: TextFieldClientComponent = (props) => {
   }
 
   const busy = phase.kind === 'uploading'
+
+  const status = (
+    <p className="field-description" role="status" style={{ color: phase.kind === 'error' ? 'var(--theme-error-500)' : undefined }}>
+      {phase.kind === 'uploading' && 'Uploading… keep this page open.'}
+      {phase.kind === 'processing' &&
+        `Uploaded. Bunny is preparing the video (${phase.label.toLowerCase()}${phase.progress != null ? `, ${phase.progress}%` : ''}). You can save now; it plays once it's ready.`}
+      {phase.kind === 'ready' && 'Ready to play. Save to keep it.'}
+      {phase.kind === 'error' && phase.message}
+    </p>
+  )
+  const picker = (
+    <input
+      ref={fileRef}
+      type="file"
+      accept="video/*"
+      hidden
+      onChange={(e) => {
+        const f = e.target.files?.[0]
+        e.target.value = ''
+        if (f) start(f)
+      }}
+    />
+  )
+
+  if (uploadFirst) {
+    const label = typeof props.field.label === 'string' ? props.field.label : 'Video'
+    const description = typeof props.field.admin?.description === 'string' ? props.field.admin.description : undefined
+    return (
+      <div className="field-type b61-video-field" style={{ marginBottom: 24 }}>
+        <label className="field-label">{label}</label>
+        {!enabled ? (
+          <>
+            <TextField {...props} />
+            <p className="field-description">Video uploads switch on once the Bunny Stream keys are added in Vercel.</p>
+          </>
+        ) : (
+          <>
+            {picker}
+            <div
+              onDragOver={(e) => {
+                e.preventDefault()
+                setOver(true)
+              }}
+              onDragLeave={() => setOver(false)}
+              onDrop={(e) => {
+                e.preventDefault()
+                setOver(false)
+                const f = Array.from(e.dataTransfer.files).find((x) => x.type.startsWith('video/'))
+                if (f && !busy) start(f)
+              }}
+              style={{
+                border: `1px dashed var(--theme-elevation-${over ? '500' : '250'})`,
+                borderRadius: 4,
+                padding: 20,
+                display: 'flex',
+                gap: 12,
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
+              {busy ? (
+                <>
+                  <progress max={100} value={phase.pct} style={{ width: 180 }} aria-label="Upload progress" />
+                  <span>{phase.pct}%</span>
+                  <Button buttonStyle="none" size="small" margin={false} onClick={cancel}>
+                    Cancel
+                  </Button>
+                </>
+              ) : value ? (
+                <>
+                  <span>Video added ✓</span>
+                  <Button buttonStyle="secondary" size="small" margin={false} onClick={() => fileRef.current?.click()}>
+                    Replace
+                  </Button>
+                  <Button buttonStyle="none" size="small" margin={false} onClick={() => { setValue(''); setPhase({ kind: 'idle' }) }}>
+                    Remove
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button buttonStyle="secondary" size="small" margin={false} onClick={() => fileRef.current?.click()}>
+                    Upload a video
+                  </Button>
+                  <span className="field-description" style={{ margin: 0 }}>or drag and drop a file</span>
+                </>
+              )}
+            </div>
+            {status}
+            {description && <p className="field-description">{description}</p>}
+            {showLink ? (
+              <TextField {...props} field={{ ...props.field, label: 'Bunny link', admin: { ...props.field.admin, description: undefined } } as any} />
+            ) : (
+              <Button buttonStyle="none" size="small" margin={false} onClick={() => setShowLink(true)}>
+                Paste a Bunny link instead
+              </Button>
+            )}
+          </>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div className="b61-video-field">

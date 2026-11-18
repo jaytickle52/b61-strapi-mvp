@@ -257,7 +257,7 @@ async function main() {
     )
   } else check(heroPage.status === 200, '… and the page still shows without the Bunny CDN hostname set')
   const heroNo = await api('POST', '/pages', { token: admin, body: hero('https://www.youtube.com/watch?v=dQw4w9WgXcQ') })
-  check(heroNo.status === 400 && /Bunny video/.test(JSON.stringify(heroNo.json)), "a Hero background link that isn't Bunny is refused with a message")
+  check(heroNo.status === 400 && /Video|Bunny Stream link/.test(JSON.stringify(heroNo.json)), "a Hero background link that isn't Bunny is refused with a message")
   for (const d of [heroOk, heroNo]) if (d.json?.doc?.id) await api('DELETE', `/pages/${d.json.doc.id}`, { token: admin })
 
   // ----- Branding (School settings > Look) ------------------------------------
@@ -308,6 +308,17 @@ async function main() {
     check(withAlt.status === 201 && !withAlt.json?.doc?.altAuto, '… and saves once alt text is typed in')
     if (withAlt.json?.doc?.id) await api('DELETE', `/media/${withAlt.json.doc.id}`, { token: admin })
     check(altCfg.status === 200 && altCfg.json?.enabled === false, '"Write missing alt text" stays hidden without the AI key')
+  }
+
+  // ----- Videos never go to the Photos library (Vercel); they belong on Bunny ---
+  {
+    const form = new FormData()
+    form.append('file', new Blob([Buffer.from('not really a video')], { type: 'video/mp4' }), `clip-${RUN}.mp4`)
+    form.append('_payload', JSON.stringify({ school: cedar, alt: 'A clip' }))
+    const res = await fetch(BASE + '/api/media', { method: 'POST', headers: { Authorization: `JWT ${admin}` }, body: form })
+    const body = await res.json().catch(() => null)
+    check(res.status >= 400 && res.status < 500, 'a video file is refused by the Photos library (videos go to Bunny)')
+    if (body?.doc?.id) await api('DELETE', `/media/${body.doc.id}`, { token: admin })
   }
 
   // ----- Bunny video uploads -------------------------------------------------

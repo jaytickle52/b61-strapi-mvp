@@ -43,14 +43,14 @@ export const MEDIA_SIZES: ImageSize[] = [
 
 export const Media: CollectionConfig = {
   slug: 'media',
-  labels: { singular: 'Photo or video', plural: 'Photos and videos' },
+  labels: { singular: 'Photo', plural: 'Photos' },
   // Everyone at the school uploads; only Editors and School Admins delete.
   access: { read: () => true, delete: publishersOnly },
   folders: true,
   admin: {
     group: 'Files',
     description:
-      'Photos and videos for the website. Add alt text so screen readers can describe each photo. PDFs go in Documents.',
+      'Photos for the website. Add alt text so screen readers can describe each photo. PDFs go in Documents. Videos go to Bunny Stream: use "Upload a video" on the element that shows it.',
     defaultColumns: ['filename', 'alt', 'folder', 'updatedAt'],
     // "Write missing alt text" (only when ANTHROPIC_API_KEY is set; src/media/autoAlt.ts).
     components: { beforeListTable: ['@/media/FillAlt#FillAlt'] },
@@ -108,7 +108,8 @@ export const Media: CollectionConfig = {
   upload: {
     // On Railway this folder is a persistent volume.
     staticDir: process.env.MEDIA_DIR || 'media',
-    mimeTypes: ['image/*', 'video/*'],
+    // Photos only: videos are hosted on Bunny Stream, never here (src/video).
+    mimeTypes: ['image/*'],
     // Cap and re-compress the original (it is still kept, for downloads and future sizes).
     resizeOptions: { width: 2560, height: 2560, fit: 'inside', withoutEnlargement: true },
     imageSizes: MEDIA_SIZES,

@@ -129,8 +129,9 @@ export const B61Hero = defineElement({
           type: 'row',
           admin: { condition: coverBg('video') },
           fields: [
-            { name: 'video', label: 'Video', type: 'upload', relationTo: 'media', filterOptions: onlyVideos, admin: { width: '50%' } },
-            { name: 'videoWebm', label: 'Backup video', type: 'upload', relationTo: 'media', filterOptions: onlyVideos, admin: { width: '50%' } },
+            // Old video files from the Photos library: hidden, still played until moved to Bunny (src/video/moveToBunny.ts).
+            { name: 'video', label: 'Video file (old)', type: 'upload', relationTo: 'media', filterOptions: onlyVideos, admin: { width: '50%', hidden: true } },
+            { name: 'videoWebm', label: 'Backup video (old)', type: 'upload', relationTo: 'media', filterOptions: onlyVideos, admin: { width: '50%', hidden: true } },
           ],
         },
         bunnyBackgroundField((s: any) => coverBg('video')(undefined, s)),
