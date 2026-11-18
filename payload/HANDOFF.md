@@ -245,11 +245,15 @@ Plan: Claude Doc "Schoolbox setup in Base Camp: build plan". Code in `src/setup/
 - **Stage:** `schools.setupStage` (Setup, Review, Live; empty for non-Schoolbox schools) and
   `schools.setupSpots` (flat map, e.g. `home.hero.tagline1`, `home.photo.hero` = media id). Both
   Banner 61 only, hidden from school accounts.
-- **Spots:** `src/setup/spots.ts`. Home only so far; other Schoolbox pages get spot lists once the
-  page list is settled. Empty spots keep the template's [bracketed] guidance.
+- **Pages and spots:** `src/setup/pages.ts` (spot checks in `src/setup/spots.ts`). Ten pages: Home,
+  About, Admissions, Academics, Leadership & Staff, Tuition & Aid, Schedule a Visit (the existing
+  `schedule-a-tour` page, keeps the tour form), Discipleship, Current Families, Support. Empty spots
+  keep [bracketed] guidance; "optional" sections (founder story, results, state programs…) appear
+  only when filled, so a startup isn't asked for results it doesn't have. Home has per-theme layouts;
+  the other pages use the shared elements.
 - **Endpoints** (Banner 61 only): `GET /api/schools/setup/spots`, `POST /api/schools/:id/setup/spots`
-  `{ spots, replace? }` (empty value clears a spot), `POST /api/schools/:id/setup/build` (Home saved
-  as a **draft**; photos must be the school's own), `POST /api/schools/:id/setup/preview-link`.
+  `{ spots, replace? }` (empty value clears a spot), `POST /api/schools/:id/setup/build` `{ pages? }`
+  (every page saved as a **draft**; photos must be the school's own), `POST /api/schools/:id/setup/preview-link`.
   Build and preview links only work in Setup or Review; at Live the pages are edited directly.
 - **Preview links:** `/next/setup-preview?t=<school>.<expiry>.<HMAC>` (14 days, secret derived from
   `SCHOOL_SECRET` as `SETUP_PREVIEW_SECRET`). Sets a cookie + draft mode; `src/lib/data.ts` then shows
