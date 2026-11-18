@@ -9,11 +9,10 @@ import { schoolboxGuidance, type SchoolboxCopy, type SchoolboxPhotos } from '../
  * the school's pages. A spot left empty keeps the template's [bracketed]
  * guidance, so a half-finished setup still builds a complete page.
  *
- * Only the Home page has spots so far; the other Schoolbox pages get theirs
- * once the page list is settled.
+ * The pages and their spots are in ./pages.ts.
  */
 
-export type SpotKind = 'text' | 'long' | 'icon' | 'photo'
+export type SpotKind = 'text' | 'long' | 'icon' | 'photo' | 'link'
 export type Spot = { id: string; page: string; label: string; kind: SpotKind; max?: number; help?: string }
 export type SpotValues = Record<string, string | number | null | undefined>
 
@@ -53,9 +52,6 @@ export const HOME_SPOTS: Spot[] = [
   photo('cta', 'Photo behind the final invitation', 'Bold shows it.'),
 ]
 
-export const SPOTS: Spot[] = [...HOME_SPOTS]
-export const SPOT_PAGES = ['home'] as const
-export const spotById = new Map(SPOTS.map((s) => [s.id, s]))
 
 const text = (v: unknown): string | null => (typeof v === 'string' && v.trim() ? v.trim() : null)
 const photoId = (v: unknown): number | null => {
@@ -99,15 +95,15 @@ export function homePhotos(spots: SpotValues): SchoolboxPhotos {
   return { hero: p('hero'), problem: p('problem'), outcomes: [p('outcome1'), p('outcome2'), p('outcome3')], cta: p('cta') }
 }
 
-export const photoIds = (spots: SpotValues): number[] =>
-  SPOTS.filter((s) => s.kind === 'photo').map((s) => photoId(spots[s.id])).filter((n): n is number => n != null)
+export const photoIds = (spots: SpotValues, all: Spot[]): number[] =>
+  all.filter((s) => s.kind === 'photo').map((s) => photoId(spots[s.id])).filter((n): n is number => n != null)
 
 /**
  * Cleans a spots map before it is saved: unknown spot ids are dropped, words
  * are trimmed, photos must be ids. Returns the clean map and plain-language
  * problems (words over a spot's length are kept but reported).
  */
-export function cleanSpots(input: unknown): { spots: SpotValues; problems: string[] } {
+export function cleanSpots(input: unknown, spotById: Map<string, Spot>): { spots: SpotValues; problems: string[] } {
   const spots: SpotValues = {}
   const problems: string[] = []
   if (!input || typeof input !== 'object' || Array.isArray(input)) return { spots, problems: input == null ? [] : ['Spots must be a list of named values.'] }
@@ -131,6 +127,10 @@ export function cleanSpots(input: unknown): { spots: SpotValues; problems: strin
     const v = raw.trim().slice(0, 2000)
     if (spot.kind === 'icon' && !ICONS.includes(v)) {
       problems.push(`${spot.label}: "${v}" isn't one of the icons, so it was left out.`)
+      continue
+    }
+    if (spot.kind === 'link' && !/^(https?:\/\/[^\s]+|\/[^\s]*)$/.test(v)) {
+      problems.push(`${spot.label}: "${v}" isn't a web address, so it was left out.`)
       continue
     }
     if (spot.max && v.length > spot.max) problems.push(`${spot.label} is ${v.length} characters; it fits best under ${spot.max}.`)

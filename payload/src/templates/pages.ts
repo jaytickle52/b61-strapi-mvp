@@ -35,17 +35,17 @@ export type PageTemplate = {
   sections: (c: TemplateContext) => any[]
 }
 
-const para = (text: string) => ({
+export const para = (text: string) => ({
   root: {
     type: 'root', format: '', indent: 0, version: 1, direction: 'ltr',
     children: [{ type: 'paragraph', format: '', indent: 0, version: 1, direction: 'ltr', textFormat: 0, textStyle: '',
       children: [{ type: 'text', text, format: 0, style: '', mode: 'normal', detail: 0, version: 1 }] }],
   },
 })
-const url = (u: string) => ({ type: 'url', url: u })
-const lines = (...t: string[]) => t.map((text, i) => ({ text, emphasize: i === t.length - 1 && t.length > 1 }))
+export const url = (u: string) => ({ type: 'url', url: u })
+export const lines = (...t: string[]) => t.map((text, i) => ({ text, emphasize: i === t.length - 1 && t.length > 1 }))
 
-const hero = (o: { eyebrow: string; lines: string[]; sub: string; buttons?: [string, string][]; size?: 'compact' | 'standard' }) => ({
+export const hero = (o: { eyebrow: string; lines: string[]; sub: string; buttons?: [string, string][]; size?: 'compact' | 'standard' }) => ({
   blockType: 'b61Hero',
   eyebrow: o.eyebrow,
   headingLevel: 'auto',
@@ -60,7 +60,7 @@ const hero = (o: { eyebrow: string; lines: string[]; sub: string; buttons?: [str
   entrance: 'on',
 })
 
-const prose = (o: { eyebrow?: string; heading: string; text: string[]; emphasis?: string; surface?: string }) => ({
+export const prose = (o: { eyebrow?: string; heading: string; text: string[]; emphasis?: string; surface?: string }) => ({
   blockType: 'b61Prose',
   ...(o.eyebrow ? { eyebrow: o.eyebrow } : {}),
   headingLevel: 'auto',
@@ -77,7 +77,7 @@ const prose = (o: { eyebrow?: string; heading: string; text: string[]; emphasis?
   entrance: 'on',
 })
 
-const cards = (heading: string, intro: string | null, items: [string, string, string?][], tone = 'light') =>
+export const cards = (heading: string, intro: string | null, items: [string, string, string?][], tone = 'light') =>
   cardsFrom({
     heading,
     intro,
@@ -87,7 +87,7 @@ const cards = (heading: string, intro: string | null, items: [string, string, st
     cards: items.map(([title, body, link]) => ({ title, body, link: link ?? null })),
   })
 
-const faq = (heading: string, items: [string, string][], eyebrow = 'Questions') => ({
+export const faq = (heading: string, items: [string, string][], eyebrow = 'Questions') => ({
   blockType: 'b61Accordion',
   eyebrow,
   lines: [{ text: heading }],
@@ -95,9 +95,9 @@ const faq = (heading: string, items: [string, string][], eyebrow = 'Questions') 
   items: items.map(([title, body]) => ({ title, body: para(body) })),
 })
 
-const quote = (q: string, who: string) => ({ blockType: 'b61Testimonial', eyebrow: 'From our families', surface: 'soft', quote: q, attribution: who })
+export const quote = (q: string, who: string) => ({ blockType: 'b61Testimonial', eyebrow: 'From our families', surface: 'soft', quote: q, attribution: who })
 
-const cta = (heading: string, body: string, buttons: [string, string][], surface = 'accent') => ({
+export const cta = (heading: string, body: string, buttons: [string, string][], surface = 'accent') => ({
   blockType: 'b61Cta',
   headingLevel: 'auto',
   lines: [{ text: heading, emphasize: false }],
@@ -111,10 +111,10 @@ const cta = (heading: string, body: string, buttons: [string, string][], surface
   entrance: 'on',
 })
 
-const form = (id: number | string | undefined, heading: string, eyebrow: string) =>
+export const form = (id: number | string | undefined, heading: string, eyebrow: string) =>
   id ? [{ blockType: 'b61Form', form: id, eyebrow, lines: [{ text: heading }], surface: 'soft', card: 'card' }] : []
 
-const buttonBar = (a: [string, string], b: [string, string]) => ({
+export const buttonBar = (a: [string, string], b: [string, string]) => ({
   blockType: 'b61ButtonBar', firstLabel: a[0], firstLink: url(a[1]), secondLabel: b[0], secondLink: url(b[1]), size: 'large',
 })
 
