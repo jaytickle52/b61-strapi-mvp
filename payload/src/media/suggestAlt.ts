@@ -68,7 +68,7 @@ export const suggestAltEndpoint: Endpoint = {
         },
         body: JSON.stringify({
           model: MODEL,
-          max_tokens: 120,
+          max_tokens: 1024, // room for the model to think first; the alt text itself stays short (prompt)
           messages: [
             {
               role: 'user',
