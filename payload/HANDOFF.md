@@ -237,6 +237,26 @@ WordPress sites. Code in `src/mcp/` (`config.ts`, `pages.ts`), checks in `script
 - Any new collection Claude should see goes in `collections` in `src/mcp/config.ts` (and in
   `MCP_DRAFT_COLLECTIONS` if it has drafts). Changing it changes the keys table: make a migration.
 
+## Schoolbox setup, Payload side (build plan step 1)
+
+Schools answer an interview in Base Camp; Base Camp saves "spots" here and builds the pages.
+Plan: Claude Doc "Schoolbox setup in Base Camp: build plan". Code in `src/setup/`, checks in
+`scripts/setup.mjs` (CI).
+- **Stage:** `schools.setupStage` (Setup, Review, Live; empty for non-Schoolbox schools) and
+  `schools.setupSpots` (flat map, e.g. `home.hero.tagline1`, `home.photo.hero` = media id). Both
+  Banner 61 only, hidden from school accounts.
+- **Spots:** `src/setup/spots.ts`. Home only so far; other Schoolbox pages get spot lists once the
+  page list is settled. Empty spots keep the template's [bracketed] guidance.
+- **Endpoints** (Banner 61 only): `GET /api/schools/setup/spots`, `POST /api/schools/:id/setup/spots`
+  `{ spots, replace? }` (empty value clears a spot), `POST /api/schools/:id/setup/build` (Home saved
+  as a **draft**; photos must be the school's own), `POST /api/schools/:id/setup/preview-link`.
+  Build and preview links only work in Setup or Review; at Live the pages are edited directly.
+- **Preview links:** `/next/setup-preview?t=<school>.<expiry>.<HMAC>` (14 days, secret derived from
+  `SCHOOL_SECRET` as `SETUP_PREVIEW_SECRET`). Sets a cookie + draft mode; `src/lib/data.ts` then shows
+  that one school's drafts (school-scoped reads with `overrideAccess`), never another school's, and
+  stops once the school is Live. Opens in a new tab; inside a Base Camp iframe the cookies would be
+  third-party and blocked, which step 4 has to solve.
+
 ## Working rules with Jay
 
 - End work replies with a 2-line status: what was done, and the one thing needed from Jay.

@@ -3865,6 +3865,22 @@ export interface School {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Only for Schoolbox schools. During Setup and Review, Base Camp builds the pages from the school’s answers. At Live that stops and the pages are edited like any other site.
+   */
+  setupStage?: ('setup' | 'review' | 'live') | null;
+  /**
+   * The words and photo picks Base Camp saves for each spot on the Schoolbox pages. Edited in Base Camp, not here.
+   */
+  setupSpots?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -3885,8 +3901,6 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -3956,7 +3970,6 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4788,8 +4801,6 @@ export interface FormSubmission {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -8608,7 +8619,6 @@ export interface MediaSelect<T extends boolean = true> {
   altAuto?: T;
   caption?: T;
   credit?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8684,8 +8694,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
-  prefix?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8989,8 +8997,6 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -9368,6 +9374,8 @@ export interface SchoolsSelect<T extends boolean = true> {
         domain?: T;
         id?: T;
       };
+  setupStage?: T;
+  setupSpots?: T;
   updatedAt?: T;
   createdAt?: T;
 }
