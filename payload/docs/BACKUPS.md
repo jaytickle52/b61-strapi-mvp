@@ -52,7 +52,7 @@ repository secret. Add three:
 |---|---|
 | `BACKUP_DATABASE_URL` | Neon console > the b61-schools project > **Connect** > production branch, with **Connection pooling off**, copy the address. (Vercel marks the integration's variables as sensitive, so it can't show them.) |
 | `BACKUP_BLOB_TOKEN` | Vercel > Storage > the b61-schools Blob store > its **.env.local** / Quickstart snippet shows `BLOB_READ_WRITE_TOKEN`; copy the value. A read/write token is needed because the backup lists the store. |
-| `BACKUP_PASSPHRASE` | Make a long random passphrase in the password manager and save it there first. **Without it no backup can ever be opened.** |
+| `BACKUP_PASSPHRASE` | Generate at least 30 random characters in the password manager and save it there first. **Without it no backup can ever be opened.** It is the only thing protecting the backups (they hold form answers, password hashes and two-factor secrets), and anyone signed in to GitHub can download them. Changing it later doesn't re-protect artifacts already uploaded: delete those runs' artifacts if it ever leaks. |
 
 Then Actions > Payload backup > Run workflow, tick "full check", and confirm
 both jobs go green. Until the secrets exist the backup skips itself with a
