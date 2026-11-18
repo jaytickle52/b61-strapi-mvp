@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { isAdmin, isB61Admin } from '../access'
+import { schoolStarterHook } from '../school/starter'
 import { setupEndpoints } from '../setup/endpoints'
 import { twoFactorPending } from '../users/two-factor-rules'
 
@@ -23,6 +24,7 @@ export const Schools: CollectionConfig = {
     hidden: ({ user }) => !isB61Admin(user),
   },
   endpoints: setupEndpoints,
+  hooks: { afterChange: [schoolStarterHook] },
   access: {
     create: isAdmin,
     delete: isAdmin,

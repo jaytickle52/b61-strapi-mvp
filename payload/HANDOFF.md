@@ -242,6 +242,13 @@ WordPress sites. Code in `src/mcp/` (`config.ts`, `pages.ts`), checks in `script
 - Any new collection Claude should see goes in `collections` in `src/mcp/config.ts` (and in
   `MCP_DRAFT_COLLECTIONS` if it has drafts). Changing it changes the keys table: make a migration.
 
+## New schools start ready to build
+
+A school added in the admin (or later by Base Camp) gets its School settings (with its name), the
+standard forms (inquiry, tour, contact, apply) and their pages, from `src/school/starter.ts` (an
+`afterChange` hook on Schools). Saving a school that is missing them adds them; nothing existing is
+changed. The seed skips it (`context.b61SkipStarter`) because it sets demo schools up itself.
+
 ## Schoolbox setup, Payload side (build plan step 1)
 
 Schools answer an interview in Base Camp; Base Camp saves "spots" here and builds the pages.

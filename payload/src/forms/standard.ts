@@ -1,4 +1,4 @@
-import type { Payload } from 'payload'
+import type { Payload, PayloadRequest } from 'payload'
 import type { School } from '../payload-types'
 
 /*
@@ -263,9 +263,9 @@ export function standardForms(schoolName: string) {
 }
 
 /** Creates the standard forms and their pages for a school with no forms yet. */
-export async function ensureStandardForms(payload: Payload, school: School) {
+export async function ensureStandardForms(payload: Payload, school: School, req?: PayloadRequest) {
   const mine = { school: { equals: school.id } }
-  const has = await payload.count({ collection: 'forms', where: mine, overrideAccess: true })
+  const has = await payload.count({ collection: 'forms', where: mine, overrideAccess: true, req })
   if (has.totalDocs > 0) return
   const made: { collection: 'forms' | 'pages'; id: number }[] = []
   try {
@@ -274,17 +274,20 @@ export async function ensureStandardForms(payload: Payload, school: School) {
         collection: 'forms',
         data: { ...s.form, school: school.id } as any,
         overrideAccess: true,
+        req,
       })
       made.push({ collection: 'forms', id: form.id as number })
       const exists = await payload.count({
         collection: 'pages',
         where: { and: [mine, { slug: { equals: s.page.slug } }] },
         overrideAccess: true,
+        req,
       })
       if (exists.totalDocs > 0) continue
       const page = await payload.create({
         collection: 'pages',
         overrideAccess: true,
+        req,
         data: {
           title: s.page.title,
           slug: s.page.slug,
@@ -310,7 +313,7 @@ export async function ensureStandardForms(payload: Payload, school: School) {
     // All or nothing, so the next build tries again from a clean slate.
     for (const m of made.reverse())
       await payload
-        .delete({ collection: m.collection, id: m.id, overrideAccess: true, context: { b61AllowDelete: true } })
+        .delete({ collection: m.collection, id: m.id, overrideAccess: true, req, context: { b61AllowDelete: true } })
         .catch(() => {})
     throw err
   }
