@@ -163,7 +163,7 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
   }
   const name = profile.settings.schoolName as string
   const found = await payload.find({ collection: 'schools', where: { slug: { equals: key } }, limit: 1, depth: 0 })
-  const school: School = found.docs[0] ?? (await payload.create({ collection: 'schools', data: { name, slug: key } }))
+  const school: School = found.docs[0] ?? (await payload.create({ collection: 'schools', data: { name, slug: key }, context: { b61SkipStarter: true } }))
 
   const existing = await payload.find({ collection: 'pages', where: { school: { equals: school.id } }, limit: 1, draft: true })
   if (existing.totalDocs > 0) return school // already has content; never overwrite a school's work

@@ -132,6 +132,23 @@ async function main() {
   const after = await fetch(BASE + '/', { headers: { cookie: preview.cookie } })
   check(!visible(await after.text()).includes(tagline), 'an old preview link stops showing drafts once the school is live')
 
+  // A new school gets its School settings, standard forms and their pages
+  const slug = `starter-${RUN}`
+  const made = await api('POST', '/schools', { token, body: { name: `Starter Test ${RUN}`, slug } })
+  const newId = made.json?.doc?.id
+  check(made.status === 201 && Boolean(newId), 'a school can be added')
+  if (newId) {
+    const settings = (await api('GET', `/school-settings?where[school][equals]=${newId}&depth=0&draft=true`, { token })).json?.docs ?? []
+    check(settings.length === 1 && settings[0].schoolName === `Starter Test ${RUN}`, 'the new school gets its School settings, with its name')
+    const forms = (await api('GET', `/forms?where[school][equals]=${newId}&depth=0&limit=20`, { token })).json?.docs ?? []
+    check(['Admissions inquiry', 'Tour request', 'Contact us'].every((t) => forms.some((f) => f.title === t)), 'the new school gets the standard forms')
+    const pages = (await api('GET', `/pages?where[school][equals]=${newId}&depth=0&limit=20&draft=true`, { token })).json?.docs ?? []
+    check(['inquire', 'schedule-a-tour', 'contact', 'apply'].every((p) => pages.some((x) => x.slug === p)), 'the new school gets the standard form pages')
+    await api('PATCH', `/schools/${newId}`, { token, body: { name: `Starter Test ${RUN}` } })
+    const again = (await api('GET', `/school-settings?where[school][equals]=${newId}&depth=0`, { token })).json?.docs ?? []
+    check(again.length === 1, 'saving the school again adds nothing twice')
+  }
+
   // Put the demo school back
   await api('PATCH', `/schools/${id}`, { token, body: { setupStage: null, setupSpots: null } })
   const users = (await api('GET', `/users?where[email][equals]=${encodeURIComponent(email)}&depth=0`, { token })).json?.docs ?? []
