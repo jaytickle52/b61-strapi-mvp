@@ -130,6 +130,13 @@ jobs:
           SMOKE_PASSWORD: ci-smoke-password-123
         run: node scripts/features.mjs
 
+      - name: Schoolbox setup test (spots, build from spots, preview links)
+        env:
+          BASE_URL: http://localhost:3000
+          SMOKE_EMAIL: ci@example.com
+          SMOKE_PASSWORD: ci-smoke-password-123
+        run: node scripts/setup.mjs
+
       - name: Click-to-field test (live preview, in a real browser)
         env:
           BASE_URL: http://localhost:3000

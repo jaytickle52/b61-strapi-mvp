@@ -6,6 +6,8 @@ import config from '@payload-config'
 import { ymd } from '@/events/time'
 import { CACHE_SECONDS, CACHE_VERSION, quarterHour, SCHOOLS_TAG, schoolTag } from '@/cache/tags'
 import { twoFactorPending } from '@/users/two-factor-rules'
+import { readPreviewToken, SETUP_PREVIEW_COOKIE } from '@/setup/preview-token'
+import { BUILDABLE_STAGES } from '@/setup/stages'
 import type { Announcement, Event, Media, News, NewsCategory, Page, Program, School, SchoolSetting, Staff } from '@/payload-types'
 
 export type { Announcement, Event, Media, News, NewsCategory, Page, Program, School, SchoolSetting, Staff }
@@ -21,13 +23,30 @@ export const payloadClient = () => getPayload({ config })
 const reader = cache(async () => {
   const payload = await payloadClient()
   const { isEnabled } = await draftMode()
-  if (!isEnabled) return { payload, user: null, draft: false }
+  if (!isEnabled) return { payload, user: null, draft: false, setupSchool: null }
   const { user: signedIn } = await payload.auth({ headers: await headers() })
   // A session still owing its two-factor code counts as signed out.
   const user = signedIn && !twoFactorPending(signedIn) ? signedIn : null
-  return { payload, user, draft: Boolean(user) }
+  if (user) return { payload, user, draft: true, setupSchool: null }
+  // A school leader with a signed setup preview link (src/setup/preview-token.ts):
+  // drafts of that one school only, while it is in setup.
+  const granted = readPreviewToken((await cookies()).get(SETUP_PREVIEW_COOKIE)?.value)
+  return { payload, user: null, draft: false, setupSchool: granted }
 })
 
+/**
+ * Whether drafts show: an editor in preview, or a setup preview link for this
+ * school while it is in Setup or Review. `editable` is false for the setup
+ * preview (no admin to click through to).
+ */
+const drafts = cache(async () => {
+  const [r, school] = await Promise.all([reader(), currentSchool()])
+  if (r.draft) return { ...r, schoolId: school?.id ?? -1, viaLink: false }
+  const ok = r.setupSchool != null && school != null && String(school.id) === String(r.setupSchool) && BUILDABLE_STAGES.includes((school as any).setupStage)
+  return { ...r, draft: ok, schoolId: school?.id ?? -1, viaLink: ok }
+})
+
+/** Editor preview (live preview, click-to-field). False for a setup preview link. */
 export const isPreview = async () => (await reader()).draft
 
 /** The cookie that picks a school on an address that isn't any school's own domain (the demo URL). */
@@ -81,7 +100,23 @@ type SiteCollection = 'pages' | 'events' | 'news' | 'news-categories' | 'program
 type FindOpts = { where?: Where; sort?: string; limit?: number; depth?: number; page?: number }
 type Found<T> = { docs: T[]; page: number; totalPages: number; totalDocs: number }
 
-async function query<T>(collection: SiteCollection, schoolId: number | string, opts: FindOpts, draft: boolean, user: any): Promise<Found<T>> {
+/**
+ * A setup preview link reads with overrideAccess (it has no user), which also
+ * skips field-level read rules. These are the fields those rules keep from
+ * anyone not signed in; drop them so a link holder never gets them.
+ */
+const SIGNED_IN_ONLY = new Set(['parentPassword', 'gaPropertyId'])
+function withoutSignedInFields(collection: SiteCollection, doc: any): any {
+  const strip = (v: any): any =>
+    Array.isArray(v) ? v.map(strip) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).filter(([k]) => !SIGNED_IN_ONLY.has(k)).map(([k, x]) => [k, strip(x)])) : v
+  if (collection === 'school-settings') return strip(doc)
+  // An imported event's feed: only its name (the calendar address can be private).
+  if (collection === 'events' && doc?.importedFrom && typeof doc.importedFrom === 'object')
+    return { ...doc, importedFrom: { id: doc.importedFrom.id, name: doc.importedFrom.name } }
+  return doc
+}
+
+async function query<T>(collection: SiteCollection, schoolId: number | string, opts: FindOpts, draft: boolean, user: any, viaLink = false): Promise<Found<T>> {
   const payload = await payloadClient()
   const mine: Where = { school: { equals: schoolId } }
   const res = await payload.find({
@@ -93,9 +128,11 @@ async function query<T>(collection: SiteCollection, schoolId: number | string, o
     depth: opts.depth ?? 1,
     draft,
     user,
-    overrideAccess: false,
+    // A setup preview link has no user; the school filter above still applies.
+    overrideAccess: viaLink,
   })
-  return { docs: res.docs as T[], page: res.page ?? 1, totalPages: res.totalPages ?? 1, totalDocs: res.totalDocs ?? res.docs.length }
+  const docs = viaLink ? res.docs.map((d) => withoutSignedInFields(collection, d)) : res.docs
+  return { docs: docs as T[], page: res.page ?? 1, totalPages: res.totalPages ?? 1, totalDocs: res.totalDocs ?? res.docs.length }
 }
 
 /**
@@ -104,9 +141,8 @@ async function query<T>(collection: SiteCollection, schoolId: number | string, o
  * (src/cache/plugin.ts). An editor's preview always reads live, with drafts.
  */
 async function findPage<T>(collection: SiteCollection, opts: FindOpts = {}): Promise<Found<T>> {
-  const [{ user, draft }, school] = await Promise.all([reader(), currentSchool()])
-  const schoolId = school?.id ?? -1
-  if (draft) return query<T>(collection, schoolId, opts, true, user)
+  const { user, draft, schoolId, viaLink } = await drafts()
+  if (draft) return query<T>(collection, schoolId, opts, true, user, viaLink)
   return unstable_cache(
     () => query<T>(collection, schoolId, opts, false, null),
     [CACHE_VERSION, 'find', collection, String(schoolId), JSON.stringify(opts)],
@@ -219,7 +255,7 @@ export const getAnnouncements = cache(async () => {
  * only after the page has checked the parent password.
  */
 export async function getParentFeed() {
-  const { payload, draft } = await reader()
+  const { payload, draft } = await drafts()
   const base: Where = draft ? {} : { _status: { equals: 'published' } }
   const [events, news] = await Promise.all([
     payload.find({ collection: 'events', where: await scoped({ and: [base, upcomingWhere()] }), sort: 'startsAt', limit: 20, draft, overrideAccess: true }),

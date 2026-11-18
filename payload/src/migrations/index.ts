@@ -26,6 +26,7 @@ import * as migration_20261118_015443_hero_bunny_video from './20261118_015443_h
 import * as migration_20261118_020923_media_auto_alt from './20261118_020923_media_auto_alt';
 import * as migration_20261118_021736_drop_sort_order from './20261118_021736_drop_sort_order';
 import * as migration_20261118_024244_two_factor from './20261118_024244_two_factor';
+import * as migration_20261118_144205_schoolbox_setup_spots from './20261118_144205_schoolbox_setup_spots';
 
 export const migrations = [
   {
@@ -166,6 +167,11 @@ export const migrations = [
   {
     up: migration_20261118_024244_two_factor.up,
     down: migration_20261118_024244_two_factor.down,
-    name: '20261118_024244_two_factor'
+    name: '20261118_024244_two_factor',
+  },
+  {
+    up: migration_20261118_144205_schoolbox_setup_spots.up,
+    down: migration_20261118_144205_schoolbox_setup_spots.down,
+    name: '20261118_144205_schoolbox_setup_spots'
   },
 ];

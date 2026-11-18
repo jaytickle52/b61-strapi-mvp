@@ -3865,6 +3865,22 @@ export interface School {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Only for Schoolbox schools. During Setup and Review, Base Camp builds the pages from the school’s answers. At Live that stops and the pages are edited like any other site.
+   */
+  setupStage?: ('setup' | 'review' | 'live') | null;
+  /**
+   * The words and photo picks Base Camp saves for each spot on the Schoolbox pages. Edited in Base Camp, not here.
+   */
+  setupSpots?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -9368,6 +9384,8 @@ export interface SchoolsSelect<T extends boolean = true> {
         domain?: T;
         id?: T;
       };
+  setupStage?: T;
+  setupSpots?: T;
   updatedAt?: T;
   createdAt?: T;
 }
