@@ -68,7 +68,7 @@ const allOn = {
   pages: { find: true },
   news: { find: true, create: true, update: true },
   media: { find: true, update: true },
-  'payload-mcp-tool': { pageSections: true, createPage: true, updatePage: true, editorLinks: true, uploadPhoto: true },
+  'payload-mcp-tool': { pageSections: true, createPage: true, updatePage: true, editorLinks: true, uploadPhoto: true, previewLink: true },
 }
 const made = await api('/api/payload-mcp-api-keys', {
   token,
@@ -156,6 +156,18 @@ if (photoId) {
   const m = await api(`/api/media/${photoId}?depth=0`, { token })
   ok(String(m.json?.school) === String(school.id) && m.json?.alt === 'Two students with backpacks', 'the photo is in that school\u2019s library with its alt text')
 }
+
+// previewLink: only for a school in Setup or Review
+ok(/isn't in Setup or Review/.test(await call(KEY, 'previewLink', { school: school.id })), 'previewLink refuses a school that isn\u2019t in setup')
+await api(`/api/schools/${school.id}`, { token, method: 'PATCH', body: { setupStage: 'setup' } })
+const plink = await call(KEY, 'previewLink', { school: school.id })
+const purl = plink.match(/https?:\/\/\S+\/next\/setup-preview\?t=\S+/)?.[0]
+ok(Boolean(purl), `previewLink gives a signed link (${plink.slice(0, 60)})`)
+if (purl) {
+  const res = await fetch(purl.replace(/^https?:\/\/[^/]+/, BASE), { redirect: 'manual' })
+  ok(res.status === 307 || res.status === 302, 'the link opens the preview')
+}
+await api(`/api/schools/${school.id}`, { token, method: 'PATCH', body: { setupStage: null } })
 
 // Only Banner 61 admins can make keys: an editor can't.
 const editorEmail = `mcp-editor-${Date.now()}@example.com`

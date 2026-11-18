@@ -5,6 +5,7 @@ import { z } from 'zod/v3'
 import { isB61Admin } from '../access'
 import { createPage, pageSections, updatePage } from './pages'
 import { uploadPhoto } from './photos'
+import { previewLink } from './preview'
 
 /*
  * The MCP connector: lets Claude (or any MCP client) read and edit school
@@ -158,6 +159,7 @@ const instructions = `Banner 61 school websites (Payload CMS). One app serves ma
 - Nothing can be deleted here. Private data (users, form answers, email log) is not available.
 - Pages: \`sections\` is the list of sections. Read an existing page first (findPages, draft: true) and copy its structure rather than inventing fields; pageSections outlines each section type. Change pages with createPage / updatePage, one page at a time.
 - Photos: add one from a public https address with uploadPhoto (school, url, alt), then use its id as \`image\` in a section.
+- A school in Setup or Review: previewLink gives a signed link to its drafts, for its leaders.
 - Use \`select\` to fetch only the fields you need; pages are large.`
 
 const apiKeys = (collection: CollectionConfig): CollectionConfig => ({
@@ -194,7 +196,7 @@ export const mcpConnector = mcpPlugin({
     return settings
   },
   mcp: {
-    tools: [pageSections, createPage, updatePage, editorLinks, uploadPhoto],
+    tools: [pageSections, createPage, updatePage, editorLinks, uploadPhoto, previewLink],
     serverOptions: {
       instructions,
       serverInfo: { name: 'Banner 61 Schools', version: '1.0.0' },
