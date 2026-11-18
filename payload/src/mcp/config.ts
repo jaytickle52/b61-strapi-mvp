@@ -4,6 +4,7 @@ import { UnauthorizedError } from 'payload'
 import { z } from 'zod/v3'
 import { isB61Admin } from '../access'
 import { createPage, pageSections, updatePage } from './pages'
+import { uploadPhoto } from './photos'
 
 /*
  * The MCP connector: lets Claude (or any MCP client) read and edit school
@@ -88,7 +89,7 @@ const collections: NonNullable<Parameters<typeof mcpPlugin>[0]['collections']> =
   media: {
     enabled: { find: true, update: true },
     description:
-      "A school's photo library. Find photos to use in pages (by id) and update alt text, captions and credits. Uploading new photos is done in the editor.",
+      "A school's photo library. Find photos to use in pages (by id) and update alt text, captions and credits. Add a new photo from a web address with uploadPhoto.",
   },
   documents: {
     enabled: read,
@@ -156,6 +157,7 @@ const instructions = `Banner 61 school websites (Payload CMS). One app serves ma
 - Writes to pages, news, events, programs, staff, announcements and school settings are saved as drafts. Nothing goes live until a person publishes it in the editor. After a change, call editorLinks and give the person the link.
 - Nothing can be deleted here. Private data (users, form answers, email log) is not available.
 - Pages: \`sections\` is the list of sections. Read an existing page first (findPages, draft: true) and copy its structure rather than inventing fields; pageSections outlines each section type. Change pages with createPage / updatePage, one page at a time.
+- Photos: add one from a public https address with uploadPhoto (school, url, alt), then use its id as \`image\` in a section.
 - Use \`select\` to fetch only the fields you need; pages are large.`
 
 const apiKeys = (collection: CollectionConfig): CollectionConfig => ({
@@ -192,7 +194,7 @@ export const mcpConnector = mcpPlugin({
     return settings
   },
   mcp: {
-    tools: [pageSections, createPage, updatePage, editorLinks],
+    tools: [pageSections, createPage, updatePage, editorLinks, uploadPhoto],
     serverOptions: {
       instructions,
       serverInfo: { name: 'Banner 61 Schools', version: '1.0.0' },
