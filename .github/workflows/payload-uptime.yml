@@ -1,0 +1,42 @@
+# Uptime check for the Payload school sites. Every 15 minutes it asks the live
+# site's health address (database reachable) and the home page. A failure is
+# retried once a minute later, so a single blip doesn't page anyone; a red run
+# means the site was down for both tries, and GitHub emails it.
+# Add more addresses (for example each school's real domain once live) to SITES.
+name: Payload uptime
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: payload-uptime
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SITES: https://b61-schools.vercel.app
+    steps:
+      - name: Health and home page
+        run: |
+          check() {
+            ok=0
+            for site in $SITES; do
+              for path in /api/health /; do
+                code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$site$path" || echo 000)
+                echo "$site$path → $code"
+                [ "$code" = 200 ] || ok=1
+              done
+            done
+            return $ok
+          }
+          check && exit 0
+          echo "Retrying in 60 seconds"; sleep 60
+          check || { echo "::error::The site is down (see the addresses above)"; exit 1; }

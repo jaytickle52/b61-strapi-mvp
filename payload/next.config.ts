@@ -1,4 +1,5 @@
 import { withPayload } from '@payloadcms/next/withPayload'
+import { withSentryConfig } from '@sentry/nextjs/config'
 import type { NextConfig } from 'next'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -43,4 +44,17 @@ withPayloadConfig.headers = async () => {
   )
 }
 
-export default withPayloadConfig
+// Error tracking (src/instrumentation*.ts) only changes the build once a Sentry
+// DSN is set. With SENTRY_AUTH_TOKEN + SENTRY_ORG + SENTRY_PROJECT the build also
+// uploads source maps, so errors point at real file names and lines.
+const sentryOn = Boolean((process.env.NEXT_PUBLIC_SENTRY_DSN || '').trim())
+export default sentryOn
+  ? withSentryConfig(withPayloadConfig, {
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      silent: !process.env.CI,
+      sourcemaps: { disable: !process.env.SENTRY_AUTH_TOKEN },
+      telemetry: false,
+    })
+  : withPayloadConfig

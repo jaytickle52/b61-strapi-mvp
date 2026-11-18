@@ -219,10 +219,6 @@ export const Programs: CollectionConfig = {
     { name: 'summary', type: 'textarea', maxLength: 240 },
     { name: 'description', type: 'richText' },
     { name: 'image', type: 'upload', relationTo: 'media' },
-    // Replaced by drag ordering (_order). Kept, hidden, so the live site keeps
-    // working while a preview deploy has already migrated the shared database;
-    // drop it in a later cleanup.
-    { name: 'sortOrder', type: 'number', defaultValue: 100, admin: { hidden: true } },
   ],
 }
 
@@ -249,9 +245,5 @@ export const Staff: CollectionConfig = {
     { name: 'email', type: 'email' },
     { name: 'bio', type: 'textarea' },
     { name: 'photo', type: 'upload', relationTo: 'media' },
-    // Replaced by drag ordering (_order). Kept, hidden, so the live site keeps
-    // working while a preview deploy has already migrated the shared database;
-    // drop it in a later cleanup.
-    { name: 'sortOrder', type: 'number', defaultValue: 100, admin: { hidden: true } },
   ],
 }
