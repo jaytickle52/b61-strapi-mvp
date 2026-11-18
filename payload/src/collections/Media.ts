@@ -3,6 +3,7 @@ import { publishersOnly } from '../access'
 import { refuseDeleteWhenUsed, usageEndpoint, usageField } from '../usage/fields'
 import { sameSchoolFolder } from '../media/folders'
 import { altTextEnabled, suggestAltEndpoint } from '../media/suggestAlt'
+import { autoAlt, fillAltEndpoints, requireAlt } from '../media/autoAlt'
 
 /*
  * Photos and videos for the website.
@@ -51,22 +52,43 @@ export const Media: CollectionConfig = {
     description:
       'Photos and videos for the website. Add alt text so screen readers can describe each photo. PDFs go in Documents.',
     defaultColumns: ['filename', 'alt', 'folder', 'updatedAt'],
+    // "Write missing alt text" (only when ANTHROPIC_API_KEY is set; src/media/autoAlt.ts).
+    components: { beforeListTable: ['@/media/FillAlt#FillAlt'] },
   },
-  hooks: { beforeValidate: [sameSchoolFolder], beforeDelete: [refuseDeleteWhenUsed('media')] },
-  endpoints: [usageEndpoint('media'), suggestAltEndpoint],
+  hooks: {
+    beforeValidate: [sameSchoolFolder],
+    // Alt text is required, unless Claude can write it (right after saving).
+    beforeChange: [requireAlt],
+    afterChange: [autoAlt],
+    beforeDelete: [refuseDeleteWhenUsed('media')],
+  },
+  endpoints: [usageEndpoint('media'), suggestAltEndpoint, ...fillAltEndpoints],
   fields: [
     {
       name: 'alt',
       label: 'Alt text',
       type: 'text',
-      required: true,
+      // Required (src/media/autoAlt.ts requireAlt), except that photos left
+      // blank get alt text from Claude when ANTHROPIC_API_KEY is set.
       admin: {
-        description: 'What the photo shows, in a sentence, for people who can’t see it.',
+        description: altTextEnabled()
+          ? 'What the photo shows, in a sentence, for people who can’t see it. Leave it empty and it is written for you after saving.'
+          : 'What the photo shows, in a sentence, for people who can’t see it.',
         components: {
           afterInput: [
             { path: '@/media/SuggestAlt#SuggestAlt', clientProps: { enabled: altTextEnabled() } },
           ],
         },
+      },
+    },
+    {
+      name: 'altAuto',
+      label: 'Alt text written by AI',
+      type: 'checkbox',
+      admin: {
+        position: 'sidebar',
+        description: 'Check it describes the photo. Editing the alt text clears this.',
+        condition: (data) => Boolean(data?.altAuto),
       },
     },
     {

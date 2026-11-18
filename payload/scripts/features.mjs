@@ -288,6 +288,28 @@ async function main() {
   const inlined = /<style id="b61-fonts">[\s\S]*?font-family: 'Lato'/.test(harborHome)
   check(inlined || (fontsLink && !/family=Lato:[^&]*\b(500|600)\b/.test(fontsLink)), 'font requests only name weights the font has (Lato has no 500/600)')
 
+  // ----- Alt text (required unless Claude writes it) ---------------------------
+  console.log('\nAlt text')
+  const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64')
+  const upload = async (fields) => {
+    const form = new FormData()
+    form.append('file', new Blob([png], { type: 'image/png' }), `alt-test-${RUN}.png`)
+    form.append('_payload', JSON.stringify({ school: cedar, ...fields }))
+    const res = await fetch(BASE + '/api/media', { method: 'POST', headers: { Authorization: `JWT ${admin}` }, body: form })
+    return { status: res.status, json: await res.json().catch(() => null) }
+  }
+  const altCfg = await api('GET', '/media/fill-alt', { token: admin })
+  if (altCfg.json?.enabled) {
+    console.log('  (skipped: ANTHROPIC_API_KEY is set, so missing alt text is written automatically)')
+  } else {
+    const noAlt = await upload({})
+    check(noAlt.status === 400 && /Add alt text/.test(JSON.stringify(noAlt.json)), 'a photo without alt text is refused with a message (no AI key)')
+    const withAlt = await upload({ alt: 'A test square' })
+    check(withAlt.status === 201 && !withAlt.json?.doc?.altAuto, '… and saves once alt text is typed in')
+    if (withAlt.json?.doc?.id) await api('DELETE', `/media/${withAlt.json.doc.id}`, { token: admin })
+    check(altCfg.status === 200 && altCfg.json?.enabled === false, '"Write missing alt text" stays hidden without the AI key')
+  }
+
   // ----- Bunny video uploads -------------------------------------------------
   console.log('\nVideo uploads')
   const anonCfg = await api('GET', '/bunny/config')

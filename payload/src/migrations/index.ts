@@ -23,6 +23,7 @@ import * as migration_20261117_014843_schoolbox_themes from './20261117_014843_s
 import * as migration_20261117_104230_side_button_icons from './20261117_104230_side_button_icons';
 import * as migration_20261117_111456_mcp_keys from './20261117_111456_mcp_keys';
 import * as migration_20261118_015443_hero_bunny_video from './20261118_015443_hero_bunny_video';
+import * as migration_20261118_020923_media_auto_alt from './20261118_020923_media_auto_alt';
 
 export const migrations = [
   {
@@ -148,6 +149,11 @@ export const migrations = [
   {
     up: migration_20261118_015443_hero_bunny_video.up,
     down: migration_20261118_015443_hero_bunny_video.down,
-    name: '20261118_015443_hero_bunny_video'
+    name: '20261118_015443_hero_bunny_video',
+  },
+  {
+    up: migration_20261118_020923_media_auto_alt.up,
+    down: migration_20261118_020923_media_auto_alt.down,
+    name: '20261118_020923_media_auto_alt'
   },
 ];

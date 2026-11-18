@@ -1,4 +1,4 @@
-import type { Endpoint } from 'payload'
+import type { Endpoint, PayloadRequest } from 'payload'
 import { canUseSchool } from '../access'
 
 /*
@@ -19,6 +19,59 @@ Reply with the alt text only.`
 
 export const altTextEnabled = () => Boolean(process.env.ANTHROPIC_API_KEY)
 
+/** Asks Claude for alt text for one photo (base64). Throws with the reason when there is none. */
+export async function describePhoto(mediaType: string, data: string): Promise<string> {
+  if (data.length * 0.75 > MAX_BYTES) throw new Error('That photo is too large to describe.')
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': process.env.ANTHROPIC_API_KEY!,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      max_tokens: 1024, // room for the model to think first; the alt text itself stays short (prompt)
+      messages: [
+        {
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: mediaType, data } },
+            { type: 'text', text: PROMPT },
+          ],
+        },
+      ],
+    }),
+  })
+  const out: any = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(`Anthropic ${res.status}: ${out?.error?.message ?? 'no details'}`)
+  const alt = String(out?.content?.find((c: any) => c.type === 'text')?.text ?? '')
+    .trim()
+    .replace(/^["']|["']$/g, '')
+  if (!alt) throw new Error(`Empty reply (stop: ${out?.stop_reason ?? 'unknown'}, model: ${MODEL})`)
+  return alt.slice(0, 300)
+}
+
+/** A saved photo's image data (its 800px "card" copy), ready for describePhoto. */
+export async function photoData(doc: any, req: PayloadRequest): Promise<{ mediaType: string; data: string }> {
+  const url: string | undefined = doc.sizes?.card?.url || doc.url
+  if (!url || !String(doc.mimeType).startsWith('image/')) throw new Error('Only photos can be described.')
+  const base = req.url || process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+  const abs = /^https?:/.test(url) ? url : new URL(url, base).toString()
+  const res = await fetch(abs)
+  if (!res.ok) throw new Error(`Could not open the photo (${res.status}).`)
+  return {
+    mediaType: (res.headers.get('content-type') || 'image/jpeg').split(';')[0],
+    data: Buffer.from(await res.arrayBuffer()).toString('base64'),
+  }
+}
+
+/** Alt text for a saved photo. Throws with the reason when there is none. */
+export async function altForPhoto(doc: any, req: PayloadRequest): Promise<string> {
+  const { mediaType, data } = await photoData(doc, req)
+  return describePhoto(mediaType, data)
+}
+
 export const suggestAltEndpoint: Endpoint = {
   path: '/suggest-alt',
   method: 'post',
@@ -28,65 +81,22 @@ export const suggestAltEndpoint: Endpoint = {
       return Response.json({ error: 'Alt text suggestions are not switched on.' }, { status: 501 })
     const body = (await req.json?.().catch(() => ({}))) ?? {}
 
-    let mediaType = ''
-    let data = ''
-    if (typeof body.image === 'string') {
-      const m = /^data:(image\/(?:jpeg|png|webp|gif));base64,(.+)$/.exec(body.image)
-      if (!m)
-        return Response.json(
-          { error: 'That file isn’t a photo this can describe.' },
-          { status: 400 },
-        )
-      mediaType = m[1]
-      data = m[2]
-    } else if (body.id) {
-      const doc: any = await req.payload
-        .findByID({ collection: 'media', id: body.id, depth: 0, overrideAccess: true })
-        .catch(() => null)
-      if (!doc || !canUseSchool(req.user, doc.school))
-        return Response.json({ error: 'Photo not found.' }, { status: 404 })
-      const url: string | undefined = doc.sizes?.card?.url || doc.url
-      if (!url || !String(doc.mimeType).startsWith('image/'))
-        return Response.json({ error: 'Only photos can be described.' }, { status: 400 })
-      const abs = /^https?:/.test(url) ? url : new URL(url, req.url).toString()
-      const res = await fetch(abs)
-      if (!res.ok) return Response.json({ error: 'Could not open the photo.' }, { status: 502 })
-      mediaType = (res.headers.get('content-type') || 'image/jpeg').split(';')[0]
-      data = Buffer.from(await res.arrayBuffer()).toString('base64')
-    } else return Response.json({ error: 'No photo given.' }, { status: 400 })
-
-    if (data.length * 0.75 > MAX_BYTES)
-      return Response.json({ error: 'That photo is too large to describe.' }, { status: 413 })
-
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'x-api-key': process.env.ANTHROPIC_API_KEY!,
-          'anthropic-version': '2023-06-01',
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: MODEL,
-          max_tokens: 1024, // room for the model to think first; the alt text itself stays short (prompt)
-          messages: [
-            {
-              role: 'user',
-              content: [
-                { type: 'image', source: { type: 'base64', media_type: mediaType, data } },
-                { type: 'text', text: PROMPT },
-              ],
-            },
-          ],
-        }),
-      })
-      const out: any = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(`Anthropic ${res.status}: ${out?.error?.message ?? 'no details'}`)
-      const alt = String(out?.content?.find((c: any) => c.type === 'text')?.text ?? '')
-        .trim()
-        .replace(/^["']|["']$/g, '')
-      if (!alt) throw new Error(`Empty reply (stop: ${out?.stop_reason ?? 'unknown'}, model: ${MODEL})`)
-      return Response.json({ alt })
+      if (typeof body.image === 'string') {
+        const m = /^data:(image\/(?:jpeg|png|webp|gif));base64,(.+)$/.exec(body.image)
+        if (!m)
+          return Response.json({ error: 'That file isn’t a photo this can describe.' }, { status: 400 })
+        return Response.json({ alt: await describePhoto(m[1], m[2]) })
+      }
+      if (body.id) {
+        const doc: any = await req.payload
+          .findByID({ collection: 'media', id: body.id, depth: 0, overrideAccess: true })
+          .catch(() => null)
+        if (!doc || !canUseSchool(req.user, doc.school))
+          return Response.json({ error: 'Photo not found.' }, { status: 404 })
+        return Response.json({ alt: await altForPhoto(doc, req) })
+      }
+      return Response.json({ error: 'No photo given.' }, { status: 400 })
     } catch (err: any) {
       // console.error reaches Vercel's runtime log reliably; Payload's logger may not flush there.
       console.error('Alt text suggestion failed:', err?.message ?? err)

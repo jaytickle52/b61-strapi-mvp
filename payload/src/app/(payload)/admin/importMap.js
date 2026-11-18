@@ -48,6 +48,7 @@ import { ManageCategories as ManageCategories_ae430fd4103f3d388c847198199894b5 }
 import { SuggestAlt as SuggestAlt_6b067041defabe0edf7fa7ea34db3026 } from '@/media/SuggestAlt'
 import { FolderTableCell as FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { FolderField as FolderField_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
+import { FillAlt as FillAlt_3b5339136e96bbfabd14043f01af08cd } from '@/media/FillAlt'
 import { FieldPicker as FieldPicker_9ea8c2d18fb87511fa1afdb6adc070a8 } from '@/forms/FieldPicker'
 import { EmailRowLabel as EmailRowLabel_5968a7d5cc5b18b8bb4f5a521219c0fd } from '@/forms/EmailRowLabel'
 import { SubmissionsLink as SubmissionsLink_c6910aaaae4c22ec3cd3bf920ceab3d4 } from '@/forms/SubmissionsLink'
@@ -129,6 +130,7 @@ export const importMap = {
   "@/media/SuggestAlt#SuggestAlt": SuggestAlt_6b067041defabe0edf7fa7ea34db3026,
   "@payloadcms/next/rsc#FolderTableCell": FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/next/rsc#FolderField": FolderField_f9c02e79a4aed9a3924487c0cd4cafb1,
+  "@/media/FillAlt#FillAlt": FillAlt_3b5339136e96bbfabd14043f01af08cd,
   "@/forms/FieldPicker#FieldPicker": FieldPicker_9ea8c2d18fb87511fa1afdb6adc070a8,
   "@/forms/EmailRowLabel#EmailRowLabel": EmailRowLabel_5968a7d5cc5b18b8bb4f5a521219c0fd,
   "@/forms/SubmissionsLink#SubmissionsLink": SubmissionsLink_c6910aaaae4c22ec3cd3bf920ceab3d4,
