@@ -91,3 +91,29 @@ export async function videoStatus(videoId: string) {
   const s = STATES[v.status] ?? { label: 'Processing' }
   return { ...s, progress: typeof v.encodeProgress === 'number' ? v.encodeProgress : undefined, seconds: v.length }
 }
+
+/**
+ * Puts a video file that is already somewhere on the web (e.g. a Vercel Blob
+ * URL) into the school's Bunny collection: creates the entry, then uploads the
+ * bytes. Returns the Bunny embed link; Bunny encodes it over the next minutes.
+ */
+export async function copyToBunny(payload: Payload, school: number | string, title: string, sourceUrl: string): Promise<string> {
+  const cfg = bunnyConfig()
+  if (!cfg) throw new Error('Bunny Stream is not set up.')
+  const file = await fetch(sourceUrl)
+  if (!file.ok) throw new Error(`Could not download ${sourceUrl} (${file.status})`)
+  const bytes = Buffer.from(await file.arrayBuffer())
+  const doc = await payload.findByID({ collection: 'schools', id: school, depth: 0, overrideAccess: true }).catch(() => null)
+  const collectionId = doc ? await schoolCollection(String((doc as any).name ?? (doc as any).slug ?? school)) : undefined
+  const video = await bunny<{ guid: string }>('/videos', {
+    method: 'POST',
+    body: JSON.stringify({ title: title.slice(0, 200) || 'Video', ...(collectionId ? { collectionId } : {}) }),
+  })
+  const put = await fetch(`${API}/library/${cfg.libraryId}/videos/${video.guid}`, {
+    method: 'PUT',
+    headers: { AccessKey: cfg.apiKey, 'content-type': 'application/octet-stream' },
+    body: bytes,
+  })
+  if (!put.ok) throw new Error(`Bunny refused the upload (${put.status}): ${(await put.text()).slice(0, 200)}`)
+  return `https://iframe.mediadelivery.net/embed/${cfg.libraryId}/${video.guid}`
+}

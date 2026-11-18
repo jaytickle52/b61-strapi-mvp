@@ -82,14 +82,14 @@ const BUNNY_ONLY_ERROR =
 export function bunnyBackgroundField(show: (siblingData: any) => boolean): Field {
   return {
     name: 'bunnyVideo',
-    label: 'Bunny video',
+    label: 'Video',
     type: 'text',
     admin: {
       condition: (_, s) => show(s),
       placeholder: 'https://iframe.mediadelivery.net/embed/…',
       description:
-        'Plays from Bunny Stream instead of the Video above: cheaper and faster for big files. Used when filled in.',
-      components: { Field: '@/video/VideoField#VideoField' },
+        'Plays muted on a loop behind the text. Videos are stored on Bunny Stream; keep this page open until the upload finishes.',
+      components: { Field: { path: '@/video/VideoField#VideoField', clientProps: { uploadFirst: true } } },
     },
     validate: (v: unknown, { siblingData }: any) => {
       if (!show(siblingData) || !v) return true
