@@ -87,6 +87,7 @@ export interface Config {
     users: User;
     schools: School;
     'news-categories': NewsCategory;
+    'totp-attempts': TotpAttempt;
     'payload-mcp-api-keys': PayloadMcpApiKey;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
@@ -120,6 +121,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     schools: SchoolsSelect<false> | SchoolsSelect<true>;
     'news-categories': NewsCategoriesSelect<false> | NewsCategoriesSelect<true>;
+    'totp-attempts': TotpAttemptsSelect<false> | TotpAttemptsSelect<true>;
     'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
@@ -3883,6 +3885,8 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -3952,6 +3956,7 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
+  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4783,6 +4788,8 @@ export interface FormSubmission {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -4806,7 +4813,7 @@ export interface EmailLog {
   subject?: string | null;
   to?: string | null;
   status?: ('sent' | 'failed' | 'logged') | null;
-  kind?: ('form' | 'test' | 'password' | 'invite' | 'other') | null;
+  kind?: ('form' | 'test' | 'password' | 'invite' | 'security' | 'other') | null;
   detail?: string | null;
   school?: (number | null) | School;
   updatedAt: string;
@@ -5382,6 +5389,8 @@ export interface User {
         id?: string | null;
       }[]
     | null;
+  totpSecret?: string | null;
+  hasTotp?: boolean | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -5401,6 +5410,15 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "totp-attempts".
+ */
+export interface TotpAttempt {
+  id: string;
+  attempts: number;
+  lockUntil?: string | null;
 }
 /**
  * Keys that let Claude (or another MCP client) read and edit school content at /api/mcp. A key acts as you. Edits are saved as drafts; nothing is deleted. Delete a key to switch it off.
@@ -8590,6 +8608,7 @@ export interface MediaSelect<T extends boolean = true> {
   altAuto?: T;
   caption?: T;
   credit?: T;
+  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8665,6 +8684,8 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
+  prefix?: T;
+  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8968,6 +8989,8 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -9312,6 +9335,8 @@ export interface UsersSelect<T extends boolean = true> {
         role?: T;
         id?: T;
       };
+  totpSecret?: T;
+  hasTotp?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -9358,6 +9383,15 @@ export interface NewsCategoriesSelect<T extends boolean = true> {
   slug?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "totp-attempts_select".
+ */
+export interface TotpAttemptsSelect<T extends boolean = true> {
+  id?: T;
+  attempts?: T;
+  lockUntil?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

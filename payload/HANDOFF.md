@@ -151,18 +151,25 @@ plugin 1.77.1) are ported so the sites look the same; the plugin's CSS is copied
 - Checks: `scripts/permissions.mjs` (API checks per role; reads invite emails from
   `EMAIL_PREVIEW_DIR`) and `src/scripts/check-publish-button.ts`; both run in CI after the
   smoke test.
-- Two-factor sign-in is **not built yet**: waiting on Jay's choice (install the community
-  `payload-totp` plugin, or build our own).
+- Two-factor sign-in (PR #46, 17 Nov 2026): community `payload-totp` plugin plus
+  `src/users/two-factor*.ts`. Required for Banner 61 admins on the live site, optional for
+  school staff; a password-only session owing a code can do nothing staff-only; Banner 61
+  admins reset it for a lost phone. Full notes: `docs/TWO-FACTOR.md`. Test:
+  `scripts/two-factor.mjs` (CI runs it twice, the second time with the server restarted with
+  `B61_REQUIRE_ADMIN_2FA=true`; keep that step last). Keep `...twoFactor` last in `plugins`.
 
 ## Branding, dashboard and Analytics (Thread G)
 
 Ask AI was dropped from this thread at Jay's request (14 Nov 2026).
 
 - `src/brand/`: Banner 61 look for the editor. `Logo.tsx` (login page; `Icon` in the
-  breadcrumb), `public/b61-icon.svg` (browser tab), `BeforeLogin.tsx`, `brand.scss` (imported by
+  breadcrumb), `BeforeLogin.tsx`, `brand.scss` (imported by
   `custom.scss`). Brand: ink #3F3B4C, paper #F0F1EE, text #101827, accent #EE5758. The accent is
-  only for marks and thin lines (white on it is under 4.5:1); primary buttons use the ink. The
-  marks are drawn in code; to use the real logo file, see the note at the top of `Logo.tsx`.
+  only for marks and thin lines (white on it is under 4.5:1); primary buttons use the ink. Since
+  PR #43 the real logo files are used: `public/b61-logo.png` (light theme), `b61-logo-dark.png`
+  (light letters, dark theme), `b61-icon.png` (round flag, menu), `b61-favicon-32.png` and
+  `apple-touch-icon-b61.png` (browser tab). `B61_SUPPORT_EMAIL=projects@banner61.com` set in
+  Vercel 17 Nov 2026.
 - `src/brand/Welcome.tsx` (dashboard, `beforeDashboard`): greeting, shortcuts (by role),
   "Last 7 days" (website visitors when GA is connected, form answers for Editors/School Admins),
   "Not published yet" (latest drafts across pages, news, events, programs, staff), help line.
@@ -239,6 +246,39 @@ WordPress sites. Code in `src/mcp/` (`config.ts`, `pages.ts`), checks in `script
 - Don't share jay@hourglassk12.com externally without approval.
 - Plain language; Jay isn't a developer.
 
+## Operations (PR #43, 17 Nov 2026)
+
+- **Backups:** `.github/workflows/payload-backup.yml`, guide `docs/BACKUPS.md`. Nightly 07:17 UTC:
+  `pg_dump` (Postgres 18 tools) of the live Neon database + every Vercel Blob file
+  (`scripts/backup/blob-download.mjs`, manifest with sha256), both encrypted with
+  `BACKUP_PASSPHRASE` (gpg AES-256) and kept as run artifacts (30 days; Sunday 90). The repo is
+  public: nothing leaves the job unencrypted, nothing secret is printed. Restore test every night
+  (restore into a throwaway Postgres, `scripts/backup/compare-counts.mjs` against counts taken
+  before and after the dump, `blob-verify.mjs`); Sundays or "full check" also build the site on the
+  restored data and run the smoke test (`src/scripts/restore-check-admin.ts` adds a throwaway admin,
+  `B61_JOBS_OFF=true` stops scheduled jobs). Skips itself until Jay adds `BACKUP_DATABASE_URL`,
+  `BACKUP_BLOB_TOKEN`, `BACKUP_PASSPHRASE` as GitHub secrets. Disaster recovery for files:
+  `scripts/backup/blob-restore.mjs`. Neon Free's own instant restore covers 6 hours.
+- **Uptime:** `GET /api/health` (`src/ops/health.ts`, counts schools; 503 when the database is
+  unreachable) and `.github/workflows/payload-uptime.yml` (every 15 minutes, one retry). Add school
+  domains to its `SITES` as they go live.
+- **Sentry:** `@sentry/nextjs` (`src/instrumentation.ts`, `src/instrumentation-client.ts`) +
+  `@payloadcms/plugin-sentry`, all off until `NEXT_PUBLIC_SENTRY_DSN` is set (then `next.config.ts`
+  wraps with `withSentryConfig`; source maps only with `SENTRY_AUTH_TOKEN`/`SENTRY_ORG`/
+  `SENTRY_PROJECT`). `src/ops/sentry-options.ts` strips request bodies, cookies, headers, query
+  strings, IPs and emails; no replay; 5% traces. **Run `npm run generate:importmap` with
+  `NEXT_PUBLIC_SENTRY_DSN` set to any dummy value**, or the plugin's admin component drops out of
+  the import map and the editor breaks once the real DSN is added.
+- Neon SSL warning fixed in code (`src/lib/db-url.ts`: `sslmode=require` → `verify-full`), so it
+  also covers preview branches' injected addresses.
+- The hidden `sortOrder` columns on Staff and Programs are dropped (`*_drop_sort_order`).
+  Previews' own Neon branches were confirmed from the 17 Nov build logs (production ran
+  `20261117_111456_mcp_keys` itself after that branch's previews).
+- Turnstile is already built (Thread B): it switches on when Jay adds
+  `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` in Vercel and redeploys. The
+  Cloudflare widget must list every hostname the forms run on (the demo address and each school's
+  domain).
+
 ## Open items (from the audit, in order)
 
 1. ~~One app per school~~ → done (multi-tenant).
@@ -255,7 +295,7 @@ Also pending / nice to have:
 - Jay to create his admin account at b61-schools.vercel.app/admin (new database).
 - `SCHOOL_SECRET` is set for Production only; add it for Preview so preview links work.
 - Shut down the Railway services once Vercel is confirmed.
-- Harmless Neon SSL warning in logs: set `sslmode=verify-full` in the connection string.
+- ~~Harmless Neon SSL warning~~ → fixed in code (PR #43, `src/lib/db-url.ts`).
 - Icon list cards are tall in the editor; rows could start collapsed.
 - The plugin's own Split gallery column bug (`--b61-split-cols` collision) is fixed here
   but still needs fixing in the Breakdance plugin.

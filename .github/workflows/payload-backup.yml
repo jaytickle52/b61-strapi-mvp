@@ -90,13 +90,16 @@ jobs:
           DB: ${{ secrets.BACKUP_DATABASE_URL }}
         run: |
           mkdir -p /tmp/backup/db
-          # Row counts first, then the dump (custom format, no owners/grants so it
-          # restores into any Postgres).
-          docker run --rm --network host -e DB -v "$PWD/scripts/backup:/s:ro" "$PG_IMAGE" \
-            sh -c 'psql "$DB" -X -At -v ON_ERROR_STOP=1 -f /s/table-counts.sql' > /tmp/backup/db/counts.tsv
+          # Row counts just before and just after the dump (custom format, no
+          # owners/grants so it restores into any Postgres). The restore test
+          # allows a table that changed during the dump to be anywhere between.
+          count() { docker run --rm --network host -e DB -v "$PWD/scripts/backup:/s:ro" "$PG_IMAGE" \
+            sh -c 'psql "$DB" -X -At -v ON_ERROR_STOP=1 -f /s/table-counts.sql'; }
+          count > /tmp/backup/db/counts-before.tsv
           docker run --rm --network host -e DB -v /tmp/backup/db:/out "$PG_IMAGE" \
             sh -c 'pg_dump "$DB" --format=custom --no-owner --no-acl --file=/out/database.dump && psql "$DB" -X -At -c "show server_version" > /out/server-version.txt'
-          echo "Tables: $(wc -l < /tmp/backup/db/counts.tsv), dump: $(du -h /tmp/backup/db/database.dump | cut -f1), server $(cat /tmp/backup/db/server-version.txt)"
+          count > /tmp/backup/db/counts-after.tsv
+          echo "Tables: $(wc -l < /tmp/backup/db/counts-after.tsv), dump: $(du -h /tmp/backup/db/database.dump | cut -f1), server $(cat /tmp/backup/db/server-version.txt)"
 
       - name: Copy the Blob files
         if: steps.secrets.outputs.ready == 'true'
@@ -110,6 +113,7 @@ jobs:
           PASS: ${{ secrets.BACKUP_PASSPHRASE }}
           STAMP: ${{ steps.stamp.outputs.stamp }}
         run: |
+          set -o pipefail
           mkdir -p /tmp/out
           umask 077; printf '%s' "$PASS" > /tmp/pass
           for part in db blob; do
@@ -166,6 +170,7 @@ jobs:
         env:
           PASS: ${{ secrets.BACKUP_PASSPHRASE }}
         run: |
+          set -o pipefail
           umask 077; printf '%s' "$PASS" > /tmp/pass
           for part in db blob; do
             mkdir -p /tmp/restore/$part
@@ -183,10 +188,7 @@ jobs:
         run: |
           docker run --rm --network host -v "$PWD/scripts/backup:/s:ro" "$PG_IMAGE" \
             psql "$DATABASE_URL" -X -At -v ON_ERROR_STOP=1 -f /s/table-counts.sql > /tmp/restored-counts.tsv
-          if ! diff /tmp/restore/db/counts.tsv /tmp/restored-counts.tsv; then
-            echo "::error::The restored database doesn't match the live one (lines above: < live, > restored)"; exit 1
-          fi
-          echo "All $(wc -l < /tmp/restored-counts.tsv) tables match ($(awk -F'\t' '{s+=$2} END {print s}' /tmp/restored-counts.tsv) rows)"
+          node scripts/backup/compare-counts.mjs /tmp/restore/db/counts-before.tsv /tmp/restore/db/counts-after.tsv /tmp/restored-counts.tsv
 
       - name: Every Blob file matches its checksum
         run: node scripts/backup/blob-verify.mjs /tmp/restore/blob

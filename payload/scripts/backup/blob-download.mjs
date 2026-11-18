@@ -25,7 +25,7 @@ let bytes = 0
 for (const b of files) {
   // A path from the store never leaves the backup folder.
   const dest = path.resolve(out, 'files', b.pathname)
-  if (!dest.startsWith(path.join(out, 'files') + path.sep)) throw new Error(`Unsafe path: ${b.pathname}`)
+  if (!dest.startsWith(path.join(out, 'files') + path.sep)) throw new Error(`Unsafe path in the store (file ${files.indexOf(b) + 1})`)
   let body
   for (let attempt = 1; ; attempt++) {
     const res = await fetch(b.downloadUrl || b.url, { headers: { authorization: `Bearer ${token}` } })
@@ -33,7 +33,8 @@ for (const b of files) {
       body = Buffer.from(await res.arrayBuffer())
       break
     }
-    if (attempt === 3) throw new Error(`${b.pathname}: download failed (${res.status})`)
+    // File names can be families' own (form uploads) and the logs are public: no names.
+    if (attempt === 3) throw new Error(`File ${files.indexOf(b) + 1} of ${files.length}: download failed (${res.status})`)
     await new Promise((r) => setTimeout(r, 2000 * attempt))
   }
   await mkdir(path.dirname(dest), { recursive: true })
