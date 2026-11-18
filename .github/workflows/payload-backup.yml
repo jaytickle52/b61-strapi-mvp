@@ -113,6 +113,7 @@ jobs:
           PASS: ${{ secrets.BACKUP_PASSPHRASE }}
           STAMP: ${{ steps.stamp.outputs.stamp }}
         run: |
+          set -o pipefail
           mkdir -p /tmp/out
           umask 077; printf '%s' "$PASS" > /tmp/pass
           for part in db blob; do
@@ -169,6 +170,7 @@ jobs:
         env:
           PASS: ${{ secrets.BACKUP_PASSPHRASE }}
         run: |
+          set -o pipefail
           umask 077; printf '%s' "$PASS" > /tmp/pass
           for part in db blob; do
             mkdir -p /tmp/restore/$part
