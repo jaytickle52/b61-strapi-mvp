@@ -87,6 +87,7 @@ export interface Config {
     users: User;
     schools: School;
     'news-categories': NewsCategory;
+    'totp-attempts': TotpAttempt;
     'payload-mcp-api-keys': PayloadMcpApiKey;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
@@ -120,6 +121,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     schools: SchoolsSelect<false> | SchoolsSelect<true>;
     'news-categories': NewsCategoriesSelect<false> | NewsCategoriesSelect<true>;
+    'totp-attempts': TotpAttemptsSelect<false> | TotpAttemptsSelect<true>;
     'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
@@ -5382,6 +5384,8 @@ export interface User {
         id?: string | null;
       }[]
     | null;
+  totpSecret?: string | null;
+  hasTotp?: boolean | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -5401,6 +5405,15 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "totp-attempts".
+ */
+export interface TotpAttempt {
+  id: string;
+  attempts: number;
+  lockUntil?: string | null;
 }
 /**
  * Keys that let Claude (or another MCP client) read and edit school content at /api/mcp. A key acts as you. Edits are saved as drafts; nothing is deleted. Delete a key to switch it off.
@@ -9312,6 +9325,8 @@ export interface UsersSelect<T extends boolean = true> {
         role?: T;
         id?: T;
       };
+  totpSecret?: T;
+  hasTotp?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -9358,6 +9373,15 @@ export interface NewsCategoriesSelect<T extends boolean = true> {
   slug?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "totp-attempts_select".
+ */
+export interface TotpAttemptsSelect<T extends boolean = true> {
+  id?: T;
+  attempts?: T;
+  lockUntil?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

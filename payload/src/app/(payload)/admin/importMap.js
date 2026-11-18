@@ -62,6 +62,8 @@ import { SetupNote as SetupNote_ad3208fc0d6a1f0e5094f01910836258 } from '@/analy
 import { LinkToDoc as LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
 import { ReindexButton as ReindexButton_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
 import { InviteStatus as InviteStatus_347c307375689c3154b14532242e9bc9 } from '@/users/InviteStatus'
+import { TwoFactorReset as TwoFactorReset_434fe45efcaf2727ce2276cf4c8c5922 } from '@/users/TwoFactorReset'
+import { TOTPField as TOTPField_4eaf6cb33cfb75be01716613e3c9a512 } from 'payload-totp/rsc'
 import { InviteForm as InviteForm_3d308d2e6080724a74ef0384d9cf30a9 } from '@/users/InviteForm'
 import { WatchTenantCollection as WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a } from '@payloadcms/plugin-multi-tenant/client'
 import { BackToNews as BackToNews_ae430fd4103f3d388c847198199894b5 } from '@/admin/CategoryLinks'
@@ -73,8 +75,12 @@ import { AnalyticsNavLink as AnalyticsNavLink_de3ee0bfb1cb67479b3c8b4bee96e318 }
 import { Welcome as Welcome_ff2f921263b589433fe08bc93d20011e } from '@/brand/Welcome'
 import { BeforeLogin as BeforeLogin_13385b62538c205a089df88fcb53324b } from '@/brand/BeforeLogin'
 import { TenantSelector as TenantSelector_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
+import { TOTPProvider as TOTPProvider_4eaf6cb33cfb75be01716613e3c9a512 } from 'payload-totp/rsc'
+import { TwoFactorRequired as TwoFactorRequired_8ab413807772d035b41e13cfbd46c7b2 } from '@/users/TwoFactorRequired'
 import { TenantSelectionProvider as TenantSelectionProvider_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
 import { AdminErrorBoundary as AdminErrorBoundary_e5a9e14bdbe97e70ba60697217fe7688 } from '@payloadcms/plugin-sentry/client'
+import { TOTPSetup as TOTPSetup_4eaf6cb33cfb75be01716613e3c9a512 } from 'payload-totp/rsc'
+import { TOTPVerify as TOTPVerify_4eaf6cb33cfb75be01716613e3c9a512 } from 'payload-totp/rsc'
 import { AnalyticsView as AnalyticsView_854d8e14c63a6f219fe1972ddfe84975 } from '@/analytics/AnalyticsView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
@@ -145,6 +151,8 @@ export const importMap = {
   "@payloadcms/plugin-search/client#LinkToDoc": LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634,
   "@payloadcms/plugin-search/client#ReindexButton": ReindexButton_aead06e4cbf6b2620c5c51c9ab283634,
   "@/users/InviteStatus#InviteStatus": InviteStatus_347c307375689c3154b14532242e9bc9,
+  "@/users/TwoFactorReset#TwoFactorReset": TwoFactorReset_434fe45efcaf2727ce2276cf4c8c5922,
+  "payload-totp/rsc#TOTPField": TOTPField_4eaf6cb33cfb75be01716613e3c9a512,
   "@/users/InviteForm#InviteForm": InviteForm_3d308d2e6080724a74ef0384d9cf30a9,
   "@payloadcms/plugin-multi-tenant/client#WatchTenantCollection": WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a,
   "@/admin/CategoryLinks#BackToNews": BackToNews_ae430fd4103f3d388c847198199894b5,
@@ -156,8 +164,12 @@ export const importMap = {
   "@/brand/Welcome#Welcome": Welcome_ff2f921263b589433fe08bc93d20011e,
   "@/brand/BeforeLogin#BeforeLogin": BeforeLogin_13385b62538c205a089df88fcb53324b,
   "@payloadcms/plugin-multi-tenant/rsc#TenantSelector": TenantSelector_d6d5f193a167989e2ee7d14202901e62,
+  "payload-totp/rsc#TOTPProvider": TOTPProvider_4eaf6cb33cfb75be01716613e3c9a512,
+  "@/users/TwoFactorRequired#TwoFactorRequired": TwoFactorRequired_8ab413807772d035b41e13cfbd46c7b2,
   "@payloadcms/plugin-multi-tenant/rsc#TenantSelectionProvider": TenantSelectionProvider_d6d5f193a167989e2ee7d14202901e62,
   "@payloadcms/plugin-sentry/client#AdminErrorBoundary": AdminErrorBoundary_e5a9e14bdbe97e70ba60697217fe7688,
+  "payload-totp/rsc#TOTPSetup": TOTPSetup_4eaf6cb33cfb75be01716613e3c9a512,
+  "payload-totp/rsc#TOTPVerify": TOTPVerify_4eaf6cb33cfb75be01716613e3c9a512,
   "@/analytics/AnalyticsView#AnalyticsView": AnalyticsView_854d8e14c63a6f219fe1972ddfe84975,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e
