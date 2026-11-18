@@ -68,7 +68,7 @@ const allOn = {
   pages: { find: true },
   news: { find: true, create: true, update: true },
   media: { find: true, update: true },
-  'payload-mcp-tool': { pageSections: true, createPage: true, updatePage: true, editorLinks: true },
+  'payload-mcp-tool': { pageSections: true, createPage: true, updatePage: true, editorLinks: true, uploadPhoto: true },
 }
 const made = await api('/api/payload-mcp-api-keys', {
   token,
@@ -127,6 +127,35 @@ if (post) {
 
 const sections = await call(KEY, 'pageSections', {})
 ok(/b61Hero/.test(sections), 'pageSections lists the section types')
+
+// uploadPhoto: only public https addresses, real photos, with alt text.
+for (const [url, why] of [
+  ['http://example.com/a.jpg', 'plain http'],
+  ['https://localhost/a.jpg', 'localhost'],
+  ['https://127.0.0.1/a.jpg', 'a loopback address'],
+  ['https://10.0.0.5/a.jpg', 'a private address'],
+  ['https://169.254.169.254/latest/meta-data', 'the cloud metadata address'],
+  ['https://[::1]/a.jpg', 'an IPv6 loopback address'],
+  ['https://user:pw@example.com/a.jpg', 'an address with a password'],
+]) {
+  const r = await call(KEY, 'uploadPhoto', { school: school.id, url, alt: 'Test' })
+  ok(/Couldn't add the photo/.test(r) && !/Photo added/.test(r), `uploadPhoto refuses ${why}`)
+}
+ok(/Give alt text/.test(await call(KEY, 'uploadPhoto', { school: school.id, url: 'https://example.com/a.jpg', alt: ' ' })), 'uploadPhoto needs alt text')
+const notPhoto = await call(KEY, 'uploadPhoto', { school: school.id, url: 'https://raw.githubusercontent.com/jaytickle52/b61-strapi-mvp/main/payload/package.json', alt: 'Test' })
+ok(/isn’t a photo/.test(notPhoto), `uploadPhoto refuses a file that isn't a photo (${notPhoto.slice(0, 80)})`)
+const photo = await call(KEY, 'uploadPhoto', {
+  school: school.id,
+  url: 'https://raw.githubusercontent.com/jaytickle52/b61-strapi-mvp/main/payload/demo-photos/backpack-friends.jpg',
+  alt: 'Two students with backpacks',
+  credit: 'Test',
+})
+const photoId = photo.match(/id (\d+)/)?.[1]
+ok(Boolean(photoId), `uploadPhoto adds a photo from a public address (${photo.slice(0, 90)})`)
+if (photoId) {
+  const m = await api(`/api/media/${photoId}?depth=0`, { token })
+  ok(String(m.json?.school) === String(school.id) && m.json?.alt === 'Two students with backpacks', 'the photo is in that school\u2019s library with its alt text')
+}
 
 // Only Banner 61 admins can make keys: an editor can't.
 const editorEmail = `mcp-editor-${Date.now()}@example.com`

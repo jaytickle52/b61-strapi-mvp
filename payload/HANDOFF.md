@@ -229,6 +229,11 @@ WordPress sites. Code in `src/mcp/` (`config.ts`, `pages.ts`), checks in `script
 - **Drafts only:** writes to pages, news, events, programs, staff, announcements and school
   settings are forced to drafts (`draftsOnlyOverMcp`); the live site changes only on Publish.
   No delete tools. Users, form answers, form files and the email log are not offered.
+- **Photos (`uploadPhoto`, `src/mcp/photos.ts`):** adds a photo to a school's library from a public
+  https address (school, url, alt; credit and caption optional) and returns its id for sections.
+  The server fetches it, so only public addresses are allowed: every connection (redirects too) is
+  checked at connect time against private, loopback and link-local ranges; max 3 redirects, 25 MB,
+  30 s; JPEG, PNG, WebP, GIF or AVIF only. Then the normal Media rules apply.
 - **Pages:** the generated page create/update tools were ~170 KB each, so pages use custom
   `createPage` / `updatePage` (data as JSON) and `pageSections` (compact field outline).
   `editorLinks` returns the editor address after a change.

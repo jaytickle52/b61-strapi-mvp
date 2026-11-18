@@ -5621,6 +5621,10 @@ export interface PayloadMcpApiKey {
      * Get the editor address for an item (to review a draft and press Publish) and, for pages, the public address. Use after creating or updating something so the person can check it.
      */
     editorLinks?: boolean | null;
+    /**
+     * Add a photo to a school's photo library from a public https address (a school's shared photo, or a licensed stock photo's download link). Give `school` (id), `url` and `alt` (what the photo shows, one sentence); `credit` and `caption` are optional. Returns the new photo's id, to use as `image` in page sections.
+     */
+    uploadPhoto?: boolean | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -9512,6 +9516,7 @@ export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
         createPage?: T;
         updatePage?: T;
         editorLinks?: T;
+        uploadPhoto?: T;
       };
   updatedAt?: T;
   createdAt?: T;
