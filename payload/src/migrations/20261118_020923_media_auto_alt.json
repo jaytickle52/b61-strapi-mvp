@@ -686,6 +686,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "bunny_video": {
+          "name": "bunny_video",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "poster_id": {
           "name": "poster_id",
           "type": "integer",
@@ -10735,6 +10741,12 @@
         "video_webm_id": {
           "name": "video_webm_id",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bunny_video": {
+          "name": "bunny_video",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
@@ -43774,6 +43786,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "081d83a5-3357-483b-bbd2-fcc826c7e8f3",
+  "id": "e41292a5-02b7-4357-b09f-4fe78e930d08",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

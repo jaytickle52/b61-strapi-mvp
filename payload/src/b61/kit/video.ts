@@ -58,3 +58,42 @@ export function videoLinkField(show: (siblingData: any) => boolean): Field {
     },
   }
 }
+
+/**
+ * A Bunny Stream video as a plain video file, for backgrounds that autoplay
+ * muted (Hero). Uses the library's CDN hostname (BUNNY_STREAM_CDN_HOSTNAME,
+ * e.g. vz-1234abcd-567.b-cdn.net, from Bunny > Stream > the library > API)
+ * and Bunny's MP4 files (the library's "MP4 fallback" must be on). Sizes are
+ * listed largest first; the browser moves on when one doesn't exist.
+ * Server-side only (reads the environment).
+ */
+export function bunnyBackground(url?: string | null): { sources: string[]; poster: string } | null {
+  const v = parseVideo(url)
+  const host = process.env.BUNNY_STREAM_CDN_HOSTNAME?.trim().replace(/^https?:\/\//, '').replace(/\/+$/, '')
+  if (!v || v.provider !== 'bunny' || !host) return null
+  const base = `https://${host}/${v.id}`
+  return { sources: ['720p', '480p', '360p'].map((h) => `${base}/play_${h}.mp4`), poster: `${base}/thumbnail.jpg` }
+}
+
+const BUNNY_ONLY_ERROR =
+  'Paste a Bunny Stream link: open the video in Bunny Stream and copy its Embed or Play link (it contains mediadelivery.net).'
+
+/** The Hero's "Bunny video" field: a Bunny link (or upload), played as the background. */
+export function bunnyBackgroundField(show: (siblingData: any) => boolean): Field {
+  return {
+    name: 'bunnyVideo',
+    label: 'Bunny video',
+    type: 'text',
+    admin: {
+      condition: (_, s) => show(s),
+      placeholder: 'https://iframe.mediadelivery.net/embed/…',
+      description:
+        'Plays from Bunny Stream instead of the Video above: cheaper and faster for big files. Used when filled in.',
+      components: { Field: '@/video/VideoField#VideoField' },
+    },
+    validate: (v: unknown, { siblingData }: any) => {
+      if (!show(siblingData) || !v) return true
+      return parseVideo(String(v))?.provider === 'bunny' ? true : BUNNY_ONLY_ERROR
+    },
+  }
+}

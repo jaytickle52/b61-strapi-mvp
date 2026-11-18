@@ -239,6 +239,27 @@ async function main() {
   if (no.json?.doc?.id) await api('DELETE', `/pages/${no.json.doc.id}`, { token: admin })
   if (ok.json?.doc?.id) await api('DELETE', `/pages/${ok.json.doc.id}`, { token: admin })
 
+  // Hero background from Bunny Stream (plays Bunny's MP4 files from the library's CDN).
+  const hero = (bunnyVideo) => ({
+    school: cedar,
+    title: `Hero video ${RUN}`,
+    slug: `hero-video-${RUN}-${Math.random().toString(36).slice(2, 6)}`,
+    sections: [{ blockType: 'b61Hero', layoutMode: 'cover', backgroundType: 'video', lines: [{ text: 'Welcome' }], bunnyVideo }],
+    _status: 'published',
+  })
+  const heroOk = await api('POST', '/pages', { token: admin, body: hero('https://iframe.mediadelivery.net/embed/123456/0b1c2d3e-4f50-6172-8394-a5b6c7d8e9f0') })
+  check(heroOk.status === 201, 'a Hero accepts a Bunny Stream background video')
+  const heroPage = await page(`/${heroOk.json?.doc?.slug}`, 'cedar-ridge')
+  if (/b-cdn\.net/.test(heroPage.text)) {
+    check(
+      heroPage.text.includes('/0b1c2d3e-4f50-6172-8394-a5b6c7d8e9f0/play_720p.mp4') && heroPage.text.includes('/thumbnail.jpg'),
+      "… and plays it from Bunny's CDN, with Bunny's thumbnail as the poster",
+    )
+  } else check(heroPage.status === 200, '… and the page still shows without the Bunny CDN hostname set')
+  const heroNo = await api('POST', '/pages', { token: admin, body: hero('https://www.youtube.com/watch?v=dQw4w9WgXcQ') })
+  check(heroNo.status === 400 && /Bunny video/.test(JSON.stringify(heroNo.json)), "a Hero background link that isn't Bunny is refused with a message")
+  for (const d of [heroOk, heroNo]) if (d.json?.doc?.id) await api('DELETE', `/pages/${d.json.doc.id}`, { token: admin })
+
   // ----- Branding (School settings > Look) ------------------------------------
   console.log('\nBranding')
   const settingsOf = async (school) =>
