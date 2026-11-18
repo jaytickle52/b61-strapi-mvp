@@ -151,8 +151,12 @@ plugin 1.77.1) are ported so the sites look the same; the plugin's CSS is copied
 - Checks: `scripts/permissions.mjs` (API checks per role; reads invite emails from
   `EMAIL_PREVIEW_DIR`) and `src/scripts/check-publish-button.ts`; both run in CI after the
   smoke test.
-- Two-factor sign-in is **not built yet**: waiting on Jay's choice (install the community
-  `payload-totp` plugin, or build our own).
+- Two-factor sign-in (PR #44, 17 Nov 2026): community `payload-totp` plugin plus
+  `src/users/two-factor*.ts`. Required for Banner 61 admins on the live site, optional for
+  school staff; a password-only session owing a code can do nothing staff-only; Banner 61
+  admins reset it for a lost phone. Full notes: `docs/TWO-FACTOR.md`. Test:
+  `scripts/two-factor.mjs` (CI runs it twice, the second time with the server restarted with
+  `B61_REQUIRE_ADMIN_2FA=true`; keep that step last). Keep `...twoFactor` last in `plugins`.
 
 ## Branding, dashboard and Analytics (Thread G)
 

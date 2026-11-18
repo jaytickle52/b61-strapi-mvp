@@ -29,7 +29,7 @@ export function TwoFactorReset() {
       <span className="field-label">Two-factor sign-in</span>
       <p className="field-description">Lost or new phone? Turn off their authenticator code so they can sign in with their password and set it up again.</p>
       {state.confirm ? (
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
           <Button buttonStyle="primary" size="small" margin={false} disabled={state.busy} onClick={reset}>
             {state.busy ? 'Resetting…' : 'Yes, reset'}
           </Button>
@@ -38,9 +38,11 @@ export function TwoFactorReset() {
           </Button>
         </div>
       ) : (
-        <Button buttonStyle="secondary" size="small" margin={false} onClick={() => setState({ confirm: true })}>
-          Reset two-factor
-        </Button>
+        <div style={{ marginTop: 8 }}>
+          <Button buttonStyle="secondary" size="small" margin={false} onClick={() => setState({ confirm: true })}>
+            Reset two-factor
+          </Button>
+        </div>
       )}
       {state.message && (
         <p className="field-description" role="status" style={{ color: state.ok === false ? 'var(--theme-error-500)' : undefined }}>

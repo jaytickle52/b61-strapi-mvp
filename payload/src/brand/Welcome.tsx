@@ -1,3 +1,4 @@
+import { twoFactorPending } from '@/users/two-factor-rules'
 import type { Payload } from 'payload'
 import { headers } from 'next/headers'
 import { canManagePeopleAt, canPublishAt, isB61Admin, roleAt, SCHOOL_ROLES } from '@/access'
@@ -21,7 +22,7 @@ const DRAFTABLE = [
 ] as const
 
 export async function Welcome({ payload, user }: { payload: Payload; user?: any }) {
-  if (!user) return null
+  if (!user || twoFactorPending(user)) return null
   const school = await selectedSchool({ payload, user, headers: await headers() } as any)
   const name = String(user.name || user.firstName || user.email || '').split(/[\s@]/)[0]
   const admin = isB61Admin(user)

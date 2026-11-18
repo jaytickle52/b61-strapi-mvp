@@ -5,6 +5,7 @@ import { getPayload, type Where } from 'payload'
 import config from '@payload-config'
 import { ymd } from '@/events/time'
 import { CACHE_SECONDS, CACHE_VERSION, quarterHour, SCHOOLS_TAG, schoolTag } from '@/cache/tags'
+import { twoFactorPending } from '@/users/two-factor-rules'
 import type { Announcement, Event, Media, News, NewsCategory, Page, Program, School, SchoolSetting, Staff } from '@/payload-types'
 
 export type { Announcement, Event, Media, News, NewsCategory, Page, Program, School, SchoolSetting, Staff }
@@ -21,7 +22,9 @@ const reader = cache(async () => {
   const payload = await payloadClient()
   const { isEnabled } = await draftMode()
   if (!isEnabled) return { payload, user: null, draft: false }
-  const { user } = await payload.auth({ headers: await headers() })
+  const { user: signedIn } = await payload.auth({ headers: await headers() })
+  // A session still owing its two-factor code counts as signed out.
+  const user = signedIn && !twoFactorPending(signedIn) ? signedIn : null
   return { payload, user, draft: Boolean(user) }
 })
 

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { adminTwoFactorRequired } from './two-factor'
+import { adminTwoFactorRequired } from './two-factor-rules'
 
 /*
  * Admin provider: a Banner 61 admin who hasn't set up two-factor is sent to the
@@ -17,7 +17,9 @@ export async function TwoFactorRequired({ children, payload, user }: { children:
       const admin = payload.config.routes.admin === '/' ? '' : payload.config.routes.admin
       const setup = `${admin}/setup-totp`
       const path = (await headers()).get('x-pathname') || ''
-      if (path && path.replace(/\/$/, '') !== setup) redirect(`${setup}?back=${encodeURIComponent(path)}`)
+      // Signing out stays possible.
+      const free = [setup, `${admin}/logout`, `${admin}/logout-inactivity`]
+      if (path && !free.includes(path.replace(/\/$/, ''))) redirect(`${setup}?back=${encodeURIComponent(path)}`)
     }
   }
   return children

@@ -24,7 +24,16 @@ Authy, etc.). Built on the community plugin
 3. Enter the 6-digit code the app shows. Done: from now on, each sign-in asks
    for the code after the password.
 
-The app entry is named "Banner 61" with your email.
+The app entry is named "Banner 61" with your email. The account gets an email
+whenever two-factor is turned on or reset, so a change someone else made
+doesn't go unnoticed.
+
+## Turning it on for Banner 61 (right after the merge)
+
+Until a Banner 61 admin has set it up, anyone holding that admin's password
+could set it up first and lock the owner out (the email above would flag
+it). So straight after the deploy, each Banner 61 admin should sign in at
+b61-schools.vercel.app/admin and complete the setup page.
 
 ## What a password alone gets you once it's on
 
@@ -40,7 +49,8 @@ MCP keys (Claude) keep working without a code: a key isn't a password.
 
 - **School staff or another Banner 61 admin:** a Banner 61 admin opens their
   account (Users) and presses **Reset two-factor** in the sidebar. They sign in
-  with their password and set it up again.
+  with their password and set it up again. The reset also signs them out on
+  every device and emails them.
 - **You can't reset your own.** Ask another Banner 61 admin.
 - **The only Banner 61 admin is locked out:** in the Neon console > SQL Editor
   on the production branch, run
@@ -55,12 +65,21 @@ SQL step.
 
 ## How it's built
 
-- `src/users/two-factor.ts`: `twoFactorPending(user)` (has it, or must have it
+- `src/users/two-factor-rules.ts`: `twoFactorPending(user)` (has it, or must have it
   as a Banner 61 admin, and this session hasn't entered a code; keys never owe
-  one), `guardEverything` (wraps every collection and global's access and every
+  one); no imports, so the public site code can use it. `src/users/two-factor.ts`:
+  `guardEverything` (wraps every collection and global's access and every
   custom endpoint registered before it; anonymous visitors go straight to the
   normal rules), then `payloadTotp(...)`, then `providersFirst` (the two-factor
-  redirects run before any other admin provider). Must stay last in `plugins`.
+  redirects run before any other admin provider; also emails the account after
+  setup, `src/users/two-factor-email.ts`). Must stay last in `plugins`.
+- Also treated as signed out while a code is owed: the preview route
+  (`/next/preview`), draft reads in `src/lib/data.ts`, the Analytics view and the
+  dashboard welcome (custom views can render without the editor's layout, so
+  they check for themselves). Any new custom admin view should do the same.
+- Known gap (plugin): Payload's own folders, saved list filters and job
+  collections are wrapped by payload-totp itself, which doesn't know MCP keys;
+  the MCP tools don't use them.
 - `src/users/TwoFactorRequired.tsx`: sends Banner 61 admins without it to
   `/admin/setup-totp`. `src/proxy.ts` passes the editor's path in `x-pathname`
   for this and for the plugin's own pages.
