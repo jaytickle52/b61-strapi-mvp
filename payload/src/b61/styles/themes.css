@@ -89,9 +89,21 @@
 
 /* The cover hero ends in one large curved corner. */
 [data-b61-theme='warm'] .b61-hero--cover {
-  border-end-end-radius: clamp(72px, 12vw, 200px);
+  --b61-warm-curve: clamp(72px, 12vw, 200px);
+  border-end-end-radius: var(--b61-warm-curve);
   overflow: hidden;
+  position: relative;
+  z-index: 1;
 }
+/* The corner the curve cuts away would show the plain page. When the section
+   below has a coloured ground (on the element itself, or on its first child,
+   as with Card Grid's region), a copy of that ground (its shadow, shifted up
+   by the curve's size) fills the corner behind the hero, so the curve reads
+   as the hero sitting on that section. */
+[data-b61-theme='warm'] .b61-hero--cover + :is(.b61-surface--soft, :has(> .b61-surface--soft:first-child)) { box-shadow: 0 calc(-1 * clamp(72px, 12vw, 200px)) 0 0 var(--b61-surface-soft); }
+[data-b61-theme='warm'] .b61-hero--cover + :is(.b61-surface--plain, :has(> .b61-surface--plain:first-child)) { box-shadow: 0 calc(-1 * clamp(72px, 12vw, 200px)) 0 0 var(--b61-surface); }
+[data-b61-theme='warm'] .b61-hero--cover + :is(.b61-surface--dark, :has(> .b61-surface--dark:first-child)) { box-shadow: 0 calc(-1 * clamp(72px, 12vw, 200px)) 0 0 var(--b61-surface-dark); }
+[data-b61-theme='warm'] .b61-hero--cover + :is(.b61-surface--accent, :has(> .b61-surface--accent:first-child)) { box-shadow: 0 calc(-1 * clamp(72px, 12vw, 200px)) 0 0 var(--b61-surface-accent); }
 [data-b61-theme='warm'] .b61-hero--cover .b61-hero__edge { display: none; }
 
 /* Cards lift off the page with a soft shadow instead of a border. */
