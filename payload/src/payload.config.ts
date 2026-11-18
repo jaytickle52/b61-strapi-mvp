@@ -1,6 +1,10 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { cacheInvalidation } from './cache/plugin'
 import { bunnyEndpoints } from './video/endpoints'
+import { healthEndpoint } from './ops/health'
+import * as Sentry from '@sentry/nextjs'
+import { sentryPlugin } from '@payloadcms/plugin-sentry'
+import { sentryDsn } from './ops/sentry-options'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -23,6 +27,7 @@ import { multiTenantPlugin } from '@payloadcms/plugin-multi-tenant'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { seedDemoSchools } from './seed'
 import { secret } from './lib/secrets'
+import { databaseUrl } from './lib/db-url'
 import { migrations } from './migrations'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { seoPlugins } from './seo/config'
@@ -45,7 +50,10 @@ export default buildConfig({
     importMap: { baseDir: path.resolve(dirname) },
     meta: {
       titleSuffix: ' · School website',
-      icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/b61-icon.svg' }],
+      icons: [
+        { rel: 'icon', type: 'image/png', sizes: '32x32', url: '/b61-favicon-32.png' },
+        { rel: 'apple-touch-icon', type: 'image/png', sizes: '180x180', url: '/apple-touch-icon-b61.png' },
+      ],
     },
     // Banner 61 branding, the dashboard welcome and the Analytics page (Thread G).
     components: {
@@ -84,14 +92,14 @@ export default buildConfig({
     Users,
   ],
   // Video uploads to Bunny Stream from the editor (src/video).
-  endpoints: bunnyEndpoints,
+  endpoints: [...bunnyEndpoints, healthEndpoint],
   // Resend when RESEND_API_KEY is set; otherwise emails are only logged (src/email).
   email: emailAdapter,
   editor: lexicalEditor(),
   secret: secret('PAYLOAD_SECRET'),
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
   db: postgresAdapter({
-    pool: { connectionString: process.env.DATABASE_URL || '' },
+    pool: { connectionString: databaseUrl() },
     // Never change the database schema on the fly; every change is a migration.
     push: false,
     // Schema changes ship as migrations. On Vercel they run during the build
@@ -105,7 +113,12 @@ export default buildConfig({
     access: {
       run: ({ req }) => Boolean(req.user) || (Boolean(process.env.CRON_SECRET) && req.headers.get('authorization') === `Bearer ${process.env.CRON_SECRET}`),
     },
-    autoRun: process.env.VERCEL ? undefined : [{ cron: '* * * * *', queue: 'default', limit: 20 }],
+    // B61_JOBS_OFF=true (the backup restore test) keeps a copy of the live data
+    // from running scheduled work such as calendar imports.
+    autoRun:
+      process.env.VERCEL || process.env.B61_JOBS_OFF === 'true'
+        ? undefined
+        : [{ cron: '* * * * *', queue: 'default', limit: 20 }],
     tasks: [
       {
         // Copies events in from every school's Calendar feeds, once a day.
@@ -193,6 +206,19 @@ export default buildConfig({
             saveToJWT: true,
           },
         ],
+      },
+    }),
+    // Error tracking (src/ops/sentry-options.ts): Payload's own server errors
+    // (500s) go to Sentry once NEXT_PUBLIC_SENTRY_DSN is set. The user is sent
+    // as an id only.
+    sentryPlugin({
+      enabled: Boolean(sentryDsn()),
+      Sentry,
+      options: {
+        context: ({ defaultContext }) => ({
+          ...defaultContext,
+          user: defaultContext.user?.id != null ? { id: String(defaultContext.user.id) } : undefined,
+        }),
       },
     }),
     // Clears a school's cached public pages when staff change its content

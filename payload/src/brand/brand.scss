@@ -30,11 +30,13 @@ html[data-theme='light'] .btn--style-primary {
 
 /* Login page */
 html[data-theme='light'] .template-minimal { background: var(--b61-paper); }
-.b61-logo { display: inline-flex; align-items: center; gap: 14px; }
-.b61-logo__text { display: flex; flex-direction: column; line-height: 1.15; }
-.b61-logo__name { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; color: var(--theme-text); }
+.b61-logo { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.b61-logo__img { display: block; width: 140px; height: auto; }
+.b61-logo__img--dark { display: none; }
+html[data-theme='dark'] .b61-logo__img--light { display: none; }
+html[data-theme='dark'] .b61-logo__img--dark { display: block; }
 .b61-logo__tag { font-size: 13px; color: var(--theme-elevation-600); }
-.b61-icon { display: inline-flex; width: 18px; height: 18px; svg { width: 18px; height: 18px; } }
+.b61-icon { display: inline-flex; width: 18px; height: 18px; img { width: 18px; height: 18px; } }
 .b61-login-note {
   margin-bottom: 20px;
   color: var(--theme-elevation-700);

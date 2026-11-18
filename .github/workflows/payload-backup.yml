@@ -1,0 +1,242 @@
+# Nightly backup of the Payload school sites, with a restore test every night.
+# Full guide (setup, where backups are, how to restore): payload/docs/BACKUPS.md
+#
+# 1. backup: dumps the live Neon database and copies every Vercel Blob file
+#    (photos, documents, form uploads), encrypts both with BACKUP_PASSPHRASE and
+#    keeps them as artifacts of this run (30 days; Sunday's copy 90 days).
+#    The repo is public, so nothing leaves this job unencrypted and nothing
+#    secret is printed.
+# 2. restore-test: in a throwaway Postgres, decrypts that night's backup,
+#    restores it and checks every table's row count against the live database
+#    and every file against its checksum. On Sundays (and when run by hand with
+#    "full check") it also builds the site on the restored data, signs in and
+#    loads every school's published pages (scripts/smoke.mjs).
+#
+# Needs three repository secrets (Settings > Secrets and variables > Actions):
+#   BACKUP_DATABASE_URL   Neon's direct (unpooled) address of the live database
+#   BACKUP_BLOB_TOKEN     the Vercel Blob read/write token of the live store
+#   BACKUP_PASSPHRASE     a long random passphrase; keep a copy in the password manager
+# Until they're added the backup skips itself with a warning instead of failing.
+name: Payload backup
+
+on:
+  schedule:
+    - cron: '17 7 * * *' # 07:17 UTC = 2:17 AM Eastern (3:17 AM in summer)
+  workflow_dispatch:
+    inputs:
+      full_check:
+        description: 'Also build the site on the restored copy and load every page'
+        type: boolean
+        default: false
+
+concurrency:
+  group: payload-backup
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  PG_IMAGE: postgres:18
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      ready: ${{ steps.secrets.outputs.ready }}
+      stamp: ${{ steps.stamp.outputs.stamp }}
+    defaults:
+      run:
+        working-directory: payload
+    steps:
+      - name: Secrets present?
+        id: secrets
+        working-directory: .
+        env:
+          A: ${{ secrets.BACKUP_DATABASE_URL }}
+          B: ${{ secrets.BACKUP_BLOB_TOKEN }}
+          C: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          if [ -n "$A" ] && [ -n "$B" ] && [ -n "$C" ]; then echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::Backup skipped: add BACKUP_DATABASE_URL, BACKUP_BLOB_TOKEN and BACKUP_PASSPHRASE (see payload/docs/BACKUPS.md)"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Name this backup
+        id: stamp
+        working-directory: .
+        run: echo "stamp=$(date -u +%Y-%m-%d-%H%M)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: steps.secrets.outputs.ready == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.secrets.outputs.ready == 'true'
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: payload/package-lock.json
+
+      - name: Install
+        if: steps.secrets.outputs.ready == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Dump the database
+        if: steps.secrets.outputs.ready == 'true'
+        env:
+          DB: ${{ secrets.BACKUP_DATABASE_URL }}
+        run: |
+          mkdir -p /tmp/backup/db
+          # Row counts first, then the dump (custom format, no owners/grants so it
+          # restores into any Postgres).
+          docker run --rm --network host -e DB -v "$PWD/scripts/backup:/s:ro" "$PG_IMAGE" \
+            sh -c 'psql "$DB" -X -At -v ON_ERROR_STOP=1 -f /s/table-counts.sql' > /tmp/backup/db/counts.tsv
+          docker run --rm --network host -e DB -v /tmp/backup/db:/out "$PG_IMAGE" \
+            sh -c 'pg_dump "$DB" --format=custom --no-owner --no-acl --file=/out/database.dump && psql "$DB" -X -At -c "show server_version" > /out/server-version.txt'
+          echo "Tables: $(wc -l < /tmp/backup/db/counts.tsv), dump: $(du -h /tmp/backup/db/database.dump | cut -f1), server $(cat /tmp/backup/db/server-version.txt)"
+
+      - name: Copy the Blob files
+        if: steps.secrets.outputs.ready == 'true'
+        env:
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.BACKUP_BLOB_TOKEN }}
+        run: node scripts/backup/blob-download.mjs /tmp/backup/blob
+
+      - name: Encrypt
+        if: steps.secrets.outputs.ready == 'true'
+        env:
+          PASS: ${{ secrets.BACKUP_PASSPHRASE }}
+          STAMP: ${{ steps.stamp.outputs.stamp }}
+        run: |
+          mkdir -p /tmp/out
+          umask 077; printf '%s' "$PASS" > /tmp/pass
+          for part in db blob; do
+            tar -C /tmp/backup/$part -cf - . | gpg --batch --yes --pinentry-mode loopback --passphrase-file /tmp/pass \
+              --symmetric --cipher-algo AES256 --compress-algo zlib -o /tmp/out/b61-$part-$STAMP.tar.gpg
+          done
+          rm -f /tmp/pass; rm -rf /tmp/backup
+          ls -lh /tmp/out
+
+      - name: Keep (30 days; Sunday's 90)
+        if: steps.secrets.outputs.ready == 'true'
+        id: days
+        working-directory: .
+        run: echo "days=$([ "$(date -u +%u)" = 7 ] && echo 90 || echo 30)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        if: steps.secrets.outputs.ready == 'true'
+        with:
+          name: b61-backup-${{ steps.stamp.outputs.stamp }}
+          path: /tmp/out/*.tar.gpg
+          retention-days: ${{ steps.days.outputs.days }}
+          compression-level: 0
+          if-no-files-found: error
+
+  restore-test:
+    needs: backup
+    if: needs.backup.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: payload
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: b61
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/b61
+      FULL: ${{ github.event_name == 'workflow_dispatch' && inputs.full_check || (github.event_name == 'schedule' && 'weekly') || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: b61-backup-${{ needs.backup.outputs.stamp }}
+          path: /tmp/in
+
+      - name: Decrypt
+        env:
+          PASS: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          umask 077; printf '%s' "$PASS" > /tmp/pass
+          for part in db blob; do
+            mkdir -p /tmp/restore/$part
+            gpg --batch --pinentry-mode loopback --passphrase-file /tmp/pass -d /tmp/in/b61-$part-*.tar.gpg | tar -C /tmp/restore/$part -xf -
+          done
+          rm -f /tmp/pass
+
+      - name: Restore the database into a throwaway Postgres
+        run: |
+          docker run --rm --network host -v /tmp/restore/db:/in:ro "$PG_IMAGE" \
+            pg_restore --dbname="$DATABASE_URL" --no-owner --no-acl --exit-on-error /in/database.dump
+          echo "Restored a dump of Postgres $(cat /tmp/restore/db/server-version.txt)"
+
+      - name: Every table has the same number of rows as the live database
+        run: |
+          docker run --rm --network host -v "$PWD/scripts/backup:/s:ro" "$PG_IMAGE" \
+            psql "$DATABASE_URL" -X -At -v ON_ERROR_STOP=1 -f /s/table-counts.sql > /tmp/restored-counts.tsv
+          if ! diff /tmp/restore/db/counts.tsv /tmp/restored-counts.tsv; then
+            echo "::error::The restored database doesn't match the live one (lines above: < live, > restored)"; exit 1
+          fi
+          echo "All $(wc -l < /tmp/restored-counts.tsv) tables match ($(awk -F'\t' '{s+=$2} END {print s}' /tmp/restored-counts.tsv) rows)"
+
+      - name: Every Blob file matches its checksum
+        run: node scripts/backup/blob-verify.mjs /tmp/restore/blob
+
+      - name: Full check this time?
+        id: full
+        working-directory: .
+        run: |
+          if [ "$FULL" = "true" ] || { [ "$FULL" = "weekly" ] && [ "$(date -u +%u)" = 7 ]; }; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; fi
+
+      - uses: actions/setup-node@v4
+        if: steps.full.outputs.run == 'true'
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: payload/package-lock.json
+
+      - name: Build the site on the restored data
+        if: steps.full.outputs.run == 'true'
+        env:
+          SCHOOL_SECRET: restore-test-only
+          B61_JOBS_OFF: 'true'
+          B61_RESTORE_TEST: 'true'
+          EMAIL_PREVIEW_DIR: /tmp/emails
+          NEXT_TELEMETRY_DISABLED: '1'
+          SMOKE_EMAIL: restore-test@example.com
+          SMOKE_PASSWORD: ${{ github.run_id }}-restore-test
+        run: |
+          npm ci --no-audit --no-fund
+          # Usually nothing to do; if main has a migration newer than the
+          # backup, it runs here, which also proves it applies to real data.
+          npx payload migrate
+          npx payload run src/scripts/restore-check-admin.ts
+          npm run build
+
+      - name: Start it and load every school's published pages
+        if: steps.full.outputs.run == 'true'
+        env:
+          SCHOOL_SECRET: restore-test-only
+          B61_JOBS_OFF: 'true'
+          EMAIL_PREVIEW_DIR: /tmp/emails
+          NEXT_TELEMETRY_DISABLED: '1'
+          BASE_URL: http://localhost:3000
+          SMOKE_EMAIL: restore-test@example.com
+          SMOKE_PASSWORD: ${{ github.run_id }}-restore-test
+        run: |
+          mkdir -p /tmp/emails
+          nohup npm start > /tmp/server.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/admin/login | grep -q 200; then break; fi
+            sleep 2
+          done
+          node scripts/smoke.mjs

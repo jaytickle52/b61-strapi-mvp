@@ -4704,7 +4704,6 @@ export interface Program {
     [k: string]: unknown;
   } | null;
   image?: (number | null) | Media;
-  sortOrder?: number | null;
   meta?: {
     /**
      * What the page is, in the words a family would search, then the school's name: "Admissions and Tuition | Grace Christian School". Used exactly as written. About 50-60 characters.
@@ -4743,7 +4742,6 @@ export interface Staff {
   email?: string | null;
   bio?: string | null;
   photo?: (number | null) | Media;
-  sortOrder?: number | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -8558,7 +8556,6 @@ export interface ProgramsSelect<T extends boolean = true> {
   summary?: T;
   description?: T;
   image?: T;
-  sortOrder?: T;
   meta?:
     | T
     | {
@@ -8584,7 +8581,6 @@ export interface StaffSelect<T extends boolean = true> {
   email?: T;
   bio?: T;
   photo?: T;
-  sortOrder?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
