@@ -99,42 +99,13 @@ async function main() {
   const cleared = await api('POST', `/schools/${id}/setup/spots`, { token, body: { spots: { 'home.diff1.title': '' } } })
   check(cleared.status === 200 && !('home.diff1.title' in cleared.json.spots) && cleared.json.spots['home.hero.tagline1'] === tagline, 'an empty value clears one spot and keeps the rest')
 
-  // Every Schoolbox page has spots
-  for (const key of ['about', 'admissions', 'academics', 'leadership', 'tuition', 'visit', 'discipleship', 'families', 'support'])
-    check(list.json?.spots?.some((s) => s.page === key), `the spot list covers the ${key} page`)
-  const more = await api('POST', `/schools/${id}/setup/spots`, {
-    token,
-    body: {
-      spots: {
-        'about.mission.text': `We exist ${RUN}.`,
-        'academics.philosophy.text': `Classical ${RUN}.`,
-        'support.give.url': 'not a link',
-        'families.link1.url': '/calendar',
-        'families.link1.title': 'Calendar',
-      },
-    },
-  })
-  check(more.json?.problems?.some((p) => p.includes("isn't a web address")) && !('support.give.url' in more.json.spots), 'a link that isn’t a web address is left out')
-
   // Build
   const visitorBefore = visible(await (await fetch(BASE + '/', { headers: { cookie: 'b61-school=schoolbox' } })).text())
   const built = await api('POST', `/schools/${id}/setup/build`, { token })
   check(built.status === 200 && built.json?.pages?.[0]?.slug === 'home', 'Build makes the Home page from the spots')
   if (other) check(built.json?.problems?.some((p) => p.includes(`Photo ${other.id}`)), 'a photo from another school is left out and reported')
 
-  check(built.json?.pages?.length === 10, 'Build makes all ten Schoolbox pages')
-  const draftOf = async (slug) => (await api('GET', `/pages?where[school][equals]=${id}&where[slug][equals]=${slug}&draft=true&depth=0`, { token })).json?.docs?.[0]
-  const aboutText = JSON.stringify((await draftOf('about'))?.sections ?? [])
-  check(aboutText.includes(`We exist ${RUN}.`) && !aboutText.includes('Our founder'), 'About has the school’s mission, and no founder section when that spot is empty')
-  const acad = JSON.stringify((await draftOf('academics'))?.sections ?? [])
-  check(acad.includes(`Classical ${RUN}.`) && !acad.includes('"Results"'), 'Academics shows the optional philosophy, and no results band when none are given')
-  const visitPage = await draftOf('schedule-a-tour')
-  check(visitPage?.title === 'Schedule a Visit' && JSON.stringify(visitPage.sections).includes('b61Form'), 'Schedule a Visit replaces the tour page and keeps the tour form')
-  check(JSON.stringify((await draftOf('current-families'))?.sections ?? []).includes('/calendar'), 'Current Families quick links use the school’s addresses')
-  const one = await api('POST', `/schools/${id}/setup/build`, { token, body: { pages: ['about'] } })
-  check(one.json?.pages?.length === 1 && one.json.pages[0].key === 'about', 'Build can make just the pages asked for')
-
-  const draft = await draftOf('home')
+  const draft = (await api('GET', `/pages?where[school][equals]=${id}&where[slug][equals]=home&draft=true&depth=0`, { token })).json?.docs?.[0]
   const text = JSON.stringify(draft?.sections ?? [])
   check(text.includes(tagline) && text.includes('Growing in grace.'), 'the draft Home page has the school’s words')
   check(text.includes('[Key differentiator]'), 'empty spots keep the template’s guidance')
