@@ -40,6 +40,7 @@ export const EmailLog: CollectionConfig = {
         { label: 'Test email', value: 'test' },
         { label: 'Password reset', value: 'password' },
         { label: 'Invite', value: 'invite' },
+        { label: 'Account security (two-factor)', value: 'security' },
         { label: 'Other', value: 'other' },
       ],
     },

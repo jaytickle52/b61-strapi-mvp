@@ -10,7 +10,9 @@
 #      categories, drag ordering, page templates, video links (scripts/features.mjs),
 #   7. checks what search engines get: descriptions, sitemap, robots, the
 #      calendar limit, site icons, the one-H1 rule (scripts/seo.mjs, check-seo-helpers.ts),
-#   8. checks the MCP connector: keys, drafts only, no deletes (scripts/mcp.mjs).
+#   8. checks the MCP connector: keys, drafts only, no deletes (scripts/mcp.mjs),
+#   9. checks two-factor sign-in, optional for school staff and then (server
+#      restarted as on the live site) required for Banner 61 admins (scripts/two-factor.mjs).
 # Vercel still deploys main on its own; a red check here means look before you trust that deploy.
 name: Payload checks
 
@@ -152,6 +154,31 @@ jobs:
           SMOKE_EMAIL: ci@example.com
           SMOKE_PASSWORD: ci-smoke-password-123
         run: node scripts/mcp.mjs
+
+      - name: Two-factor test (optional for school staff)
+        env:
+          BASE_URL: http://localhost:3000
+          SMOKE_EMAIL: ci@example.com
+          SMOKE_PASSWORD: ci-smoke-password-123
+        run: node scripts/two-factor.mjs
+
+      # Last: it sets up two-factor on the CI admin, so later password-only sign-ins would be held at the code page.
+      - name: Two-factor test (required for Banner 61 admins, as on the live site)
+        env:
+          BASE_URL: http://localhost:3000
+          SMOKE_EMAIL: ci@example.com
+          SMOKE_PASSWORD: ci-smoke-password-123
+          REQUIRED: 'true'
+        run: |
+          pkill -f "next-server|next start|scripts/start.mjs" || true
+          for i in $(seq 1 15); do curl -s -o /dev/null http://localhost:3000/ || break; sleep 1; done
+          mkdir -p /tmp/emails
+          B61_REQUIRE_ADMIN_2FA=true nohup npm start > /tmp/server.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/admin/login | grep -q 200; then break; fi
+            sleep 2
+          done
+          node scripts/two-factor.mjs
 
       - name: Server log
         if: failure()

@@ -1,3 +1,4 @@
+import { twoFactorPending } from '@/users/two-factor-rules'
 import type { AdminViewServerProps } from 'payload'
 import { DefaultTemplate } from '@payloadcms/next/templates'
 import { redirect } from 'next/navigation'
@@ -17,6 +18,8 @@ import { DEMO_SLUGS, sampleReport } from './sample'
 export async function AnalyticsView({ initPageResult, params, searchParams }: AdminViewServerProps) {
   const { req, visibleEntities, permissions, locale, cookies } = initPageResult
   if (!req.user) redirect('/admin/login?redirect=%2Fadmin%2Fanalytics')
+  // Owing a two-factor code: the editor's own redirect takes them to the right page.
+  if (twoFactorPending(req.user)) redirect('/admin')
   const days = toPeriod(searchParams?.days)
   const school = await selectedSchool(req, cookies)
 

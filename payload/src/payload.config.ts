@@ -40,6 +40,7 @@ import { emailAdapter } from './email/adapter'
 import { sidebarOrder } from './admin/sidebarOrder'
 import { managesAnySchool, SCHOOL_ROLES } from './access'
 import { draftsOnlyOverMcp, mcpConnector } from './mcp/config'
+import { twoFactor, twoFactorPending } from './users/two-factor'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -111,7 +112,9 @@ export default buildConfig({
   // /api/payload-jobs/run (vercel.json); elsewhere the server runs it itself.
   jobs: {
     access: {
-      run: ({ req }) => Boolean(req.user) || (Boolean(process.env.CRON_SECRET) && req.headers.get('authorization') === `Bearer ${process.env.CRON_SECRET}`),
+      run: ({ req }) =>
+        (Boolean(req.user) && !twoFactorPending(req.user)) ||
+        (Boolean(process.env.CRON_SECRET) && req.headers.get('authorization') === `Bearer ${process.env.CRON_SECRET}`),
     },
     // B61_JOBS_OFF=true (the backup restore test) keeps a copy of the live data
     // from running scheduled work such as calendar imports.
@@ -229,6 +232,9 @@ export default buildConfig({
     mcpConnector,
     // The sidebar's order (src/admin/sidebarOrder.ts). Display only.
     sidebarOrder,
+    // Two-factor sign-in (src/users/two-factor.ts). Must stay last: it guards
+    // every collection, global and endpoint registered before it.
+    ...twoFactor,
   ],
   onInit: async (payload) => {
     // On Vercel the demo is seeded during the build (scripts/seed.ts), not on every cold start.

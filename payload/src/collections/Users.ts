@@ -3,6 +3,7 @@ import { APIError } from 'payload'
 import { idOf, isB61Admin, managesAnySchool, MANAGERS, schoolsWith } from '../access'
 import { brandedEmail, schoolSender, siteOrigin } from '../email/school'
 import { inviteEndpoint, resendInviteEndpoint } from '../users/invite'
+import { resetTwoFactorEndpoint } from '../users/two-factor-reset'
 
 /**
  * People who sign in to the admin.
@@ -179,12 +180,15 @@ export const Users: CollectionConfig = {
       },
     },
   },
-  endpoints: [inviteEndpoint, resendInviteEndpoint],
+  endpoints: [inviteEndpoint, resendInviteEndpoint, resetTwoFactorEndpoint],
   access: {
     read: readUsers,
     create: manageUsers,
     update: updateUsers,
     delete: manageUsers,
+    // Lifting a lockout (wrong passwords or wrong two-factor codes): the same
+    // people who manage the account, not any signed-in user (Payload's default).
+    unlock: manageUsers,
   },
   hooks: {
     beforeChange: [guardUserChanges],
@@ -224,6 +228,11 @@ export const Users: CollectionConfig = {
       name: 'invite',
       type: 'ui',
       admin: { position: 'sidebar', components: { Field: '@/users/InviteStatus#InviteStatus' } },
+    },
+    {
+      name: 'twoFactorReset',
+      type: 'ui',
+      admin: { position: 'sidebar', components: { Field: '@/users/TwoFactorReset#TwoFactorReset' } },
     },
     {
       name: 'invitedAt',
