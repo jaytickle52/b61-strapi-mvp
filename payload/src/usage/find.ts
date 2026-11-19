@@ -1,5 +1,6 @@
 import type { Block, Field, Payload } from 'payload'
 import { BODY_BLOCKS } from '../b61/kit/body'
+import { videoGuid } from '../video/bunny'
 
 /*
  * "Where is this used": finds every place a photo, document or page is used
@@ -11,7 +12,7 @@ import { BODY_BLOCKS } from '../b61/kit/body'
  * Both the published version and the latest draft are checked.
  */
 
-export type UsageTarget = 'media' | 'documents' | 'pages'
+export type UsageTarget = 'media' | 'documents' | 'pages' | 'videos'
 export type UsageHit = { collection: string; id: number | string; title: string; where: string[] }
 
 const SCANNED = [
@@ -43,7 +44,8 @@ const lexicalBlocks: Record<string, Block> = Object.fromEntries(
   Object.values(BODY_BLOCKS).map((b) => [b.slug, b]),
 )
 
-type Ctx = { target: UsageTarget; id: string; found: Set<string> }
+// text: a video is used by its player link (a text field), matched on the video's id.
+type Ctx = { target: UsageTarget; id: string; found: Set<string>; text?: string | null }
 
 function matchesRelation(f: any, value: unknown, ctx: Ctx): boolean {
   const rel = f.relationTo
@@ -133,6 +135,11 @@ export function walkFields(fields: Field[], data: any, path: string[], ctx: Ctx)
         if (f.name && matchesRelation(f, data[f.name], ctx))
           ctx.found.add([...path, labelOf(f, f.name)].join(' › '))
         break
+      case 'text':
+      case 'textarea':
+        if (ctx.text && f.name && typeof data[f.name] === 'string' && data[f.name].toLowerCase().includes(ctx.text))
+          ctx.found.add([...path, labelOf(f, f.name)].join(' › '))
+        break
       case 'richText':
         if (f.name && data[f.name]) walkLexical(data[f.name], [...path, labelOf(f, f.name)], ctx)
         break
@@ -149,6 +156,12 @@ export async function findUsage(
 ): Promise<UsageHit[]> {
   const schoolId = idOf(school)
   const hits: UsageHit[] = []
+  let text: string | null = null
+  if (target === 'videos') {
+    const video: any = await payload.findByID({ collection: 'videos' as any, id, depth: 0, overrideAccess: true }).catch(() => null)
+    text = videoGuid(video?.link)
+    if (!text) return hits
+  }
   for (const slug of SCANNED) {
     const collection = payload.collections[slug]
     if (!collection) continue
@@ -170,7 +183,7 @@ export async function findUsage(
     }
     for (const [docId, versions] of byId) {
       if (slug === target && docId === String(id)) continue
-      const ctx: Ctx = { target, id: String(id), found: new Set() }
+      const ctx: Ctx = { target, id: String(id), found: new Set(), text }
       for (const doc of versions) walkFields(config.fields, doc, [], ctx)
       if (!ctx.found.size) continue
       const titleField = (config.admin?.useAsTitle as string) || 'title'

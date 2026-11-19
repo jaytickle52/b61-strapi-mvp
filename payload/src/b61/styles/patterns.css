@@ -78,7 +78,6 @@
 .b61-cards__side { display: flex; flex-direction: column; align-items: flex-start; gap: var(--b61-space-lg, 28px); min-width: 0; }
 .b61-cards__side > .b61-cards__head { margin: 0; }
 .b61-cards__side > .b61-car__controls { margin: 0; }
-.b61-cards__side > .b61-cards__actions { margin: 0; }
 .b61-halign-center .b61-cards__side { align-items: center; text-align: center; }
 .b61-cards__main { min-width: 0; }
 .b61-cards__main > .b61-cards__grid,
@@ -89,14 +88,19 @@
   .b61-cards__region--beside.b61-cards__region--stagger .b61-cards__side { position: sticky; top: calc(var(--b61-sticky-h, 76px) + 24px); padding-top: var(--b61-space-xl, 40px); }
 }
 
-/* Run off the screen edge: the carousel's track reaches the right edge of the
-   screen, so the next cards show past the page width. Top-level bands only
-   (inside a Section column it stops at the column). */
+/* Run off the screen edge: the carousel's cards reach the right edge of the
+   screen, so the next ones show past the page width. Any carousel, every
+   screen size (Jay, 19 Nov 2026: it used to need Heading beside and a wide
+   screen, so it looked broken). Top-level bands only (inside a Section column
+   it stops at the column). The controls and buttons stay inside the page. */
 .b61-cards:has(.b61-cards__region--bleed) { overflow-x: clip; }
-@media (min-width: 1024px) {
-  .b61-cards__region--bleed .b61-cards__main {
-    margin-right: calc((min(100vw - 2 * var(--b61-pad-inline, 20px), var(--b61-width)) - 100vw) / 2);
-  }
+.b61-cards__region--bleed > .b61-cards__viewport {
+  max-width: none;
+  margin-left: calc((100% - min(100%, var(--b61-width))) / 2);
+  margin-right: calc((100% - 100vw) / 2);
+}
+.b61-cards__region--bleed .b61-cards__main > .b61-cards__viewport {
+  margin-right: calc((min(100vw - 2 * var(--b61-pad-inline, 20px), var(--b61-width)) - 100vw) / 2);
 }
 
 /* Staggered: every other column sits lower. Wide screens only; narrower

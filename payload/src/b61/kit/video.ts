@@ -43,7 +43,7 @@ const VIDEO_ERROR = 'Paste a YouTube or Vimeo link, or upload a video.'
 export function videoLinkField(show: (siblingData: any) => boolean): Field {
   return {
     name: 'video',
-    label: 'Video link',
+    label: 'Video',
     type: 'text',
     admin: {
       condition: (_, s) => show(s),

@@ -53,7 +53,7 @@ export const refuseDeleteWhenUsed =
       )
     const hits = await findUsage(req.payload, target, id, doc.school)
     if (!hits.length) return
-    const name = target === 'media' ? 'photo' : target === 'documents' ? 'document' : 'page'
+    const name = target === 'media' ? 'photo' : target === 'documents' ? 'document' : target === 'videos' ? 'video' : 'page'
     const list = hits
       .slice(0, 5)
       .map(

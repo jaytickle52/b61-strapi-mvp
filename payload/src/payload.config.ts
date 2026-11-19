@@ -5,7 +5,8 @@ import { healthEndpoint } from './ops/health'
 import * as Sentry from '@sentry/nextjs'
 import { sentryPlugin } from '@payloadcms/plugin-sentry'
 import { sentryDsn } from './ops/sentry-options'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { LinkFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
+import { noNewTab } from './b61/kit/controls'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -14,6 +15,7 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Documents } from './collections/Documents'
+import { Videos } from './collections/Videos'
 import { sameSchoolFolder } from './media/folders'
 import { Events, News, Pages, Programs, Staff } from './collections/content'
 import { Announcements } from './collections/Announcements'
@@ -86,6 +88,7 @@ export default buildConfig({
     NewsCategories,
     Media,
     Documents,
+    Videos,
     FormUploads,
     EmailLog,
     withPreviewFocus(SchoolSettings),
@@ -96,7 +99,11 @@ export default buildConfig({
   endpoints: [...bunnyEndpoints, healthEndpoint],
   // Resend when RESEND_API_KEY is set; otherwise emails are only logged (src/email).
   email: emailAdapter,
-  editor: lexicalEditor(),
+  // Links never ask about a new tab: pages open in place, documents and other
+  // websites in a new tab (EDITING-STANDARD.md section 5).
+  editor: lexicalEditor({
+    features: ({ defaultFeatures }) => [...defaultFeatures.filter((f) => f.key !== 'link'), LinkFeature({ fields: noNewTab })],
+  }),
   secret: secret('PAYLOAD_SECRET'),
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
   db: postgresAdapter({
@@ -178,6 +185,7 @@ export default buildConfig({
         staff: {},
         media: {},
         documents: {},
+        videos: {},
         // Folders for photos and documents belong to a school too.
         'payload-folders': {},
         'school-settings': { isGlobal: true },

@@ -34,9 +34,23 @@ export function focusOf(m: MediaRef): string | undefined {
 }
 
 type LinkValue =
-  | { type?: 'page' | 'url' | 'document' | null; page?: number | Page | null; document?: number | { url?: string | null } | null; url?: string | null; newTab?: boolean | null }
+  | { type?: 'page' | 'url' | 'document' | null; page?: number | Page | null; document?: number | { url?: string | null } | null; url?: string | null }
   | null
   | undefined
+
+/**
+ * Whether a link opens in a new tab. Editors don't choose (Jay, 19 Nov 2026):
+ * pages on this site open in place; documents and other websites open in a new
+ * tab. A web address that stays on this site ("/apply", "#visit"), and email,
+ * phone and text links, open in place.
+ */
+export function opensNewTab(href: string | null | undefined, kind: 'page' | 'document' | 'url' | null | undefined): boolean {
+  if (!href) return false
+  if (kind === 'document') return true
+  if (kind !== 'url') return false
+  if (/^(\/(?!\/)|#|\?|mailto:|tel:|sms:)/i.test(href)) return false
+  return true
+}
 
 export function resolveLink(link: LinkValue): { href: string | null; newTab: boolean } {
   if (!link) return { href: null, newTab: false }
@@ -44,5 +58,5 @@ export function resolveLink(link: LinkValue): { href: string | null; newTab: boo
   if (link.type === 'url') href = link.url || null
   else if (link.type === 'document') href = (link.document && typeof link.document === 'object' && link.document.url) || null
   else if (link.page && typeof link.page === 'object') href = link.page.slug === 'home' ? '/' : `/${link.page.slug}`
-  return { href, newTab: Boolean(link.newTab) }
+  return { href, newTab: opensNewTab(href, link.type ?? 'page') }
 }

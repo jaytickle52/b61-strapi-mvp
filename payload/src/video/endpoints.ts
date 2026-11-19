@@ -27,6 +27,16 @@ export const bunnyEndpoints: Endpoint[] = [
         return Response.json({ message: 'You can only upload videos for your own school.' }, { status: 403 })
       try {
         const ticket = await createUpload(req.payload, body.school, String(body.title ?? ''))
+        // Every upload joins the school's Videos, so it can be used again elsewhere
+        // (the Videos page itself saves its own entry: library false).
+        if (body.library !== false) {
+          const video = await req.payload.create({
+            collection: 'videos' as any,
+            data: { school: body.school, title: String(body.title ?? '').slice(0, 200) || 'Video', link: ticket.embed } as any,
+            overrideAccess: true,
+          })
+          return Response.json({ ...ticket, videoDoc: video.id })
+        }
         return Response.json(ticket)
       } catch (err: any) {
         req.payload.logger.error({ err }, 'Bunny upload ticket failed')

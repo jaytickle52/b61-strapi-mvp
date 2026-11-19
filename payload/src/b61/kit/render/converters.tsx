@@ -1,4 +1,5 @@
-import { LinkJSXConverter, type JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
+import type { JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
+import { opensNewTab } from '../../lib/media'
 
 /**
  * Where a link made in the Content editor goes when it points at something on
@@ -53,8 +54,36 @@ const tableConverters = {
   },
 }
 
+/**
+ * Links typed in the Content editor. Same rule as every other link (`opensNewTab`):
+ * pages open in place, documents and other websites in a new tab. Older links'
+ * own "Open in new tab" setting is ignored.
+ */
+const linkConverters = {
+  autolink: ({ node, nodesToJSX }: any) => {
+    const href = node.fields?.url ?? ''
+    const nt = opensNewTab(href, 'url')
+    return (
+      <a href={href} {...(nt ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+        {nodesToJSX({ nodes: node.children })}
+      </a>
+    )
+  },
+  link: ({ node, nodesToJSX }: any) => {
+    const internal = node.fields?.linkType === 'internal'
+    const href = internal ? internalHref(node) : (node.fields?.url ?? '')
+    const kind = internal ? (node.fields?.doc?.relationTo === 'documents' ? 'document' : 'page') : 'url'
+    const nt = href !== '#' && opensNewTab(href, kind)
+    return (
+      <a href={href} {...(nt ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+        {nodesToJSX({ nodes: node.children })}
+      </a>
+    )
+  },
+}
+
 export const b61Converters: JSXConvertersFunction = ({ defaultConverters }) => ({
   ...defaultConverters,
   ...tableConverters,
-  ...LinkJSXConverter({ internalDocToHref: ({ linkNode }) => internalHref(linkNode) }),
+  ...linkConverters,
 })

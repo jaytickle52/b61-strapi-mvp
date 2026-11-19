@@ -117,3 +117,17 @@ export async function copyToBunny(payload: Payload, school: number | string, tit
   if (!put.ok) throw new Error(`Bunny refused the upload (${put.status}): ${(await put.text()).slice(0, 200)}`)
   return `https://iframe.mediadelivery.net/embed/${cfg.libraryId}/${video.guid}`
 }
+
+const GUID_RE = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
+
+/** The video's id inside one of our player links, or null. */
+export function videoGuid(link?: string | null): string | null {
+  const m = typeof link === 'string' && /mediadelivery\.net/i.test(link) ? link.match(GUID_RE) : null
+  return m ? m[0].toLowerCase() : null
+}
+
+/** Removes a video file from the library (the Videos list deletes unused ones). */
+export async function deleteVideo(guid: string): Promise<void> {
+  if (!bunnyConfig()) return
+  await bunny(`/videos/${encodeURIComponent(guid)}`, { method: 'DELETE' })
+}

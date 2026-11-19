@@ -3,7 +3,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import type { Page } from '@/payload-types'
-import { asMedia, focusOf, imgProps, resolveLink } from '../../lib/media'
+import { asMedia, focusOf, imgProps, opensNewTab, resolveLink } from '../../lib/media'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { Buttons, HeadingLines, revealAttr } from '../../kit/render/parts'
 import { B61Icon } from '../../kit/render/icons'
@@ -59,7 +59,7 @@ async function loadCards(block: CardGridBlock): Promise<Card[]> {
         key: String(s.id), image: s.photo, eyebrow: s.role, title: s.name, body: s.bio ? <p>{s.bio}</p> : null, href: null,
       }))
     case 'school-facts':
-      return (await schoolFacts(await getSettings())).map((f) => ({ key: f.key, eyebrow: f.label, title: f.value, href: f.href, newTab: Boolean(f.href) }))
+      return (await schoolFacts(await getSettings())).map((f) => ({ key: f.key, eyebrow: f.label, title: f.value, href: f.href, newTab: opensNewTab(f.href, 'url') }))
     default:
       return (block.cards ?? []).map((c, i) => {
         const { href, newTab } = resolveLink(c.link as any)
@@ -76,7 +76,7 @@ async function loadCards(block: CardGridBlock): Promise<Card[]> {
  * B61 Card Grid markup, ported from elements/Card_Grid/html.twig (plugin 1.77.1).
  * Same classes and structure, so the plugin's stylesheets style it unchanged.
  */
-export default async function B61CardGrid({ block, index = 0 }: { block: CardGridBlock; index?: number }) {
+export default async function B61CardGrid({ block, index = 0, nested = false }: { block: CardGridBlock; index?: number; nested?: boolean }) {
   const cards = await loadCards(block)
   const ri = revealAttr(block.entrance)
   const rv = block.entrance === 'off' ? 'off' : 'on'
@@ -119,7 +119,7 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
   const bx = block as any
   const beside = Boolean(bx.headBeside)
   const stagger = !car && Boolean(bx.stagger) && cols !== '1'
-  const bleed = car && beside && Boolean(bx.bleed)
+  const bleed = car && !nested && Boolean(bx.bleed)
   const reveal = ov && Boolean(bx.hoverReveal)
   const altTint = ov && Boolean(bx.altTint)
   const feature = !car && cols === '3' && Boolean(bx.featureMiddle)
@@ -268,36 +268,49 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
 
   const carTop = car && cpos === 'top-right'
   const buttons = <Buttons buttons={block.buttons as any} className="b61-cards__actions b61-btn-group" ri={ri} />
+  // The cards, with a carousel's viewport, bottom controls and status.
+  const body =
+    grid &&
+    (car ? (
+      <>
+        <div className="b61-car__viewport b61-cards__viewport">
+          {grid}
+          {cpos === 'sides' && controls}
+        </div>
+        {['bottom-left', 'bottom-center', 'bottom-right'].includes(cpos) && controls}
+        {cpos === 'sides' && bottomMeta}
+        <p className="b61-car__status js-b61-car-status" aria-live="polite" />
+        <CarouselInit />
+      </>
+    ) : (
+      grid
+    ))
+  const outerClass = `b61-cards b61-halign-${talign}${block.eyebrowRule && block.eyebrowRule !== 'site' ? ` b61-erule-${block.eyebrowRule}` : ''}`
+  const regionProps = {
+    className: regionClass,
+    style: customRatio ? ({ '--cards-ratio': `${rw} / ${rh}` } as CSSProperties) : undefined,
+    'data-b61-reveal': rv,
+    ...(car ? { 'data-b61-car-noun': 'Card' } : {}),
+    ...(hasHeading ? { 'aria-labelledby': headingId } : car ? { 'data-b61-car-name': block.eyebrow || 'Cards' } : {}),
+  }
 
-  // Heading beside the cards: the head (with a carousel's arrows and the
-  // buttons under it) in a side column, the cards in the main one.
+  // Heading beside the cards: the head in a side column (with the arrows under
+  // it when Controls is Top right), the cards in the main one. Other Controls
+  // choices and the buttons sit with the cards, as without it (Jay, 19 Nov 2026).
   if (beside) {
     return (
-      <div className={`b61-cards b61-halign-${talign}${block.eyebrowRule && block.eyebrowRule !== 'site' ? ` b61-erule-${block.eyebrowRule}` : ''}`}>
-        <Wrap
-          className={regionClass}
-          style={customRatio ? ({ '--cards-ratio': `${rw} / ${rh}` } as CSSProperties) : undefined}
-          data-b61-reveal={rv}
-          {...(car ? { 'data-b61-car-noun': 'Card' } : {})}
-          {...(hasHeading ? { 'aria-labelledby': headingId } : car ? { 'data-b61-car-name': block.eyebrow || 'Cards' } : {})}
-        >
+      <div className={outerClass}>
+        <Wrap {...regionProps}>
           <div className="b61-cards__beside">
-            <div className="b61-cards__side">
-              {head}
-              {car && cpos !== 'hidden' && controls}
-              {buttons}
-            </div>
+            {(head || carTop) && (
+              <div className="b61-cards__side">
+                {head}
+                {carTop && controls}
+              </div>
+            )}
             <div className="b61-cards__main">
-              {grid &&
-                (car ? (
-                  <>
-                    <div className="b61-car__viewport b61-cards__viewport">{grid}</div>
-                    <p className="b61-car__status js-b61-car-status" aria-live="polite" />
-                    <CarouselInit />
-                  </>
-                ) : (
-                  grid
-                ))}
+              {body}
+              {buttons}
             </div>
           </div>
         </Wrap>
@@ -306,14 +319,8 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
   }
 
   return (
-    <div className={`b61-cards b61-halign-${talign}${block.eyebrowRule && block.eyebrowRule !== 'site' ? ` b61-erule-${block.eyebrowRule}` : ''}`}>
-      <Wrap
-        className={regionClass}
-        style={customRatio ? ({ '--cards-ratio': `${rw} / ${rh}` } as CSSProperties) : undefined}
-        data-b61-reveal={rv}
-        {...(car ? { 'data-b61-car-noun': 'Card' } : {})}
-        {...(hasHeading ? { 'aria-labelledby': headingId } : car ? { 'data-b61-car-name': block.eyebrow || 'Cards' } : {})}
-      >
+    <div className={outerClass}>
+      <Wrap {...regionProps}>
         {carTop ? (
           <div className="b61-car__headrow b61-cards__headrow">
             {head}
@@ -322,21 +329,7 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
         ) : (
           head
         )}
-        {grid &&
-          (car ? (
-            <>
-              <div className="b61-car__viewport b61-cards__viewport">
-                {grid}
-                {cpos === 'sides' && controls}
-              </div>
-              {['bottom-left', 'bottom-center', 'bottom-right'].includes(cpos) && controls}
-              {cpos === 'sides' && bottomMeta}
-              <p className="b61-car__status js-b61-car-status" aria-live="polite" />
-              <CarouselInit />
-            </>
-          ) : (
-            grid
-          ))}
+        {body}
         {buttons}
       </Wrap>
     </div>

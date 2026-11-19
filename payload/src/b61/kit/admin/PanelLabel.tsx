@@ -60,6 +60,8 @@ export function PanelLabel(props: Spec) {
       if (!state || state.passesCondition === false) continue
       const v = state.value
       if (s.kind === 'text') {
+        // An uploaded video's player address says where files are kept; editors see what it is.
+        if (/mediadelivery\.net/i.test(str(v))) return 'Uploaded video'
         if (str(v)) return str(v)
       } else if (s.kind === 'rich') {
         const t = firstWords(v)
