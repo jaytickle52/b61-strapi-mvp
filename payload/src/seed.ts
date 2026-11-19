@@ -304,7 +304,6 @@ export async function seedDemoSchools(payload: Payload) {
     if (school) await ensureStandardForms(payload, school).catch((e) => payload.logger.error(`[b61] Standard forms: ${e.message}`))
     if (school) await syncElementLibrary(payload, school).catch((e) => payload.logger.error(`[b61] Element library: ${e.message}`))
     if (school) await ensureFeatureDemo(payload, school).catch((e) => payload.logger.error(`[b61] School features demo: ${e.message}`))
-    if (school) await ensureProgramsPage(payload, school).catch((e) => payload.logger.error(`[b61] Programs page: ${e.message}`))
     if (school && key !== 'schoolbox') await ensurePatternsDemo(payload, school).catch((e) => payload.logger.error(`[b61] Layout ideas demo: ${e.message}`))
     if (school && key !== 'schoolbox') await ensurePatternsDemo2(payload, school).catch((e) => payload.logger.error(`[b61] More layout ideas demo: ${e.message}`))
     if (school && key === 'schoolbox') await ensureSchoolboxDemo(payload, school).catch((e) => payload.logger.error(`[b61] Schoolbox demo: ${e.message}`))
@@ -312,25 +311,3 @@ export async function seedDemoSchools(payload: Payload) {
   }
 }
 
-/**
- * Demo schools link to /programs (menu, buttons). Since programs became pages
- * (19 Nov 2026) that address is an ordinary page with a programs card grid;
- * this adds it to a demo school that has program pages but no Programs page.
- */
-async function ensureProgramsPage(payload: Payload, school: School) {
-  const mine = { school: { equals: school.id } }
-  const has = await payload.find({ collection: 'pages', where: { and: [mine, { slug: { equals: 'programs' } }] }, limit: 1, depth: 0, draft: true, overrideAccess: true })
-  if (has.totalDocs > 0) return
-  const progs = await payload.find({ collection: 'pages', where: { and: [mine, { isProgram: { equals: true } }] }, limit: 1, depth: 0, draft: true, overrideAccess: true })
-  if (progs.totalDocs === 0) return
-  await payload.create({
-    collection: 'pages',
-    data: {
-      school: school.id, title: 'Programs', slug: 'programs', generateSlug: false, _status: 'published',
-      meta: { description: `Programs at ${school.name}` },
-      sections: [cardsFrom({ heading: 'Our programs', intro: "A path for every stage of your child's growth.", source: 'programs', limit: 12, columns: 'three', tone: 'light' })],
-    } as any,
-    overrideAccess: true,
-  })
-  payload.logger.info(`[b61] Programs page added for ${school.name}`)
-}

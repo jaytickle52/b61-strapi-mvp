@@ -64,7 +64,9 @@ function later(payload: Payload, collection: string, doc: any) {
   }
 }
 
-const afterChange: CollectionAfterChangeHook = ({ collection, doc, previousDoc, req }) => {
+const afterChange: CollectionAfterChangeHook = ({ collection, doc, previousDoc, req, context }) => {
+  // Not from inside a database migration: it may still roll back.
+  if ((context as any)?.b61Migration) return doc
   // Only a real publish (or a save of a published item). Draft saves and autosaves
   // never ping, even on a page that is already live.
   if (doc?._status !== 'published') return doc

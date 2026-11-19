@@ -4,72 +4,19 @@ import { tidyRemovedNodes } from '../b61/kit/editors'
 import { plainToRich } from '../b61/kit/plain'
 
 /*
- * Programs become pages (19 Nov 2026). Each program is copied to a page at
- * /<its slug> with "This page is a program" switched on and its grades,
- * summary, photo and list order on the program card. Its description becomes
- * a Prose section (grades as eyebrow, name as heading). If the school already
- * has a page at that address, that page is tagged instead and keeps its
- * sections. SEO fields come along, redirects that pointed at the program point
- * at its page, and the program's search entries are dropped (the build re-indexes).
- * Old /programs/<slug> links redirect in the app (app/(frontend)/programs/[slug]).
+ * Programs become pages tagged as programs (Jay, 19 Nov 2026).
+ *
+ * 1. Pages get "This page is a program" and the program card fields.
+ * 2. Each program is copied to a page at /<its slug> (see moveProgramsToPages).
+ * 3. Each school that had programs gets an ordinary "Programs" page with a
+ *    programs card grid at /programs, unless it already has a page there.
+ *
+ * The old programs tables are NOT dropped here. Vercel builds (and runs this)
+ * while the previous version of the site is still serving, and that version
+ * reads them; dropping them now would break it for the minutes the build
+ * takes. A follow-up migration removes them once this version is live.
  */
-async function moveProgramsToPages({ db, payload, req }: Pick<MigrateUpArgs, 'db' | 'payload' | 'req'>) {
-  const exists: any = await db.execute(sql`SELECT to_regclass('public.programs') AS t`)
-  if (!(exists.rows ?? exists)[0]?.t) return
-  const res: any = await db.execute(sql`
-    SELECT id, school_id, name, slug, grades, summary, description, image_id, _status, _order,
-           meta_title, meta_description, meta_image_id, meta_noindex
-    FROM programs ORDER BY school_id, _order NULLS LAST, id`)
-  const rows: any[] = res.rows ?? res
-  const rank = new Map<number, number>()
-  for (const p of rows) {
-    const n = (rank.get(p.school_id) ?? 0) + 1
-    rank.set(p.school_id, n)
-    const program = { grades: p.grades, summary: p.summary, image: p.image_id ?? null, order: n * 10 }
-    const meta = { title: p.meta_title, description: p.meta_description ?? p.summary, image: p.meta_image_id ?? null, noindex: p.meta_noindex ?? false }
-    const description = tidyRemovedNodes(typeof p.description === 'string' ? JSON.parse(p.description) : p.description)
-    const hasWords = Boolean((description as any)?.root?.children?.some((c: any) => c?.children?.length))
-    const slug = p.slug || String(p.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-
-    const found = await payload.find({
-      collection: 'pages', where: { and: [{ school: { equals: p.school_id } }, { slug: { equals: slug } }] },
-      limit: 1, depth: 0, draft: true, overrideAccess: true, req,
-    })
-    let pageId: number | string
-    const ctx = { b61Migration: true }
-    if (found.docs[0]) {
-      pageId = found.docs[0].id
-      await payload.update({
-        collection: 'pages', id: pageId, data: { isProgram: true, program } as any,
-        overrideAccess: true, req, context: ctx, draft: (found.docs[0] as any)._status !== 'published',
-      })
-    } else {
-      const sections = [
-        {
-          blockType: 'b61Prose',
-          ...(p.grades ? { eyebrow: `Grades ${p.grades}` } : {}),
-          headingLevel: 'auto',
-          heading: [{ text: p.name, emphasize: false }],
-          ...(hasWords ? { body: toBody([{ type: 'body', body: description }]) } : p.summary ? { body: toBody([{ type: 'body', body: plainToRich(p.summary) }]) } : {}),
-          textAlign: 'left', position: 'center', surface: 'none', eyebrowRule: 'site', headingRule: 'site', entrance: 'on',
-        },
-      ]
-      const page = await payload.create({
-        collection: 'pages',
-        data: { school: p.school_id, title: p.name, slug, generateSlug: false, isProgram: true, program, meta, sections, _status: p._status === 'published' ? 'published' : 'draft' } as any,
-        overrideAccess: true, req, context: ctx, draft: p._status !== 'published',
-      })
-      pageId = page.id
-    }
-    await db.execute(sql`UPDATE redirects_rels SET pages_id = ${pageId}, programs_id = NULL WHERE programs_id = ${p.id}`)
-  }
-  await db.execute(sql`DELETE FROM search WHERE id IN (SELECT parent_id FROM search_rels WHERE programs_id IS NOT NULL)`)
-  payload.logger.info(`[b61] Moved ${rows.length} program(s) to pages`)
-}
-
-
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
-  // 1. Pages get "This page is a program" and the program card fields.
   await db.execute(sql`
   ALTER TABLE "pages" ADD COLUMN "is_program" boolean DEFAULT false;
   ALTER TABLE "pages" ADD COLUMN "program_grades" varchar;
@@ -85,142 +32,155 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "_pages_v" ADD CONSTRAINT "_pages_v_version_program_image_id_media_id_fk" FOREIGN KEY ("version_program_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   CREATE INDEX "pages_program_program_image_idx" ON "pages" USING btree ("program_image_id");
   CREATE INDEX "_pages_v_version_program_version_program_image_idx" ON "_pages_v" USING btree ("version_program_image_id");`)
-
-  // 2. Every program becomes a page tagged as a program (Jay, 19 Nov 2026).
   await moveProgramsToPages({ db, payload, req })
-
-  // 3. The Programs collection goes. (Its school + slug index was number 3;
-  //    News categories' index takes that number, as Payload counts them.)
-  await db.execute(sql`
-  ALTER TABLE "programs" DISABLE ROW LEVEL SECURITY;
-  ALTER TABLE "_programs_v" DISABLE ROW LEVEL SECURITY;
-  DROP TABLE "programs" CASCADE;
-  DROP TABLE "_programs_v" CASCADE;
-  ALTER TABLE "redirects_rels" DROP CONSTRAINT IF EXISTS "redirects_rels_programs_fk";
-  ALTER TABLE "search_rels" DROP CONSTRAINT IF EXISTS "search_rels_programs_fk";
-  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT IF EXISTS "payload_locked_documents_rels_programs_fk";
-  DROP INDEX IF EXISTS "redirects_rels_programs_id_idx";
-  DROP INDEX IF EXISTS "search_rels_programs_id_idx";
-  DROP INDEX IF EXISTS "school_slug_4_idx";
-  DROP INDEX IF EXISTS "payload_locked_documents_rels_programs_id_idx";
-  CREATE UNIQUE INDEX "school_slug_3_idx" ON "news_categories" USING btree ("school_id","slug");
-  ALTER TABLE "redirects_rels" DROP COLUMN IF EXISTS "programs_id";
-  ALTER TABLE "search_rels" DROP COLUMN IF EXISTS "programs_id";
-  ALTER TABLE "payload_mcp_api_keys" DROP COLUMN IF EXISTS "programs_find";
-  ALTER TABLE "payload_mcp_api_keys" DROP COLUMN IF EXISTS "programs_create";
-  ALTER TABLE "payload_mcp_api_keys" DROP COLUMN IF EXISTS "programs_update";
-  ALTER TABLE "payload_locked_documents_rels" DROP COLUMN IF EXISTS "programs_id";
-  DROP TYPE "public"."enum_programs_status";
-  DROP TYPE "public"."enum__programs_v_version_status";`)
 }
 
-export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
+/** Back out the page fields. The programs tables were never touched, so the old site works again. */
+export async function down({ db }: MigrateDownArgs): Promise<void> {
   await db.execute(sql`
-   CREATE TYPE "public"."enum_programs_status" AS ENUM('draft', 'published');
-  CREATE TYPE "public"."enum__programs_v_version_status" AS ENUM('draft', 'published');
-  CREATE TABLE "programs" (
-  	"id" serial PRIMARY KEY NOT NULL,
-  	"_order" varchar,
-  	"school_id" integer,
-  	"name" varchar,
-  	"generate_slug" boolean DEFAULT true,
-  	"slug" varchar,
-  	"grades" varchar,
-  	"summary" varchar,
-  	"description" jsonb,
-  	"image_id" integer,
-  	"meta_title" varchar,
-  	"meta_description" varchar,
-  	"meta_image_id" integer,
-  	"meta_noindex" boolean,
-  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-  	"_status" "enum_programs_status" DEFAULT 'draft'
-  );
-  
-  CREATE TABLE "_programs_v" (
-  	"id" serial PRIMARY KEY NOT NULL,
-  	"parent_id" integer,
-  	"version__order" varchar,
-  	"version_school_id" integer,
-  	"version_name" varchar,
-  	"version_generate_slug" boolean DEFAULT true,
-  	"version_slug" varchar,
-  	"version_grades" varchar,
-  	"version_summary" varchar,
-  	"version_description" jsonb,
-  	"version_image_id" integer,
-  	"version_meta_title" varchar,
-  	"version_meta_description" varchar,
-  	"version_meta_image_id" integer,
-  	"version_meta_noindex" boolean,
-  	"version_updated_at" timestamp(3) with time zone,
-  	"version_created_at" timestamp(3) with time zone,
-  	"version__status" "enum__programs_v_version_status" DEFAULT 'draft',
-  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-  	"latest" boolean,
-  	"autosave" boolean
-  );
-  
-  ALTER TABLE "pages" DROP CONSTRAINT "pages_program_image_id_media_id_fk";
-  
-  ALTER TABLE "_pages_v" DROP CONSTRAINT "_pages_v_version_program_image_id_media_id_fk";
-  
-  DROP INDEX "pages_program_program_image_idx";
-  DROP INDEX "_pages_v_version_program_version_program_image_idx";
-  DROP INDEX "school_slug_3_idx";
-  ALTER TABLE "redirects_rels" ADD COLUMN "programs_id" integer;
-  ALTER TABLE "search_rels" ADD COLUMN "programs_id" integer;
-  ALTER TABLE "payload_mcp_api_keys" ADD COLUMN "programs_find" boolean DEFAULT false;
-  ALTER TABLE "payload_mcp_api_keys" ADD COLUMN "programs_create" boolean DEFAULT false;
-  ALTER TABLE "payload_mcp_api_keys" ADD COLUMN "programs_update" boolean DEFAULT false;
-  ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "programs_id" integer;
-  ALTER TABLE "programs" ADD CONSTRAINT "programs_school_id_schools_id_fk" FOREIGN KEY ("school_id") REFERENCES "public"."schools"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "programs" ADD CONSTRAINT "programs_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "programs" ADD CONSTRAINT "programs_meta_image_id_media_id_fk" FOREIGN KEY ("meta_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "_programs_v" ADD CONSTRAINT "_programs_v_parent_id_programs_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."programs"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "_programs_v" ADD CONSTRAINT "_programs_v_version_school_id_schools_id_fk" FOREIGN KEY ("version_school_id") REFERENCES "public"."schools"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "_programs_v" ADD CONSTRAINT "_programs_v_version_image_id_media_id_fk" FOREIGN KEY ("version_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "_programs_v" ADD CONSTRAINT "_programs_v_version_meta_image_id_media_id_fk" FOREIGN KEY ("version_meta_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
-  CREATE INDEX "programs__order_idx" ON "programs" USING btree ("_order");
-  CREATE INDEX "programs_school_idx" ON "programs" USING btree ("school_id");
-  CREATE INDEX "programs_slug_idx" ON "programs" USING btree ("slug");
-  CREATE INDEX "programs_image_idx" ON "programs" USING btree ("image_id");
-  CREATE INDEX "programs_meta_meta_image_idx" ON "programs" USING btree ("meta_image_id");
-  CREATE INDEX "programs_updated_at_idx" ON "programs" USING btree ("updated_at");
-  CREATE INDEX "programs_created_at_idx" ON "programs" USING btree ("created_at");
-  CREATE INDEX "programs__status_idx" ON "programs" USING btree ("_status");
-  CREATE UNIQUE INDEX "school_slug_3_idx" ON "programs" USING btree ("school_id","slug");
-  CREATE INDEX "_programs_v_parent_idx" ON "_programs_v" USING btree ("parent_id");
-  CREATE INDEX "_programs_v_version_version__order_idx" ON "_programs_v" USING btree ("version__order");
-  CREATE INDEX "_programs_v_version_version_school_idx" ON "_programs_v" USING btree ("version_school_id");
-  CREATE INDEX "_programs_v_version_version_slug_idx" ON "_programs_v" USING btree ("version_slug");
-  CREATE INDEX "_programs_v_version_version_image_idx" ON "_programs_v" USING btree ("version_image_id");
-  CREATE INDEX "_programs_v_version_meta_version_meta_image_idx" ON "_programs_v" USING btree ("version_meta_image_id");
-  CREATE INDEX "_programs_v_version_version_updated_at_idx" ON "_programs_v" USING btree ("version_updated_at");
-  CREATE INDEX "_programs_v_version_version_created_at_idx" ON "_programs_v" USING btree ("version_created_at");
-  CREATE INDEX "_programs_v_version_version__status_idx" ON "_programs_v" USING btree ("version__status");
-  CREATE INDEX "_programs_v_created_at_idx" ON "_programs_v" USING btree ("created_at");
-  CREATE INDEX "_programs_v_updated_at_idx" ON "_programs_v" USING btree ("updated_at");
-  CREATE INDEX "_programs_v_latest_idx" ON "_programs_v" USING btree ("latest");
-  CREATE INDEX "_programs_v_autosave_idx" ON "_programs_v" USING btree ("autosave");
-  CREATE INDEX "version_school_version_slug_3_idx" ON "_programs_v" USING btree ("version_school_id","version_slug");
-  ALTER TABLE "redirects_rels" ADD CONSTRAINT "redirects_rels_programs_fk" FOREIGN KEY ("programs_id") REFERENCES "public"."programs"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "search_rels" ADD CONSTRAINT "search_rels_programs_fk" FOREIGN KEY ("programs_id") REFERENCES "public"."programs"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_programs_fk" FOREIGN KEY ("programs_id") REFERENCES "public"."programs"("id") ON DELETE cascade ON UPDATE no action;
-  CREATE INDEX "redirects_rels_programs_id_idx" ON "redirects_rels" USING btree ("programs_id");
-  CREATE INDEX "search_rels_programs_id_idx" ON "search_rels" USING btree ("programs_id");
-  CREATE UNIQUE INDEX "school_slug_4_idx" ON "news_categories" USING btree ("school_id","slug");
-  CREATE INDEX "payload_locked_documents_rels_programs_id_idx" ON "payload_locked_documents_rels" USING btree ("programs_id");
-  ALTER TABLE "pages" DROP COLUMN "is_program";
-  ALTER TABLE "pages" DROP COLUMN "program_grades";
-  ALTER TABLE "pages" DROP COLUMN "program_summary";
-  ALTER TABLE "pages" DROP COLUMN "program_image_id";
-  ALTER TABLE "pages" DROP COLUMN "program_order";
-  ALTER TABLE "_pages_v" DROP COLUMN "version_is_program";
-  ALTER TABLE "_pages_v" DROP COLUMN "version_program_grades";
-  ALTER TABLE "_pages_v" DROP COLUMN "version_program_summary";
-  ALTER TABLE "_pages_v" DROP COLUMN "version_program_image_id";
-  ALTER TABLE "_pages_v" DROP COLUMN "version_program_order";`)
+  ALTER TABLE "pages" DROP CONSTRAINT IF EXISTS "pages_program_image_id_media_id_fk";
+  ALTER TABLE "_pages_v" DROP CONSTRAINT IF EXISTS "_pages_v_version_program_image_id_media_id_fk";
+  DROP INDEX IF EXISTS "pages_program_program_image_idx";
+  DROP INDEX IF EXISTS "_pages_v_version_program_version_program_image_idx";
+  ALTER TABLE "pages" DROP COLUMN IF EXISTS "is_program", DROP COLUMN IF EXISTS "program_grades", DROP COLUMN IF EXISTS "program_summary", DROP COLUMN IF EXISTS "program_image_id", DROP COLUMN IF EXISTS "program_order";
+  ALTER TABLE "_pages_v" DROP COLUMN IF EXISTS "version_is_program", DROP COLUMN IF EXISTS "version_program_grades", DROP COLUMN IF EXISTS "version_program_summary", DROP COLUMN IF EXISTS "version_program_image_id", DROP COLUMN IF EXISTS "version_program_order";`)
+}
+
+const rowsOf = (r: any): any[] => r?.rows ?? r ?? []
+const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+const asJson = (v: unknown) => (typeof v === 'string' ? JSON.parse(v) : v)
+
+/** The program's page: a Prose band (grades as eyebrow, name as heading, its description as the text). */
+function programSections(o: { name: string; grades?: string | null; summary?: string | null; description?: unknown }) {
+  const description = tidyRemovedNodes(asJson(o.description))
+  const hasWords = Boolean((description as any)?.root?.children?.some((c: any) => c?.children?.length))
+  const body = hasWords ? description : o.summary ? plainToRich(o.summary) : null
+  return [
+    {
+      blockType: 'b61Prose',
+      ...(o.grades ? { eyebrow: `Grades ${o.grades}` } : {}),
+      headingLevel: 'auto',
+      heading: [{ text: o.name, emphasize: false }],
+      ...(body ? { body: toBody([{ type: 'body', body }]) } : {}),
+      textAlign: 'left', position: 'center', surface: 'none', eyebrowRule: 'site', headingRule: 'site', entrance: 'on',
+    },
+  ]
+}
+
+/*
+ * Each program is copied from two places: the program as it is live (the
+ * main table) and its latest edit (the newest version, which is where an
+ * unpublished draft lives). A published program becomes a published page;
+ * if it also has a newer draft, that draft is saved on the page as a draft.
+ * A program never published becomes a draft page.
+ *
+ * If the school already has a page at that address, that page is tagged as
+ * the program instead (its live version and its drafts) and keeps its own
+ * content; the program's card fields come along.
+ *
+ * Redirects that pointed at the program now point at its page. The program's
+ * search entries are removed (the build re-indexes the pages). No search-engine
+ * pings go out from here (context b61Migration; see seo/indexnow.ts).
+ */
+async function moveProgramsToPages({ db, payload, req }: Pick<MigrateUpArgs, 'db' | 'payload' | 'req'>) {
+  if (!rowsOf(await db.execute(sql`SELECT to_regclass('public.programs') AS t`))[0]?.t) return
+  const rows = rowsOf(
+    await db.execute(sql`
+      SELECT p.id, p.school_id, p._status, p._order,
+             p.name, p.slug, p.grades, p.summary, p.description, p.image_id,
+             p.meta_title, p.meta_description, p.meta_image_id, p.meta_noindex,
+             v.version__status AS v_status, v.version_name AS v_name, v.version_slug AS v_slug,
+             v.version_grades AS v_grades, v.version_summary AS v_summary, v.version_description AS v_description,
+             v.version_image_id AS v_image_id, v.version_meta_title AS v_meta_title,
+             v.version_meta_description AS v_meta_description, v.version_meta_image_id AS v_meta_image_id,
+             v.version_meta_noindex AS v_meta_noindex
+      FROM programs p
+      LEFT JOIN LATERAL (
+        SELECT * FROM _programs_v WHERE parent_id = p.id ORDER BY latest DESC NULLS LAST, updated_at DESC LIMIT 1
+      ) v ON true
+      ORDER BY p.school_id, p._order NULLS LAST, p.id`),
+  )
+  const ctx = { b61Migration: true }
+  const rank = new Map<number, number>()
+  const schools = new Set<number>()
+  for (const r of rows) {
+    schools.add(r.school_id)
+    const n = (rank.get(r.school_id) ?? 0) + 1
+    rank.set(r.school_id, n)
+    const published = r._status === 'published'
+    // The latest edit, falling back to the live values field by field.
+    const latest = {
+      name: r.v_name ?? r.name, slug: r.v_slug ?? r.slug, grades: r.v_grades ?? r.grades, summary: r.v_summary ?? r.summary,
+      description: r.v_description ?? r.description, image: r.v_image_id ?? r.image_id,
+      meta: { title: r.v_meta_title ?? r.meta_title, description: r.v_meta_description ?? r.meta_description, image: r.v_meta_image_id ?? r.meta_image_id, noindex: r.v_meta_noindex ?? r.meta_noindex ?? false },
+    }
+    const live = {
+      name: r.name, slug: r.slug, grades: r.grades, summary: r.summary, description: r.description, image: r.image_id,
+      meta: { title: r.meta_title, description: r.meta_description, image: r.meta_image_id, noindex: r.meta_noindex ?? false },
+    }
+    const base = published ? live : latest
+    const name = base.name || latest.name || 'Program'
+    const slug = base.slug || latest.slug || slugify(name) || `program-${r.id}`
+    const card = (x: typeof live) => ({ grades: x.grades ?? null, summary: x.summary ?? null, image: x.image ?? null, order: n * 10 })
+
+    // The school + slug unique index is on the pages table, so look there.
+    const taken = rowsOf(await db.execute(sql`SELECT id FROM pages WHERE school_id = ${r.school_id} AND slug = ${slug} LIMIT 1`))[0]
+    let pageId: number
+    if (taken) {
+      pageId = taken.id
+      const c = card(latest)
+      await db.execute(sql`UPDATE pages SET is_program = true, program_grades = ${c.grades}, program_summary = ${c.summary}, program_image_id = ${c.image}, program_order = ${c.order} WHERE id = ${pageId}`)
+      await db.execute(sql`UPDATE _pages_v SET version_is_program = true, version_program_grades = ${c.grades}, version_program_summary = ${c.summary}, version_program_image_id = ${c.image}, version_program_order = ${c.order} WHERE parent_id = ${pageId}`)
+      payload.logger.info(`[b61] Program "${name}" (school ${r.school_id}): tagged the existing page at /${slug}`)
+    } else {
+      const page = await payload.create({
+        collection: 'pages',
+        data: {
+          school: r.school_id, title: name, slug, generateSlug: false, isProgram: true,
+          program: card(base), meta: { ...base.meta, description: base.meta.description ?? base.summary },
+          sections: programSections({ name, grades: base.grades, summary: base.summary, description: base.description }),
+          _status: published ? 'published' : 'draft',
+        } as any,
+        overrideAccess: true, req, context: ctx, draft: !published,
+      })
+      pageId = page.id as number
+      // A live program with a newer, unpublished edit: keep that edit as the page's draft.
+      if (published && r.v_status === 'draft') {
+        const lname = latest.name || name
+        await payload.update({
+          collection: 'pages', id: pageId, draft: true, overrideAccess: true, req, context: ctx,
+          data: {
+            title: lname, isProgram: true, program: card(latest), meta: { ...latest.meta, description: latest.meta.description ?? latest.summary },
+            sections: programSections({ name: lname, grades: latest.grades, summary: latest.summary, description: latest.description }),
+            _status: 'draft',
+          } as any,
+        })
+      }
+    }
+    await db.execute(sql`UPDATE redirects_rels SET pages_id = ${pageId}, programs_id = NULL WHERE programs_id = ${r.id}`)
+  }
+  await db.execute(sql`DELETE FROM search WHERE id IN (SELECT parent_id FROM search_rels WHERE programs_id IS NOT NULL)`)
+
+  // /programs was a built-in list; it is now an ordinary page, made here for
+  // each school that had programs (unless one is already there).
+  for (const school of schools) {
+    if (rowsOf(await db.execute(sql`SELECT id FROM pages WHERE school_id = ${school} AND slug = 'programs' LIMIT 1`))[0]) continue
+    const schoolName = rowsOf(await db.execute(sql`SELECT name FROM schools WHERE id = ${school}`))[0]?.name ?? 'our school'
+    await payload.create({
+      collection: 'pages',
+      data: {
+        school, title: 'Programs', slug: 'programs', generateSlug: false, _status: 'published',
+        meta: { description: `Programs at ${schoolName}: every stage, from the youngest learners up.` },
+        sections: [
+          {
+            blockType: 'b61CardGrid', headingLevel: 'auto', heading: [{ text: 'Our programs', emphasize: false }],
+            source: 'programs', limit: 12, mediaType: 'image', cards: [], arrangement: 'grid', columns: '3',
+            textAlign: 'left', cardStyle: 'bordered', cardSurface: 'light', surface: 'none', entrance: 'on',
+          },
+        ],
+      } as any,
+      overrideAccess: true, req, context: ctx,
+    })
+  }
+  payload.logger.info(`[b61] Moved ${rows.length} program(s) to pages; Programs pages for ${schools.size} school(s)`)
 }

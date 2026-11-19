@@ -227,7 +227,21 @@ export async function getNewsPost(slug: string) {
  */
 export type ProgramCard = { id: number | string; title: string; slug: string; href: string; grades?: string | null; summary?: string | null; image?: unknown; updatedAt?: string; meta?: any }
 export async function getPrograms(limit = 50): Promise<ProgramCard[]> {
-  const docs = await find<Page>('pages', { where: { isProgram: { equals: true } }, sort: 'program.order', limit, depth: 1 })
+  // Only the card fields; the sections are read just for programs with no
+  // card photo, to borrow the first photo on the page.
+  const docs = await find<Page>('pages', {
+    where: { isProgram: { equals: true } },
+    sort: 'program.order',
+    limit,
+    depth: 1,
+    select: { title: true, slug: true, program: true, updatedAt: true, meta: true },
+  })
+  const noPhoto = docs.filter((d) => !d.program?.image).map((d) => d.id)
+  const photos = new Map<string, unknown>()
+  if (noPhoto.length) {
+    const full = await find<Page>('pages', { where: { id: { in: noPhoto } }, limit: noPhoto.length, depth: 1, select: { sections: true } })
+    for (const d of full) photos.set(String(d.id), firstImage(d.sections ?? []))
+  }
   return docs
     .sort((a, b) => (a.program?.order ?? 10) - (b.program?.order ?? 10) || a.title.localeCompare(b.title))
     .map((d) => ({
@@ -237,7 +251,7 @@ export async function getPrograms(limit = 50): Promise<ProgramCard[]> {
       href: d.slug === 'home' ? '/' : `/${d.slug}`,
       grades: d.program?.grades,
       summary: d.program?.summary,
-      image: d.program?.image ?? firstImage(d.sections ?? []),
+      image: d.program?.image ?? photos.get(String(d.id)) ?? null,
       updatedAt: d.updatedAt,
       meta: (d as any).meta,
     }))
