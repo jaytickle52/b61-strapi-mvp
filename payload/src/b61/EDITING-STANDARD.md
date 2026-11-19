@@ -132,7 +132,7 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
   the photo everywhere it is used. Set them from any photo field with the
   pencil icon (opens that photo in a drawer) > Edit image.
 - Alt text is required on upload. Decorative backgrounds render with empty alt.
-- Photos and videos live in **Photos and videos**; PDFs and other downloads in **Documents**.
+- Photos live in **Photos**; PDFs and other downloads in **Documents**.
   Both can be sorted into folders (each school has its own). A link control offers
   Page / Document / Web address, and the Content editor's link tool can pick a page or a document.
 - **Videos** (Files > Videos): every uploaded video, so one upload can go on any number of
