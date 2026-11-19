@@ -1,3 +1,4 @@
+import { plainToRich } from './b61/kit/plain'
 import type { Payload } from 'payload'
 import type { School } from './payload-types'
 import { syncElementLibrary } from './b61/library'
@@ -189,7 +190,7 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
     await create('programs', { ...prog, slug: slugify(prog.name), generateSlug: false, description: p(prog.summary) })
   }
   for (const person of profile.staff) {
-    await create('staff', person)
+    await create('staff', { ...person, bio: plainToRich(person.bio) })
   }
 
   const events = [

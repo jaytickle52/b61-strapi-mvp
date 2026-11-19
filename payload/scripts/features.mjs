@@ -140,6 +140,63 @@ async function main() {
   const one = await page('/events/spring-open-house/event.ics', 'cedar-ridge')
   check(one.status === 200 && one.text.includes('SUMMARY:Spring Open House'), 'each event has an "Add to calendar" file')
 
+  // Event description editor (19 Nov 2026): no Heading 1, block quote or
+  // relationship; checklist and the kit's Emphasis, Quote, Callout, Button.
+  {
+    const t = (text) => ({ type: 'text', text, version: 1, format: 0, detail: 0, mode: 'normal', style: '' })
+    const el = (type, children, extra = {}) => ({ type, children, version: 1, direction: 'ltr', format: '', indent: 0, ...extra })
+    const blk = (blockType, fields) => ({ type: 'block', version: 2, format: '', fields: { id: `t${Math.random().toString(36).slice(2, 10)}`, blockName: '', blockType, ...fields } })
+    const desc = {
+      root: el('root', [
+        el('heading', [t(`Old big heading ${RUN}`)], { tag: 'h1' }),
+        el('quote', [t(`Old quote ${RUN}`)]),
+        { type: 'relationship', version: 2, format: '', relationTo: 'pages', value: 1 },
+        el('list', [el('listitem', [t('Water bottle')], { value: 1, checked: true }), el('listitem', [t('Sneakers')], { value: 2, checked: false })], { listType: 'check', tag: 'ul', start: 1 }),
+        blk('emphasis', { text: `Bring the whole family ${RUN}` }),
+        blk('pullQuoteText', { text: `Best day of the year ${RUN}`, attribution: 'A parent' }),
+        blk('callout', { tone: 'important', title: `Parking ${RUN}`, text: 'Use the north lot.' }),
+        blk('bodyButton', { label: `RSVP ${RUN}`, variant: 'primary', link: { type: 'url', url: '/inquire' } }),
+      ]),
+    }
+    const ev = await api('POST', '/events', {
+      token: admin,
+      body: { school: cedar, title: `Description test ${RUN}`, slug: `description-test-${RUN}`.toLowerCase().replace(/[^a-z0-9-]/g, '-'), startsAt: new Date(Date.now() + 5 * 86400000).toISOString(), audience: 'public', description: desc, _status: 'published' },
+    })
+    const saved = ev.json?.doc?.description?.root?.children ?? []
+    check(ev.status === 201, 'an event saves with a checklist and the kit blocks in its description')
+    check(saved.every((n) => n.type !== 'relationship' && n.type !== 'quote' && !(n.type === 'heading' && n.tag === 'h1')), '… Heading 1, block quote and relationship are tidied away on save')
+    check(saved.some((n) => n.type === 'heading' && n.tag === 'h2') && saved.some((n) => n.type === 'paragraph'), '… as a Heading 2 and a paragraph')
+    const evPage = visible((await page(`/events/${ev.json?.doc?.slug}`, 'cedar-ridge')).text)
+    check(/class="b61-checklist"/.test(evPage) && /b61-checklist__item--done/.test(evPage) && evPage.includes('Done: '), 'the event page shows the checklist, ticked rows marked')
+    check(evPage.includes(`b61-rt-emphasis">Bring the whole family ${RUN}`), '… the Emphasis line')
+    check(/<figure class="b61-rt-quote">[\s\S]*?Best day of the year/.test(evPage), '… the Quote')
+    check(evPage.includes(`b61-callout--important`) && evPage.includes(`Parking ${RUN}`), '… the Callout')
+    check(evPage.includes(`RSVP ${RUN}`) && evPage.includes('b61-body-btn'), '… and the Button')
+    if (ev.json?.doc?.id) await api('DELETE', `/events/${ev.json.doc.id}`, { token: admin })
+
+    // News articles and staff bios use the same editor (and the same tidying).
+    const nw = await api('POST', '/news', {
+      token: admin,
+      body: { school: cedar, title: `Body test ${RUN}`, slug: `body-test-${RUN}`.toLowerCase().replace(/[^a-z0-9-]/g, '-'), date: new Date().toISOString(), body: { root: el('root', [el('heading', [t('Old H1')], { tag: 'h1' }), blk('emphasis', { text: `News emphasis ${RUN}` })]) }, _status: 'published' },
+    })
+    check(nw.status === 201 && nw.json?.doc?.body?.root?.children?.[0]?.tag === 'h2', 'a news article\'s Heading 1 is tidied to a Heading 2')
+    const nwPage = visible((await page(`/news/${nw.json?.doc?.slug}`, 'cedar-ridge')).text)
+    check(nwPage.includes(`b61-rt-emphasis">News emphasis ${RUN}`), '… and its Emphasis line shows on the article')
+    if (nw.json?.doc?.id) await api('DELETE', `/news/${nw.json.doc.id}`, { token: admin })
+    const st = await api('POST', '/staff', {
+      token: admin,
+      body: {
+        school: cedar, name: `Bio Person ${RUN}`, role: 'Teacher',
+        bio: { root: el('root', [el('heading', [t(`Why I teach ${RUN}`)], { tag: 'h3' }), blk('pullQuoteText', { text: `Every child can learn ${RUN}` })]) },
+        _status: 'published',
+      },
+    })
+    check(st.status === 201, 'a staff bio saves as rich text with a Quote and a subheading')
+    const stPage = visible((await page('/staff', 'cedar-ridge')).text)
+    check(stPage.includes(`Why I teach ${RUN}`) && /<figure class="b61-rt-quote">[\s\S]*?Every child can learn/.test(stPage), '… and both show on the staff card')
+    if (st.json?.doc?.id) await api('DELETE', `/staff/${st.json.doc.id}`, { token: admin })
+  }
+
   // ----- Calendar feed import -----------------------------------------------
   console.log('\nCalendar feed import')
   const feedUrl = `http://localhost:${FEED_PORT}/calendar.ics`

@@ -56,7 +56,7 @@ async function loadCards(block: CardGridBlock): Promise<Card[]> {
       }))
     case 'staff':
       return (await getStaff(limit)).map((s) => ({
-        key: String(s.id), image: s.photo, eyebrow: s.role, title: s.name, body: s.bio ? <p>{s.bio}</p> : null, href: null,
+        key: String(s.id), image: s.photo, eyebrow: s.role, title: s.name, body: s.bio ? <RichText data={s.bio as SerializedEditorState} disableContainer converters={b61Converters} /> : null, href: null,
       }))
     case 'school-facts':
       return (await schoolFacts(await getSettings())).map((f) => ({ key: f.key, eyebrow: f.label, title: f.value, href: f.href, newTab: opensNewTab(f.href, 'url') }))
