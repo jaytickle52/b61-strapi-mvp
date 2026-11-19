@@ -33,6 +33,7 @@ import * as migration_20261119_143833_heading_one_box from './20261119_143833_he
 import * as migration_20261119_150651_card_grid_review from './20261119_150651_card_grid_review';
 import * as migration_20261119_155243_links_videos_library from './20261119_155243_links_videos_library';
 import * as migration_20261119_170557_split_gallery_layout from './20261119_170557_split_gallery_layout';
+import * as migration_20261119_173616_announcement_popups from './20261119_173616_announcement_popups';
 
 export const migrations = [
   {
@@ -208,6 +209,11 @@ export const migrations = [
   {
     up: migration_20261119_170557_split_gallery_layout.up,
     down: migration_20261119_170557_split_gallery_layout.down,
-    name: '20261119_170557_split_gallery_layout'
+    name: '20261119_170557_split_gallery_layout',
+  },
+  {
+    up: migration_20261119_173616_announcement_popups.up,
+    down: migration_20261119_173616_announcement_popups.down,
+    name: '20261119_173616_announcement_popups'
   },
 ];

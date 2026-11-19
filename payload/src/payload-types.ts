@@ -4299,8 +4299,6 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4370,7 +4368,6 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4859,7 +4856,7 @@ export interface Form {
   createdAt: string;
 }
 /**
- * A short message across the top of the website between two dates: closings, deadlines, big news.
+ * A message on the website between two dates: a bar across the top (closings, deadlines, big news) or a pop-up (open house, enrollment, a short form).
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "announcements".
@@ -4872,7 +4869,7 @@ export interface Announcement {
    */
   title: string;
   /**
-   * One or two short sentences. Optional.
+   * Optional. A bar fits one or two short sentences (200 characters); a pop-up can say a little more (400).
    */
   message?: string | null;
   button?: {
@@ -4885,20 +4882,34 @@ export interface Announcement {
     };
   };
   /**
-   * A pop-up opens over the page a moment after it loads and stays closed once the visitor closes it. Keep pop-ups rare.
+   * A pop-up opens over the page after it loads; only one shows at a time. Keep pop-ups rare.
    */
   display: 'bar' | 'popup';
+  /**
+   * On phones both slide up from the bottom of the screen.
+   */
+  popupPosition?: ('center' | 'corner') | null;
+  popupOpens?: ('soon' | 'later' | 'scroll') | null;
+  /**
+   * Editing the pop-up shows it again to everyone.
+   */
+  popupRepeat?: ('once' | 'week' | 'visit') | null;
   /**
    * Shown above the headline. Put the important words in the headline and message too: words inside a graphic can't be read by everyone.
    */
   image?: (number | null) | Media;
+  /**
+   * One of this school's forms (Website > Forms), shown under the message. Short forms work best: a name, an email, a question or two.
+   */
+  form?: (number | null) | Form;
   style: 'standard' | 'urgent' | 'celebrate';
   startsAt: string;
   /**
    * Leave empty to keep it up until you unpublish it.
    */
   endsAt?: string | null;
-  showOn: 'all' | 'home';
+  showOn: 'all' | 'home' | 'pages';
+  pages?: (number | Page)[] | null;
   /**
    * Once closed, it stays closed on that visitor's browser.
    */
@@ -5201,8 +5212,6 @@ export interface FormSubmission {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -8642,11 +8651,16 @@ export interface AnnouncementsSelect<T extends boolean = true> {
             };
       };
   display?: T;
+  popupPosition?: T;
+  popupOpens?: T;
+  popupRepeat?: T;
   image?: T;
+  form?: T;
   style?: T;
   startsAt?: T;
   endsAt?: T;
   showOn?: T;
+  pages?: T;
   dismissible?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8779,7 +8793,6 @@ export interface MediaSelect<T extends boolean = true> {
   altAuto?: T;
   caption?: T;
   credit?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8855,8 +8868,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
-  prefix?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -9160,8 +9171,6 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

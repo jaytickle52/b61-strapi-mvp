@@ -85,7 +85,7 @@ const collections: NonNullable<Parameters<typeof mcpPlugin>[0]['collections']> =
   announcements: {
     enabled: write,
     description:
-      'Site-wide announcement bars (Standard / Urgent / Celebration) with show-from / hide-after times. Creates and updates are saved as drafts.',
+      'Announcements shown between show-from / hide-after times, as a bar above the header (display "bar") or a pop-up (display "popup": popupPosition center/corner, popupOpens soon/later/scroll, popupRepeat once/week/visit, optional image and form). showOn all / home / pages (with pages). Styles Standard / Urgent / Celebration. Creates and updates are saved as drafts.',
   },
   media: {
     enabled: { find: true, update: true },
