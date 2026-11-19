@@ -8,7 +8,7 @@ import { ensurePatternsDemo, ensurePatternsDemo2 } from './b61/patterns-demo'
 import { ensureSchoolboxDemo, SCHOOLBOX_COPY, schoolboxPhotos } from './b61/schoolbox-demo'
 import { schoolboxHome } from './templates/schoolbox'
 import { demoChrome } from './b61/chrome/demo'
-import { cardsFrom, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, placeDemoPhotos, statsFrom, swapPlaceholderPhotos } from './b61/demo'
+import { cardsFrom, demoProgramSections, demoCta, demoHeroes, demoProse, demoSplits, ensureDemoImages, placeDemoPhotos, statsFrom, swapPlaceholderPhotos } from './b61/demo'
 
 // Fictional demo schools, same content as the Strapi build so the two editors
 // can be compared like for like. SEED_SCHOOLS lists which ones to create.
@@ -171,7 +171,7 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
 
   // A demo school with no pages never finished seeding (a build stopped part
   // way). Clear what that attempt left so this run starts clean.
-  for (const collection of ['programs', 'staff', 'events', 'news', 'school-settings', 'media'] as const) {
+  for (const collection of ['staff', 'events', 'news', 'school-settings', 'media'] as const) {
     await payload.delete({ collection, where: { school: { equals: school.id } }, context: { b61AllowDelete: true } })
   }
 
@@ -185,10 +185,6 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
     ...demoChrome({ name, programs }),
   })
 
-  // Created in order, so each lands at the end of its list (drag to reorder).
-  for (const prog of profile.programs) {
-    await create('programs', { ...prog, slug: slugify(prog.name), generateSlug: false, description: p(prog.summary) })
-  }
   for (const person of profile.staff) {
     await create('staff', { ...person, bio: plainToRich(person.bio) })
   }
@@ -273,6 +269,22 @@ export async function seedDemoSchool(payload: Payload, key: string): Promise<Sch
       ],
     },
   ]
+  // Programs are pages tagged as programs, at /<slug>; "Programs" is an
+  // ordinary page listing them (Jay, 19 Nov 2026).
+  pages.push(
+    ...profile.programs.map((prog, i) => ({
+      title: prog.name, slug: slugify(prog.name),
+      meta: { description: prog.summary },
+      isProgram: true,
+      program: { grades: prog.grades, summary: prog.summary, order: (i + 1) * 10 },
+      sections: demoProgramSections(prog),
+    })) as any[],
+    {
+      title: 'Programs', slug: 'programs',
+      meta: { description: `Programs at ${name}` },
+      sections: [cardsFrom({ heading: 'Our programs', intro: "A path for every stage of your child's growth.", source: 'programs', limit: 12, columns: 'three', tone: 'light' })],
+    } as any,
+  )
   for (const page of pages) await create('pages', { ...page, generateSlug: false })
 
   payload.logger.info(`[b61] Demo content ready for ${name}`)
@@ -298,3 +310,4 @@ export async function seedDemoSchools(payload: Payload) {
     if (school && (fresh || swapped)) await placeDemoPhotos(payload, school).catch((e) => payload.logger.error(`[b61] Demo photos: ${e.message}`))
   }
 }
+

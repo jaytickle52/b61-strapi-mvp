@@ -221,7 +221,14 @@ export async function placeDemoPhotos(payload: Payload, school: School) {
     if (JSON.stringify(menu) !== JSON.stringify(settings.menu ?? [])) await save('school-settings', settings, { menu })
   }
 
-  const fill = async (collection: 'programs' | 'news' | 'events', pick: (doc: any, i: number) => string | undefined) => {
+  // Program card photos: programs are pages tagged as programs, in list order.
+  const progPages = (await payload.find({ collection: 'pages', where: { and: [{ school: { equals: id } }, { isProgram: { equals: true } }] }, pagination: false, depth: 0, draft: true, overrideAccess: true, sort: 'program.order' })).docs as any[]
+  for (const [i, doc] of progPages.entries()) {
+    if (doc.program?.image) continue
+    const photo = set.programs[i] ? byName.get(set.programs[i]) : undefined
+    if (photo) await save('pages', doc, { program: { ...(doc.program ?? {}), image: photo } })
+  }
+  const fill = async (collection: 'news' | 'events', pick: (doc: any, i: number) => string | undefined) => {
     const docs = (await payload.find({ collection, where: { school: { equals: id } }, pagination: false, depth: 0, draft: true, overrideAccess: true, sort: 'createdAt' })).docs as any[]
     for (const [i, doc] of docs.entries()) {
       if (doc.image) continue
@@ -230,7 +237,6 @@ export async function placeDemoPhotos(payload: Payload, school: School) {
       if (photo) await save(collection, doc, { image: photo })
     }
   }
-  await fill('programs', (_d, i) => set.programs[i])
   await fill('news', (d) => set.items[d.title])
   await fill('events', (d) => set.items[d.title])
   payload.logger.info(`[b61] Demo photos placed for ${school.name}`)
@@ -426,6 +432,30 @@ export function demoProse(opts: { heading?: string; body?: unknown; phone?: stri
     headingRule: 'site',
     entrance: 'on',
   } as const
+}
+
+/**
+ * A demo program page (programs are pages tagged as programs): a Prose band
+ * with the grades as eyebrow, the program's name as the page heading and its
+ * summary as the text, then a visit invitation.
+ */
+export function demoProgramSections(o: { name: string; grades?: string; summary: string }) {
+  return [
+    {
+      blockType: 'b61Prose',
+      ...(o.grades ? { eyebrow: `Grades ${o.grades}` } : {}),
+      headingLevel: 'auto',
+      heading: [{ text: o.name, emphasize: false }],
+      body: toBody([{ type: 'body', body: para(o.summary) }], { emphasisScale: true, dividers: true }),
+      textAlign: 'left',
+      position: 'center',
+      surface: 'none',
+      eyebrowRule: 'site',
+      headingRule: 'site',
+      entrance: 'on',
+    },
+    demoCta({ heading: `See ${o.name} for yourself`, body: 'Visit a classroom, meet the teachers and ask every question you have.' }),
+  ]
 }
 
 /**

@@ -86,6 +86,27 @@ export const Pages: CollectionConfig = {
       blocks: sectionBlocks,
       admin: { initCollapsed: true, description: 'Add, reorder and remove sections. Open one to edit it; changes show in the live preview as you type.' },
     },
+    // A program is a page tagged as one (Jay, 19 Nov 2026): it lives at
+    // /elementary like any page, and program cards and lists pick it up.
+    {
+      name: 'isProgram',
+      label: 'This page is a program',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: { position: 'sidebar', description: 'e.g. Elementary, Middle School, Preschool. Program cards and lists show it.' },
+    },
+    {
+      name: 'program',
+      label: 'Program card',
+      type: 'group',
+      admin: { position: 'sidebar', condition: (data) => Boolean(data?.isProgram) },
+      fields: [
+        { name: 'grades', type: 'text', admin: { description: 'e.g. K–5' } },
+        { name: 'summary', type: 'textarea', maxLength: 240, admin: { description: 'One or two sentences for program cards.' } },
+        { name: 'image', label: 'Card photo', type: 'upload', relationTo: 'media', filterOptions: { mimeType: { contains: 'image' } }, admin: { description: 'Leave empty to use the first photo on the page.' } },
+        { name: 'order', label: 'Order in program lists', type: 'number', defaultValue: 10, admin: { description: 'Lower numbers come first (e.g. Preschool 10, Elementary 20).' } },
+      ],
+    },
     usageField('pages'),
   ],
   // Menus, buttons and text links point at pages; don't let one vanish under them.
@@ -208,37 +229,11 @@ export const News: CollectionConfig = {
   ],
 }
 
-export const Programs: CollectionConfig = {
-  slug: 'programs',
-  admin: {
-    group: 'Programs & staff',
-    useAsTitle: 'name',
-    defaultColumns: ['name', 'grades', '_status'],
-    description: 'Drag the handle at the start of each row to change the order on the website.',
-    livePreview: livePreview((d) => `/programs/${d.slug ?? ''}`),
-  },
-  access: { read: publishedOrSignedIn, ...writeAccess },
-  versions: drafts,
-  hooks: publishGuard(),
-  indexes: [{ fields: ['school', 'slug'], unique: true }],
-  // Drag the rows in the list to set the order programs appear on the site.
-  orderable: true,
-  defaultSort: '_order',
-  fields: [
-    { name: 'name', type: 'text', required: true },
-    slugField({ useAsSlug: 'name', disableUnique: true }),
-    { name: 'grades', type: 'text', admin: { description: 'e.g. K–5' } },
-    { name: 'summary', type: 'textarea', maxLength: 240 },
-    { name: 'description', type: 'richText' },
-    { name: 'image', type: 'upload', relationTo: 'media' },
-  ],
-}
-
 export const Staff: CollectionConfig = {
   slug: 'staff',
   labels: { singular: 'Staff member', plural: 'Staff' },
   admin: {
-    group: 'Programs & staff',
+    group: 'People',
     useAsTitle: 'name',
     defaultColumns: ['name', 'role', 'department'],
     description: 'Drag the handle at the start of each row to change the order on the website.',

@@ -8,7 +8,7 @@ import { SCHOOLS_TAG, schoolTag } from './tags'
  * jobs are left out: a visitor sending a form shouldn't clear the cache.
  */
 const SHOWN_ON_SITE = new Set([
-  'pages', 'events', 'calendar-feeds', 'news', 'news-categories', 'announcements', 'programs', 'staff',
+  'pages', 'events', 'calendar-feeds', 'news', 'news-categories', 'announcements', 'staff',
   'media', 'documents', 'school-settings', 'forms', 'redirects', 'schools',
 ])
 

@@ -17,7 +17,7 @@ import { Media } from './collections/Media'
 import { Documents } from './collections/Documents'
 import { Videos } from './collections/Videos'
 import { sameSchoolFolder } from './media/folders'
-import { Events, News, Pages, Programs, Staff } from './collections/content'
+import { Events, News, Pages, Staff } from './collections/content'
 import { Announcements } from './collections/Announcements'
 import { NewsCategories } from './collections/NewsCategories'
 import { CalendarFeeds } from './collections/CalendarFeeds'
@@ -69,7 +69,7 @@ export default buildConfig({
       },
     },
     livePreview: {
-      collections: ['pages', 'events', 'news', 'announcements', 'programs', 'staff', 'school-settings'],
+      collections: ['pages', 'events', 'news', 'announcements', 'staff', 'school-settings'],
     },
   },
   // Folders (Payload beta) for Photos and Documents; each school has its own.
@@ -84,7 +84,7 @@ export default buildConfig({
   collections: [
     ...[Pages, Events].map(withPreviewFocus),
     CalendarFeeds,
-    ...[News, Announcements, Programs, Staff].map(withPreviewFocus),
+    ...[News, Announcements, Staff].map(withPreviewFocus),
     NewsCategories,
     Media,
     Documents,
@@ -181,7 +181,6 @@ export default buildConfig({
         news: {},
         'news-categories': {},
         announcements: {},
-        programs: {},
         staff: {},
         media: {},
         documents: {},

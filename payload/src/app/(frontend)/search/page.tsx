@@ -5,9 +5,9 @@ import { seoMetadata } from "@/seo/metadata";
 
 export const generateMetadata = () => seoMetadata({ title: "Search", path: "/search", meta: { noindex: true } });
 
-const KIND: Record<string, string> = { pages: "Page", programs: "Program", events: "Event", news: "News" };
+const KIND: Record<string, string> = { pages: "Page", events: "Event", news: "News" };
 
-/* Site search over this school's published pages, programs, events and news. */
+/* Site search over this school's published pages (programs are pages), events and news. */
 export default async function SearchPage({ searchParams }: PageProps<"/search">) {
   const raw = (await searchParams).q;
   const q = (Array.isArray(raw) ? raw[0] : raw)?.toString().slice(0, 100) ?? "";

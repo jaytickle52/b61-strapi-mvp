@@ -146,11 +146,9 @@ async function main() {
   if (settings?.grades) check(sch?.description?.includes(settings.grades), 'School data describes the school with its facts')
   check(Boolean(ofType(home, 'WebSite')), 'the home page names the site (WebSite)')
   check(!ofType((await get('/about', { school: 'cedar-ridge' })).text, 'WebSite'), '… and only the home page')
-  const prog = (await api('GET', `/programs?where[school][equals]=${school.id}&limit=1&depth=0`, { token: admin })).json?.docs?.[0]
-  if (prog) {
-    const crumbs = ofType((await get(`/programs/${prog.slug}`, { school: 'cedar-ridge' })).text, 'BreadcrumbList')
-    check(crumbs?.itemListElement?.map((x) => x.name).join(' > ') === `Home > Programs > ${prog.name}`, 'program pages carry a breadcrumb trail')
-  }
+  // Programs are pages (19 Nov 2026): /lower-school, with the page's own description.
+  const prog = (await api('GET', `/pages?where[school][equals]=${school.id}&where[isProgram][equals]=true&limit=1&depth=0`, { token: admin })).json?.docs?.[0]
+  if (prog) check(Boolean(description((await get(`/${prog.slug}`, { school: 'cedar-ridge' })).text)), 'a program page has a description')
   const staff = ofType((await get('/staff', { school: 'cedar-ridge' })).text, 'ItemList')
   check(staff?.itemListElement?.[0]?.item?.['@type'] === 'Person', 'Our team describes each person')
   if (settings?.grades) check((await get('/about', { school: 'cedar-ridge' })).text.includes(settings.grades), 'School facts show on the demo About page')

@@ -1,6 +1,6 @@
 import type { Payload } from 'payload'
 
-const COLLECTIONS = ['pages', 'programs', 'events', 'news'] as const
+const COLLECTIONS = ['pages', 'events', 'news'] as const
 
 /*
  * Site search only learns about a page when it is saved. Anything published

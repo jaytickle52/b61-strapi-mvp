@@ -20,7 +20,7 @@ export function demoChrome(o: { name: string; programs: { name: string; slug: st
       {
         label: 'Programs',
         kind: 'dropdown',
-        links: [...o.programs.map((p) => ({ label: p.name, link: u(`/programs/${p.slug}`) })), { label: 'All programs', link: u('/programs') }],
+        links: [...o.programs.map((p) => ({ label: p.name, link: u(`/${p.slug}`) })), { label: 'All programs', link: u('/programs') }],
       },
       { label: 'Events', kind: 'link', link: u('/events') },
       { label: 'News', kind: 'link', link: u('/news') },

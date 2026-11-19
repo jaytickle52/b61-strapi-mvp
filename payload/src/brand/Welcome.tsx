@@ -17,7 +17,6 @@ const DRAFTABLE = [
   { slug: 'pages', label: 'Page', title: 'title' },
   { slug: 'news', label: 'News', title: 'title' },
   { slug: 'events', label: 'Event', title: 'title' },
-  { slug: 'programs', label: 'Program', title: 'name' },
   { slug: 'staff', label: 'Staff', title: 'name' },
 ] as const
 

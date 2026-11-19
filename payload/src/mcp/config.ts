@@ -16,7 +16,7 @@ import { previewLink } from './preview'
  *   the admin who made it, so Payload's normal access rules, school scoping and
  *   hooks all apply. Each key has switches per collection and per action.
  * - Nothing is ever deleted through MCP (no delete tools are offered).
- * - Everything Claude writes to pages, news, events, programs, staff,
+ * - Everything Claude writes to pages, news, events, staff,
  *   announcements and school settings is saved as a DRAFT. The live site
  *   doesn't change until someone presses Publish in the editor
  *   (`draftsOnlyOverMcp` below forces this, whatever the client asks for).
@@ -34,7 +34,6 @@ export const MCP_DRAFT_COLLECTIONS: CollectionSlug[] = [
   'pages',
   'news',
   'events',
-  'programs',
   'staff',
   'announcements',
   'school-settings',
@@ -59,7 +58,7 @@ const collections: NonNullable<Parameters<typeof mcpPlugin>[0]['collections']> =
   pages: {
     enabled: read,
     description:
-      "A school's web pages. `sections` holds the page's sections (Hero, Split, Prose, Card Grid, ...) in order. Filter by `school` and find by `slug` (the home page's slug is `home`). Use draft: true to see the latest draft. Change pages with createPage / updatePage.",
+      "A school's web pages. `sections` holds the page's sections (Hero, Split, Prose, Card Grid, ...) in order. Filter by `school` and find by `slug` (the home page's slug is `home`). A program (Elementary, Middle School) is a page with `isProgram: true` and a `program` group (grades, summary, image, order). Use draft: true to see the latest draft. Change pages with createPage / updatePage.",
   },
   news: {
     enabled: write,
@@ -73,10 +72,6 @@ const collections: NonNullable<Parameters<typeof mcpPlugin>[0]['collections']> =
     enabled: write,
     description:
       "A school's calendar events (start/end times in the school's time zone; `allDay` for day-long events). Events imported from a calendar feed are overwritten by the next import, so edit the source calendar instead. Creates and updates are saved as drafts.",
-  },
-  programs: {
-    enabled: write,
-    description: "A school's programs (grades, divisions, offerings). Creates and updates are saved as drafts.",
   },
   staff: {
     enabled: write,
@@ -124,7 +119,7 @@ const editorLinks = {
     'Get the editor address for an item (to review a draft and press Publish) and, for pages, the public address. Use after creating or updating something so the person can check it.',
   // Cast: the plugin types its own copy of zod; the shapes are the same at run time.
   parameters: {
-    collection: z.enum(['pages', 'news', 'events', 'programs', 'staff', 'announcements', 'school-settings', 'media', 'redirects']),
+    collection: z.enum(['pages', 'news', 'events', 'staff', 'announcements', 'school-settings', 'media', 'redirects']),
     id: z.union([z.string(), z.number()]),
   } as any,
   handler: async (args: Record<string, unknown>, req: PayloadRequest) => {
@@ -155,7 +150,7 @@ const editorLinks = {
 
 const instructions = `Banner 61 school websites (Payload CMS). One app serves many schools.
 - Every item belongs to a school through its \`school\` field. Find the school in \`schools\` first and always filter by it (where: {"school": {"equals": <id>}}).
-- Writes to pages, news, events, programs, staff, announcements and school settings are saved as drafts. Nothing goes live until a person publishes it in the editor. After a change, call editorLinks and give the person the link.
+- Writes to pages, news, events, staff, announcements and school settings are saved as drafts. Nothing goes live until a person publishes it in the editor. After a change, call editorLinks and give the person the link.
 - Nothing can be deleted here. Private data (users, form answers, email log) is not available.
 - Pages: \`sections\` is the list of sections. Read an existing page first (findPages, draft: true) and copy its structure rather than inventing fields; pageSections outlines each section type. Change pages with createPage / updatePage, one page at a time.
 - Photos: add one from a public https address with uploadPhoto (school, url, alt), then use its id as \`image\` in a section.

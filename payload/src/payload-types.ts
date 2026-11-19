@@ -73,7 +73,6 @@ export interface Config {
     events: Event;
     'calendar-feeds': CalendarFeed;
     news: News;
-    programs: Program;
     staff: Staff;
     media: Media;
     documents: Document;
@@ -108,7 +107,6 @@ export interface Config {
     events: EventsSelect<false> | EventsSelect<true>;
     'calendar-feeds': CalendarFeedsSelect<false> | CalendarFeedsSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
-    programs: ProgramsSelect<false> | ProgramsSelect<true>;
     staff: StaffSelect<false> | StaffSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
@@ -4219,6 +4217,28 @@ export interface Page {
           }
       )[]
     | null;
+  /**
+   * e.g. Elementary, Middle School, Preschool. Program cards and lists show it.
+   */
+  isProgram?: boolean | null;
+  program?: {
+    /**
+     * e.g. K–5
+     */
+    grades?: string | null;
+    /**
+     * One or two sentences for program cards.
+     */
+    summary?: string | null;
+    /**
+     * Leave empty to use the first photo on the page.
+     */
+    image?: (number | null) | Media;
+    /**
+     * Lower numbers come first (e.g. Preschool 10, Elementary 20).
+     */
+    order?: number | null;
+  };
   meta?: {
     /**
      * What the page is, in the words a family would search, then the school's name: "Admissions and Tuition | Grace Christian School". Used exactly as written. About 50-60 characters.
@@ -4299,6 +4319,8 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4368,6 +4390,7 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
+  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -5103,65 +5126,6 @@ export interface NewsCategory {
  * Drag the handle at the start of each row to change the order on the website.
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "programs".
- */
-export interface Program {
-  id: number;
-  _order?: string | null;
-  school?: (number | null) | School;
-  name: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  /**
-   * e.g. K–5
-   */
-  grades?: string | null;
-  summary?: string | null;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  image?: (number | null) | Media;
-  meta?: {
-    /**
-     * What the page is, in the words a family would search, then the school's name: "Admissions and Tuition | Grace Christian School". Used exactly as written. About 50-60 characters.
-     */
-    title?: string | null;
-    /**
-     * One or two plain sentences that answer what a family is looking for here (grades, tuition, how to apply). Google shows it under the title; AI tools may quote it. Empty: taken from the page.
-     */
-    description?: string | null;
-    /**
-     * Shown when the page is shared in a text or on social media. Empty: the page's first photo.
-     */
-    image?: (number | null) | Media;
-    /**
-     * For thank-you pages and the like. Also keeps it out of the site search.
-     */
-    noindex?: boolean | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * Drag the handle at the start of each row to change the order on the website.
- *
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "staff".
  */
 export interface Staff {
@@ -5235,6 +5199,8 @@ export interface FormSubmission {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -5773,10 +5739,6 @@ export interface Redirect {
       | ({
           relationTo: 'events';
           value: number | Event;
-        } | null)
-      | ({
-          relationTo: 'programs';
-          value: number | Program;
         } | null);
     url?: string | null;
   };
@@ -5788,7 +5750,7 @@ export interface Redirect {
   createdAt: string;
 }
 /**
- * Kept up to date automatically from pages, programs, events and news.
+ * Kept up to date automatically from pages, events and news.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "search".
@@ -5810,10 +5772,6 @@ export interface Search {
     | {
         relationTo: 'events';
         value: number | Event;
-      }
-    | {
-        relationTo: 'programs';
-        value: number | Program;
       };
   url?: string | null;
   summary?: string | null;
@@ -5969,20 +5927,6 @@ export interface PayloadMcpApiKey {
     create?: boolean | null;
     /**
      * Allow clients to update events.
-     */
-    update?: boolean | null;
-  };
-  programs?: {
-    /**
-     * Allow clients to find programs.
-     */
-    find?: boolean | null;
-    /**
-     * Allow clients to create programs.
-     */
-    create?: boolean | null;
-    /**
-     * Allow clients to update programs.
      */
     update?: boolean | null;
   };
@@ -6234,10 +6178,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'news';
         value: number | News;
-      } | null)
-    | ({
-        relationTo: 'programs';
-        value: number | Program;
       } | null)
     | ({
         relationTo: 'staff';
@@ -8640,6 +8580,15 @@ export interface PagesSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
+  isProgram?: T;
+  program?:
+    | T
+    | {
+        grades?: T;
+        summary?: T;
+        image?: T;
+        order?: T;
+      };
   meta?:
     | T
     | {
@@ -8765,32 +8714,6 @@ export interface NewsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "programs_select".
- */
-export interface ProgramsSelect<T extends boolean = true> {
-  _order?: T;
-  school?: T;
-  name?: T;
-  generateSlug?: T;
-  slug?: T;
-  grades?: T;
-  summary?: T;
-  description?: T;
-  image?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-        noindex?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "staff_select".
  */
 export interface StaffSelect<T extends boolean = true> {
@@ -8816,6 +8739,7 @@ export interface MediaSelect<T extends boolean = true> {
   altAuto?: T;
   caption?: T;
   credit?: T;
+  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8891,6 +8815,8 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
+  prefix?: T;
+  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -9194,6 +9120,8 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -9650,13 +9578,6 @@ export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
         create?: T;
         update?: T;
       };
-  programs?:
-    | T
-    | {
-        find?: T;
-        create?: T;
-        update?: T;
-      };
   staff?:
     | T
     | {
@@ -9869,10 +9790,6 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'news';
           value: number | News;
-        } | null)
-      | ({
-          relationTo: 'programs';
-          value: number | Program;
         } | null)
       | ({
           relationTo: 'staff';

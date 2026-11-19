@@ -35,6 +35,7 @@ import * as migration_20261119_155243_links_videos_library from './20261119_1552
 import * as migration_20261119_170557_split_gallery_layout from './20261119_170557_split_gallery_layout';
 import * as migration_20261119_173616_announcement_popups from './20261119_173616_announcement_popups';
 import * as migration_20261119_182905_rich_descriptions_staff_bio from './20261119_182905_rich_descriptions_staff_bio';
+import * as migration_20261119_184651_programs_are_pages from './20261119_184651_programs_are_pages';
 
 export const migrations = [
   {
@@ -220,6 +221,11 @@ export const migrations = [
   {
     up: migration_20261119_182905_rich_descriptions_staff_bio.up,
     down: migration_20261119_182905_rich_descriptions_staff_bio.down,
-    name: '20261119_182905_rich_descriptions_staff_bio'
+    name: '20261119_182905_rich_descriptions_staff_bio',
+  },
+  {
+    up: migration_20261119_184651_programs_are_pages.up,
+    down: migration_20261119_184651_programs_are_pages.down,
+    name: '20261119_184651_programs_are_pages'
   },
 ];
