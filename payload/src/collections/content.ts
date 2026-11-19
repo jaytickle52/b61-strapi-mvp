@@ -1,6 +1,9 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from 'payload'
 import { ymd, zoned } from '../events/time'
 import { slugField } from 'payload'
+
+/** Whether a rich-text value holds any words (an empty editor still has a root). */
+const hasRichText = (v: any): boolean => Boolean(v?.root?.children?.some((n: any) => n?.children?.length || n?.type === 'block' || n?.type === 'upload'))
 import { contentAccess, guardPublishing, publicAudienceOrSignedIn, publishedOrSignedIn } from '../access'
 import { sectionBlocks } from '../blocks'
 import { refuseDeleteWhenUsed, usageEndpoint, usageField } from '../usage/fields'
@@ -204,6 +207,7 @@ export const Programs: CollectionConfig = {
     defaultColumns: ['name', 'grades', '_status'],
     description: 'Drag the handle at the start of each row to change the order on the website.',
     livePreview: livePreview((d) => `/programs/${d.slug ?? ''}`),
+    preview: (doc) => previewUrl(`/programs/${doc.slug ?? ''}`, doc.school),
   },
   access: { read: publishedOrSignedIn, ...writeAccess },
   versions: drafts,
@@ -215,10 +219,28 @@ export const Programs: CollectionConfig = {
   fields: [
     { name: 'name', type: 'text', required: true },
     slugField({ useAsSlug: 'name', disableUnique: true }),
-    { name: 'grades', type: 'text', admin: { description: 'e.g. K–5' } },
-    { name: 'summary', type: 'textarea', maxLength: 240 },
-    { name: 'description', type: 'richText' },
-    { name: 'image', type: 'upload', relationTo: 'media' },
+    // A program's page is built like any page: sections (Jay, 19 Nov 2026).
+    // Grades, summary and photo feed the program cards and the Programs list.
+    { name: 'grades', type: 'text', admin: { position: 'sidebar', description: 'e.g. K–5. Shown on program cards.' } },
+    { name: 'summary', type: 'textarea', maxLength: 240, admin: { position: 'sidebar', description: 'One or two sentences for program cards and search results.' } },
+    { name: 'image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar', description: 'Photo for program cards.' } },
+    { name: 'headingCheck', type: 'ui', admin: { components: { Field: '@/b61/kit/admin/HeadingCheck#HeadingCheck' } } },
+    {
+      name: 'sections',
+      type: 'blocks',
+      blocks: sectionBlocks,
+      admin: { initCollapsed: true, description: 'Build the program page like any page: add, reorder and remove sections. Changes show in the live preview as you type.' },
+    },
+    {
+      name: 'description',
+      label: 'Description (older layout)',
+      type: 'richText',
+      admin: {
+        // Only on programs written before sections; new programs use sections.
+        condition: (data) => hasRichText(data?.description),
+        description: 'Shown only while this program has no sections. Once you add sections, the page uses them instead; copy anything you want to keep into a Prose section.',
+      },
+    },
   ],
 }
 

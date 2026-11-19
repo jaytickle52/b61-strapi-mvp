@@ -4299,8 +4299,6 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4370,7 +4368,6 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -5113,10 +5110,4030 @@ export interface Program {
   generateSlug?: boolean | null;
   slug: string;
   /**
-   * e.g. K–5
+   * e.g. K–5. Shown on program cards.
    */
   grades?: string | null;
+  /**
+   * One or two sentences for program cards and search results.
+   */
   summary?: string | null;
+  /**
+   * Photo for program cards.
+   */
+  image?: (number | null) | Media;
+  /**
+   * Build the program page like any page: add, reorder and remove sections. Changes show in the live preview as you type.
+   */
+  sections?:
+    | (
+        | {
+            layoutMode?: ('cover' | 'band' | 'split' | 'type') | null;
+            eyebrow?: string | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            /**
+             * Words that take turns with the emphasized words, separated by commas. Works best at the end of the heading.
+             */
+            changingWords?: string | null;
+            subheadline?: string | null;
+            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3') | null;
+            buttons?:
+              | {
+                  label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
+                  link?: {
+                    type?: ('page' | 'document' | 'url') | null;
+                    page?: (number | null) | Page;
+                    document?: (number | null) | Document;
+                    url?: string | null;
+                  };
+                  /**
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            backgroundType?: ('image' | 'slideshow' | 'video') | null;
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            image?: (number | null) | Media;
+            slides?:
+              | {
+                  image: number | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            video?: (number | null) | Media;
+            videoWebm?: (number | null) | Media;
+            /**
+             * Plays muted on a loop behind the text. Keep this page open until the upload finishes.
+             */
+            bunnyVideo?: string | null;
+            /**
+             * Shows while the video loads, if autoplay is blocked, and when motion is turned off.
+             */
+            poster?: (number | null) | Media;
+            /**
+             * Below 80%, check the words stay easy to read over the photo.
+             */
+            overlayStrength?: number | null;
+            /**
+             * 1 to 3 photos beside the text.
+             */
+            collage?:
+              | {
+                  image: number | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            height?: ('short' | 'medium' | 'tall' | 'full') | null;
+            bandSize?: ('compact' | 'standard') | null;
+            splitSide?: ('right' | 'left') | null;
+            verticalPosition?: ('top' | 'center' | 'bottom') | null;
+            textAlign?: ('left' | 'center') | null;
+            columnBalance?: number | null;
+            subheadlineWidth?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            overlay?: ('gradient' | 'wash') | null;
+            surface?: ('light' | 'primary' | 'secondary') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Hero';
+          }
+        | {
+            eyebrow?: string | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
+             */
+            body?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            buttons?:
+              | {
+                  label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
+                  link?: {
+                    type?: ('page' | 'document' | 'url') | null;
+                    page?: (number | null) | Page;
+                    document?: (number | null) | Document;
+                    url?: string | null;
+                  };
+                  /**
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            media?: ('photo' | 'gallery' | 'video') | null;
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            image?: (number | null) | Media;
+            caption?: string | null;
+            images?:
+              | {
+                  image: number | Media;
+                  caption?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            galleryLayout?: ('grid' | 'masonry' | 'strip') | null;
+            /**
+             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+             */
+            video?: string | null;
+            imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+            /**
+             * A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+             */
+            badge?: (number | null) | Media;
+            imageSide?: ('left' | 'right') | null;
+            verticalPosition?: ('top' | 'center') | null;
+            stackOrder?: ('text' | 'media') | null;
+            columnHeight?: ('fit' | 'fill') | null;
+            overlap?: boolean | null;
+            headingAlign?: ('left' | 'center') | null;
+            columnBalance?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+            frameColor?: ('primary' | 'secondary' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Split';
+          }
+        | {
+            eyebrow?: string | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
+             */
+            body?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            buttons?:
+              | {
+                  label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
+                  link?: {
+                    type?: ('page' | 'document' | 'url') | null;
+                    page?: (number | null) | Page;
+                    document?: (number | null) | Document;
+                    url?: string | null;
+                  };
+                  /**
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            headPosition?: ('above' | 'beside') | null;
+            columnBalance?: number | null;
+            textAlign?: ('left' | 'center') | null;
+            measureStep?: number | null;
+            position?: ('left' | 'center') | null;
+            headingWidth?: ('text' | 'full') | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            iconlistStyle?: ('standard' | 'links') | null;
+            iconlistEdges?: boolean | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            headingRule?: ('site' | 'none' | 'trailing') | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Prose';
+          }
+        | {
+            cardText?: ('below' | 'on') | null;
+            eyebrow?: string | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            intro?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts') | null;
+            limit?: number | null;
+            mediaType?: ('image' | 'icon' | 'none') | null;
+            cards?:
+              | {
+                  image?: (number | null) | Media;
+                  icon?:
+                    | (
+                        | 'check'
+                        | 'question'
+                        | 'email'
+                        | 'phone'
+                        | 'location'
+                        | 'calendar'
+                        | 'clock'
+                        | 'link'
+                        | 'star'
+                        | 'heart'
+                        | 'book'
+                        | 'people'
+                        | 'cross'
+                        | 'school'
+                        | 'custom'
+                      )
+                    | null;
+                  /**
+                   * An SVG or PNG on a see-through background. It takes the text colour, like the other icons.
+                   */
+                  iconImage?: (number | null) | Media;
+                  iconColours?: boolean | null;
+                  eyebrow?: string | null;
+                  title?: string | null;
+                  body?: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: any;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  } | null;
+                  link?: {
+                    type?: ('page' | 'document' | 'url') | null;
+                    page?: (number | null) | Page;
+                    document?: (number | null) | Document;
+                    url?: string | null;
+                  };
+                  /**
+                   * Shows a "Read more"-style link. Leave empty to link the title.
+                   */
+                  linkText?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            buttons?:
+              | {
+                  label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
+                  link?: {
+                    type?: ('page' | 'document' | 'url') | null;
+                    page?: (number | null) | Page;
+                    document?: (number | null) | Document;
+                    url?: string | null;
+                  };
+                  /**
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            arrangement?: ('grid' | 'carousel') | null;
+            columns?: ('1' | '2' | '3' | '4') | null;
+            textAlign?: ('left' | 'center') | null;
+            advance?: ('one' | 'view') | null;
+            controlsPosition?:
+              ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
+            showCounter?: boolean | null;
+            showProgress?: boolean | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            cardStyle?: ('plain' | 'flat' | 'bordered') | null;
+            cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
+            imageShape?: ('fixed' | 'custom') | null;
+            ratioW?: number | null;
+            ratioH?: number | null;
+            cardTextPosition?: ('top' | 'center' | 'bottom') | null;
+            mediaRound?: boolean | null;
+            iconSize?: ('sm' | 'md' | 'lg') | null;
+            showNumbers?: boolean | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            cardSurface?: ('light' | 'soft' | 'primary') | null;
+            cardOverlay?: ('none' | 'gradient' | 'wash') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            headBeside?: boolean | null;
+            stagger?: boolean | null;
+            bleed?: boolean | null;
+            hoverReveal?: boolean | null;
+            altTint?: boolean | null;
+            featureMiddle?: boolean | null;
+            duotone?: boolean | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61CardGrid';
+          }
+        | {
+            eyebrow?: string | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            intro?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            stats?:
+              | {
+                  figure?: string | null;
+                  label?: string | null;
+                  note?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            buttons?:
+              | {
+                  label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
+                  link?: {
+                    type?: ('page' | 'document' | 'url') | null;
+                    page?: (number | null) | Page;
+                    document?: (number | null) | Document;
+                    url?: string | null;
+                  };
+                  /**
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            columns?: ('1' | '2' | '3' | '4') | null;
+            labelPosition?: ('below' | 'above') | null;
+            textAlign?: ('left' | 'center') | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            itemStyle?: ('plain' | 'divided' | 'boxed' | 'inline') | null;
+            flushEdges?: boolean | null;
+            figureScale?: ('large' | 'medium' | 'small') | null;
+            /**
+             * Inside a Section, Tabs or a Carousel this starts as None, so it shares that colour.
+             */
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            bandWidth?: ('full' | 'right' | 'left') | null;
+            pullUp?: boolean | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61StatsBand';
+          }
+        | {
+            eyebrow?: string | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            intro?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            media?: ('photo' | 'gallery' | 'video') | null;
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            image?: (number | null) | Media;
+            caption?: string | null;
+            images?:
+              | {
+                  image: number | Media;
+                  caption?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            scrollHint?: string | null;
+            /**
+             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+             */
+            video?: string | null;
+            buttons?:
+              | {
+                  label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
+                  link?: {
+                    type?: ('page' | 'document' | 'url') | null;
+                    page?: (number | null) | Page;
+                    document?: (number | null) | Document;
+                    url?: string | null;
+                  };
+                  /**
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            galleryLayout?: ('strip' | 'grid' | 'masonry') | null;
+            /**
+             * A strip always has its text above.
+             */
+            textPosition?: ('above' | 'beside') | null;
+            headingAlign?: ('left' | 'center') | null;
+            balanceStep?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            itemSize?: ('small' | 'medium' | 'large') | null;
+            columns?: ('2' | '3' | '4') | null;
+            imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            duotone?: boolean | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Gallery';
+          }
+        | {
+            eyebrow?: string | null;
+            quote: string;
+            attribution?: string | null;
+            /**
+             * A faint logo behind the quote.
+             */
+            watermark?: (number | null) | Media;
+            textAlign?: ('left' | 'center') | null;
+            textStyle?: ('italic' | 'normal') | null;
+            widthStep?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            showMark?: boolean | null;
+            markRoom?: boolean | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Testimonial';
+          }
+        | {
+            eyebrow?: string | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            intro?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            items?:
+              | {
+                  title: string;
+                  subtitle?: string | null;
+                  /**
+                   * Use + or / to add a button.
+                   */
+                  body?: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: any;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  } | null;
+                  id?: string | null;
+                }[]
+              | null;
+            /**
+             * Search engines and AI tools read each title as a question and its body as the answer.
+             */
+            faq?: boolean | null;
+            firstItemOpen?: boolean | null;
+            singleOpen?: boolean | null;
+            buttons?:
+              | {
+                  label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
+                  link?: {
+                    type?: ('page' | 'document' | 'url') | null;
+                    page?: (number | null) | Page;
+                    document?: (number | null) | Document;
+                    url?: string | null;
+                  };
+                  /**
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            headingAlign?: ('left' | 'center') | null;
+            widthStep?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            itemStyle?: ('divided' | 'boxed' | 'separated') | null;
+            iconStyle?: ('chevron' | 'plusminus') | null;
+            showNumbers?: boolean | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Accordion';
+          }
+        | {
+            eyebrow?: string | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            intro?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            tabs?:
+              | {
+                  label: string;
+                  /**
+                   * What shows when this tab is selected.
+                   */
+                  content?:
+                    | (
+                        | {
+                            eyebrow?: string | null;
+                            quote: string;
+                            attribution?: string | null;
+                            /**
+                             * A faint logo behind the quote.
+                             */
+                            watermark?: (number | null) | Media;
+                            textAlign?: ('left' | 'center') | null;
+                            textStyle?: ('italic' | 'normal') | null;
+                            widthStep?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            showMark?: boolean | null;
+                            markRoom?: boolean | null;
+                            entrance?: ('on' | 'off') | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Testimonial';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            /**
+                             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                             */
+                            heading?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            /**
+                             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
+                             */
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  action?: ('link' | 'video') | null;
+                                  link?: {
+                                    type?: ('page' | 'document' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    document?: (number | null) | Document;
+                                    url?: string | null;
+                                  };
+                                  /**
+                                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                                   */
+                                  video?: string | null;
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            media?: ('photo' | 'gallery' | 'video') | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image?: (number | null) | Media;
+                            caption?: string | null;
+                            images?:
+                              | {
+                                  image: number | Media;
+                                  caption?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            galleryLayout?: ('grid' | 'masonry' | 'strip') | null;
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                            /**
+                             * A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+                             */
+                            badge?: (number | null) | Media;
+                            imageSide?: ('left' | 'right') | null;
+                            verticalPosition?: ('top' | 'center') | null;
+                            stackOrder?: ('text' | 'media') | null;
+                            columnHeight?: ('fit' | 'fill') | null;
+                            overlap?: boolean | null;
+                            headingAlign?: ('left' | 'center') | null;
+                            columnBalance?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                            frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Split';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            /**
+                             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                             */
+                            heading?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+                            /**
+                             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
+                             */
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  action?: ('link' | 'video') | null;
+                                  link?: {
+                                    type?: ('page' | 'document' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    document?: (number | null) | Document;
+                                    url?: string | null;
+                                  };
+                                  /**
+                                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                                   */
+                                  video?: string | null;
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headPosition?: ('above' | 'beside') | null;
+                            columnBalance?: number | null;
+                            textAlign?: ('left' | 'center') | null;
+                            measureStep?: number | null;
+                            position?: ('left' | 'center') | null;
+                            headingWidth?: ('text' | 'full') | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            iconlistStyle?: ('standard' | 'links') | null;
+                            iconlistEdges?: boolean | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            headingRule?: ('site' | 'none' | 'trailing') | null;
+                            entrance?: ('on' | 'off') | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Prose';
+                          }
+                        | {
+                            cardText?: ('below' | 'on') | null;
+                            eyebrow?: string | null;
+                            /**
+                             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                             */
+                            heading?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            intro?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            source?:
+                              | ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts')
+                              | null;
+                            limit?: number | null;
+                            mediaType?: ('image' | 'icon' | 'none') | null;
+                            cards?:
+                              | {
+                                  image?: (number | null) | Media;
+                                  icon?:
+                                    | (
+                                        | 'check'
+                                        | 'question'
+                                        | 'email'
+                                        | 'phone'
+                                        | 'location'
+                                        | 'calendar'
+                                        | 'clock'
+                                        | 'link'
+                                        | 'star'
+                                        | 'heart'
+                                        | 'book'
+                                        | 'people'
+                                        | 'cross'
+                                        | 'school'
+                                        | 'custom'
+                                      )
+                                    | null;
+                                  /**
+                                   * An SVG or PNG on a see-through background. It takes the text colour, like the other icons.
+                                   */
+                                  iconImage?: (number | null) | Media;
+                                  iconColours?: boolean | null;
+                                  eyebrow?: string | null;
+                                  title?: string | null;
+                                  body?: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  } | null;
+                                  link?: {
+                                    type?: ('page' | 'document' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    document?: (number | null) | Document;
+                                    url?: string | null;
+                                  };
+                                  /**
+                                   * Shows a "Read more"-style link. Leave empty to link the title.
+                                   */
+                                  linkText?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  action?: ('link' | 'video') | null;
+                                  link?: {
+                                    type?: ('page' | 'document' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    document?: (number | null) | Document;
+                                    url?: string | null;
+                                  };
+                                  /**
+                                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                                   */
+                                  video?: string | null;
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            arrangement?: ('grid' | 'carousel') | null;
+                            columns?: ('1' | '2' | '3' | '4') | null;
+                            textAlign?: ('left' | 'center') | null;
+                            advance?: ('one' | 'view') | null;
+                            controlsPosition?:
+                              | ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden')
+                              | null;
+                            showCounter?: boolean | null;
+                            showProgress?: boolean | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            cardStyle?: ('plain' | 'flat' | 'bordered') | null;
+                            cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
+                            imageShape?: ('fixed' | 'custom') | null;
+                            ratioW?: number | null;
+                            ratioH?: number | null;
+                            cardTextPosition?: ('top' | 'center' | 'bottom') | null;
+                            mediaRound?: boolean | null;
+                            iconSize?: ('sm' | 'md' | 'lg') | null;
+                            showNumbers?: boolean | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            cardSurface?: ('light' | 'soft' | 'primary') | null;
+                            cardOverlay?: ('none' | 'gradient' | 'wash') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            headBeside?: boolean | null;
+                            stagger?: boolean | null;
+                            bleed?: boolean | null;
+                            hoverReveal?: boolean | null;
+                            altTint?: boolean | null;
+                            featureMiddle?: boolean | null;
+                            duotone?: boolean | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61CardGrid';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            firstItemOpen?: boolean | null;
+            tabPosition?: ('top' | 'left' | 'right') | null;
+            tabAlign?: ('left' | 'center' | 'full') | null;
+            headingAlign?: ('left' | 'center') | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Tabs';
+          }
+        | {
+            eyebrow?: string | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            intro?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            items?:
+              | {
+                  title: string;
+                  body?: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: any;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  } | null;
+                  /**
+                   * To set the focal point, click the pencil on the photo, then Edit image.
+                   */
+                  image?: (number | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            firstItemOpen?: boolean | null;
+            tabPosition?: ('left' | 'right' | 'top') | null;
+            tabAlign?: ('left' | 'center' | 'full') | null;
+            headingAlign?: ('left' | 'center') | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            scrollStory?: boolean | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Pillars';
+          }
+        | {
+            eyebrow?: string | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            intro?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Used only when there is no heading.
+             */
+            label?: string | null;
+            slides?:
+              | {
+                  label?: string | null;
+                  content?:
+                    | (
+                        | {
+                            eyebrow?: string | null;
+                            quote: string;
+                            attribution?: string | null;
+                            /**
+                             * A faint logo behind the quote.
+                             */
+                            watermark?: (number | null) | Media;
+                            textAlign?: ('left' | 'center') | null;
+                            textStyle?: ('italic' | 'normal') | null;
+                            widthStep?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            showMark?: boolean | null;
+                            markRoom?: boolean | null;
+                            entrance?: ('on' | 'off') | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Testimonial';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            /**
+                             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                             */
+                            heading?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            /**
+                             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
+                             */
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  action?: ('link' | 'video') | null;
+                                  link?: {
+                                    type?: ('page' | 'document' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    document?: (number | null) | Document;
+                                    url?: string | null;
+                                  };
+                                  /**
+                                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                                   */
+                                  video?: string | null;
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            media?: ('photo' | 'gallery' | 'video') | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image?: (number | null) | Media;
+                            caption?: string | null;
+                            images?:
+                              | {
+                                  image: number | Media;
+                                  caption?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            galleryLayout?: ('grid' | 'masonry' | 'strip') | null;
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                            /**
+                             * A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+                             */
+                            badge?: (number | null) | Media;
+                            imageSide?: ('left' | 'right') | null;
+                            verticalPosition?: ('top' | 'center') | null;
+                            stackOrder?: ('text' | 'media') | null;
+                            columnHeight?: ('fit' | 'fill') | null;
+                            overlap?: boolean | null;
+                            headingAlign?: ('left' | 'center') | null;
+                            columnBalance?: number | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                            frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            entrance?: ('on' | 'off') | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Split';
+                          }
+                        | {
+                            eyebrow?: string | null;
+                            /**
+                             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                             */
+                            heading?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            subheads?:
+                              | {
+                                  text: string;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+                            /**
+                             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
+                             */
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            buttons?:
+                              | {
+                                  label: string;
+                                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                                  action?: ('link' | 'video') | null;
+                                  link?: {
+                                    type?: ('page' | 'document' | 'url') | null;
+                                    page?: (number | null) | Page;
+                                    document?: (number | null) | Document;
+                                    url?: string | null;
+                                  };
+                                  /**
+                                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                                   */
+                                  video?: string | null;
+                                  fullWidth?: boolean | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            headPosition?: ('above' | 'beside') | null;
+                            columnBalance?: number | null;
+                            textAlign?: ('left' | 'center') | null;
+                            measureStep?: number | null;
+                            position?: ('left' | 'center') | null;
+                            headingWidth?: ('text' | 'full') | null;
+                            padTop?: ('normal' | 'tight' | 'none') | null;
+                            padBottom?: ('normal' | 'tight' | 'none') | null;
+                            iconlistStyle?: ('standard' | 'links') | null;
+                            iconlistEdges?: boolean | null;
+                            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                            headingRule?: ('site' | 'none' | 'trailing') | null;
+                            entrance?: ('on' | 'off') | null;
+                            /**
+                             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                             */
+                            cssClass?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'b61Prose';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            perView?: ('1' | '2' | '3' | '4') | null;
+            headingAlign?: ('left' | 'center') | null;
+            advance?: ('one' | 'view') | null;
+            controlsPosition?:
+              ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
+            showCounter?: boolean | null;
+            showProgress?: boolean | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Carousel';
+          }
+        | {
+            /**
+             * The elements in this section, top to bottom.
+             */
+            content?:
+              | (
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
+                       */
+                      body?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headPosition?: ('above' | 'beside') | null;
+                      columnBalance?: number | null;
+                      textAlign?: ('left' | 'center') | null;
+                      measureStep?: number | null;
+                      position?: ('left' | 'center') | null;
+                      headingWidth?: ('text' | 'full') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      iconlistStyle?: ('standard' | 'links') | null;
+                      iconlistEdges?: boolean | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      headingRule?: ('site' | 'none' | 'trailing') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Prose';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
+                       */
+                      body?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      media?: ('photo' | 'gallery' | 'video') | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image?: (number | null) | Media;
+                      caption?: string | null;
+                      images?:
+                        | {
+                            image: number | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      galleryLayout?: ('grid' | 'masonry' | 'strip') | null;
+                      /**
+                       * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                       */
+                      video?: string | null;
+                      imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                      /**
+                       * A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+                       */
+                      badge?: (number | null) | Media;
+                      imageSide?: ('left' | 'right') | null;
+                      verticalPosition?: ('top' | 'center') | null;
+                      stackOrder?: ('text' | 'media') | null;
+                      columnHeight?: ('fit' | 'fill') | null;
+                      overlap?: boolean | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      columnBalance?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                      frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Split';
+                    }
+                  | {
+                      cardText?: ('below' | 'on') | null;
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      source?:
+                        ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts') | null;
+                      limit?: number | null;
+                      mediaType?: ('image' | 'icon' | 'none') | null;
+                      cards?:
+                        | {
+                            image?: (number | null) | Media;
+                            icon?:
+                              | (
+                                  | 'check'
+                                  | 'question'
+                                  | 'email'
+                                  | 'phone'
+                                  | 'location'
+                                  | 'calendar'
+                                  | 'clock'
+                                  | 'link'
+                                  | 'star'
+                                  | 'heart'
+                                  | 'book'
+                                  | 'people'
+                                  | 'cross'
+                                  | 'school'
+                                  | 'custom'
+                                )
+                              | null;
+                            /**
+                             * An SVG or PNG on a see-through background. It takes the text colour, like the other icons.
+                             */
+                            iconImage?: (number | null) | Media;
+                            iconColours?: boolean | null;
+                            eyebrow?: string | null;
+                            title?: string | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * Shows a "Read more"-style link. Leave empty to link the title.
+                             */
+                            linkText?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      arrangement?: ('grid' | 'carousel') | null;
+                      columns?: ('1' | '2' | '3' | '4') | null;
+                      textAlign?: ('left' | 'center') | null;
+                      advance?: ('one' | 'view') | null;
+                      controlsPosition?:
+                        ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
+                      showCounter?: boolean | null;
+                      showProgress?: boolean | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      cardStyle?: ('plain' | 'flat' | 'bordered') | null;
+                      cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
+                      imageShape?: ('fixed' | 'custom') | null;
+                      ratioW?: number | null;
+                      ratioH?: number | null;
+                      cardTextPosition?: ('top' | 'center' | 'bottom') | null;
+                      mediaRound?: boolean | null;
+                      iconSize?: ('sm' | 'md' | 'lg') | null;
+                      showNumbers?: boolean | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      cardSurface?: ('light' | 'soft' | 'primary') | null;
+                      cardOverlay?: ('none' | 'gradient' | 'wash') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      headBeside?: boolean | null;
+                      stagger?: boolean | null;
+                      bleed?: boolean | null;
+                      hoverReveal?: boolean | null;
+                      altTint?: boolean | null;
+                      featureMiddle?: boolean | null;
+                      duotone?: boolean | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61CardGrid';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      stats?:
+                        | {
+                            figure?: string | null;
+                            label?: string | null;
+                            note?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      columns?: ('1' | '2' | '3' | '4') | null;
+                      labelPosition?: ('below' | 'above') | null;
+                      textAlign?: ('left' | 'center') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      itemStyle?: ('plain' | 'divided' | 'boxed' | 'inline') | null;
+                      flushEdges?: boolean | null;
+                      figureScale?: ('large' | 'medium' | 'small') | null;
+                      /**
+                       * Inside a Section, Tabs or a Carousel this starts as None, so it shares that colour.
+                       */
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      bandWidth?: ('full' | 'right' | 'left') | null;
+                      pullUp?: boolean | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61StatsBand';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      media?: ('photo' | 'gallery' | 'video') | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image?: (number | null) | Media;
+                      caption?: string | null;
+                      images?:
+                        | {
+                            image: number | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      scrollHint?: string | null;
+                      /**
+                       * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                       */
+                      video?: string | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      galleryLayout?: ('strip' | 'grid' | 'masonry') | null;
+                      /**
+                       * A strip always has its text above.
+                       */
+                      textPosition?: ('above' | 'beside') | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      balanceStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      itemSize?: ('small' | 'medium' | 'large') | null;
+                      columns?: ('2' | '3' | '4') | null;
+                      imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      duotone?: boolean | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Gallery';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      quote: string;
+                      attribution?: string | null;
+                      /**
+                       * A faint logo behind the quote.
+                       */
+                      watermark?: (number | null) | Media;
+                      textAlign?: ('left' | 'center') | null;
+                      textStyle?: ('italic' | 'normal') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      showMark?: boolean | null;
+                      markRoom?: boolean | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Testimonial';
+                    }
+                  | {
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image: number | Media;
+                      imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide' | 'custom') | null;
+                      imageHeight?: ('360px' | '460px' | '560px' | '680px') | null;
+                      ratioW?: number | null;
+                      ratioH?: number | null;
+                      flipFrame?: boolean | null;
+                      widthStep?: number | null;
+                      frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61FramedImage';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      items?:
+                        | {
+                            title: string;
+                            subtitle?: string | null;
+                            /**
+                             * Use + or / to add a button.
+                             */
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      /**
+                       * Search engines and AI tools read each title as a question and its body as the answer.
+                       */
+                      faq?: boolean | null;
+                      firstItemOpen?: boolean | null;
+                      singleOpen?: boolean | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      itemStyle?: ('divided' | 'boxed' | 'separated') | null;
+                      iconStyle?: ('chevron' | 'plusminus') | null;
+                      showNumbers?: boolean | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Accordion';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      items?:
+                        | {
+                            title: string;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image?: (number | null) | Media;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      firstItemOpen?: boolean | null;
+                      tabPosition?: ('left' | 'right' | 'top') | null;
+                      tabAlign?: ('left' | 'center' | 'full') | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      scrollStory?: boolean | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Pillars';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
+                       */
+                      body?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image?: (number | null) | Media;
+                      /**
+                       * Without a text panel, check the words stay easy to read over the photo (70% is a safe start).
+                       */
+                      overlayStrength?: number | null;
+                      textAlign?: ('left' | 'center') | null;
+                      widthStep?: number | null;
+                      position?: ('left' | 'center') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      /**
+                       * Inside a Section, Tabs or a Carousel this starts as None, so it shares that colour.
+                       */
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Cta';
+                    }
+                  | {
+                      /**
+                       * Questions, emails and the thank-you message are edited in Forms.
+                       */
+                      form: number | Form;
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      textAlign?: ('left' | 'center') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      /**
+                       * On a Dark or Accent surface the form always sits on a white card.
+                       */
+                      card?: ('none' | 'card') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Form';
+                    }
+                  | {
+                      firstLabel?: string | null;
+                      firstLink?: {
+                        type?: ('page' | 'document' | 'url') | null;
+                        page?: (number | null) | Page;
+                        document?: (number | null) | Document;
+                        url?: string | null;
+                      };
+                      secondLabel?: string | null;
+                      secondLink?: {
+                        type?: ('page' | 'document' | 'url') | null;
+                        page?: (number | null) | Page;
+                        document?: (number | null) | Document;
+                        url?: string | null;
+                      };
+                      size?: ('standard' | 'large') | null;
+                      firstColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
+                      secondColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61ButtonBar';
+                    }
+                  | {
+                      lineStyle?: ('rule' | 'ornament') | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      ornament?: (number | null) | Media;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      widthStep?: number | null;
+                      weight?: ('hairline' | 'regular' | 'heavy') | null;
+                      lineColor?: ('accent' | 'ink' | 'muted') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Divider';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      logos?:
+                        | {
+                            /**
+                             * The logo's alt text should be the name (e.g. "Wake Forest University").
+                             */
+                            image: number | Media;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            id?: string | null;
+                          }[]
+                        | null;
+                      motion?: ('still' | 'scroll') | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      logoStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      oneColour?: boolean | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Logos';
+                    }
+                )[]
+              | null;
+            /**
+             * Usually one Rail (buttons and a link list).
+             */
+            side?:
+              | (
+                  | {
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      linksLabel?: string | null;
+                      links?:
+                        | {
+                            label: string;
+                            icon?:
+                              | (
+                                  | 'arrow'
+                                  | 'check'
+                                  | 'question'
+                                  | 'email'
+                                  | 'phone'
+                                  | 'location'
+                                  | 'calendar'
+                                  | 'clock'
+                                  | 'link'
+                                  | 'star'
+                                  | 'heart'
+                                  | 'book'
+                                  | 'people'
+                                  | 'cross'
+                                  | 'school'
+                                  | 'custom'
+                                )
+                              | null;
+                            /**
+                             * An SVG or PNG on a see-through background. It takes the text colour, like the other icons.
+                             */
+                            iconImage?: (number | null) | Media;
+                            iconColours?: boolean | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            id?: string | null;
+                          }[]
+                        | null;
+                      actionsPosition?: ('top' | 'bottom') | null;
+                      sticky?: boolean | null;
+                      surface?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Rail';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
+                       */
+                      body?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headPosition?: ('above' | 'beside') | null;
+                      columnBalance?: number | null;
+                      textAlign?: ('left' | 'center') | null;
+                      measureStep?: number | null;
+                      position?: ('left' | 'center') | null;
+                      headingWidth?: ('text' | 'full') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      iconlistStyle?: ('standard' | 'links') | null;
+                      iconlistEdges?: boolean | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      headingRule?: ('site' | 'none' | 'trailing') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Prose';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
+                       */
+                      body?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      media?: ('photo' | 'gallery' | 'video') | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image?: (number | null) | Media;
+                      caption?: string | null;
+                      images?:
+                        | {
+                            image: number | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      galleryLayout?: ('grid' | 'masonry' | 'strip') | null;
+                      /**
+                       * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                       */
+                      video?: string | null;
+                      imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                      /**
+                       * A seal or award on the outer corner of the photo, e.g. an anniversary seal. A PNG with a see-through background works best.
+                       */
+                      badge?: (number | null) | Media;
+                      imageSide?: ('left' | 'right') | null;
+                      verticalPosition?: ('top' | 'center') | null;
+                      stackOrder?: ('text' | 'media') | null;
+                      columnHeight?: ('fit' | 'fill') | null;
+                      overlap?: boolean | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      columnBalance?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                      frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Split';
+                    }
+                  | {
+                      cardText?: ('below' | 'on') | null;
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      source?:
+                        ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts') | null;
+                      limit?: number | null;
+                      mediaType?: ('image' | 'icon' | 'none') | null;
+                      cards?:
+                        | {
+                            image?: (number | null) | Media;
+                            icon?:
+                              | (
+                                  | 'check'
+                                  | 'question'
+                                  | 'email'
+                                  | 'phone'
+                                  | 'location'
+                                  | 'calendar'
+                                  | 'clock'
+                                  | 'link'
+                                  | 'star'
+                                  | 'heart'
+                                  | 'book'
+                                  | 'people'
+                                  | 'cross'
+                                  | 'school'
+                                  | 'custom'
+                                )
+                              | null;
+                            /**
+                             * An SVG or PNG on a see-through background. It takes the text colour, like the other icons.
+                             */
+                            iconImage?: (number | null) | Media;
+                            iconColours?: boolean | null;
+                            eyebrow?: string | null;
+                            title?: string | null;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * Shows a "Read more"-style link. Leave empty to link the title.
+                             */
+                            linkText?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      arrangement?: ('grid' | 'carousel') | null;
+                      columns?: ('1' | '2' | '3' | '4') | null;
+                      textAlign?: ('left' | 'center') | null;
+                      advance?: ('one' | 'view') | null;
+                      controlsPosition?:
+                        ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
+                      showCounter?: boolean | null;
+                      showProgress?: boolean | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      cardStyle?: ('plain' | 'flat' | 'bordered') | null;
+                      cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
+                      imageShape?: ('fixed' | 'custom') | null;
+                      ratioW?: number | null;
+                      ratioH?: number | null;
+                      cardTextPosition?: ('top' | 'center' | 'bottom') | null;
+                      mediaRound?: boolean | null;
+                      iconSize?: ('sm' | 'md' | 'lg') | null;
+                      showNumbers?: boolean | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      cardSurface?: ('light' | 'soft' | 'primary') | null;
+                      cardOverlay?: ('none' | 'gradient' | 'wash') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      headBeside?: boolean | null;
+                      stagger?: boolean | null;
+                      bleed?: boolean | null;
+                      hoverReveal?: boolean | null;
+                      altTint?: boolean | null;
+                      featureMiddle?: boolean | null;
+                      duotone?: boolean | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61CardGrid';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      stats?:
+                        | {
+                            figure?: string | null;
+                            label?: string | null;
+                            note?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      columns?: ('1' | '2' | '3' | '4') | null;
+                      labelPosition?: ('below' | 'above') | null;
+                      textAlign?: ('left' | 'center') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      itemStyle?: ('plain' | 'divided' | 'boxed' | 'inline') | null;
+                      flushEdges?: boolean | null;
+                      figureScale?: ('large' | 'medium' | 'small') | null;
+                      /**
+                       * Inside a Section, Tabs or a Carousel this starts as None, so it shares that colour.
+                       */
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      bandWidth?: ('full' | 'right' | 'left') | null;
+                      pullUp?: boolean | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61StatsBand';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      media?: ('photo' | 'gallery' | 'video') | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image?: (number | null) | Media;
+                      caption?: string | null;
+                      images?:
+                        | {
+                            image: number | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      scrollHint?: string | null;
+                      /**
+                       * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                       */
+                      video?: string | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      galleryLayout?: ('strip' | 'grid' | 'masonry') | null;
+                      /**
+                       * A strip always has its text above.
+                       */
+                      textPosition?: ('above' | 'beside') | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      balanceStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      itemSize?: ('small' | 'medium' | 'large') | null;
+                      columns?: ('2' | '3' | '4') | null;
+                      imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      duotone?: boolean | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Gallery';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      quote: string;
+                      attribution?: string | null;
+                      /**
+                       * A faint logo behind the quote.
+                       */
+                      watermark?: (number | null) | Media;
+                      textAlign?: ('left' | 'center') | null;
+                      textStyle?: ('italic' | 'normal') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      showMark?: boolean | null;
+                      markRoom?: boolean | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Testimonial';
+                    }
+                  | {
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image: number | Media;
+                      imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide' | 'custom') | null;
+                      imageHeight?: ('360px' | '460px' | '560px' | '680px') | null;
+                      ratioW?: number | null;
+                      ratioH?: number | null;
+                      flipFrame?: boolean | null;
+                      widthStep?: number | null;
+                      frameColor?: ('primary' | 'secondary' | 'accent') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61FramedImage';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      items?:
+                        | {
+                            title: string;
+                            subtitle?: string | null;
+                            /**
+                             * Use + or / to add a button.
+                             */
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      /**
+                       * Search engines and AI tools read each title as a question and its body as the answer.
+                       */
+                      faq?: boolean | null;
+                      firstItemOpen?: boolean | null;
+                      singleOpen?: boolean | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      itemStyle?: ('divided' | 'boxed' | 'separated') | null;
+                      iconStyle?: ('chevron' | 'plusminus') | null;
+                      showNumbers?: boolean | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Accordion';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      intro?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      items?:
+                        | {
+                            title: string;
+                            body?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            /**
+                             * To set the focal point, click the pencil on the photo, then Edit image.
+                             */
+                            image?: (number | null) | Media;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      firstItemOpen?: boolean | null;
+                      tabPosition?: ('left' | 'right' | 'top') | null;
+                      tabAlign?: ('left' | 'center' | 'full') | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      scrollStory?: boolean | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Pillars';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
+                       */
+                      body?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      buttons?:
+                        | {
+                            label: string;
+                            variant: 'primary' | 'secondary' | 'light' | 'link';
+                            action?: ('link' | 'video') | null;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            /**
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                             */
+                            video?: string | null;
+                            fullWidth?: boolean | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      image?: (number | null) | Media;
+                      /**
+                       * Without a text panel, check the words stay easy to read over the photo (70% is a safe start).
+                       */
+                      overlayStrength?: number | null;
+                      textAlign?: ('left' | 'center') | null;
+                      widthStep?: number | null;
+                      position?: ('left' | 'center') | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      /**
+                       * Inside a Section, Tabs or a Carousel this starts as None, so it shares that colour.
+                       */
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Cta';
+                    }
+                  | {
+                      /**
+                       * Questions, emails and the thank-you message are edited in Forms.
+                       */
+                      form: number | Form;
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      textAlign?: ('left' | 'center') | null;
+                      widthStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      /**
+                       * On a Dark or Accent surface the form always sits on a white card.
+                       */
+                      card?: ('none' | 'card') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Form';
+                    }
+                  | {
+                      firstLabel?: string | null;
+                      firstLink?: {
+                        type?: ('page' | 'document' | 'url') | null;
+                        page?: (number | null) | Page;
+                        document?: (number | null) | Document;
+                        url?: string | null;
+                      };
+                      secondLabel?: string | null;
+                      secondLink?: {
+                        type?: ('page' | 'document' | 'url') | null;
+                        page?: (number | null) | Page;
+                        document?: (number | null) | Document;
+                        url?: string | null;
+                      };
+                      size?: ('standard' | 'large') | null;
+                      firstColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
+                      secondColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61ButtonBar';
+                    }
+                  | {
+                      lineStyle?: ('rule' | 'ornament') | null;
+                      /**
+                       * To set the focal point, click the pencil on the photo, then Edit image.
+                       */
+                      ornament?: (number | null) | Media;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      widthStep?: number | null;
+                      weight?: ('hairline' | 'regular' | 'heavy') | null;
+                      lineColor?: ('accent' | 'ink' | 'muted') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Divider';
+                    }
+                  | {
+                      eyebrow?: string | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      subheads?:
+                        | {
+                            text: string;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      logos?:
+                        | {
+                            /**
+                             * The logo's alt text should be the name (e.g. "Wake Forest University").
+                             */
+                            image: number | Media;
+                            link?: {
+                              type?: ('page' | 'document' | 'url') | null;
+                              page?: (number | null) | Page;
+                              document?: (number | null) | Document;
+                              url?: string | null;
+                            };
+                            id?: string | null;
+                          }[]
+                        | null;
+                      motion?: ('still' | 'scroll') | null;
+                      headingAlign?: ('left' | 'center') | null;
+                      logoStep?: number | null;
+                      padTop?: ('normal' | 'tight' | 'none') | null;
+                      padBottom?: ('normal' | 'tight' | 'none') | null;
+                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+                      oneColour?: boolean | null;
+                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+                      entrance?: ('on' | 'off') | null;
+                      /**
+                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
+                       */
+                      cssClass?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'b61Logos';
+                    }
+                )[]
+              | null;
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            image?: (number | null) | Media;
+            /**
+             * Check the words stay easy to read over the photo (70% is a safe start).
+             */
+            overlayStrength?: number | null;
+            columns?: ('full' | 'rail-right' | 'rail-left') | null;
+            railSticky?: boolean | null;
+            railAlign?: ('start' | 'center') | null;
+            railStack?: ('source' | 'rail-first' | 'rail-last') | null;
+            pullUp?: boolean | null;
+            railWidthStep?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            patternOn?: boolean | null;
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            patternImage?: (number | null) | Media;
+            tileSize?: number | null;
+            patternStrength?: number | null;
+            watermarkOn?: boolean | null;
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            watermarkImage?: (number | null) | Media;
+            watermarkSize?: number | null;
+            watermarkStrength?: number | null;
+            surface?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+            entrance?: ('on' | 'off') | null;
+            duotone?: boolean | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Section';
+          }
+        | {
+            eyebrow?: string | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
+             */
+            body?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            buttons?:
+              | {
+                  label: string;
+                  variant: 'primary' | 'secondary' | 'light' | 'link';
+                  action?: ('link' | 'video') | null;
+                  link?: {
+                    type?: ('page' | 'document' | 'url') | null;
+                    page?: (number | null) | Page;
+                    document?: (number | null) | Document;
+                    url?: string | null;
+                  };
+                  /**
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
+                   */
+                  video?: string | null;
+                  fullWidth?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            image?: (number | null) | Media;
+            /**
+             * Without a text panel, check the words stay easy to read over the photo (70% is a safe start).
+             */
+            overlayStrength?: number | null;
+            textAlign?: ('left' | 'center') | null;
+            widthStep?: number | null;
+            position?: ('left' | 'center') | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            /**
+             * Inside a Section, Tabs or a Carousel this starts as None, so it shares that colour.
+             */
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            textPanel?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Cta';
+          }
+        | {
+            /**
+             * Questions, emails and the thank-you message are edited in Forms.
+             */
+            form: number | Form;
+            eyebrow?: string | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            textAlign?: ('left' | 'center') | null;
+            widthStep?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            /**
+             * On a Dark or Accent surface the form always sits on a white card.
+             */
+            card?: ('none' | 'card') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Form';
+          }
+        | {
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            image: number | Media;
+            imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide' | 'custom') | null;
+            imageHeight?: ('360px' | '460px' | '560px' | '680px') | null;
+            ratioW?: number | null;
+            ratioH?: number | null;
+            flipFrame?: boolean | null;
+            widthStep?: number | null;
+            frameColor?: ('primary' | 'secondary' | 'accent') | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61FramedImage';
+          }
+        | {
+            firstLabel?: string | null;
+            firstLink?: {
+              type?: ('page' | 'document' | 'url') | null;
+              page?: (number | null) | Page;
+              document?: (number | null) | Document;
+              url?: string | null;
+            };
+            secondLabel?: string | null;
+            secondLink?: {
+              type?: ('page' | 'document' | 'url') | null;
+              page?: (number | null) | Page;
+              document?: (number | null) | Document;
+              url?: string | null;
+            };
+            size?: ('standard' | 'large') | null;
+            firstColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
+            secondColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61ButtonBar';
+          }
+        | {
+            lineStyle?: ('rule' | 'ornament') | null;
+            /**
+             * To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            ornament?: (number | null) | Media;
+            alignment?: ('left' | 'center' | 'right') | null;
+            widthStep?: number | null;
+            weight?: ('hairline' | 'regular' | 'heavy') | null;
+            lineColor?: ('accent' | 'ink' | 'muted') | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Divider';
+          }
+        | {
+            eyebrow?: string | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            subheads?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            logos?:
+              | {
+                  /**
+                   * The logo's alt text should be the name (e.g. "Wake Forest University").
+                   */
+                  image: number | Media;
+                  link?: {
+                    type?: ('page' | 'document' | 'url') | null;
+                    page?: (number | null) | Page;
+                    document?: (number | null) | Document;
+                    url?: string | null;
+                  };
+                  id?: string | null;
+                }[]
+              | null;
+            motion?: ('still' | 'scroll') | null;
+            headingAlign?: ('left' | 'center') | null;
+            logoStep?: number | null;
+            padTop?: ('normal' | 'tight' | 'none') | null;
+            padBottom?: ('normal' | 'tight' | 'none') | null;
+            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
+            oneColour?: boolean | null;
+            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
+            entrance?: ('on' | 'off') | null;
+            /**
+             * Banner 61 only. Style it in School settings > Look > Custom CSS.
+             */
+            cssClass?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'b61Logos';
+          }
+      )[]
+    | null;
+  /**
+   * Shown only while this program has no sections. Once you add sections, the page uses them instead; copy anything you want to keep into a Prose section.
+   */
   description?: {
     root: {
       type: string;
@@ -5132,7 +9149,6 @@ export interface Program {
     };
     [k: string]: unknown;
   } | null;
-  image?: (number | null) | Media;
   meta?: {
     /**
      * What the page is, in the words a family would search, then the school's name: "Admissions and Tuition | Grace Christian School". Used exactly as written. About 50-60 characters.
@@ -5215,8 +9231,6 @@ export interface FormSubmission {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -8757,8 +12771,2283 @@ export interface ProgramsSelect<T extends boolean = true> {
   slug?: T;
   grades?: T;
   summary?: T;
-  description?: T;
   image?: T;
+  sections?:
+    | T
+    | {
+        b61Hero?:
+          | T
+          | {
+              layoutMode?: T;
+              eyebrow?: T;
+              heading?: T;
+              changingWords?: T;
+              subheadline?: T;
+              headingLevel?: T;
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    variant?: T;
+                    action?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                        };
+                    video?: T;
+                    fullWidth?: T;
+                    id?: T;
+                  };
+              backgroundType?: T;
+              image?: T;
+              slides?:
+                | T
+                | {
+                    image?: T;
+                    id?: T;
+                  };
+              video?: T;
+              videoWebm?: T;
+              bunnyVideo?: T;
+              poster?: T;
+              overlayStrength?: T;
+              collage?:
+                | T
+                | {
+                    image?: T;
+                    id?: T;
+                  };
+              height?: T;
+              bandSize?: T;
+              splitSide?: T;
+              verticalPosition?: T;
+              textAlign?: T;
+              columnBalance?: T;
+              subheadlineWidth?: T;
+              padTop?: T;
+              padBottom?: T;
+              overlay?: T;
+              surface?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Split?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              body?: T;
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    variant?: T;
+                    action?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                        };
+                    video?: T;
+                    fullWidth?: T;
+                    id?: T;
+                  };
+              media?: T;
+              image?: T;
+              caption?: T;
+              images?:
+                | T
+                | {
+                    image?: T;
+                    caption?: T;
+                    id?: T;
+                  };
+              galleryLayout?: T;
+              video?: T;
+              imageShape?: T;
+              badge?: T;
+              imageSide?: T;
+              verticalPosition?: T;
+              stackOrder?: T;
+              columnHeight?: T;
+              overlap?: T;
+              headingAlign?: T;
+              columnBalance?: T;
+              padTop?: T;
+              padBottom?: T;
+              surface?: T;
+              textPanel?: T;
+              frameColor?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Prose?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              body?: T;
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    variant?: T;
+                    action?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                        };
+                    video?: T;
+                    fullWidth?: T;
+                    id?: T;
+                  };
+              headPosition?: T;
+              columnBalance?: T;
+              textAlign?: T;
+              measureStep?: T;
+              position?: T;
+              headingWidth?: T;
+              padTop?: T;
+              padBottom?: T;
+              iconlistStyle?: T;
+              iconlistEdges?: T;
+              surface?: T;
+              eyebrowRule?: T;
+              headingRule?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61CardGrid?:
+          | T
+          | {
+              cardText?: T;
+              eyebrow?: T;
+              heading?: T;
+              intro?: T;
+              headingLevel?: T;
+              source?: T;
+              limit?: T;
+              mediaType?: T;
+              cards?:
+                | T
+                | {
+                    image?: T;
+                    icon?: T;
+                    iconImage?: T;
+                    iconColours?: T;
+                    eyebrow?: T;
+                    title?: T;
+                    body?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                        };
+                    linkText?: T;
+                    id?: T;
+                  };
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    variant?: T;
+                    action?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                        };
+                    video?: T;
+                    fullWidth?: T;
+                    id?: T;
+                  };
+              arrangement?: T;
+              columns?: T;
+              textAlign?: T;
+              advance?: T;
+              controlsPosition?: T;
+              showCounter?: T;
+              showProgress?: T;
+              padTop?: T;
+              padBottom?: T;
+              cardStyle?: T;
+              cardShape?: T;
+              imageShape?: T;
+              ratioW?: T;
+              ratioH?: T;
+              cardTextPosition?: T;
+              mediaRound?: T;
+              iconSize?: T;
+              showNumbers?: T;
+              surface?: T;
+              cardSurface?: T;
+              cardOverlay?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              headBeside?: T;
+              stagger?: T;
+              bleed?: T;
+              hoverReveal?: T;
+              altTint?: T;
+              featureMiddle?: T;
+              duotone?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61StatsBand?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              intro?: T;
+              headingLevel?: T;
+              stats?:
+                | T
+                | {
+                    figure?: T;
+                    label?: T;
+                    note?: T;
+                    id?: T;
+                  };
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    variant?: T;
+                    action?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                        };
+                    video?: T;
+                    fullWidth?: T;
+                    id?: T;
+                  };
+              columns?: T;
+              labelPosition?: T;
+              textAlign?: T;
+              padTop?: T;
+              padBottom?: T;
+              itemStyle?: T;
+              flushEdges?: T;
+              figureScale?: T;
+              surface?: T;
+              itemSurface?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              bandWidth?: T;
+              pullUp?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Gallery?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              intro?: T;
+              headingLevel?: T;
+              media?: T;
+              image?: T;
+              caption?: T;
+              images?:
+                | T
+                | {
+                    image?: T;
+                    caption?: T;
+                    id?: T;
+                  };
+              scrollHint?: T;
+              video?: T;
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    variant?: T;
+                    action?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                        };
+                    video?: T;
+                    fullWidth?: T;
+                    id?: T;
+                  };
+              galleryLayout?: T;
+              textPosition?: T;
+              headingAlign?: T;
+              balanceStep?: T;
+              padTop?: T;
+              padBottom?: T;
+              itemSize?: T;
+              columns?: T;
+              imageShape?: T;
+              surface?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              duotone?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Testimonial?:
+          | T
+          | {
+              eyebrow?: T;
+              quote?: T;
+              attribution?: T;
+              watermark?: T;
+              textAlign?: T;
+              textStyle?: T;
+              widthStep?: T;
+              padTop?: T;
+              padBottom?: T;
+              surface?: T;
+              eyebrowRule?: T;
+              showMark?: T;
+              markRoom?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Accordion?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              intro?: T;
+              headingLevel?: T;
+              items?:
+                | T
+                | {
+                    title?: T;
+                    subtitle?: T;
+                    body?: T;
+                    id?: T;
+                  };
+              faq?: T;
+              firstItemOpen?: T;
+              singleOpen?: T;
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    variant?: T;
+                    action?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                        };
+                    video?: T;
+                    fullWidth?: T;
+                    id?: T;
+                  };
+              headingAlign?: T;
+              widthStep?: T;
+              padTop?: T;
+              padBottom?: T;
+              itemStyle?: T;
+              iconStyle?: T;
+              showNumbers?: T;
+              surface?: T;
+              itemSurface?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Tabs?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              intro?: T;
+              headingLevel?: T;
+              tabs?:
+                | T
+                | {
+                    label?: T;
+                    content?:
+                      | T
+                      | {
+                          b61Testimonial?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                quote?: T;
+                                attribution?: T;
+                                watermark?: T;
+                                textAlign?: T;
+                                textStyle?: T;
+                                widthStep?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                surface?: T;
+                                eyebrowRule?: T;
+                                showMark?: T;
+                                markRoom?: T;
+                                entrance?: T;
+                                cssClass?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Split?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                heading?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                body?: T;
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      action?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            document?: T;
+                                            url?: T;
+                                          };
+                                      video?: T;
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                media?: T;
+                                image?: T;
+                                caption?: T;
+                                images?:
+                                  | T
+                                  | {
+                                      image?: T;
+                                      caption?: T;
+                                      id?: T;
+                                    };
+                                galleryLayout?: T;
+                                video?: T;
+                                imageShape?: T;
+                                badge?: T;
+                                imageSide?: T;
+                                verticalPosition?: T;
+                                stackOrder?: T;
+                                columnHeight?: T;
+                                overlap?: T;
+                                headingAlign?: T;
+                                columnBalance?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                surface?: T;
+                                textPanel?: T;
+                                frameColor?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                cssClass?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Prose?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                heading?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                body?: T;
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      action?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            document?: T;
+                                            url?: T;
+                                          };
+                                      video?: T;
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                headPosition?: T;
+                                columnBalance?: T;
+                                textAlign?: T;
+                                measureStep?: T;
+                                position?: T;
+                                headingWidth?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                iconlistStyle?: T;
+                                iconlistEdges?: T;
+                                surface?: T;
+                                eyebrowRule?: T;
+                                headingRule?: T;
+                                entrance?: T;
+                                cssClass?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61CardGrid?:
+                            | T
+                            | {
+                                cardText?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                intro?: T;
+                                headingLevel?: T;
+                                source?: T;
+                                limit?: T;
+                                mediaType?: T;
+                                cards?:
+                                  | T
+                                  | {
+                                      image?: T;
+                                      icon?: T;
+                                      iconImage?: T;
+                                      iconColours?: T;
+                                      eyebrow?: T;
+                                      title?: T;
+                                      body?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            document?: T;
+                                            url?: T;
+                                          };
+                                      linkText?: T;
+                                      id?: T;
+                                    };
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      action?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            document?: T;
+                                            url?: T;
+                                          };
+                                      video?: T;
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                arrangement?: T;
+                                columns?: T;
+                                textAlign?: T;
+                                advance?: T;
+                                controlsPosition?: T;
+                                showCounter?: T;
+                                showProgress?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                cardStyle?: T;
+                                cardShape?: T;
+                                imageShape?: T;
+                                ratioW?: T;
+                                ratioH?: T;
+                                cardTextPosition?: T;
+                                mediaRound?: T;
+                                iconSize?: T;
+                                showNumbers?: T;
+                                surface?: T;
+                                cardSurface?: T;
+                                cardOverlay?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                headBeside?: T;
+                                stagger?: T;
+                                bleed?: T;
+                                hoverReveal?: T;
+                                altTint?: T;
+                                featureMiddle?: T;
+                                duotone?: T;
+                                cssClass?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                  };
+              firstItemOpen?: T;
+              tabPosition?: T;
+              tabAlign?: T;
+              headingAlign?: T;
+              padTop?: T;
+              padBottom?: T;
+              surface?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Pillars?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              intro?: T;
+              headingLevel?: T;
+              items?:
+                | T
+                | {
+                    title?: T;
+                    body?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              firstItemOpen?: T;
+              tabPosition?: T;
+              tabAlign?: T;
+              headingAlign?: T;
+              padTop?: T;
+              padBottom?: T;
+              surface?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              scrollStory?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Carousel?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              intro?: T;
+              headingLevel?: T;
+              label?: T;
+              slides?:
+                | T
+                | {
+                    label?: T;
+                    content?:
+                      | T
+                      | {
+                          b61Testimonial?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                quote?: T;
+                                attribution?: T;
+                                watermark?: T;
+                                textAlign?: T;
+                                textStyle?: T;
+                                widthStep?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                surface?: T;
+                                eyebrowRule?: T;
+                                showMark?: T;
+                                markRoom?: T;
+                                entrance?: T;
+                                cssClass?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Split?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                heading?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                body?: T;
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      action?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            document?: T;
+                                            url?: T;
+                                          };
+                                      video?: T;
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                media?: T;
+                                image?: T;
+                                caption?: T;
+                                images?:
+                                  | T
+                                  | {
+                                      image?: T;
+                                      caption?: T;
+                                      id?: T;
+                                    };
+                                galleryLayout?: T;
+                                video?: T;
+                                imageShape?: T;
+                                badge?: T;
+                                imageSide?: T;
+                                verticalPosition?: T;
+                                stackOrder?: T;
+                                columnHeight?: T;
+                                overlap?: T;
+                                headingAlign?: T;
+                                columnBalance?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                surface?: T;
+                                textPanel?: T;
+                                frameColor?: T;
+                                eyebrowRule?: T;
+                                entrance?: T;
+                                cssClass?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          b61Prose?:
+                            | T
+                            | {
+                                eyebrow?: T;
+                                heading?: T;
+                                subheads?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                headingLevel?: T;
+                                body?: T;
+                                buttons?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      variant?: T;
+                                      action?: T;
+                                      link?:
+                                        | T
+                                        | {
+                                            type?: T;
+                                            page?: T;
+                                            document?: T;
+                                            url?: T;
+                                          };
+                                      video?: T;
+                                      fullWidth?: T;
+                                      id?: T;
+                                    };
+                                headPosition?: T;
+                                columnBalance?: T;
+                                textAlign?: T;
+                                measureStep?: T;
+                                position?: T;
+                                headingWidth?: T;
+                                padTop?: T;
+                                padBottom?: T;
+                                iconlistStyle?: T;
+                                iconlistEdges?: T;
+                                surface?: T;
+                                eyebrowRule?: T;
+                                headingRule?: T;
+                                entrance?: T;
+                                cssClass?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                  };
+              perView?: T;
+              headingAlign?: T;
+              advance?: T;
+              controlsPosition?: T;
+              showCounter?: T;
+              showProgress?: T;
+              padTop?: T;
+              padBottom?: T;
+              surface?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Section?:
+          | T
+          | {
+              content?:
+                | T
+                | {
+                    b61Prose?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          body?: T;
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          headPosition?: T;
+                          columnBalance?: T;
+                          textAlign?: T;
+                          measureStep?: T;
+                          position?: T;
+                          headingWidth?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          iconlistStyle?: T;
+                          iconlistEdges?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          headingRule?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Split?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          body?: T;
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          media?: T;
+                          image?: T;
+                          caption?: T;
+                          images?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                              };
+                          galleryLayout?: T;
+                          video?: T;
+                          imageShape?: T;
+                          badge?: T;
+                          imageSide?: T;
+                          verticalPosition?: T;
+                          stackOrder?: T;
+                          columnHeight?: T;
+                          overlap?: T;
+                          headingAlign?: T;
+                          columnBalance?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          textPanel?: T;
+                          frameColor?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61CardGrid?:
+                      | T
+                      | {
+                          cardText?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          intro?: T;
+                          headingLevel?: T;
+                          source?: T;
+                          limit?: T;
+                          mediaType?: T;
+                          cards?:
+                            | T
+                            | {
+                                image?: T;
+                                icon?: T;
+                                iconImage?: T;
+                                iconColours?: T;
+                                eyebrow?: T;
+                                title?: T;
+                                body?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                linkText?: T;
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          arrangement?: T;
+                          columns?: T;
+                          textAlign?: T;
+                          advance?: T;
+                          controlsPosition?: T;
+                          showCounter?: T;
+                          showProgress?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          cardStyle?: T;
+                          cardShape?: T;
+                          imageShape?: T;
+                          ratioW?: T;
+                          ratioH?: T;
+                          cardTextPosition?: T;
+                          mediaRound?: T;
+                          iconSize?: T;
+                          showNumbers?: T;
+                          surface?: T;
+                          cardSurface?: T;
+                          cardOverlay?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          headBeside?: T;
+                          stagger?: T;
+                          bleed?: T;
+                          hoverReveal?: T;
+                          altTint?: T;
+                          featureMiddle?: T;
+                          duotone?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61StatsBand?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          intro?: T;
+                          headingLevel?: T;
+                          stats?:
+                            | T
+                            | {
+                                figure?: T;
+                                label?: T;
+                                note?: T;
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          columns?: T;
+                          labelPosition?: T;
+                          textAlign?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          itemStyle?: T;
+                          flushEdges?: T;
+                          figureScale?: T;
+                          surface?: T;
+                          itemSurface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          bandWidth?: T;
+                          pullUp?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Gallery?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          intro?: T;
+                          headingLevel?: T;
+                          media?: T;
+                          image?: T;
+                          caption?: T;
+                          images?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                              };
+                          scrollHint?: T;
+                          video?: T;
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          galleryLayout?: T;
+                          textPosition?: T;
+                          headingAlign?: T;
+                          balanceStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          itemSize?: T;
+                          columns?: T;
+                          imageShape?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          duotone?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Testimonial?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          quote?: T;
+                          attribution?: T;
+                          watermark?: T;
+                          textAlign?: T;
+                          textStyle?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          showMark?: T;
+                          markRoom?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61FramedImage?:
+                      | T
+                      | {
+                          image?: T;
+                          imageShape?: T;
+                          imageHeight?: T;
+                          ratioW?: T;
+                          ratioH?: T;
+                          flipFrame?: T;
+                          widthStep?: T;
+                          frameColor?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Accordion?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          intro?: T;
+                          headingLevel?: T;
+                          items?:
+                            | T
+                            | {
+                                title?: T;
+                                subtitle?: T;
+                                body?: T;
+                                id?: T;
+                              };
+                          faq?: T;
+                          firstItemOpen?: T;
+                          singleOpen?: T;
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          headingAlign?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          itemStyle?: T;
+                          iconStyle?: T;
+                          showNumbers?: T;
+                          surface?: T;
+                          itemSurface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Pillars?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          intro?: T;
+                          headingLevel?: T;
+                          items?:
+                            | T
+                            | {
+                                title?: T;
+                                body?: T;
+                                image?: T;
+                                id?: T;
+                              };
+                          firstItemOpen?: T;
+                          tabPosition?: T;
+                          tabAlign?: T;
+                          headingAlign?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          scrollStory?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Cta?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          body?: T;
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          image?: T;
+                          overlayStrength?: T;
+                          textAlign?: T;
+                          widthStep?: T;
+                          position?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          textPanel?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Form?:
+                      | T
+                      | {
+                          form?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          textAlign?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          card?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61ButtonBar?:
+                      | T
+                      | {
+                          firstLabel?: T;
+                          firstLink?:
+                            | T
+                            | {
+                                type?: T;
+                                page?: T;
+                                document?: T;
+                                url?: T;
+                              };
+                          secondLabel?: T;
+                          secondLink?:
+                            | T
+                            | {
+                                type?: T;
+                                page?: T;
+                                document?: T;
+                                url?: T;
+                              };
+                          size?: T;
+                          firstColor?: T;
+                          secondColor?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Divider?:
+                      | T
+                      | {
+                          lineStyle?: T;
+                          ornament?: T;
+                          alignment?: T;
+                          widthStep?: T;
+                          weight?: T;
+                          lineColor?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Logos?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          logos?:
+                            | T
+                            | {
+                                image?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                id?: T;
+                              };
+                          motion?: T;
+                          headingAlign?: T;
+                          logoStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          oneColour?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
+              side?:
+                | T
+                | {
+                    b61Rail?:
+                      | T
+                      | {
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          linksLabel?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                icon?: T;
+                                iconImage?: T;
+                                iconColours?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                id?: T;
+                              };
+                          actionsPosition?: T;
+                          sticky?: T;
+                          surface?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Prose?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          body?: T;
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          headPosition?: T;
+                          columnBalance?: T;
+                          textAlign?: T;
+                          measureStep?: T;
+                          position?: T;
+                          headingWidth?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          iconlistStyle?: T;
+                          iconlistEdges?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          headingRule?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Split?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          body?: T;
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          media?: T;
+                          image?: T;
+                          caption?: T;
+                          images?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                              };
+                          galleryLayout?: T;
+                          video?: T;
+                          imageShape?: T;
+                          badge?: T;
+                          imageSide?: T;
+                          verticalPosition?: T;
+                          stackOrder?: T;
+                          columnHeight?: T;
+                          overlap?: T;
+                          headingAlign?: T;
+                          columnBalance?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          textPanel?: T;
+                          frameColor?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61CardGrid?:
+                      | T
+                      | {
+                          cardText?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          intro?: T;
+                          headingLevel?: T;
+                          source?: T;
+                          limit?: T;
+                          mediaType?: T;
+                          cards?:
+                            | T
+                            | {
+                                image?: T;
+                                icon?: T;
+                                iconImage?: T;
+                                iconColours?: T;
+                                eyebrow?: T;
+                                title?: T;
+                                body?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                linkText?: T;
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          arrangement?: T;
+                          columns?: T;
+                          textAlign?: T;
+                          advance?: T;
+                          controlsPosition?: T;
+                          showCounter?: T;
+                          showProgress?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          cardStyle?: T;
+                          cardShape?: T;
+                          imageShape?: T;
+                          ratioW?: T;
+                          ratioH?: T;
+                          cardTextPosition?: T;
+                          mediaRound?: T;
+                          iconSize?: T;
+                          showNumbers?: T;
+                          surface?: T;
+                          cardSurface?: T;
+                          cardOverlay?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          headBeside?: T;
+                          stagger?: T;
+                          bleed?: T;
+                          hoverReveal?: T;
+                          altTint?: T;
+                          featureMiddle?: T;
+                          duotone?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61StatsBand?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          intro?: T;
+                          headingLevel?: T;
+                          stats?:
+                            | T
+                            | {
+                                figure?: T;
+                                label?: T;
+                                note?: T;
+                                id?: T;
+                              };
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          columns?: T;
+                          labelPosition?: T;
+                          textAlign?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          itemStyle?: T;
+                          flushEdges?: T;
+                          figureScale?: T;
+                          surface?: T;
+                          itemSurface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          bandWidth?: T;
+                          pullUp?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Gallery?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          intro?: T;
+                          headingLevel?: T;
+                          media?: T;
+                          image?: T;
+                          caption?: T;
+                          images?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                              };
+                          scrollHint?: T;
+                          video?: T;
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          galleryLayout?: T;
+                          textPosition?: T;
+                          headingAlign?: T;
+                          balanceStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          itemSize?: T;
+                          columns?: T;
+                          imageShape?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          duotone?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Testimonial?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          quote?: T;
+                          attribution?: T;
+                          watermark?: T;
+                          textAlign?: T;
+                          textStyle?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          showMark?: T;
+                          markRoom?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61FramedImage?:
+                      | T
+                      | {
+                          image?: T;
+                          imageShape?: T;
+                          imageHeight?: T;
+                          ratioW?: T;
+                          ratioH?: T;
+                          flipFrame?: T;
+                          widthStep?: T;
+                          frameColor?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Accordion?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          intro?: T;
+                          headingLevel?: T;
+                          items?:
+                            | T
+                            | {
+                                title?: T;
+                                subtitle?: T;
+                                body?: T;
+                                id?: T;
+                              };
+                          faq?: T;
+                          firstItemOpen?: T;
+                          singleOpen?: T;
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          headingAlign?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          itemStyle?: T;
+                          iconStyle?: T;
+                          showNumbers?: T;
+                          surface?: T;
+                          itemSurface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Pillars?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          intro?: T;
+                          headingLevel?: T;
+                          items?:
+                            | T
+                            | {
+                                title?: T;
+                                body?: T;
+                                image?: T;
+                                id?: T;
+                              };
+                          firstItemOpen?: T;
+                          tabPosition?: T;
+                          tabAlign?: T;
+                          headingAlign?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          scrollStory?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Cta?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          body?: T;
+                          buttons?:
+                            | T
+                            | {
+                                label?: T;
+                                variant?: T;
+                                action?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                video?: T;
+                                fullWidth?: T;
+                                id?: T;
+                              };
+                          image?: T;
+                          overlayStrength?: T;
+                          textAlign?: T;
+                          widthStep?: T;
+                          position?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          textPanel?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Form?:
+                      | T
+                      | {
+                          form?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          textAlign?: T;
+                          widthStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          card?: T;
+                          surface?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61ButtonBar?:
+                      | T
+                      | {
+                          firstLabel?: T;
+                          firstLink?:
+                            | T
+                            | {
+                                type?: T;
+                                page?: T;
+                                document?: T;
+                                url?: T;
+                              };
+                          secondLabel?: T;
+                          secondLink?:
+                            | T
+                            | {
+                                type?: T;
+                                page?: T;
+                                document?: T;
+                                url?: T;
+                              };
+                          size?: T;
+                          firstColor?: T;
+                          secondColor?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Divider?:
+                      | T
+                      | {
+                          lineStyle?: T;
+                          ornament?: T;
+                          alignment?: T;
+                          widthStep?: T;
+                          weight?: T;
+                          lineColor?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    b61Logos?:
+                      | T
+                      | {
+                          eyebrow?: T;
+                          heading?: T;
+                          subheads?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          headingLevel?: T;
+                          logos?:
+                            | T
+                            | {
+                                image?: T;
+                                link?:
+                                  | T
+                                  | {
+                                      type?: T;
+                                      page?: T;
+                                      document?: T;
+                                      url?: T;
+                                    };
+                                id?: T;
+                              };
+                          motion?: T;
+                          headingAlign?: T;
+                          logoStep?: T;
+                          padTop?: T;
+                          padBottom?: T;
+                          surface?: T;
+                          oneColour?: T;
+                          eyebrowRule?: T;
+                          entrance?: T;
+                          cssClass?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
+              image?: T;
+              overlayStrength?: T;
+              columns?: T;
+              railSticky?: T;
+              railAlign?: T;
+              railStack?: T;
+              pullUp?: T;
+              railWidthStep?: T;
+              padTop?: T;
+              padBottom?: T;
+              patternOn?: T;
+              patternImage?: T;
+              tileSize?: T;
+              patternStrength?: T;
+              watermarkOn?: T;
+              watermarkImage?: T;
+              watermarkSize?: T;
+              watermarkStrength?: T;
+              surface?: T;
+              entrance?: T;
+              duotone?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Cta?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              body?: T;
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    variant?: T;
+                    action?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                        };
+                    video?: T;
+                    fullWidth?: T;
+                    id?: T;
+                  };
+              image?: T;
+              overlayStrength?: T;
+              textAlign?: T;
+              widthStep?: T;
+              position?: T;
+              padTop?: T;
+              padBottom?: T;
+              surface?: T;
+              textPanel?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Form?:
+          | T
+          | {
+              form?: T;
+              eyebrow?: T;
+              heading?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              textAlign?: T;
+              widthStep?: T;
+              padTop?: T;
+              padBottom?: T;
+              card?: T;
+              surface?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61FramedImage?:
+          | T
+          | {
+              image?: T;
+              imageShape?: T;
+              imageHeight?: T;
+              ratioW?: T;
+              ratioH?: T;
+              flipFrame?: T;
+              widthStep?: T;
+              frameColor?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61ButtonBar?:
+          | T
+          | {
+              firstLabel?: T;
+              firstLink?:
+                | T
+                | {
+                    type?: T;
+                    page?: T;
+                    document?: T;
+                    url?: T;
+                  };
+              secondLabel?: T;
+              secondLink?:
+                | T
+                | {
+                    type?: T;
+                    page?: T;
+                    document?: T;
+                    url?: T;
+                  };
+              size?: T;
+              firstColor?: T;
+              secondColor?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Divider?:
+          | T
+          | {
+              lineStyle?: T;
+              ornament?: T;
+              alignment?: T;
+              widthStep?: T;
+              weight?: T;
+              lineColor?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+        b61Logos?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              subheads?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              headingLevel?: T;
+              logos?:
+                | T
+                | {
+                    image?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                        };
+                    id?: T;
+                  };
+              motion?: T;
+              headingAlign?: T;
+              logoStep?: T;
+              padTop?: T;
+              padBottom?: T;
+              surface?: T;
+              oneColour?: T;
+              eyebrowRule?: T;
+              entrance?: T;
+              cssClass?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  description?: T;
   meta?:
     | T
     | {
@@ -8798,7 +15087,6 @@ export interface MediaSelect<T extends boolean = true> {
   altAuto?: T;
   caption?: T;
   credit?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8874,8 +15162,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
-  prefix?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -9179,8 +15465,6 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

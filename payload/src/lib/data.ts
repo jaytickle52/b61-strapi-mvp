@@ -97,7 +97,7 @@ const scoped = async (where?: Where): Promise<Where> => {
 }
 
 type SiteCollection = 'pages' | 'events' | 'news' | 'news-categories' | 'programs' | 'staff' | 'announcements' | 'school-settings'
-type FindOpts = { where?: Where; sort?: string; limit?: number; depth?: number; page?: number }
+type FindOpts = { where?: Where; sort?: string; limit?: number; depth?: number; page?: number; select?: Record<string, boolean> }
 type Found<T> = { docs: T[]; page: number; totalPages: number; totalDocs: number }
 
 /**
@@ -126,6 +126,7 @@ async function query<T>(collection: SiteCollection, schoolId: number | string, o
     limit: opts.limit ?? 50,
     page: opts.page,
     depth: opts.depth ?? 1,
+    ...(opts.select ? { select: opts.select as any } : {}),
     draft,
     user,
     // A setup preview link has no user; the school filter above still applies.
@@ -218,10 +219,11 @@ export async function getNewsPost(slug: string) {
   return docs[0] ?? null
 }
 
-export const getPrograms = (limit = 50) => find<Program>('programs', { sort: '_order', limit })
+// Lists and cards don't need each program's page sections.
+export const getPrograms = (limit = 50) => find<Program>('programs', { sort: '_order', limit, select: { sections: false } })
 
 export async function getProgram(slug: string) {
-  const docs = await find<Program>('programs', { where: { slug: { equals: slug } }, limit: 1 })
+  const docs = await find<Program>('programs', { where: { slug: { equals: slug } }, limit: 1, depth: 2 })
   return docs[0] ?? null
 }
 

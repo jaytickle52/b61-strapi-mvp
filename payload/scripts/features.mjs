@@ -140,6 +140,31 @@ async function main() {
   const one = await page('/events/spring-open-house/event.ics', 'cedar-ridge')
   check(one.status === 200 && one.text.includes('SUMMARY:Spring Open House'), 'each event has an "Add to calendar" file')
 
+  // Programs are built like pages (19 Nov 2026): sections, else the older layout.
+  {
+    const slug = `sections-program-${RUN}`.toLowerCase().replace(/[^a-z0-9-]/g, '-')
+    const pr = await api('POST', '/programs', {
+      token: admin,
+      body: {
+        school: cedar, name: `Sections program ${RUN}`, slug, grades: 'K–5', summary: 'Card summary.',
+        sections: [{ blockType: 'b61Hero', heading: { root: { type: 'root', version: 1, format: '', indent: 0, direction: 'ltr', children: [{ type: 'paragraph', version: 1, format: '', indent: 0, direction: 'ltr', textFormat: 0, textStyle: '', children: [{ type: 'text', text: `Program hero ${RUN}`, version: 1, format: 0, detail: 0, mode: 'normal', style: '' }] }] } } }],
+        _status: 'published',
+      },
+    })
+    check(pr.status === 201, 'a program saves with page sections')
+    const prPage = visible((await page(`/programs/${slug}`, 'cedar-ridge')).text)
+    check(prPage.includes(`Program hero ${RUN}`) && prPage.includes('b61-hero'), '… and its page is built from them, like any page')
+    const older = (await api('GET', `/programs?where[school][equals]=${cedar}&limit=1&depth=0&sort=_order`, { token: admin })).json?.docs?.[0]
+    if (older && !(older.sections ?? []).length) {
+      const op = (await page(`/programs/${older.slug}`, 'cedar-ridge'))
+      check(op.status === 200 && visible(op.text).includes(older.name), 'a program without sections keeps its older layout')
+    }
+    const listing = await api('GET', `/programs?where[slug][equals]=${slug}&depth=0`, { token: admin })
+    check(listing.json?.docs?.[0]?.grades === 'K–5', '… and keeps grades and summary for the program cards')
+    check((await page('/programs', 'cedar-ridge')).text.includes(`Sections program ${RUN}`), 'the Programs list shows it')
+    if (pr.json?.doc?.id) await api('DELETE', `/programs/${pr.json.doc.id}`, { token: admin })
+  }
+
   // ----- Calendar feed import -----------------------------------------------
   console.log('\nCalendar feed import')
   const feedUrl = `http://localhost:${FEED_PORT}/calendar.ics`
