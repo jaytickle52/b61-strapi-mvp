@@ -8,7 +8,6 @@ const NAMES: Record<string, string> = {
   pages: 'Page',
   events: 'Event',
   news: 'News',
-  programs: 'Program',
   staff: 'Staff',
   'school-settings': 'School settings',
   forms: 'Form',

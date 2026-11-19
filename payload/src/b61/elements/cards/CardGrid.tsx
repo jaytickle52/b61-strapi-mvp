@@ -40,9 +40,10 @@ async function loadCards(block: CardGridBlock): Promise<Card[]> {
   const limit = block.limit ?? 3
   switch (block.source as string) {
     case 'programs':
+      // Pages tagged "This page is a program" (lib/data.ts getPrograms).
       return (await getPrograms(limit)).map((p) => ({
-        key: String(p.id), image: p.image, eyebrow: p.grades ? `Grades ${p.grades}` : null, title: p.name,
-        body: p.summary ? <p>{p.summary}</p> : null, href: `/programs/${p.slug}`,
+        key: String(p.id), image: p.image as any, eyebrow: p.grades ? `Grades ${p.grades}` : null, title: p.title,
+        body: p.summary ? <p>{p.summary}</p> : null, href: p.href,
       }))
     case 'upcoming-events':
       return (await getEvents({ limit })).map((e) => ({

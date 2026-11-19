@@ -43,7 +43,7 @@ export async function GET() {
   if (summary) sections.push(`> ${summary}`, '')
   if (contact.length) sections.push(...contact, '')
   sections.push('## Pages', line('Home', '/'), ...pageLines, '')
-  if (programs.length) sections.push('## Programs', ...programs.map((p: any) => line(p.name, `/programs/${p.slug}`, p.summary)), '')
+  if (programs.length) sections.push('## Programs', ...programs.map((p) => line(p.title, p.href, p.summary)), '')
   if (events.length) sections.push('## Upcoming events', line('All events', '/events'), ...events.map((e: any) => line(e.title, `/events/${e.slug}`, e.summary)), '')
   if (news.length) sections.push('## Latest news', line('All news', '/news'), ...news.map((n: any) => line(n.title, `/news/${n.slug}`, n.summary)), '')
   sections.push('## More', line('Our team', '/staff'), line('Sitemap', '/sitemap.xml'), line('News feed (RSS)', '/news/feed.xml'), '')

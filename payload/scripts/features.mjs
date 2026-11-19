@@ -197,6 +197,27 @@ async function main() {
     if (st.json?.doc?.id) await api('DELETE', `/staff/${st.json.doc.id}`, { token: admin })
   }
 
+  // Programs are pages tagged as programs (19 Nov 2026), at /<slug>.
+  {
+    const slug = `tagged-program-${RUN}`.toLowerCase().replace(/[^a-z0-9-]/g, '-')
+    const pg = await api('POST', '/pages', {
+      token: admin,
+      body: { school: cedar, title: `Tagged program ${RUN}`, slug, isProgram: true, program: { grades: 'PK', summary: `Card words ${RUN}`, order: 1 }, sections: [], _status: 'published' },
+    })
+    check(pg.status === 201 && pg.json?.doc?.isProgram === true, 'a page can be tagged as a program')
+    check((await page(`/${slug}`, 'cedar-ridge')).status === 200, '… and lives at /<slug> like any page')
+    const listing = visible((await page('/programs', 'cedar-ridge')).text)
+    check(listing.includes(`Tagged program ${RUN}`) && listing.includes(`Card words ${RUN}`) && listing.includes('Grades PK'), 'program cards list it with its grades and summary')
+    const grid = listing.slice(listing.indexOf('Our programs'))
+    check(grid.indexOf(`Tagged program ${RUN}`) >= 0 && grid.indexOf(`Tagged program ${RUN}`) < grid.indexOf('Lower School'), '… in program order (lowest number first)')
+    check(listing.includes(`href="/${slug}"`), '… linking to /<slug>')
+    const old = await fetch(`${BASE}/programs/${slug}`, { headers: { cookie: 'b61-school=cedar-ridge' }, redirect: 'manual' })
+    check([301, 308].includes(old.status) && old.headers.get('location')?.endsWith(`/${slug}`), 'an old /programs/<slug> link moves to /<slug> for good')
+    const plain = await api('POST', '/pages', { token: admin, body: { school: cedar, title: `Not a program ${RUN}`, slug: `not-a-program-${RUN}`.toLowerCase().replace(/[^a-z0-9-]/g, '-'), sections: [], _status: 'published' } })
+    check(!visible((await page('/programs', 'cedar-ridge')).text).includes(`Not a program ${RUN}`), 'an untagged page is not in program lists')
+    for (const d of [pg, plain]) if (d.json?.doc?.id) await api('DELETE', `/pages/${d.json.doc.id}`, { token: admin })
+  }
+
   // ----- Calendar feed import -----------------------------------------------
   console.log('\nCalendar feed import')
   const feedUrl = `http://localhost:${FEED_PORT}/calendar.ics`
@@ -241,7 +262,7 @@ async function main() {
   console.log('\nDrag ordering')
   const staff = (await api('GET', `/staff?where[school][equals]=${cedar}&sort=_order&depth=0&limit=50`, { token: admin })).json?.docs ?? []
   check(staff.length >= 2 && staff.every((s) => s._order), 'staff have a drag order')
-  for (const col of ['staff', 'programs', 'news-categories']) {
+  for (const col of ['staff', 'news-categories']) {
     const all = (await api('GET', `/${col}?limit=500&depth=0&sort=_order`, { token: admin })).json?.docs ?? []
     const keys = all.map((d) => d._order)
     check(keys.length > 0 && new Set(keys).size === keys.length, `every ${col} row has its own place in the order`)

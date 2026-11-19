@@ -17,7 +17,7 @@ const idOf = (v: any) => (v && typeof v === 'object' ? v.id : v) ?? null
 export function pathFor(collection: string, doc: any): string {
   const slug = doc?.slug
   if (collection === 'pages') return !slug || slug === 'home' ? '/' : `/${slug}`
-  if (collection === 'news' || collection === 'events' || collection === 'programs') return `/${collection}/${slug}`
+  if (collection === 'news' || collection === 'events') return `/${collection}/${slug}`
   return '/'
 }
 
@@ -60,7 +60,7 @@ const seoFields = ({ defaultFields }: { defaultFields: Field[] }): Field[] => [
 
 export const seoPlugins: Plugin[] = [
   seoPlugin({
-    collections: ['pages', 'news', 'events', 'programs'],
+    collections: ['pages', 'news', 'events'],
     uploadsCollection: 'media',
     tabbedUI: true,
     fields: seoFields,
@@ -74,7 +74,7 @@ export const seoPlugins: Plugin[] = [
   }),
 
   redirectsPlugin({
-    collections: ['pages', 'news', 'events', 'programs'],
+    collections: ['pages', 'news', 'events'],
     redirectTypes: ['301', '302'],
     overrides: {
       labels: { singular: 'Redirect', plural: 'Redirects' },
@@ -104,8 +104,8 @@ export const seoPlugins: Plugin[] = [
   }),
 
   searchPlugin({
-    collections: ['pages', 'news', 'events', 'programs'],
-    defaultPriorities: { pages: 10, programs: 20, events: 30, news: 40 },
+    collections: ['pages', 'news', 'events'],
+    defaultPriorities: { pages: 10, events: 30, news: 40 },
     // Parents-only posts and hidden pages never go into the public search.
     skipSync: ({ doc }) => doc?.audience === 'parents' || Boolean(doc?.meta?.noindex),
     beforeSync: ({ originalDoc, searchDoc, collectionSlug }) => ({
@@ -120,7 +120,7 @@ export const seoPlugins: Plugin[] = [
       labels: { singular: 'Search result', plural: 'Search index' },
       admin: {
         group: 'Settings',
-        description: 'Kept up to date automatically from pages, programs, events and news.',
+        description: 'Kept up to date automatically from pages, events and news.',
         hidden: ({ user }) => !isB61Admin(user),
       },
       fields: ({ defaultFields }) => [

@@ -8,9 +8,10 @@ import { CACHE_SECONDS, CACHE_VERSION, quarterHour, SCHOOLS_TAG, schoolTag } fro
 import { twoFactorPending } from '@/users/two-factor-rules'
 import { readPreviewToken, SETUP_PREVIEW_COOKIE } from '@/setup/preview-token'
 import { BUILDABLE_STAGES } from '@/setup/stages'
-import type { Announcement, Event, Media, News, NewsCategory, Page, Program, School, SchoolSetting, Staff } from '@/payload-types'
+import { firstImage } from '@/seo/text'
+import type { Announcement, Event, Media, News, NewsCategory, Page, School, SchoolSetting, Staff } from '@/payload-types'
 
-export type { Announcement, Event, Media, News, NewsCategory, Page, Program, School, SchoolSetting, Staff }
+export type { Announcement, Event, Media, News, NewsCategory, Page, School, SchoolSetting, Staff }
 export type Audience = 'public' | 'parents'
 
 export const payloadClient = () => getPayload({ config })
@@ -96,8 +97,8 @@ const scoped = async (where?: Where): Promise<Where> => {
   return where ? { and: [mine, where] } : mine
 }
 
-type SiteCollection = 'pages' | 'events' | 'news' | 'news-categories' | 'programs' | 'staff' | 'announcements' | 'school-settings'
-type FindOpts = { where?: Where; sort?: string; limit?: number; depth?: number; page?: number }
+type SiteCollection = 'pages' | 'events' | 'news' | 'news-categories' | 'staff' | 'announcements' | 'school-settings'
+type FindOpts = { where?: Where; sort?: string; limit?: number; depth?: number; page?: number; select?: Record<string, boolean> }
 type Found<T> = { docs: T[]; page: number; totalPages: number; totalDocs: number }
 
 /**
@@ -126,6 +127,7 @@ async function query<T>(collection: SiteCollection, schoolId: number | string, o
     limit: opts.limit ?? 50,
     page: opts.page,
     depth: opts.depth ?? 1,
+    ...(opts.select ? { select: opts.select as any } : {}),
     draft,
     user,
     // A setup preview link has no user; the school filter above still applies.
@@ -218,11 +220,27 @@ export async function getNewsPost(slug: string) {
   return docs[0] ?? null
 }
 
-export const getPrograms = (limit = 50) => find<Program>('programs', { sort: '_order', limit })
-
-export async function getProgram(slug: string) {
-  const docs = await find<Program>('programs', { where: { slug: { equals: slug } }, limit: 1 })
-  return docs[0] ?? null
+/**
+ * A school's programs: pages tagged "This page is a program", in their list
+ * order. Each comes back with the page address and a card photo (the card
+ * photo, else the first photo on the page).
+ */
+export type ProgramCard = { id: number | string; title: string; slug: string; href: string; grades?: string | null; summary?: string | null; image?: unknown; updatedAt?: string; meta?: any }
+export async function getPrograms(limit = 50): Promise<ProgramCard[]> {
+  const docs = await find<Page>('pages', { where: { isProgram: { equals: true } }, sort: 'program.order', limit, depth: 1 })
+  return docs
+    .sort((a, b) => (a.program?.order ?? 10) - (b.program?.order ?? 10) || a.title.localeCompare(b.title))
+    .map((d) => ({
+      id: d.id,
+      title: d.title,
+      slug: d.slug as string,
+      href: d.slug === 'home' ? '/' : `/${d.slug}`,
+      grades: d.program?.grades,
+      summary: d.program?.summary,
+      image: d.program?.image ?? firstImage(d.sections ?? []),
+      updatedAt: d.updatedAt,
+      meta: (d as any).meta,
+    }))
 }
 
 export const getStaff = (limit = 100) => find<Staff>('staff', { sort: '_order', limit })

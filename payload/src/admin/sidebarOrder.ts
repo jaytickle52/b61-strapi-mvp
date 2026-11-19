@@ -8,13 +8,13 @@ import type { Config, Plugin } from 'payload'
  * on each collection (`admin.group`). Changing the sidebar is display only: no
  * addresses, data or permissions change, so it is safe to rearrange, with one
  * catch: Payload numbers unnamed database indexes by collection order. Keep
- * pages, events, news, programs and news-categories in this relative order
+ * pages, events, news and news-categories in this relative order
  * (each has a school + slug index), or the CI drift check will ask for a
  * migration that renames them.
  *
  *   Website           Pages, Announcements
  *   News & events     Events, Calendar feeds, News
- *   Programs & staff  Programs, Staff
+ *   People            Staff (programs are pages tagged as programs)
  *   Files             Photos and videos, Documents
  *   Forms             Forms, Form submissions, Form files, Email log
  *   Settings          School settings, Redirects, Search (Banner 61 only)
@@ -30,7 +30,6 @@ export const SIDEBAR_ORDER = [
   'events',
   'calendar-feeds',
   'news',
-  'programs',
   'staff',
   'media',
   'documents',

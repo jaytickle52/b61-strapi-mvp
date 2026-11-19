@@ -19,7 +19,6 @@ const SCANNED = [
   'pages',
   'events',
   'news',
-  'programs',
   'staff',
   'school-settings',
   'forms',

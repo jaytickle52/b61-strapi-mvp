@@ -4,7 +4,7 @@ import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, Config, Payl
 import { pathFor } from './config'
 
 /*
- * IndexNow: when a page, program, event or news post is published (or a live
+ * IndexNow: when a page, event or news post is published (or a live
  * one is saved again) or deleted, tell Bing (and the other IndexNow search engines) right away, so the
  * change shows up in search, and in Microsoft Copilot, within minutes instead of
  * at the next crawl.
@@ -15,7 +15,7 @@ import { pathFor } from './config'
  * INDEXNOW_ENDPOINT overrides where pings go (the CI test points it at itself).
  */
 
-const COLLECTIONS = ['pages', 'news', 'events', 'programs']
+const COLLECTIONS = ['pages', 'news', 'events']
 const ENDPOINT = () => process.env.INDEXNOW_ENDPOINT || 'https://api.indexnow.org/indexnow'
 const enabled = () => process.env.INDEXNOW_ENABLED === 'true' || process.env.VERCEL_ENV === 'production'
 

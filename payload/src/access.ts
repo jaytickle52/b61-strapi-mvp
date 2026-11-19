@@ -13,7 +13,7 @@ import { Forbidden } from 'payload'
  *                people at that school (never other schools, never Banner 61
  *                admins, never adding or removing schools).
  *   editor       Edits and publishes everything at that school: pages,
- *                events, news, programs, staff, photos, forms, settings.
+ *                events, news, staff, photos, forms, settings.
  *   contributor  Writes drafts and uploads photos. Can't publish, unpublish
  *                or delete, and can't see form answers, forms or settings.
  *                Someone with Editor or School Admin publishes their work.
@@ -128,7 +128,7 @@ export const publishersOnly: Access = ({ req, data }) => {
 }
 
 /**
- * Pages, events, news, programs, staff: everyone at the school writes; only
+ * Pages, events, news, staff: everyone at the school writes; only
  * publishers may save with "Published". The admin asks this same question to
  * decide whether to show the Publish button, so Contributors never see it.
  */

@@ -69,7 +69,7 @@ async function checkSchool(school, auth) {
   if (!pages.length) failures.push(`${school.slug}: no published pages found`)
   for (const p of pages) if (p.slug && p.slug !== 'home') await get(`/${p.slug}`, { cookie })
 
-  for (const collection of ['events', 'news', 'programs']) {
+  for (const collection of ['events', 'news']) {
     for (const doc of (await items(collection, school, auth)).slice(0, 5)) {
       if (doc.slug) await get(`/${collection}/${doc.slug}`, { cookie })
     }
@@ -94,7 +94,7 @@ async function checkEditor(cookie, pagesBySchool) {
   // Thread G: the Analytics page, once per period, and School settings (Analytics tab lives there).
   for (const days of [7, 28, 90]) await get(`/admin/analytics?days=${days}`, { cookie })
   await get('/admin/collections/school-settings', { cookie, expect: [200, 302, 307] })
-  for (const collection of ['pages', 'events', 'news', 'news-categories', 'announcements', 'calendar-feeds', 'programs', 'staff', 'media']) {
+  for (const collection of ['pages', 'events', 'news', 'news-categories', 'announcements', 'calendar-feeds', 'staff', 'media']) {
     await get(`/admin/collections/${collection}`, { cookie })
   }
   // Open one page in the editor per school: this renders every element's form.
