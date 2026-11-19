@@ -127,7 +127,8 @@ export function schoolboxHome(theme: ThemeName, c: SchoolboxCopy, photos: School
     t === 'bold'
       ? // Bold: the cards sit over the bottom of the hero.
         { blockType: 'b61Section', pullUp: true, surface: 'none', columns: 'full', content: [diffCards] }
-      : { ...diffCards, surface: t === 'warm' ? 'soft' : 'none' }
+      : // A short row with no heading: a tight band, not a tall one.
+        { ...diffCards, surface: 'soft', padTop: 'tight', padBottom: 'tight' }
 
   // 3. Problem and solution
   const problem = {
@@ -172,7 +173,7 @@ export function schoolboxHome(theme: ThemeName, c: SchoolboxCopy, photos: School
     cardStyle: t === 'bold' ? 'overlay' : t === 'warm' ? 'flat' : 'plain',
     ...(t === 'bold' ? { cardShape: 'portrait' } : {}),
     cardSurface: 'light',
-    surface: t === 'heritage' ? 'soft' : 'none',
+    surface: t === 'bold' ? 'none' : 'soft',
     entrance: 'on',
   }
 
@@ -185,7 +186,7 @@ export function schoolboxHome(theme: ThemeName, c: SchoolboxCopy, photos: School
     textAlign: t === 'bold' ? 'left' : 'center',
     textStyle: t === 'heritage' ? 'italic' : 'normal',
     showMark: t !== 'bold',
-    surface: t === 'bold' ? 'accent' : t === 'warm' ? 'soft' : 'none',
+    surface: t === 'bold' ? 'accent' : 'none',
     entrance: 'on',
   }
 
@@ -202,7 +203,7 @@ export function schoolboxHome(theme: ThemeName, c: SchoolboxCopy, photos: School
     textAlign: 'left',
     cardStyle: t === 'warm' ? 'flat' : t === 'bold' ? 'plain' : 'bordered',
     cardSurface: 'light',
-    surface: t === 'warm' ? 'soft' : 'none',
+    surface: t === 'bold' ? 'none' : 'soft',
     entrance: 'on',
   }
 
@@ -219,7 +220,7 @@ export function schoolboxHome(theme: ThemeName, c: SchoolboxCopy, photos: School
     arrangement: 'grid',
     columns: '3',
     textAlign: t === 'heritage' ? 'center' : 'left',
-    cardStyle: t === 'warm' ? 'flat' : t === 'bold' ? 'bordered' : 'plain',
+    cardStyle: t === 'heritage' ? 'plain' : 'bordered',
     cardSurface: 'light',
     surface: t === 'bold' ? 'soft' : 'none',
     entrance: 'on',
