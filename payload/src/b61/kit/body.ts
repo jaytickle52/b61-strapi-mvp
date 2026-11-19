@@ -274,3 +274,22 @@ export function hasBodyBlock(body: unknown, blockType: string): boolean {
     Boolean(n) && typeof n === 'object' && ((n.type === 'block' && n.fields?.blockType === blockType) || (Array.isArray(n.children) && n.children.some(walk)))
   return walk((body as any)?.root)
 }
+
+/**
+ * The Accordion answer's editor: the short editor (paragraphs, bold, italic,
+ * links, both kinds of list) plus a Button (Jay, 19 Nov 2026), from + or /.
+ */
+export const itemBodyWithButtonEditor = () =>
+  lexicalEditor({
+    features: () => [
+      ParagraphFeature(),
+      BoldFeature(),
+      ItalicFeature(),
+      UnderlineFeature(),
+      LinkFeature({ enabledCollections: ['pages', 'documents'], fields: noNewTab }),
+      UnorderedListFeature(),
+      OrderedListFeature(),
+      BlocksFeature({ blocks: [BODY_BLOCKS.bodyButton] }),
+      InlineToolbarFeature(),
+    ],
+  })

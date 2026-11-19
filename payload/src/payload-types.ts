@@ -392,7 +392,7 @@ export interface Page {
                   id?: string | null;
                 }[]
               | null;
-            columns?: ('1' | '2' | '3') | null;
+            galleryLayout?: ('grid' | 'masonry' | 'strip') | null;
             /**
              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
              */
@@ -916,6 +916,9 @@ export interface Page {
               | {
                   title: string;
                   subtitle?: string | null;
+                  /**
+                   * Use + or / to add a button.
+                   */
                   body?: {
                     root: {
                       type: string;
@@ -1125,7 +1128,7 @@ export interface Page {
                                   id?: string | null;
                                 }[]
                               | null;
-                            columns?: ('1' | '2' | '3') | null;
+                            galleryLayout?: ('grid' | 'masonry' | 'strip') | null;
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
@@ -1650,7 +1653,7 @@ export interface Page {
                                   id?: string | null;
                                 }[]
                               | null;
-                            columns?: ('1' | '2' | '3') | null;
+                            galleryLayout?: ('grid' | 'masonry' | 'strip') | null;
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
@@ -1962,7 +1965,7 @@ export interface Page {
                             id?: string | null;
                           }[]
                         | null;
-                      columns?: ('1' | '2' | '3') | null;
+                      galleryLayout?: ('grid' | 'masonry' | 'strip') | null;
                       /**
                        * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                        */
@@ -2422,6 +2425,9 @@ export interface Page {
                         | {
                             title: string;
                             subtitle?: string | null;
+                            /**
+                             * Use + or / to add a button.
+                             */
                             body?: {
                               root: {
                                 type: string;
@@ -3049,7 +3055,7 @@ export interface Page {
                             id?: string | null;
                           }[]
                         | null;
-                      columns?: ('1' | '2' | '3') | null;
+                      galleryLayout?: ('grid' | 'masonry' | 'strip') | null;
                       /**
                        * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                        */
@@ -3509,6 +3515,9 @@ export interface Page {
                         | {
                             title: string;
                             subtitle?: string | null;
+                            /**
+                             * Use + or / to add a button.
+                             */
                             body?: {
                               root: {
                                 type: string;
@@ -6431,7 +6440,7 @@ export interface PagesSelect<T extends boolean = true> {
                     caption?: T;
                     id?: T;
                   };
-              columns?: T;
+              galleryLayout?: T;
               video?: T;
               imageShape?: T;
               badge?: T;
@@ -6839,7 +6848,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       caption?: T;
                                       id?: T;
                                     };
-                                columns?: T;
+                                galleryLayout?: T;
                                 video?: T;
                                 imageShape?: T;
                                 badge?: T;
@@ -7116,7 +7125,7 @@ export interface PagesSelect<T extends boolean = true> {
                                       caption?: T;
                                       id?: T;
                                     };
-                                columns?: T;
+                                galleryLayout?: T;
                                 video?: T;
                                 imageShape?: T;
                                 badge?: T;
@@ -7301,7 +7310,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 caption?: T;
                                 id?: T;
                               };
-                          columns?: T;
+                          galleryLayout?: T;
                           video?: T;
                           imageShape?: T;
                           badge?: T;
@@ -7922,7 +7931,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 caption?: T;
                                 id?: T;
                               };
-                          columns?: T;
+                          galleryLayout?: T;
                           video?: T;
                           imageShape?: T;
                           badge?: T;

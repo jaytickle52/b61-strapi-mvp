@@ -184,7 +184,8 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 - Built-in items that break the design are left out: Heading 1, uploads, relationships,
   check lists, plain blockquotes. Headings are H2-H4.
 - Intros and item bodies (accordion, pillars, cards) use a short editor: paragraphs,
-  bold, italic, links and lists.
+  bold, italic, links and lists. Accordion answers add a **Button** from + or / (Jay, 19 Nov
+  2026; `itemBodyWithButtonEditor()` in `kit/body.ts`).
 
 ## 11. Forms
 
@@ -390,3 +391,21 @@ nesting read from the field's path) and the element applies the same rule (`Inne
 - **Run off the screen edge** works on any carousel at every screen size (it used to need
   Heading beside and a wide screen, so it looked broken). The cards reach the right edge of
   the screen; the controls and buttons stay inside the page.
+
+## 20. Split, CTA Band and Accordion review (Jay, 19 Nov 2026)
+
+- **Split gallery: no column count.** Media > **Gallery layout**: Grid · Masonry · Strip, and the
+  photos arrange themselves for however many there are, so a fourth photo just fits:
+  - Grid: one photo fills the column, two to four sit two across, five or more three across.
+    A short last row stretches its last photo, so there is never a hole.
+  - Masonry: photos keep their own shapes, in two columns (three from seven), each photo
+    going to the shorter column. Photo shape hides (it doesn't apply).
+  - Strip: one row that scrolls sideways (keyboard focusable), photos at the row's height.
+  - With **Text column height: Match the image**, the gallery fills the frame to the text's
+    height (photos crop to fit; a floor keeps it from getting too short). `SplitGallery` in
+    `Split.tsx`; CSS in `split.css`.
+- **Overlap the image** shows only when Text column height is **Fit content**; matched to the
+  image, the card would cover the photo whole, so it is ignored there too.
+- **CTA Band:** Heritage's short rule under the heading follows the band's text alignment.
+- **Add Section** shows a sketch of each element (`public/b61/blocks/<slug>.svg`, set by
+  `defineElement` as the block's `imageURL`). A new element needs its own sketch there.

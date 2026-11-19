@@ -1,4 +1,4 @@
-import { simpleEditor } from '../../kit/editors'
+import { itemBodyWithButtonEditor } from '../../kit/body'
 import { defineElement, panel } from '../../kit/element'
 import { dropdown, segmented, step, toggle } from '../../kit/controls'
 import { bandHeadFields, buttonsPanel, entranceField, eyebrowRuleField, headingAlignField, list, paddingFields, surfaceField, ITEM_SURFACES } from '../../kit/groups'
@@ -18,7 +18,7 @@ export const B61Accordion = defineElement({
           { name: 'subtitle', label: 'Tag', type: 'text', admin: { width: '35%', placeholder: 'e.g. Fall' } },
         ],
       },
-      { name: 'body', label: 'Body', type: 'richText', editor: simpleEditor() },
+      { name: 'body', label: 'Body', type: 'richText', editor: itemBodyWithButtonEditor(), admin: { description: 'Use + or / to add a button.' } },
     ]),
     // Marks the items as questions and answers for search engines (schema.org FAQPage).
     { ...toggle('faq', 'These are questions and answers'), admin: { description: 'Search engines and AI tools read each title as a question and its body as the answer.' } } as any,
