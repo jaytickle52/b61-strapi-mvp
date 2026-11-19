@@ -235,7 +235,7 @@ async function main() {
   const shown = visible((await page(`/${ok.json?.doc?.slug}`, 'cedar-ridge')).text)
   check(shown.includes('iframe.mediadelivery.net/embed/123456/'), "… and plays in Bunny's player on the page")
   const no = await api('POST', '/pages', { token: admin, body: split('https://example.com/my-video.mp4') })
-  check(no.status === 400 && /Video link/.test(JSON.stringify(no.json)), 'a link that is not YouTube, Vimeo or Bunny is refused with a message')
+  check(no.status === 400 && /Video/.test(JSON.stringify(no.json)), 'a link that is not YouTube, Vimeo or Bunny is refused with a message')
   if (no.json?.doc?.id) await api('DELETE', `/pages/${no.json.doc.id}`, { token: admin })
   if (ok.json?.doc?.id) await api('DELETE', `/pages/${ok.json.doc.id}`, { token: admin })
 
@@ -477,8 +477,8 @@ async function main() {
         type: 'root', version: 1, format: '', indent: 0, direction: 'ltr',
         children: [
           para('Tours run every Tuesday.'),
-          blockNode('bodyButton', { label: `Schedule a tour ${RUN}`, variant: 'primary', link: { type: 'url', url: '/inquire', newTab: false } }),
-          blockNode('callout', { tone: 'important', title: `Applications due March 1 ${RUN}`, text: 'Late applications join the waiting list.', linkLabel: 'Start your application', link: { type: 'url', url: '/apply', newTab: false } }),
+          blockNode('bodyButton', { label: `Schedule a tour ${RUN}`, variant: 'primary', link: { type: 'url', url: '/inquire' } }),
+          blockNode('callout', { tone: 'important', title: `Applications due March 1 ${RUN}`, text: 'Late applications join the waiting list.', linkLabel: 'Start your application', link: { type: 'url', url: '/apply' } }),
           {
             type: 'table', version: 1, format: '', indent: 0, direction: 'ltr',
             children: [row([cell('Grade', 1), cell('Tuition', 1)]), row([cell('K-5'), cell(`$9,800 ${RUN}`)]), row([cell('6-8'), cell('$10,900')])],
@@ -600,6 +600,48 @@ async function main() {
     check(/class="b61-cta__region b61-surface--none/.test(cp), '… as does a CTA Band')
     check(region(`Chosen ${RUN}`).startsWith('b61-surface--soft'), '… unless it picks its own')
     if (made.json?.doc?.id) await api('DELETE', `/pages/${made.json.doc.id}`, { token: admin })
+  }
+
+  // ----- Links open where they should (no "new tab" choice) -------------------
+  console.log('\nLinks')
+  {
+    const visit = (await api('GET', `/pages?where[slug][equals]=visit&where[school][equals]=${cedar}&depth=0&limit=1`, { token: admin })).json?.docs?.[0]
+    const made = await api('POST', '/pages', {
+      token: admin,
+      body: {
+        school: cedar, title: `Links ${RUN}`, slug: `links-${RUN}`, _status: 'published',
+        sections: [{ blockType: 'b61CardGrid', heading: [{ text: 'Links' }], source: 'manual', cards: [{ title: 'One' }],
+          buttons: [
+            { label: `Our page ${RUN}`, link: { type: 'page', page: visit?.id } },
+            { label: `Elsewhere ${RUN}`, link: { type: 'url', url: 'https://example.com/' } },
+            { label: `On this site ${RUN}`, link: { type: 'url', url: '/apply' } },
+          ] }],
+      },
+    })
+    const html = (await page(`/links-${RUN}`, 'cedar-ridge')).text
+    const tag = (label) => (html.match(new RegExp(`<a [^>]*>${label}`)) ?? [''])[0]
+    check(made.status < 300 && /href="\/visit"/.test(tag(`Our page ${RUN}`)) && !/target=/.test(tag(`Our page ${RUN}`)), 'a page on the site opens in the same tab')
+    check(/target="_blank"/.test(tag(`Elsewhere ${RUN}`)), 'another website opens in a new tab')
+    check(!/target=/.test(tag(`On this site ${RUN}`)), 'a web address on this site ("/apply") opens in the same tab')
+    if (made.json?.doc?.id) await api('DELETE', `/pages/${made.json.doc.id}`, { token: admin })
+  }
+
+  // ----- Videos: one upload, used anywhere -----------------------------------
+  console.log('\nVideos')
+  {
+    const link = 'https://iframe.mediadelivery.net/embed/123456/0b1c2d3e-4f50-6172-8394-a5b6c7d8e9f1'
+    const v = await api('POST', '/videos', { token: admin, body: { school: cedar, title: `Tour ${RUN}`, link } })
+    check(v.status === 201, 'a video can be added to the Videos list')
+    const listed = await api('GET', `/videos?where[school][equals]=${cedar}&limit=200&depth=0`, { token: contrib })
+    check((listed.json?.docs ?? []).some((d) => d.link === link), "… and staff at the school see it to choose it")
+    const used = await api('POST', '/pages', { token: admin, body: { school: cedar, title: `Uses ${RUN}`, slug: `uses-${RUN}`, _status: 'published', sections: [{ blockType: 'b61Split', heading: [{ text: 'Watch' }], media: 'video', video: link }] } })
+    const usage = await api('GET', `/videos/${v.json?.doc?.id}/usage`, { token: admin })
+    check((usage.json?.hits ?? []).some((h) => String(h.id) === String(used.json?.doc?.id)), '… its "Where this is used" lists the page using it')
+    const refused = await api('DELETE', `/videos/${v.json?.doc?.id}`, { token: admin })
+    check(refused.status === 409, "… and it can't be deleted while a page uses it")
+    if (used.json?.doc?.id) await api('DELETE', `/pages/${used.json.doc.id}`, { token: admin })
+    const gone = await api('DELETE', `/videos/${v.json?.doc?.id}`, { token: admin })
+    check(gone.status === 200, '… once nothing uses it, it can be deleted')
   }
 
   // ----- Tidy up --------------------------------------------------------------

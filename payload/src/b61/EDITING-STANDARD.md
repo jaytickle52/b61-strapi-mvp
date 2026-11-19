@@ -77,8 +77,11 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 - **On/off: a toggle.** Never a two-option radio for yes/no.
 - **Site-wide scales (1–7): step slider** with named ends and a reset to the
   site default. Never a bare number box.
-- **Links: one compact control**: A page / A web address, then the field.
-  Page links survive slug changes, so they come first.
+- **Links: one compact control**: Page / Document / Web address, then the field.
+  Page links survive slug changes, so they come first. **No "Open in a new tab"** (Jay,
+  19 Nov 2026): pages, and web addresses on the same site ("/apply"), open in place;
+  documents and other websites open in a new tab. Email and phone links open in place.
+  One rule for every link, the Content editor's included: `opensNewTab()` in `lib/media.ts`.
 - **Repeater rows are named by their content** ("Schedule a tour"), not "Button 01".
 - **A list is not wrapped in a panel of the same name.** The list is the section.
   The exception is Buttons, which sits in a closed panel so it can say what it holds;
@@ -132,7 +135,11 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 - Photos and videos live in **Photos and videos**; PDFs and other downloads in **Documents**.
   Both can be sorted into folders (each school has its own). A link control offers
   Page / Document / Web address, and the Content editor's link tool can pick a page or a document.
-- Each photo, document and page shows **Where this is used**. Anything still in use can't be
+- **Videos** (Files > Videos): every uploaded video, so one upload can go on any number of
+  pages (Jay, 19 Nov 2026). An upload from any video field joins the list; each video field
+  has **Choose a video** to pick one again. Editors see a video's title, never its address.
+  Deleting an unused video also removes the file, so storage doesn't fill with copies.
+- Each photo, document, video and page shows **Where this is used**. Anything still in use can't be
   deleted; the message says where to replace it first.
 
 ## 7. Data
@@ -288,9 +295,9 @@ arrangement choices are Banner 61-only; content a school updates stays where sta
   fields above the CSS class in the Advanced panel, which school staff never see. `bannerOnly()`
   (kit/element.ts) gives each one create/update access for Banner 61 admins only, so a staff save
   keeps what Banner 61 set. Use it for layout, not for words or photos.
-  - Card Grid: **Heading beside the cards** (head, carousel arrows and buttons in a side column),
+  - Card Grid: **Heading beside the cards** (the head in a side column; section 19),
     **Staggered cards** (every other column lower, wide screens), **Run off the screen edge**
-    (carousel + heading beside; top-level bands only), **Show card text on hover** (text on the photo;
+    (any carousel, every screen size; top-level bands only), **Show card text on hover** (text on the photo;
     touch screens always show it; keyboard focus opens it), **Accent tint on every other photo**
     (grey photo multiplied by the accent, so contrast only improves).
   - Section: **Duotone photo** (the background photo in greys, so the wash tints it one colour).
@@ -376,3 +383,10 @@ nesting read from the field's path) and the element applies the same rule (`Inne
   line to their right. Centred and top-right controls are unchanged.
 - Text on the photo at the top or the middle uses a long, eased gradient across the whole card
   (no band behind the words), so the photo fades in without a visible edge.
+- **Heading beside the cards** keeps the other choices working (Jay, 19 Nov 2026): the side
+  column holds the head, plus the arrows when Controls is Top right. Every other Controls
+  choice sits with the cards as usual, and the buttons always come after the cards. On
+  phones the side column stacks above the cards.
+- **Run off the screen edge** works on any carousel at every screen size (it used to need
+  Heading beside and a wide screen, so it looked broken). The cards reach the right edge of
+  the screen; the controls and buttons stay inside the page.

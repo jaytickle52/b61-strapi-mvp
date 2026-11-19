@@ -87,6 +87,7 @@ export interface Config {
     users: User;
     schools: School;
     'news-categories': NewsCategory;
+    videos: Video;
     'totp-attempts': TotpAttempt;
     'payload-mcp-api-keys': PayloadMcpApiKey;
     'payload-kv': PayloadKv;
@@ -121,6 +122,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     schools: SchoolsSelect<false> | SchoolsSelect<true>;
     'news-categories': NewsCategoriesSelect<false> | NewsCategoriesSelect<true>;
+    videos: VideosSelect<false> | VideosSelect<true>;
     'totp-attempts': TotpAttemptsSelect<false> | TotpAttemptsSelect<true>;
     'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -249,7 +251,6 @@ export interface Page {
                     page?: (number | null) | Page;
                     document?: (number | null) | Document;
                     url?: string | null;
-                    newTab?: boolean | null;
                   };
                   /**
                    * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -369,7 +370,6 @@ export interface Page {
                     page?: (number | null) | Page;
                     document?: (number | null) | Document;
                     url?: string | null;
-                    newTab?: boolean | null;
                   };
                   /**
                    * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -479,7 +479,6 @@ export interface Page {
                     page?: (number | null) | Page;
                     document?: (number | null) | Document;
                     url?: string | null;
-                    newTab?: boolean | null;
                   };
                   /**
                    * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -600,7 +599,6 @@ export interface Page {
                     page?: (number | null) | Page;
                     document?: (number | null) | Document;
                     url?: string | null;
-                    newTab?: boolean | null;
                   };
                   /**
                    * Shows a "Read more"-style link. Leave empty to link the title.
@@ -619,7 +617,6 @@ export interface Page {
                     page?: (number | null) | Page;
                     document?: (number | null) | Document;
                     url?: string | null;
-                    newTab?: boolean | null;
                   };
                   /**
                    * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -722,7 +719,6 @@ export interface Page {
                     page?: (number | null) | Page;
                     document?: (number | null) | Document;
                     url?: string | null;
-                    newTab?: boolean | null;
                   };
                   /**
                    * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -821,7 +817,6 @@ export interface Page {
                     page?: (number | null) | Page;
                     document?: (number | null) | Document;
                     url?: string | null;
-                    newTab?: boolean | null;
                   };
                   /**
                    * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -955,7 +950,6 @@ export interface Page {
                     page?: (number | null) | Page;
                     document?: (number | null) | Document;
                     url?: string | null;
-                    newTab?: boolean | null;
                   };
                   /**
                    * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -1109,7 +1103,6 @@ export interface Page {
                                     page?: (number | null) | Page;
                                     document?: (number | null) | Document;
                                     url?: string | null;
-                                    newTab?: boolean | null;
                                   };
                                   /**
                                    * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -1219,7 +1212,6 @@ export interface Page {
                                     page?: (number | null) | Page;
                                     document?: (number | null) | Document;
                                     url?: string | null;
-                                    newTab?: boolean | null;
                                   };
                                   /**
                                    * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -1342,7 +1334,6 @@ export interface Page {
                                     page?: (number | null) | Page;
                                     document?: (number | null) | Document;
                                     url?: string | null;
-                                    newTab?: boolean | null;
                                   };
                                   /**
                                    * Shows a "Read more"-style link. Leave empty to link the title.
@@ -1361,7 +1352,6 @@ export interface Page {
                                     page?: (number | null) | Page;
                                     document?: (number | null) | Document;
                                     url?: string | null;
-                                    newTab?: boolean | null;
                                   };
                                   /**
                                    * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -1638,7 +1628,6 @@ export interface Page {
                                     page?: (number | null) | Page;
                                     document?: (number | null) | Document;
                                     url?: string | null;
-                                    newTab?: boolean | null;
                                   };
                                   /**
                                    * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -1748,7 +1737,6 @@ export interface Page {
                                     page?: (number | null) | Page;
                                     document?: (number | null) | Document;
                                     url?: string | null;
-                                    newTab?: boolean | null;
                                   };
                                   /**
                                    * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -1866,7 +1854,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -1953,7 +1940,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -2098,7 +2084,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * Shows a "Read more"-style link. Leave empty to link the title.
@@ -2117,7 +2102,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -2220,7 +2204,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -2319,7 +2302,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -2474,7 +2456,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -2637,7 +2618,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -2732,7 +2712,6 @@ export interface Page {
                         page?: (number | null) | Page;
                         document?: (number | null) | Document;
                         url?: string | null;
-                        newTab?: boolean | null;
                       };
                       secondLabel?: string | null;
                       secondLink?: {
@@ -2740,7 +2719,6 @@ export interface Page {
                         page?: (number | null) | Page;
                         document?: (number | null) | Document;
                         url?: string | null;
-                        newTab?: boolean | null;
                       };
                       size?: ('standard' | 'large') | null;
                       firstColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
@@ -2811,7 +2789,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             id?: string | null;
                           }[]
@@ -2851,7 +2828,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -2895,7 +2871,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             id?: string | null;
                           }[]
@@ -2966,7 +2941,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -3053,7 +3027,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -3198,7 +3171,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * Shows a "Read more"-style link. Leave empty to link the title.
@@ -3217,7 +3189,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -3320,7 +3291,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -3419,7 +3389,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -3574,7 +3543,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -3737,7 +3705,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             /**
                              * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -3832,7 +3799,6 @@ export interface Page {
                         page?: (number | null) | Page;
                         document?: (number | null) | Document;
                         url?: string | null;
-                        newTab?: boolean | null;
                       };
                       secondLabel?: string | null;
                       secondLink?: {
@@ -3840,7 +3806,6 @@ export interface Page {
                         page?: (number | null) | Page;
                         document?: (number | null) | Document;
                         url?: string | null;
-                        newTab?: boolean | null;
                       };
                       size?: ('standard' | 'large') | null;
                       firstColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
@@ -3911,7 +3876,6 @@ export interface Page {
                               page?: (number | null) | Page;
                               document?: (number | null) | Document;
                               url?: string | null;
-                              newTab?: boolean | null;
                             };
                             id?: string | null;
                           }[]
@@ -4031,7 +3995,6 @@ export interface Page {
                     page?: (number | null) | Page;
                     document?: (number | null) | Document;
                     url?: string | null;
-                    newTab?: boolean | null;
                   };
                   /**
                    * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
@@ -4147,7 +4110,6 @@ export interface Page {
               page?: (number | null) | Page;
               document?: (number | null) | Document;
               url?: string | null;
-              newTab?: boolean | null;
             };
             secondLabel?: string | null;
             secondLink?: {
@@ -4155,7 +4117,6 @@ export interface Page {
               page?: (number | null) | Page;
               document?: (number | null) | Document;
               url?: string | null;
-              newTab?: boolean | null;
             };
             size?: ('standard' | 'large') | null;
             firstColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
@@ -4226,7 +4187,6 @@ export interface Page {
                     page?: (number | null) | Page;
                     document?: (number | null) | Document;
                     url?: string | null;
-                    newTab?: boolean | null;
                   };
                   id?: string | null;
                 }[]
@@ -4377,7 +4337,7 @@ export interface FolderInterface {
   createdAt: string;
 }
 /**
- * Photos for the website. Add alt text so screen readers can describe each photo. PDFs go in Documents. Videos: use "Upload a video" on the element that shows it.
+ * Photos for the website. Add alt text so screen readers can describe each photo. PDFs go in Documents, videos in Videos.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
@@ -4913,7 +4873,6 @@ export interface Announcement {
       page?: (number | null) | Page;
       document?: (number | null) | Document;
       url?: string | null;
-      newTab?: boolean | null;
     };
   };
   /**
@@ -5530,7 +5489,6 @@ export interface SchoolSetting {
           page?: (number | null) | Page;
           document?: (number | null) | Document;
           url?: string | null;
-          newTab?: boolean | null;
         };
         links?:
           | {
@@ -5540,7 +5498,6 @@ export interface SchoolSetting {
                 page?: (number | null) | Page;
                 document?: (number | null) | Document;
                 url?: string | null;
-                newTab?: boolean | null;
               };
               id?: string | null;
             }[]
@@ -5559,7 +5516,6 @@ export interface SchoolSetting {
                       page?: (number | null) | Page;
                       document?: (number | null) | Document;
                       url?: string | null;
-                      newTab?: boolean | null;
                     };
                     description?: string | null;
                     id?: string | null;
@@ -5583,7 +5539,6 @@ export interface SchoolSetting {
             page?: (number | null) | Page;
             document?: (number | null) | Document;
             url?: string | null;
-            newTab?: boolean | null;
           };
         };
         id?: string | null;
@@ -5600,7 +5555,6 @@ export interface SchoolSetting {
           page?: (number | null) | Page;
           document?: (number | null) | Document;
           url?: string | null;
-          newTab?: boolean | null;
         };
         id?: string | null;
       }[]
@@ -5612,7 +5566,6 @@ export interface SchoolSetting {
       page?: (number | null) | Page;
       document?: (number | null) | Document;
       url?: string | null;
-      newTab?: boolean | null;
     };
   };
   /**
@@ -5650,7 +5603,6 @@ export interface SchoolSetting {
           page?: (number | null) | Page;
           document?: (number | null) | Document;
           url?: string | null;
-          newTab?: boolean | null;
         };
         id?: string | null;
       }[]
@@ -5666,7 +5618,6 @@ export interface SchoolSetting {
                 page?: (number | null) | Page;
                 document?: (number | null) | Document;
                 url?: string | null;
-                newTab?: boolean | null;
               };
               id?: string | null;
             }[]
@@ -5700,7 +5651,6 @@ export interface SchoolSetting {
           page?: (number | null) | Page;
           document?: (number | null) | Document;
           url?: string | null;
-          newTab?: boolean | null;
         };
         id?: string | null;
       }[]
@@ -5870,6 +5820,23 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * Videos for the website. Upload one here or from any video field; then pick it anywhere with "Choose a video", without uploading it again.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos".
+ */
+export interface Video {
+  id: number;
+  school?: (number | null) | School;
+  /**
+   * How the video is listed when you choose one, e.g. "Campus tour 2026".
+   */
+  title?: string | null;
+  link: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -6284,6 +6251,10 @@ export interface PayloadLockedDocument {
         value: number | NewsCategory;
       } | null)
     | ({
+        relationTo: 'videos';
+        value: number | Video;
+      } | null)
+    | ({
         relationTo: 'payload-mcp-api-keys';
         value: number | PayloadMcpApiKey;
       } | null)
@@ -6378,7 +6349,6 @@ export interface PagesSelect<T extends boolean = true> {
                           page?: T;
                           document?: T;
                           url?: T;
-                          newTab?: T;
                         };
                     video?: T;
                     fullWidth?: T;
@@ -6446,7 +6416,6 @@ export interface PagesSelect<T extends boolean = true> {
                           page?: T;
                           document?: T;
                           url?: T;
-                          newTab?: T;
                         };
                     video?: T;
                     fullWidth?: T;
@@ -6510,7 +6479,6 @@ export interface PagesSelect<T extends boolean = true> {
                           page?: T;
                           document?: T;
                           url?: T;
-                          newTab?: T;
                         };
                     video?: T;
                     fullWidth?: T;
@@ -6562,7 +6530,6 @@ export interface PagesSelect<T extends boolean = true> {
                           page?: T;
                           document?: T;
                           url?: T;
-                          newTab?: T;
                         };
                     linkText?: T;
                     id?: T;
@@ -6580,7 +6547,6 @@ export interface PagesSelect<T extends boolean = true> {
                           page?: T;
                           document?: T;
                           url?: T;
-                          newTab?: T;
                         };
                     video?: T;
                     fullWidth?: T;
@@ -6648,7 +6614,6 @@ export interface PagesSelect<T extends boolean = true> {
                           page?: T;
                           document?: T;
                           url?: T;
-                          newTab?: T;
                         };
                     video?: T;
                     fullWidth?: T;
@@ -6704,7 +6669,6 @@ export interface PagesSelect<T extends boolean = true> {
                           page?: T;
                           document?: T;
                           url?: T;
-                          newTab?: T;
                         };
                     video?: T;
                     fullWidth?: T;
@@ -6779,7 +6743,6 @@ export interface PagesSelect<T extends boolean = true> {
                           page?: T;
                           document?: T;
                           url?: T;
-                          newTab?: T;
                         };
                     video?: T;
                     fullWidth?: T;
@@ -6861,7 +6824,6 @@ export interface PagesSelect<T extends boolean = true> {
                                             page?: T;
                                             document?: T;
                                             url?: T;
-                                            newTab?: T;
                                           };
                                       video?: T;
                                       fullWidth?: T;
@@ -6925,7 +6887,6 @@ export interface PagesSelect<T extends boolean = true> {
                                             page?: T;
                                             document?: T;
                                             url?: T;
-                                            newTab?: T;
                                           };
                                       video?: T;
                                       fullWidth?: T;
@@ -6977,7 +6938,6 @@ export interface PagesSelect<T extends boolean = true> {
                                             page?: T;
                                             document?: T;
                                             url?: T;
-                                            newTab?: T;
                                           };
                                       linkText?: T;
                                       id?: T;
@@ -6995,7 +6955,6 @@ export interface PagesSelect<T extends boolean = true> {
                                             page?: T;
                                             document?: T;
                                             url?: T;
-                                            newTab?: T;
                                           };
                                       video?: T;
                                       fullWidth?: T;
@@ -7142,7 +7101,6 @@ export interface PagesSelect<T extends boolean = true> {
                                             page?: T;
                                             document?: T;
                                             url?: T;
-                                            newTab?: T;
                                           };
                                       video?: T;
                                       fullWidth?: T;
@@ -7206,7 +7164,6 @@ export interface PagesSelect<T extends boolean = true> {
                                             page?: T;
                                             document?: T;
                                             url?: T;
-                                            newTab?: T;
                                           };
                                       video?: T;
                                       fullWidth?: T;
@@ -7280,7 +7237,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -7330,7 +7286,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -7396,7 +7351,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 linkText?: T;
                                 id?: T;
@@ -7414,7 +7368,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -7482,7 +7435,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -7538,7 +7490,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -7629,7 +7580,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -7705,7 +7655,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -7762,7 +7711,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 page?: T;
                                 document?: T;
                                 url?: T;
-                                newTab?: T;
                               };
                           secondLabel?: T;
                           secondLink?:
@@ -7772,7 +7720,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 page?: T;
                                 document?: T;
                                 url?: T;
-                                newTab?: T;
                               };
                           size?: T;
                           firstColor?: T;
@@ -7819,7 +7766,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 id?: T;
                               };
@@ -7856,7 +7802,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -7877,7 +7822,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 id?: T;
                               };
@@ -7914,7 +7858,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -7964,7 +7907,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -8030,7 +7972,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 linkText?: T;
                                 id?: T;
@@ -8048,7 +7989,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -8116,7 +8056,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -8172,7 +8111,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -8263,7 +8201,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -8339,7 +8276,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 video?: T;
                                 fullWidth?: T;
@@ -8396,7 +8332,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 page?: T;
                                 document?: T;
                                 url?: T;
-                                newTab?: T;
                               };
                           secondLabel?: T;
                           secondLink?:
@@ -8406,7 +8341,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 page?: T;
                                 document?: T;
                                 url?: T;
-                                newTab?: T;
                               };
                           size?: T;
                           firstColor?: T;
@@ -8453,7 +8387,6 @@ export interface PagesSelect<T extends boolean = true> {
                                       page?: T;
                                       document?: T;
                                       url?: T;
-                                      newTab?: T;
                                     };
                                 id?: T;
                               };
@@ -8522,7 +8455,6 @@ export interface PagesSelect<T extends boolean = true> {
                           page?: T;
                           document?: T;
                           url?: T;
-                          newTab?: T;
                         };
                     video?: T;
                     fullWidth?: T;
@@ -8595,7 +8527,6 @@ export interface PagesSelect<T extends boolean = true> {
                     page?: T;
                     document?: T;
                     url?: T;
-                    newTab?: T;
                   };
               secondLabel?: T;
               secondLink?:
@@ -8605,7 +8536,6 @@ export interface PagesSelect<T extends boolean = true> {
                     page?: T;
                     document?: T;
                     url?: T;
-                    newTab?: T;
                   };
               size?: T;
               firstColor?: T;
@@ -8652,7 +8582,6 @@ export interface PagesSelect<T extends boolean = true> {
                           page?: T;
                           document?: T;
                           url?: T;
-                          newTab?: T;
                         };
                     id?: T;
                   };
@@ -8701,7 +8630,6 @@ export interface AnnouncementsSelect<T extends boolean = true> {
               page?: T;
               document?: T;
               url?: T;
-              newTab?: T;
             };
       };
   display?: T;
@@ -9359,7 +9287,6 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
               page?: T;
               document?: T;
               url?: T;
-              newTab?: T;
             };
         links?:
           | T
@@ -9372,7 +9299,6 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
                     page?: T;
                     document?: T;
                     url?: T;
-                    newTab?: T;
                   };
               id?: T;
             };
@@ -9391,7 +9317,6 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
                           page?: T;
                           document?: T;
                           url?: T;
-                          newTab?: T;
                         };
                     description?: T;
                     id?: T;
@@ -9411,7 +9336,6 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
                     page?: T;
                     document?: T;
                     url?: T;
-                    newTab?: T;
                   };
             };
         id?: T;
@@ -9427,7 +9351,6 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
               page?: T;
               document?: T;
               url?: T;
-              newTab?: T;
             };
         id?: T;
       };
@@ -9442,7 +9365,6 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
               page?: T;
               document?: T;
               url?: T;
-              newTab?: T;
             };
       };
   quickLinks?:
@@ -9459,7 +9381,6 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
               page?: T;
               document?: T;
               url?: T;
-              newTab?: T;
             };
         id?: T;
       };
@@ -9478,7 +9399,6 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
                     page?: T;
                     document?: T;
                     url?: T;
-                    newTab?: T;
                   };
               id?: T;
             };
@@ -9504,7 +9424,6 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
               page?: T;
               document?: T;
               url?: T;
-              newTab?: T;
             };
         id?: T;
       };
@@ -9622,6 +9541,17 @@ export interface NewsCategoriesSelect<T extends boolean = true> {
   name?: T;
   generateSlug?: T;
   slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos_select".
+ */
+export interface VideosSelect<T extends boolean = true> {
+  school?: T;
+  title?: T;
+  link?: T;
   updatedAt?: T;
   createdAt?: T;
 }

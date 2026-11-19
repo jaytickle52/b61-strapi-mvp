@@ -11,6 +11,7 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 import { EmphasizeFeature } from './editor/emphasize'
+import { noNewTab } from './controls'
 
 /** A short-text editor: paragraphs, bold, italic, links and lists. For intros and item bodies. */
 export const simpleEditor = () =>
@@ -20,7 +21,7 @@ export const simpleEditor = () =>
       BoldFeature(),
       ItalicFeature(),
       UnderlineFeature(),
-      LinkFeature({ enabledCollections: ['pages', 'documents'] }),
+      LinkFeature({ enabledCollections: ['pages', 'documents'], fields: noNewTab }),
       UnorderedListFeature(),
       OrderedListFeature(),
       InlineToolbarFeature(),

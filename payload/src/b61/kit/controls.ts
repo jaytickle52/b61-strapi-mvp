@@ -102,7 +102,10 @@ export function step(name: string, label: string, o: { low: string; high: string
   }
 }
 
-/** One compact link: a page on this site (survives slug changes), a document (handbook, PDF) or a web address. */
+/**
+ * One compact link: a page on this site (survives slug changes), a document (handbook, PDF) or a web address.
+ * No new-tab choice: documents and other websites open in a new tab on their own (`opensNewTab`).
+ */
 export function link(name = 'link'): Field {
   return {
     name,
@@ -136,7 +139,6 @@ export function link(name = 'link'): Field {
           },
         ],
       },
-      { name: 'newTab', label: 'Open in a new tab', type: 'checkbox' },
     ],
   }
 }
@@ -152,3 +154,7 @@ export function unit<T extends Field>(field: T, u: string): T {
     },
   }
 }
+
+/** The Content editor's link drawer, without Payload's "Open in new tab" box (same rule as `link()`). */
+export const noNewTab = ({ defaultFields }: { defaultFields: any[] }) =>
+  defaultFields.filter((f) => !('name' in f) || f.name !== 'newTab')

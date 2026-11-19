@@ -397,7 +397,7 @@ export function demoProse(opts: { heading?: string; body?: unknown; phone?: stri
     ...(opts.phone ? [{ type: 'iconrow', icon: 'phone', text: `Call ${opts.phone}`, hasLink: true, link: { type: 'url', url: `tel:${opts.phone.replace(/[^0-9+]/g, '')}` } }] : []),
     ...(opts.email ? [{ type: 'iconrow', icon: 'email', text: `Email ${opts.email}`, hasLink: true, link: { type: 'url', url: `mailto:${opts.email}` } }] : []),
     ...(opts.address
-      ? [{ type: 'iconrow', icon: 'location', text: 'Get directions', hasLink: true, link: { type: 'url', url: `https://maps.google.com/?q=${encodeURIComponent(opts.address.replace(/\n/g, ', '))}`, newTab: true } }]
+      ? [{ type: 'iconrow', icon: 'location', text: 'Get directions', hasLink: true, link: { type: 'url', url: `https://maps.google.com/?q=${encodeURIComponent(opts.address.replace(/\n/g, ', '))}` } }]
       : []),
   ]
   return {

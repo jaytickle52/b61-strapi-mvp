@@ -15,7 +15,7 @@ import {
   UnorderedListFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
-import { dropdown, link, segmented } from './controls'
+import { dropdown, link, noNewTab, segmented } from './controls'
 import { ICON_OPTIONS, iconChoice, list, onlyImages } from './groups'
 
 /*
@@ -133,7 +133,7 @@ export function bodyField(o: Opts = {}): RichTextField {
         BoldFeature(),
         ItalicFeature(),
         UnderlineFeature(),
-        LinkFeature({ enabledCollections: ['pages', 'documents'] }),
+        LinkFeature({ enabledCollections: ['pages', 'documents'], fields: noNewTab }),
         UnorderedListFeature(),
         OrderedListFeature(),
         ...(o.dividers ? [HorizontalRuleFeature()] : []),
@@ -180,7 +180,7 @@ const blockNode = (blockType: string, fields: Record<string, unknown>) => ({
 })
 const hr = () => ({ type: 'horizontalrule', version: 1 })
 const idOf = (v: any) => (v && typeof v === 'object' ? v.id : v) ?? null
-const cleanLink = (l: any) => (l ? { type: l.type ?? 'page', page: idOf(l.page), url: l.url ?? null, newTab: Boolean(l.newTab) } : undefined)
+const cleanLink = (l: any) => (l ? { type: l.type ?? 'page', page: idOf(l.page), url: l.url ?? null } : undefined)
 
 /** An old-style list (body / emphasis / quote / icon row) as editor content. */
 export function toBody(items: Partial<BodyItem>[] | any[] | null | undefined, o: Opts = {}) {

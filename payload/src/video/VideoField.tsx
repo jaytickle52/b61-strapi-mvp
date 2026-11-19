@@ -15,20 +15,36 @@ type Phase =
  * The "Video link" field with an "Upload a video" button beside it: the file
  * goes straight from the browser to Banner 61's Bunny Stream library (in the
  * school's collection), and the field fills in with its player link. Pasting
- * a YouTube, Vimeo or Bunny link still works the same.
+ * a YouTube, Vimeo or Bunny link still works the same. Every upload also joins
+ * the school's Videos, and "Choose a video" picks one already uploaded.
  */
 export const VideoField: TextFieldClientComponent = (props) => {
   // uploadFirst (Hero background): one upload box that sends the file to
   // the video library; there is no link to paste.
   const uploadFirst = Boolean((props as any).uploadFirst)
+  // inLibrary: the field on a Videos entry itself, so no "Choose a video" and
+  // the upload doesn't add a second entry; it fills in the Title if empty.
+  const inLibrary = Boolean((props as any).inLibrary)
   const path = props.path ?? props.field.name
   const { value, setValue } = useField<string>({ path })
+  const titleField = useField<string>({ path: 'title' })
+  const [library, setLibrary] = useState<{ id: number | string; title: string; link: string }[] | null>(null)
   const [over, setOver] = useState(false)
   const school = useFormFields(([f]) => f?.school?.value as number | string | undefined)
   const [enabled, setEnabled] = useState(false)
   const [phase, setPhase] = useState<Phase>({ kind: 'idle' })
   const fileRef = useRef<HTMLInputElement>(null)
   const uploadRef = useRef<{ abort: (b?: boolean) => Promise<void> } | null>(null)
+
+  // The school's Videos, for "Choose a video" (one upload, used anywhere).
+  useEffect(() => {
+    if (inLibrary) return
+    const where = school != null ? `&where[school][equals]=${encodeURIComponent(String(school))}` : ''
+    fetch(`/api/videos?limit=200&depth=0&sort=-updatedAt${where}`, { credentials: 'include' })
+      .then((r) => r.json())
+      .then((d) => setLibrary((d.docs ?? []).filter((v: any) => v.link).map((v: any) => ({ id: v.id, title: v.title || 'Video', link: v.link }))))
+      .catch(() => setLibrary([]))
+  }, [school, inLibrary, phase.kind === 'processing'])
 
   useEffect(() => {
     fetch('/api/bunny/config', { credentials: 'include' })
@@ -62,7 +78,7 @@ export const VideoField: TextFieldClientComponent = (props) => {
         method: 'POST',
         credentials: 'include',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ school, title: file.name.replace(/\.[^.]+$/, '') }),
+        body: JSON.stringify({ school, title: file.name.replace(/\.[^.]+$/, ''), library: !inLibrary }),
       })
       const t: Ticket & { message?: string } = await res.json()
       if (!res.ok) throw new Error(t.message ?? `Upload refused (${res.status})`)
@@ -88,6 +104,7 @@ export const VideoField: TextFieldClientComponent = (props) => {
       })
       uploadRef.current = null
       setValue(t.embed)
+      if (inLibrary && !titleField.value) titleField.setValue(file.name.replace(/\.[^.]+$/, ''))
       setPhase({ kind: 'processing', label: 'Uploaded, queued for processing', videoId: t.videoId })
     } catch (e: any) {
       uploadRef.current = null
@@ -103,6 +120,32 @@ export const VideoField: TextFieldClientComponent = (props) => {
   }
 
   const busy = phase.kind === 'uploading'
+
+  // "Choose a video": any video the school already uploaded.
+  const choices = (library ?? []).filter((v) => v.link !== value)
+  const chooser =
+    !inLibrary && choices.length > 0 ? (
+      <select
+        aria-label="Choose a video"
+        value=""
+        disabled={busy}
+        onChange={(e) => {
+          const v = choices.find((c) => String(c.id) === e.target.value)
+          if (v) {
+            setValue(v.link)
+            setPhase({ kind: 'idle' })
+          }
+        }}
+        style={{ font: 'inherit', fontSize: 13, padding: '5px 8px', borderRadius: 4, border: '1px solid var(--theme-elevation-250)', background: 'var(--theme-input-bg)', color: 'var(--theme-text)', maxWidth: 260 }}
+      >
+        <option value="">{value ? 'Choose another video…' : 'Choose a video…'}</option>
+        {choices.map((c) => (
+          <option key={c.id} value={String(c.id)}>
+            {c.title}
+          </option>
+        ))}
+      </select>
+    ) : null
 
   const status = (
     <p className="field-description" role="status" style={{ color: phase.kind === 'error' ? 'var(--theme-error-500)' : undefined }}>
@@ -134,7 +177,11 @@ export const VideoField: TextFieldClientComponent = (props) => {
       <div className="field-type b61-video-field" style={{ marginBottom: 24 }}>
         <label className="field-label">{label}</label>
         {!enabled ? (
-          <p className="field-description">Video uploads aren't switched on for this site yet.</p>
+          <>
+            {value && <p style={{ margin: '0 0 8px' }}>{library?.find((v) => v.link === value)?.title ?? 'Video added'} ✓</p>}
+            {chooser && <div style={{ marginBottom: 8 }}>{chooser}</div>}
+            <p className="field-description">Video uploads aren't switched on for this site yet.</p>
+          </>
         ) : (
           <>
             {picker}
@@ -170,20 +217,24 @@ export const VideoField: TextFieldClientComponent = (props) => {
                 </>
               ) : value ? (
                 <>
-                  <span>Video added ✓</span>
+                  <span>{library?.find((v) => v.link === value)?.title ?? 'Video added'} ✓</span>
                   <Button buttonStyle="secondary" size="small" margin={false} onClick={() => fileRef.current?.click()}>
                     Replace
                   </Button>
-                  <Button buttonStyle="none" size="small" margin={false} onClick={() => { setValue(''); setPhase({ kind: 'idle' }) }}>
-                    Remove
-                  </Button>
+                  {!inLibrary && (
+                    <Button buttonStyle="none" size="small" margin={false} onClick={() => { setValue(''); setPhase({ kind: 'idle' }) }}>
+                      Remove
+                    </Button>
+                  )}
+                  {chooser}
                 </>
               ) : (
                 <>
                   <Button buttonStyle="secondary" size="small" margin={false} onClick={() => fileRef.current?.click()}>
                     Upload a video
                   </Button>
-                  <span className="field-description" style={{ margin: 0 }}>or drag and drop a file</span>
+                  <span className="field-description" style={{ margin: 0 }}>or drag and drop a file{chooser ? ', or' : ''}</span>
+                  {chooser}
                 </>
               )}
             </div>
@@ -197,7 +248,21 @@ export const VideoField: TextFieldClientComponent = (props) => {
 
   return (
     <div className="b61-video-field">
-      <TextField {...props} />
+      {/mediadelivery\.net/i.test(value ?? '') ? (
+        // An uploaded video: its name, not its address (editors never see where files are kept).
+        <div className="field-type" style={{ marginBottom: 0 }}>
+          <label className="field-label">{typeof props.field.label === 'string' ? props.field.label : 'Video'}</label>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+            <span>{library?.find((v) => v.link === value)?.title ?? 'Uploaded video'} ✓</span>
+            <Button buttonStyle="none" size="small" margin={false} onClick={() => { setValue(''); setPhase({ kind: 'idle' }) }}>
+              Remove
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <TextField {...props} />
+      )}
+      {!enabled && chooser && <div style={{ marginTop: 10, marginBottom: 24 }}>{chooser}</div>}
       {enabled && (
         <div style={{ marginTop: 10, marginBottom: 24 }}>
           <input
@@ -215,6 +280,7 @@ export const VideoField: TextFieldClientComponent = (props) => {
             <Button buttonStyle="secondary" size="small" margin={false} disabled={busy} onClick={() => fileRef.current?.click()}>
               Upload a video
             </Button>
+            {chooser}
             {busy && (
               <>
                 <progress max={100} value={phase.pct} style={{ width: 180 }} aria-label="Upload progress" />
@@ -226,7 +292,7 @@ export const VideoField: TextFieldClientComponent = (props) => {
             )}
           </div>
           <p className="field-description" role="status" style={{ color: phase.kind === 'error' ? 'var(--theme-error-500)' : undefined }}>
-            {phase.kind === 'idle' && 'Or upload a file from your computer; the link fills in. Keep this page open until it finishes.'}
+            {phase.kind === 'idle' && 'Or upload a file from your computer, or choose one already uploaded. Keep this page open until an upload finishes.'}
             {phase.kind === 'uploading' && 'Uploading… keep this page open.'}
             {phase.kind === 'processing' &&
               `Uploaded. The video is being prepared (${phase.label.toLowerCase()}${phase.progress != null ? `, ${phase.progress}%` : ''}). You can save now; it plays once it's ready.`}
