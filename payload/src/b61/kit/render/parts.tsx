@@ -165,6 +165,8 @@ type Block = {
   attribution?: string | null
   photo?: any
   icon?: string | null
+  iconImage?: unknown
+  iconColours?: boolean | null
   hasLink?: boolean | null
   scale?: string | null
   divider?: boolean | null
@@ -283,7 +285,7 @@ export function ContentBlocks({
       rows.push(
         <li key={key} className={`b61-iconlist__row${linked ? ' b61-iconlist__row--linked' : ''}`}>
           <span className={`b61-iconlist__mark${icon ? '' : ' b61-iconlist__mark--dot'}`} aria-hidden="true">
-            <B61Icon name={icon} />
+            <B61Icon name={icon} image={b.iconImage} keepColours={b.iconColours} />
           </span>
           <span className="b61-iconlist__text">
             {href ? (

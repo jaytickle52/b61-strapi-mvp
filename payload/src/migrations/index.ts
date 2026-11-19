@@ -30,6 +30,7 @@ import * as migration_20261118_144205_schoolbox_setup_spots from './20261118_144
 import * as migration_20261118_160316_mcp_upload_photo from './20261118_160316_mcp_upload_photo';
 import * as migration_20261118_173406_mcp_preview_link from './20261118_173406_mcp_preview_link';
 import * as migration_20261119_143833_heading_one_box from './20261119_143833_heading_one_box';
+import * as migration_20261119_150651_card_grid_review from './20261119_150651_card_grid_review';
 
 export const migrations = [
   {
@@ -190,6 +191,11 @@ export const migrations = [
   {
     up: migration_20261119_143833_heading_one_box.up,
     down: migration_20261119_143833_heading_one_box.down,
-    name: '20261119_143833_heading_one_box'
+    name: '20261119_143833_heading_one_box',
+  },
+  {
+    up: migration_20261119_150651_card_grid_review.up,
+    down: migration_20261119_150651_card_grid_review.down,
+    name: '20261119_150651_card_grid_review'
   },
 ];

@@ -18,6 +18,8 @@ type Card = {
   key: string
   image?: unknown
   icon?: string | null
+  iconImage?: unknown
+  iconColours?: boolean | null
   eyebrow?: string | null
   title?: string | null
   body?: ReactNode
@@ -62,7 +64,7 @@ async function loadCards(block: CardGridBlock): Promise<Card[]> {
       return (block.cards ?? []).map((c, i) => {
         const { href, newTab } = resolveLink(c.link as any)
         return {
-          key: c.id ?? String(i), image: c.image, icon: c.icon, eyebrow: c.eyebrow, title: c.title,
+          key: c.id ?? String(i), image: c.image, icon: c.icon, iconImage: (c as any).iconImage, iconColours: (c as any).iconColours, eyebrow: c.eyebrow, title: c.title,
           body: c.body ? <RichText data={c.body as SerializedEditorState} disableContainer converters={b61Converters} /> : null,
           href, newTab, linkText: c.linkText,
         }
@@ -85,10 +87,11 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
   // its level, but never H1: a page has one H1, and a row of them is not it.
   const CardHeading = (hasHeading ? ({ h1: 'h2', h2: 'h3', h3: 'h4', h4: 'h5' } as const)[Heading] : Heading === 'h1' ? 'h2' : Heading) as 'h2' | 'h3' | 'h4' | 'h5'
   const surface = block.surface ?? 'none'
-  const mtype = block.mediaType ?? 'image'
-  let cstyle = block.cardStyle ?? 'bordered'
-  if (cstyle === 'overlay' && mtype !== 'image') cstyle = 'bordered'
-  const ov = cstyle === 'overlay'
+  // Card text On the photo (Content's first choice) always shows photos.
+  const onPhoto = block.cardText === 'on'
+  const mtype = onPhoto ? 'image' : (block.mediaType ?? 'image')
+  const cstyle = onPhoto ? 'overlay' : (block.cardStyle ?? 'bordered')
+  const ov = onPhoto
   const surfaced = cstyle === 'flat' || cstyle === 'bordered'
   const csurf = block.cardSurface ?? 'light'
   const mround = surfaced && mtype === 'image' && block.mediaRound
@@ -109,7 +112,6 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
   const cols = block.columns ?? '3'
   const car = block.arrangement === 'carousel'
   const cpos = block.controlsPosition ?? 'top-right'
-  const peek = block.peek ?? 'small'
   const showCount = Boolean(block.showCounter)
   const showProg = Boolean(block.showProgress)
   const headingId = `b61-cards-${block.id ?? index}-heading`
@@ -184,8 +186,6 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
     mtype === 'icon' && isize !== 'sm' && `b61-cards__region--icon-${isize}`,
     mround && 'b61-cards__region--img-round',
     customRatio && 'b61-cards__region--ratio',
-    block.ctaCase === 'normal' && 'b61-cards__region--cta-normal',
-    (block.ctaSize === 'md' || block.ctaSize === 'lg') && `b61-cards__region--cta-${block.ctaSize}`,
     ov && `b61-cards__region--ovl${ovl} b61-cards__region--pos${pos} b61-cards__region--shape${shape}`,
     `b61-cards__region--pt-${pt}`,
     `b61-cards__region--pb-${pb}`,
@@ -203,7 +203,7 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
 
   const grid = cards.length ? (
     <div
-      className={`b61-cards__grid b61-cards__grid--c${cols}${car ? ` b61-car__track js-b61-car-track b61-car__track--pv${cols} b61-car__track--peek-${peek}` : ''}`}
+      className={`b61-cards__grid b61-cards__grid--c${cols}${car ? ` b61-car__track js-b61-car-track b61-car__track--pv${cols} b61-car__track--peek` : ''}`}
       style={{ '--b61-cols': cols, ...(car ? { '--b61-car-pv': cols } : {}) } as CSSProperties}
       {...(car ? { 'data-b61-car-advance': block.advance ?? 'one', tabIndex: 0 } : {})}
     >
@@ -229,7 +229,7 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
             )}
             {mtype === 'icon' && card.icon && (
               <span className="b61-cards__icon" aria-hidden="true">
-                <B61Icon name={card.icon} />
+                <B61Icon name={card.icon} image={card.iconImage} keepColours={card.iconColours} />
               </span>
             )}
             <OverlayWrap on={ov} ovl={ovl}>

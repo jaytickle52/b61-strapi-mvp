@@ -773,9 +773,9 @@
   padding-bottom: 2px;
 }
 
-.b61-car__track--peek-small  { --car-p: var(--b61-car-peek-small);  --car-pg: 1; }
-.b61-car__track--peek-medium { --car-p: var(--b61-car-peek-medium); --car-pg: 1; }
-.b61-car__track--peek-large  { --car-p: var(--b61-car-peek-large);  --car-pg: 1; }
+/* The peek is site-wide (Style > Carousel peek, Jay 19 Nov 2026): the dial sets
+   --b61-car-peek / --b61-car-peek-gap on <html>; Classic is Small. */
+.b61-car__track--peek { --car-p: var(--b61-car-peek, var(--b61-car-peek-small)); --car-pg: var(--b61-car-peek-gap, 1); }
 
 .b61-car__track > * {
   flex: 0 0 calc((100% - (var(--car-v) - 1 + var(--car-pg)) * var(--b61-car-gap)) / (var(--car-v) + var(--car-p)));
@@ -841,6 +841,12 @@
 .b61-car--ctl-bottom-center .b61-car__viewport + .b61-car__controls,
 .b61-car--ctl-sides .b61-car__viewport + .b61-car__controls--meta { justify-content: center; }
 .b61-car--ctl-bottom-right .b61-car__viewport + .b61-car__controls { justify-content: flex-end; }
+
+/* Bottom left: the arrows lead and the counter and progress line follow on
+   their right (Jay, 19 Nov 2026); elsewhere they sit before the arrows. */
+.b61-car--ctl-bottom-left .b61-car__viewport + .b61-car__controls .b61-car__btn { order: -1; }
+.b61-car--ctl-bottom-left .b61-car__viewport + .b61-car__controls .b61-car__count { order: 0; margin-inline: var(--b61-space-md) 0; }
+.b61-car--ctl-bottom-left .b61-car__viewport + .b61-car__controls .b61-car__progress { order: 1; margin-inline: var(--b61-space-md) 0; }
 
 /* ---- Sides: the two arrows over the track's edges, vertically centred ----
    The controls box spans the viewport and lets clicks through; only the

@@ -60,7 +60,7 @@ export async function ensurePatternsDemo(payload: Payload, school: School) {
           blockType: 'b61CardGrid', headBeside: true, stagger: true, hoverReveal: true, altTint: true,
           heading: [{ text: 'What our graduates carry' }], headingLevel: 'h2',
           intro: para('Graduates are sent out to make a difference. We do this by teaching:'),
-          source: 'manual', mediaType: 'image', arrangement: 'grid', columns: '2', cardStyle: 'overlay', cardShape: 'landscape', cardOverlay: 'gradient',
+          source: 'manual', mediaType: 'image', arrangement: 'grid', columns: '2', cardText: 'on', cardShape: 'landscape', cardOverlay: 'gradient',
           padTop: 'none', padBottom: 'none',
           cards: [
             ['Godliness', 'Knowing and loving God, and living it out.'],
@@ -76,8 +76,8 @@ export async function ensurePatternsDemo(payload: Payload, school: School) {
       blockType: 'b61CardGrid', headBeside: true, bleed: true, surface: 'soft',
       eyebrow: 'Academics', heading: [{ text: 'Find your place' }],
       intro: para('Christian education is more than knowledge: it is a Biblical worldview in every subject.'),
-      source: 'manual', mediaType: 'image', arrangement: 'carousel', columns: '3', peek: 'medium', advance: 'one', controlsPosition: 'bottom-left',
-      cardStyle: 'overlay', cardShape: 'portrait', cardOverlay: 'gradient',
+      source: 'manual', mediaType: 'image', arrangement: 'carousel', columns: '3', advance: 'one', controlsPosition: 'bottom-left',
+      cardText: 'on', cardShape: 'portrait', cardOverlay: 'gradient',
       cards: ['Kindergarten', 'Elementary', 'Middle School', 'High School', 'Fine Arts'].map((title, i) => ({
         title, image: pic(i + 1), link: go('programs'), linkText: 'Learn more',
       })),
@@ -138,7 +138,7 @@ export async function ensurePatternsDemo2(payload: Payload, school: School) {
   const go = (l: string) => ({ type: 'url', url: '/' + l })
   const cardSet = (titles: string[], from: number) => ({
     blockType: 'b61CardGrid', source: 'manual', mediaType: 'image', arrangement: 'grid', columns: '3', featureMiddle: true,
-    cardStyle: 'overlay', cardShape: 'portrait', cardOverlay: 'gradient', padTop: 'none', padBottom: 'none',
+    cardText: 'on', cardShape: 'portrait', cardOverlay: 'gradient', padTop: 'none', padBottom: 'none',
     cards: titles.map((title, i) => ({ title, image: pic(from + i) })),
   })
 
@@ -163,7 +163,7 @@ export async function ensurePatternsDemo2(payload: Payload, school: School) {
     },
     {
       blockType: 'b61CardGrid', duotone: true, heading: [{ text: 'A culture of' }, { text: 'community', emphasize: true }],
-      source: 'manual', mediaType: 'image', arrangement: 'grid', columns: '4', cardStyle: 'overlay', cardShape: 'portrait', cardOverlay: 'gradient',
+      source: 'manual', mediaType: 'image', arrangement: 'grid', columns: '4', cardText: 'on', cardShape: 'portrait', cardOverlay: 'gradient',
       cards: ['Faith', 'Service', 'Friendship', 'Belonging'].map((title, i) => ({ title, image: pic(i + 1) })),
     },
     {

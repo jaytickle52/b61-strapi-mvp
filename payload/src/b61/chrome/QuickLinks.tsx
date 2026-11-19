@@ -15,7 +15,7 @@ export default function QuickLinks({ links }: { links: QuickLink[] }) {
           <li key={i}>
             <a className="b61-quick__link" href={l.href!} {...(l.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
               <span className="b61-quick__icon" aria-hidden="true">
-                <B61Icon name={l.icon} />
+                <B61Icon name={l.icon} image={l.iconImage} keepColours={l.iconColours} />
               </span>
               <span className="b61-quick__label">{l.label}</span>
             </a>

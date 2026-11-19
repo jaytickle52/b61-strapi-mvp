@@ -13,7 +13,6 @@ export default function B61Carousel({ block, index = 0, path }: { block: any; in
   const surface = block.surface ?? 'none'
   const pv = ['1', '2', '3', '4'].includes(block.perView) ? block.perView : '1'
   const advance = block.advance === 'view' ? 'view' : 'one'
-  const peek = block.peek ?? 'medium'
   const cpos = block.controlsPosition ?? 'top-right'
   const showCount = block.showCounter !== false
   const showProg = block.showProgress !== false
@@ -88,7 +87,7 @@ export default function B61Carousel({ block, index = 0, path }: { block: any; in
           )}
           <div className="b61-car__viewport">
             <div
-              className={`b61-car__track js-b61-car-track b61-car__track--pv${pv} b61-car__track--peek-${peek}`}
+              className={`b61-car__track js-b61-car-track b61-car__track--pv${pv} b61-car__track--peek`}
               style={{ '--b61-car-pv': pv } as CSSProperties}
               data-b61-car-advance={advance}
               data-b61-car-id={uid}

@@ -7,6 +7,7 @@ import {
   eyebrowRuleField,
   headingFields,
   ICON_OPTIONS,
+  iconChoice,
   list,
   onlyImages,
   paddingFields,
@@ -28,10 +29,14 @@ import {
 
 const manual: WhenRule = { field: 'source', in: ['manual'] }
 const isImage: WhenRule = { field: 'mediaType', in: ['image'] }
-const isIcon: WhenRule = { field: 'mediaType', in: ['icon'] }
-const overlayImg: WhenRule = { all: [{ field: 'cardStyle', in: ['overlay'] }, isImage] }
-const notOverlayImg: WhenRule = { all: [{ field: 'cardStyle', in: ['plain', 'flat', 'bordered'] }, isImage] }
-const surfacedImg: WhenRule = { all: [{ field: 'cardStyle', in: ['flat', 'bordered'] }, isImage] }
+const isIcon: WhenRule = { all: [{ field: 'cardText', in: ['below', null] }, { field: 'mediaType', in: ['icon'] }] }
+// Card text On the photo is chosen at the top of Content (the middle path, Jay 19 Nov 2026):
+// it needs a photo, so it sets the media to Image, and its own Design controls show.
+const onPhoto: WhenRule = { field: 'cardText', in: ['on'] }
+const below: WhenRule = { field: 'cardText', in: ['below', null] }
+const overlayImg: WhenRule = onPhoto
+const notOverlayImg: WhenRule = { all: [below, isImage] }
+const surfacedImg: WhenRule = { all: [below, { field: 'cardStyle', in: ['flat', 'bordered'] }, isImage] }
 const customRatio: WhenRule[] = [
   { all: [overlayImg, { field: 'cardShape', in: ['custom'] }] },
   { all: [notOverlayImg, { field: 'imageShape', in: ['custom'] }] },
@@ -46,6 +51,15 @@ export const B61CardGrid = defineElement({
   mode: { field: 'source', labels: { manual: 'Cards', programs: 'Programs', 'upcoming-events': 'Events', 'latest-news': 'News', staff: 'Staff', 'school-facts': 'School facts' } },
 
   content: [
+    segmented(
+      'cardText',
+      'Card text',
+      [
+        ['below', 'Below the photo'],
+        ['on', 'On the photo'],
+      ],
+      { default: 'below' },
+    ),
     panel('Heading', headingFields({ levels: ['h2', 'h3', 'h4'], after: [{ name: 'intro', label: 'Intro', type: 'richText', editor: simpleEditor() }] })),
     panel('Cards', [
       dropdown(
@@ -78,7 +92,7 @@ export const B61CardGrid = defineElement({
           ['icon', 'Icon'],
           ['none', 'None'],
         ],
-        { default: 'image' },
+        { default: 'image', when: below },
       ),
       list(
         'cards',
@@ -91,11 +105,13 @@ export const B61CardGrid = defineElement({
             type: 'upload',
             relationTo: 'media',
             filterOptions: onlyImages,
-            admin: { condition: (_, __, { blockData }) => ((blockData as any)?.mediaType ?? 'image') === 'image' },
-          },
-          dropdown('icon', 'Icon', ICON_OPTIONS.filter(([v]) => v !== 'dot'), {
+            admin: { condition: (_: unknown, __: unknown, { blockData }: any) => blockData?.cardText === 'on' || (blockData?.mediaType ?? 'image') === 'image' },
+            // On the photo needs a photo on every card (it used to fall back to Bordered quietly).
+            validate: (v: unknown, { blockData }: any) => (blockData?.cardText === 'on' && !v ? 'Add a photo: this grid shows its text on the photo.' : true),
+          } as any,
+          ...iconChoice(ICON_OPTIONS.filter(([v]) => v !== 'dot'), {
             default: 'star',
-            condition: (_, __, { blockData }) => (blockData as any)?.mediaType === 'icon',
+            condition: (_, __, { blockData }) => (blockData as any)?.cardText !== 'on' && (blockData as any)?.mediaType === 'icon',
           }),
           {
             type: 'row',
@@ -158,17 +174,6 @@ export const B61CardGrid = defineElement({
             { default: 'one' },
           ),
           dropdown(
-            'peek',
-            'Next card peek',
-            [
-              ['none', 'None'],
-              ['small', 'Small'],
-              ['medium', 'Medium'],
-              ['large', 'Large'],
-            ],
-            { default: 'small' },
-          ),
-          dropdown(
             'controlsPosition',
             'Controls',
             [
@@ -200,9 +205,8 @@ export const B61CardGrid = defineElement({
             ['plain', 'Plain'],
             ['flat', 'Flat'],
             ['bordered', 'Bordered'],
-            ['overlay', 'Overlay'],
           ],
-          { default: 'bordered' },
+          { default: 'bordered', when: below },
         ),
         dropdown(
           'cardShape',
@@ -253,32 +257,7 @@ export const B61CardGrid = defineElement({
           { default: 'sm', when: isIcon },
         ),
         toggle('showNumbers', 'Show numbers', { when: { field: 'mediaType', in: ['image', 'none'] } }),
-        {
-          type: 'row',
-          // Only once a card has link text to style (audit 1.78.0).
-          admin: { condition: (_: unknown, s: any) => Array.isArray(s?.cards) && s.cards.some((c: any) => c?.linkText) && (s?.source ?? 'manual') === 'manual' },
-          fields: [
-            segmented(
-              'ctaCase',
-              'Link text case',
-              [
-                ['upper', 'Uppercase'],
-                ['normal', 'Normal'],
-              ],
-              { default: 'upper', width: '50%' },
-            ),
-            segmented(
-              'ctaSize',
-              'Link text size',
-              [
-                ['sm', 'Small'],
-                ['md', 'Medium'],
-                ['lg', 'Large'],
-              ],
-              { default: 'sm', width: '50%' },
-            ),
-          ],
-        },
+        // Link text letters and size are site-wide: Style > Card link letters / size (Jay, 19 Nov 2026).
       ],
     },
     color: [
@@ -291,7 +270,7 @@ export const B61CardGrid = defineElement({
           ['soft', 'Light wash'],
           ['primary', 'Dark'],
         ],
-        { default: 'light', when: { field: 'cardStyle', in: ['flat', 'bordered'] } },
+        { default: 'light', when: { all: [{ field: 'cardText', in: ['below', null] }, { field: 'cardStyle', in: ['flat', 'bordered'] }] } },
       ),
       segmented(
         'cardOverlay',

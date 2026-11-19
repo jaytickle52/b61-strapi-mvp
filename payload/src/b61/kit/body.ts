@@ -16,7 +16,7 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 import { dropdown, link, segmented } from './controls'
-import { ICON_OPTIONS, list, onlyImages } from './groups'
+import { ICON_OPTIONS, iconChoice, list, onlyImages } from './groups'
 
 /*
  * B61 editing kit: the Content field of Split, Prose and CTA Band.
@@ -60,9 +60,10 @@ const iconListBlock: Block = {
         type: 'row',
         fields: [
           { name: 'text', label: 'Text', type: 'text', required: true, admin: { width: '60%' } },
-          dropdown('icon', 'Icon', ICON_OPTIONS, { default: 'dot', width: '40%' }),
+          iconChoice(ICON_OPTIONS, { default: 'dot', width: '40%' })[0],
         ],
       },
+      ...iconChoice([], { default: 'dot' }).slice(1),
       { name: 'hasLink', label: 'Link this row', type: 'checkbox' },
       { ...link(), admin: { hideGutter: true, condition: (_: unknown, s: any) => Boolean(s?.hasLink) } } as Field,
     ], { minRows: 1 }),

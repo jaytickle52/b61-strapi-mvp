@@ -486,25 +486,39 @@
   );
 }
 
-.b61-cards__region--ovlgradient.b61-cards__region--postop .b61-cards__overlay-content {
+/* Text at the top or centre (Jay, 19 Nov 2026): the copy-block gradient was a
+   thin, hard band there, worst when centred. The gradient moves to the card's
+   own scrim, which spans the whole card, and eases out over most of it. The
+   text still sits on at least 0.78 (top) / 0.80 (centre), the same floor as
+   the bottom gradient's copy band. */
+.b61-cards__region--ovlgradient.b61-cards__region--postop .b61-cards__overlay-content,
+.b61-cards__region--ovlgradient.b61-cards__region--poscenter .b61-cards__overlay-content {
   padding-top: 26px;
-  padding-bottom: 72px;
-  background: linear-gradient(
+  padding-bottom: 26px;
+  background: none;
+}
+
+.b61-cards__region--ovlgradient.b61-cards__region--postop .b61-cards__scrim--gradient {
+  background-image: linear-gradient(
     to bottom,
-    rgb(var(--b61-scrim-rgb) / 0.92) 0%,
-    rgb(var(--b61-scrim-rgb) / 0.80) 58%,
-    rgb(var(--b61-scrim-rgb) / 0) 100%
+    rgb(var(--b61-scrim-rgb) / 0.9) 0%,
+    rgb(var(--b61-scrim-rgb) / 0.8) 35%,
+    rgb(var(--b61-scrim-rgb) / 0.5) 60%,
+    rgb(var(--b61-scrim-rgb) / 0.18) 82%,
+    rgb(var(--b61-scrim-rgb) / 0.05) 100%
   );
 }
 
-.b61-cards__region--ovlgradient.b61-cards__region--poscenter .b61-cards__overlay-content {
-  padding-top: 52px;
-  padding-bottom: 52px;
-  background: linear-gradient(
-    rgb(var(--b61-scrim-rgb) / 0) 0%,
-    rgb(var(--b61-scrim-rgb) / 0.86) 22%,
-    rgb(var(--b61-scrim-rgb) / 0.86) 78%,
-    rgb(var(--b61-scrim-rgb) / 0) 100%
+.b61-cards__region--ovlgradient.b61-cards__region--poscenter .b61-cards__scrim--gradient {
+  background-image: linear-gradient(
+    to bottom,
+    rgb(var(--b61-scrim-rgb) / 0.3) 0%,
+    rgb(var(--b61-scrim-rgb) / 0.62) 18%,
+    rgb(var(--b61-scrim-rgb) / 0.82) 34%,
+    rgb(var(--b61-scrim-rgb) / 0.86) 50%,
+    rgb(var(--b61-scrim-rgb) / 0.82) 66%,
+    rgb(var(--b61-scrim-rgb) / 0.62) 82%,
+    rgb(var(--b61-scrim-rgb) / 0.3) 100%
   );
 }
 
@@ -694,23 +708,16 @@
   border-radius: 0;
   line-height: inherit;
   font-family: var(--b61-font-ui);
-  font-size: var(--b61-text-sm);
+  /* Site-wide (Style > Card link letters / size, Jay 19 Nov 2026). */
+  font-size: var(--b61-card-link-size, var(--b61-text-sm));
   font-weight: 600;
-  letter-spacing: var(--b61-eyebrow-tracking);
-  text-transform: uppercase;
+  letter-spacing: var(--b61-card-link-tracking, var(--b61-eyebrow-tracking));
+  text-transform: var(--b61-card-link-case, uppercase);
   color: var(--cards-cta);
   text-decoration: none;
   transition: color var(--b61-ease);
 }
 
-/* CARD LINK TEXT (1.77.0), opt-in. Normal case drops the tracked caps; the
-   sizes step up the type scale from the default Small (--b61-text-sm). */
-.b61-cards__region--cta-normal .b61-link.b61-cards__cta {
-  text-transform: none;
-  letter-spacing: normal;
-}
-.b61-cards__region--cta-md .b61-link.b61-cards__cta { font-size: var(--b61-text-md); }
-.b61-cards__region--cta-lg .b61-link.b61-cards__cta { font-size: var(--b61-text-lg); }
 
 .b61-cards__cta::after {
   content: "";

@@ -36,11 +36,11 @@ export function resolveMenu(s: Partial<SchoolSetting>): { items: NavItem[]; util
 }
 
 /** Header > Side buttons: up to three links that stay on screen. */
-export type QuickLink = NavLink & { icon: string }
+export type QuickLink = NavLink & { icon: string; iconImage?: unknown; iconColours?: boolean | null }
 export function resolveQuickLinks(s: Partial<SchoolSetting>): QuickLink[] {
   return (((s as any).quickLinks ?? []) as any[])
     .filter((x) => x?.label)
     .slice(0, 3)
-    .map((x) => ({ ...nl(x), icon: x.icon ?? 'link' }))
+    .map((x) => ({ ...nl(x), icon: x.icon ?? 'link', iconImage: x.iconImage, iconColours: x.iconColours }))
     .filter((x) => x.href)
 }

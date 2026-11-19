@@ -143,7 +143,7 @@ export const DIALS = {
   emphasis: {
     label: 'Accent heading line',
     base: 'italic',
-    description: 'How a heading line marked Emphasize is set.',
+    description: 'How emphasized heading words are set.',
     options: [
       { value: 'italic', label: 'Italic + colour' },
       { value: 'colour', label: 'Colour only', vars: { '--b61-emph-style': 'normal' } },
@@ -169,6 +169,35 @@ export const DIALS = {
     options: [
       { value: 'capitals', label: 'Capitals' },
       { value: 'typed', label: 'As typed', vars: { '--b61-eyebrow-case': 'none', '--b61-eyebrow-tracking': '0.02em' } },
+    ],
+  },
+  cardLinkCase: {
+    label: 'Card link letters',
+    base: 'capitals',
+    description: 'The "Read more" style link at the foot of a card, site-wide.',
+    options: [
+      { value: 'capitals', label: 'Capitals' },
+      { value: 'typed', label: 'As typed', vars: { '--b61-card-link-case': 'none', '--b61-card-link-tracking': 'normal' } },
+    ],
+  },
+  cardLinkSize: {
+    label: 'Card link size',
+    base: 'small',
+    options: [
+      { value: 'small', label: 'Small' },
+      { value: 'medium', label: 'Medium', vars: { '--b61-card-link-size': 'var(--b61-text-md)' } },
+      { value: 'large', label: 'Large', vars: { '--b61-card-link-size': 'var(--b61-text-lg)' } },
+    ],
+  },
+  carouselPeek: {
+    label: 'Carousel peek',
+    base: 'small',
+    description: 'How much of the next card or slide shows at the edge of every carousel.',
+    options: [
+      { value: 'none', label: 'None', vars: { '--b61-car-peek': '0', '--b61-car-peek-gap': '0' } },
+      { value: 'small', label: 'Small' },
+      { value: 'medium', label: 'Medium', vars: { '--b61-car-peek': 'var(--b61-car-peek-medium)' } },
+      { value: 'large', label: 'Large', vars: { '--b61-car-peek': 'var(--b61-car-peek-large)' } },
     ],
   },
   frames: {
