@@ -333,7 +333,7 @@ Same rule as section 16: bigger layout choices are Banner 61-only (Design > Adva
 - **Card Grid > Advanced > Larger middle card** (3 columns): the middle column is wider, so its
   card is taller; side cards sit centred.
 - **Duotone photos** (Card Grid and Gallery > Advanced): photos in greys, tinted with the
-  primary colour. With words on the photo (overlay cards) the tint multiplies (darkens, so
+  primary colour. With Card text on the photo the tint multiplies (darkens, so
   contrast holds); otherwise it screens (colour in the shadows, pale highlights).
 - **Scroll story** (`kit/render/ScrollStory.tsx` + `ScrollStoryInit.tsx`; Tabbed Features > Advanced): a
   shared arrangement, not an element. Titles stay in view on one side as a list of links with a
