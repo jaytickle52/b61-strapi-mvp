@@ -1,5 +1,5 @@
 import type { JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
-import { opensNewTab } from '../../lib/media'
+import { opensNewTab, resolveLink } from '../../lib/media'
 
 /**
  * Where a link made in the Content editor goes when it points at something on
@@ -82,8 +82,36 @@ const linkConverters = {
   },
 }
 
+/**
+ * A Button typed into a short editor (Accordion answers): the same markup as
+ * the Content editor's Button (kit/render/parts.tsx), one button in the text.
+ */
+const blockConverters = {
+  blocks: {
+    bodyButton: ({ node }: any) => {
+      const f = node.fields ?? {}
+      if (!f.label) return null
+      const variant = ['primary', 'secondary', 'light', 'link'].includes(f.variant) ? f.variant : 'primary'
+      const { href, newTab } = resolveLink(f.link)
+      return (
+        <div className="b61-btn-group b61-body-btn">
+          <a className={variant === 'link' ? 'b61-link' : `b61-btn b61-btn--${variant}`} href={href ?? undefined} {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+            {f.label}
+            {variant === 'link' && (
+              <span className="b61-link-arrow" aria-hidden="true">
+                &rarr;
+              </span>
+            )}
+          </a>
+        </div>
+      )
+    },
+  },
+}
+
 export const b61Converters: JSXConvertersFunction = ({ defaultConverters }) => ({
   ...defaultConverters,
   ...tableConverters,
   ...linkConverters,
+  ...blockConverters,
 })

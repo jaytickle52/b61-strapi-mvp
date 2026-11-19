@@ -372,7 +372,7 @@ export function demoSplits(opts: { name: string; mission: string; phone?: string
       buttons: [{ label: 'See our programs', link: { type: 'url', url: '/programs' }, variant: 'link' }],
       media: 'gallery',
       images: [{ image: img2 }, { image: img4 }, { image: img1 }, { image: img3 }],
-      columns: '2',
+      galleryLayout: 'grid',
       imageShape: 'square',
       imageSide: 'left',
       verticalPosition: 'center',

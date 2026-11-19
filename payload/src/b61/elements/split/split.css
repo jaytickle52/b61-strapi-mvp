@@ -602,9 +602,6 @@
   gap: var(--b61-split-media-gap);
 }
 
-.b61-split__region--cols1 { --b61-split-cols: 1; }
-.b61-split__region--cols2 { --b61-split-cols: 2; }
-.b61-split__region--cols3 { --b61-split-cols: 3; }
 
 .b61-split__item {
   margin: 0;
@@ -629,6 +626,86 @@
 .b61-split__region--shape-landscape .b61-split__item--single img { height: auto; aspect-ratio: 4 / 3; }
 .b61-split__region--shape-wide .b61-split__grid .b61-split__item img,
 .b61-split__region--shape-wide .b61-split__item--single img { height: auto; aspect-ratio: 16 / 9; }
+
+/* Grid: a photo that takes the rest of a short last row keeps the row's
+   height, so its proportion is the shape's times the columns it spans. */
+.b61-split__region--shape-portrait .b61-split__grid .b61-split__item--span2 img { aspect-ratio: 6 / 4; }
+.b61-split__region--shape-portrait .b61-split__grid .b61-split__item--span3 img { aspect-ratio: 9 / 4; }
+.b61-split__region--shape-square .b61-split__grid .b61-split__item--span2 img { aspect-ratio: 2 / 1; }
+.b61-split__region--shape-square .b61-split__grid .b61-split__item--span3 img { aspect-ratio: 3 / 1; }
+.b61-split__region--shape-landscape .b61-split__grid .b61-split__item--span2 img { aspect-ratio: 8 / 3; }
+.b61-split__region--shape-landscape .b61-split__grid .b61-split__item--span3 img { aspect-ratio: 4 / 1; }
+.b61-split__region--shape-wide .b61-split__grid .b61-split__item--span2 img { aspect-ratio: 32 / 9; }
+.b61-split__region--shape-wide .b61-split__grid .b61-split__item--span3 img { aspect-ratio: 16 / 3; }
+
+.b61-split__grid .b61-split__item--fillrow { display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+.b61-split__grid .b61-split__item--fillrow img { height: 100%; aspect-ratio: auto; contain: size; min-height: 0; }
+
+/* Masonry: photos keep their own shapes, stacked in columns. */
+.b61-split__masonry {
+  display: grid;
+  grid-template-columns: repeat(var(--b61-split-gal-cols, 2), minmax(0, 1fr));
+  gap: var(--b61-split-media-gap);
+  align-items: start;
+}
+.b61-split__mcol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--b61-split-media-gap);
+  min-width: 0;
+}
+.b61-split__masonry .b61-split__item img { height: auto; }
+
+/* Strip: one row that scrolls sideways; each photo keeps its own width at the
+   row's height (or the chosen shape). */
+.b61-split__strip {
+  display: flex;
+  gap: var(--b61-split-media-gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  overscroll-behavior-x: contain;
+}
+.b61-split__strip:focus-visible { outline: 2px solid var(--b61-focus, currentColor); outline-offset: 2px; }
+.b61-split__strip .b61-split__item { flex: 0 0 auto; scroll-snap-align: start; max-width: 85%; }
+.b61-split__strip .b61-split__item img {
+  width: auto;
+  max-width: 100%;
+  height: var(--b61-split-photo-height);
+  aspect-ratio: var(--b61-split-ar, 4 / 3);
+}
+.b61-split__region--shape-portrait .b61-split__strip .b61-split__item img { aspect-ratio: 3 / 4; }
+.b61-split__region--shape-square .b61-split__strip .b61-split__item img { aspect-ratio: 1 / 1; }
+.b61-split__region--shape-landscape .b61-split__strip .b61-split__item img { aspect-ratio: 4 / 3; }
+.b61-split__region--shape-wide .b61-split__strip .b61-split__item img { aspect-ratio: 16 / 9; }
+
+/* Text column height: Match the image. The gallery fills the frame to the
+   text's height (Jay, 19 Nov 2026: it sat at the top with a gap under it).
+   `contain: size` stops the photos' own heights from making the row taller;
+   --b61-split-gal-min (set per gallery) keeps it from getting too short, and
+   the text column then matches that instead. Photos crop to fit. */
+.b61-split__inner--hfill .b61-split__gal {
+  contain: size;
+  height: 100%;
+  min-height: var(--b61-split-gal-min, var(--b61-split-photo-height));
+}
+.b61-split__inner--hfill .b61-split__grid { grid-auto-rows: minmax(0, 1fr); }
+.b61-split__inner--hfill .b61-split__masonry { align-items: stretch; }
+.b61-split__inner--hfill .b61-split__gal .b61-split__item {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: 0;
+}
+.b61-split__inner--hfill .b61-split__mcol .b61-split__item { flex-basis: 0; min-height: 60px; }
+.b61-split__inner--hfill .b61-split__gal .b61-split__item img {
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+.b61-split__inner--hfill .b61-split__strip .b61-split__item img {
+  aspect-ratio: var(--b61-split-ar, 4 / 3);
+  width: auto;
+}
 
 .b61-split__caption {
   font-family: var(--b61-font-ui);
@@ -655,8 +732,8 @@
 }
 
 @media (max-width: 640px) {
-  .b61-split__region--shape-fixed .b61-split__grid .b61-split__item img { height: var(--b61-split-photo-height-sm); }
-  .b61-split__region--cols3 { --b61-split-cols: 2; }
+  .b61-split__region--shape-fixed .b61-split__grid .b61-split__item img,
+  .b61-split__strip .b61-split__item img { height: var(--b61-split-photo-height-sm); }
 }
 
 /* No media: the two-column grid has nothing to put in the second track, so it

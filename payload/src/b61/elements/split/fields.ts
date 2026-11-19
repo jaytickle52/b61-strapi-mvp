@@ -34,7 +34,6 @@ import { bodyField } from '../../kit/body'
 const isPhoto: WhenRule = { field: 'media', in: ['photo'] }
 const isGallery: WhenRule = { field: 'media', in: ['gallery'] }
 const isVideo: WhenRule = { field: 'media', in: ['video'] }
-const anyImage: WhenRule = { field: 'media', in: ['photo', 'gallery'] }
 
 export const B61Split = defineElement({
   slug: 'b61Split',
@@ -72,15 +71,17 @@ export const B61Split = defineElement({
         ],
         { admin: { condition: (_, s) => s?.media === 'gallery' } },
       ),
+      // No column count (Jay, 19 Nov 2026): the gallery arranges however many
+      // photos there are to fill the media column, so a fourth photo just fits.
       segmented(
-        'columns',
-        'Columns',
+        'galleryLayout',
+        'Gallery layout',
         [
-          ['1', 'One'],
-          ['2', 'Two'],
-          ['3', 'Three'],
+          ['grid', 'Grid'],
+          ['masonry', 'Masonry'],
+          ['strip', 'Strip'],
         ],
-        { default: '2', when: isGallery },
+        { default: 'grid', when: isGallery },
       ),
       videoLinkField((s) => s?.media === 'video'),
       dropdown(
@@ -93,7 +94,7 @@ export const B61Split = defineElement({
           ['landscape', 'Landscape'],
           ['wide', 'Wide'],
         ],
-        { default: 'fixed', when: anyImage },
+        { default: 'fixed', when: [isPhoto, { all: [isGallery, { field: 'galleryLayout', in: ['grid', 'strip', null] }] }] },
       ),
       {
         ...photo('badge', 'Badge'),
@@ -145,7 +146,8 @@ export const B61Split = defineElement({
         ],
         { default: 'fit' },
       ),
-      toggle('overlap', 'Overlap the image'),
+      // Overlap only reads right when the text column fits its content (Jay, 19 Nov 2026).
+      toggle('overlap', 'Overlap the image', { when: { field: 'columnHeight', in: ['fit', null] } }),
       headingAlignField(),
       step('columnBalance', 'Column balance', { low: 'More media', high: 'More text' }),
     ],

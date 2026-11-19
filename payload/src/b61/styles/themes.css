@@ -48,7 +48,8 @@
   opacity: 0.45;
 }
 [data-b61-theme='heritage'] .b61-cards__head:has(.b61-cards__heading) { text-align: center; --b61-align-inline: auto; }
-[data-b61-theme='heritage'] .b61-cta__heading::after { margin-inline: auto; }
+/* CTA Band: the rule follows the band's text alignment (--b61-align-inline from
+   b61-talign-*), so a left-aligned band has its rule on the left (Jay, 19 Nov 2026). */
 
 /* Boxed cards: a hairline border with a keyline set inside it. */
 [data-b61-theme='heritage'] .b61-cards__region--style-bordered .b61-cards__card {

@@ -231,6 +231,9 @@ export function defineElement(spec: ElementSpec): Block {
   return {
     slug: spec.slug,
     labels: { singular: spec.name, plural: spec.plural ?? `${spec.name}s` },
+    // A sketch of the element in the Add Section picker (public/b61/blocks/<slug>.svg).
+    imageURL: `/b61/blocks/${spec.slug}.svg`,
+    imageAltText: `${spec.name}: a sketch of the layout`,
     admin: {
       components: {
         Label: {
