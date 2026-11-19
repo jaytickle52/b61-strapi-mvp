@@ -1,6 +1,18 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from 'payload'
 import { ymd, zoned } from '../events/time'
 import { slugField } from 'payload'
+import { descriptionEditor, tidyRemovedNodes } from '../b61/kit/editors'
+
+/** A rich-text field with the shorter editor (events, news, staff bios). */
+const describedField = (name: string, extra: Record<string, any> = {}) => ({
+  name,
+  type: 'richText' as const,
+  editor: descriptionEditor(),
+  ...extra,
+  admin: { description: 'Use + or / for a Checklist, Emphasis line, Quote, Callout or Button.', ...(extra.admin ?? {}) },
+  // Older content may hold a Heading 1, block quote or relationship card, which this editor can't open.
+  hooks: { afterRead: [({ value }: any) => tidyRemovedNodes(value)], beforeChange: [({ value }: any) => tidyRemovedNodes(value)] },
+})
 import { contentAccess, guardPublishing, publicAudienceOrSignedIn, publishedOrSignedIn } from '../access'
 import { sectionBlocks } from '../blocks'
 import { refuseDeleteWhenUsed, usageEndpoint, usageField } from '../usage/fields'
@@ -158,7 +170,7 @@ export const Events: CollectionConfig = {
     { name: 'importUid', type: 'text', index: true, admin: { hidden: true } },
     { name: 'importHash', type: 'text', admin: { hidden: true } },
     { name: 'summary', type: 'textarea', maxLength: 200, admin: { description: 'Short version for cards, the app and the parent feed' } },
-    { name: 'description', type: 'richText' },
+    describedField('description'),
     { name: 'image', type: 'upload', relationTo: 'media' },
   ],
 }
@@ -191,7 +203,7 @@ export const News: CollectionConfig = {
       admin: { position: 'sidebar', description: 'Visitors can filter the News page by these. Use + to add a new category; reorder them from "Manage categories" above the News list.' },
     },
     { name: 'summary', type: 'textarea', maxLength: 200 },
-    { name: 'body', type: 'richText' },
+    describedField('body'),
     { name: 'image', type: 'upload', relationTo: 'media' },
   ],
 }
@@ -243,7 +255,7 @@ export const Staff: CollectionConfig = {
     { name: 'role', type: 'text', required: true },
     { name: 'department', type: 'text' },
     { name: 'email', type: 'email' },
-    { name: 'bio', type: 'textarea' },
+    describedField('bio', { admin: { description: 'Shown on staff cards. Use + or / for a Quote, Emphasis line or Callout; headings for parts of a longer bio.' } }),
     { name: 'photo', type: 'upload', relationTo: 'media' },
   ],
 }

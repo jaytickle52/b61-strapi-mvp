@@ -4299,8 +4299,6 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4370,7 +4368,6 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4954,6 +4951,9 @@ export interface Event {
    * Short version for cards, the app and the parent feed
    */
   summary?: string | null;
+  /**
+   * Use + or / for a Checklist, Emphasis line, Quote, Callout or Button.
+   */
   description?: {
     root: {
       type: string;
@@ -5039,6 +5039,9 @@ export interface News {
    */
   categories?: (number | NewsCategory)[] | null;
   summary?: string | null;
+  /**
+   * Use + or / for a Checklist, Emphasis line, Quote, Callout or Button.
+   */
   body?: {
     root: {
       type: string;
@@ -5169,7 +5172,24 @@ export interface Staff {
   role: string;
   department?: string | null;
   email?: string | null;
-  bio?: string | null;
+  /**
+   * Shown on staff cards. Use + or / for a Quote, Emphasis line or Callout; headings for parts of a longer bio.
+   */
+  bio?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   photo?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
@@ -5215,8 +5235,6 @@ export interface FormSubmission {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -8798,7 +8816,6 @@ export interface MediaSelect<T extends boolean = true> {
   altAuto?: T;
   caption?: T;
   credit?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8874,8 +8891,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
-  prefix?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -9179,8 +9194,6 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

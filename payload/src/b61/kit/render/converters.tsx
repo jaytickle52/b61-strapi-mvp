@@ -109,9 +109,76 @@ const blockConverters = {
   },
 }
 
+/**
+ * The kit's other pieces typed into a rich-text field that isn't a band's
+ * Content editor (the Event description): Emphasis, Quote and Callout, with
+ * the same look as in Prose (classes in kit-frontend.css).
+ */
+const moreBlockConverters = {
+  emphasis: ({ node }: any) => (node.fields?.text ? <p className="b61-rt-emphasis">{node.fields.text}</p> : null),
+  pullQuoteText: ({ node }: any) => {
+    const f = node.fields ?? {}
+    if (!f.text) return null
+    return (
+      <figure className="b61-rt-quote">
+        <blockquote>
+          <p>{f.text}</p>
+        </blockquote>
+        {f.attribution && <figcaption>{f.attribution}</figcaption>}
+      </figure>
+    )
+  },
+  callout: ({ node }: any) => {
+    const f = node.fields ?? {}
+    if (!f.title && !f.text) return null
+    const tone = f.tone === 'important' || f.tone === 'celebrate' ? f.tone : 'note'
+    const { href, newTab } = f.linkLabel ? resolveLink(f.link) : { href: null, newTab: false }
+    return (
+      <div role="note" className={`b61-callout b61-callout--${tone} b61-rt-callout`}>
+        {f.title && <p className="b61-callout__title">{f.title}</p>}
+        {f.text && <p className="b61-callout__text">{f.text}</p>}
+        {href && (
+          <a className="b61-link b61-callout__link" href={href} {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+            {f.linkLabel}
+            <span className="b61-link-arrow" aria-hidden="true">
+              &rarr;
+            </span>
+          </a>
+        )}
+      </div>
+    )
+  },
+}
+
+/**
+ * Checklists ("What to bring"). Payload's own markup makes each row a fake
+ * checkbox that can't be ticked; on the website they're a plain list with a
+ * tick or an empty box drawn beside each row, and "Done:" read out for ticked rows.
+ */
+const checklistConverters = (defaults: any) => ({
+  list: (args: any) =>
+    args.node?.listType === 'check' ? (
+      <ul className="b61-checklist">{args.nodesToJSX({ nodes: args.node.children })}</ul>
+    ) : (
+      defaults.list(args)
+    ),
+  listitem: (args: any) => {
+    if (args.parent?.listType !== 'check') return defaults.listitem(args)
+    const done = Boolean(args.node.checked)
+    return (
+      <li className={`b61-checklist__item${done ? ' b61-checklist__item--done' : ''}`}>
+        <span className="b61-checklist__mark" aria-hidden="true" />
+        {done && <span className="sr-only">Done: </span>}
+        {args.nodesToJSX({ nodes: args.node.children })}
+      </li>
+    )
+  },
+})
+
 export const b61Converters: JSXConvertersFunction = ({ defaultConverters }) => ({
   ...defaultConverters,
   ...tableConverters,
   ...linkConverters,
-  ...blockConverters,
+  ...checklistConverters(defaultConverters),
+  blocks: { ...blockConverters.blocks, ...moreBlockConverters },
 })

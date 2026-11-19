@@ -141,3 +141,65 @@
   :is(h1, h2, h3, h4) > .b61-hline { display: inline; }
   :is(h1, h2, h3, h4):has(> .b61-hline) { text-wrap: balance; }
 }
+
+/* Event description (and any other rich-text field outside a band): the kit's
+   Emphasis, Quote and Callout, and checklists. Same look as in Prose. */
+.b61-rt-emphasis {
+  margin: 1.75rem 0;
+  font-family: var(--b61-font-display);
+  font-size: var(--b61-text-h4, 1.35rem);
+  line-height: 1.35;
+  color: var(--b61-ink);
+}
+.b61-rt-quote {
+  margin: 1.75rem 0;
+  padding: 0.25rem 0 0.25rem 1.5rem;
+  border-left: 3px solid var(--b61-secondary, currentColor);
+  font-family: var(--b61-font-display);
+  font-style: italic;
+  font-size: var(--b61-text-h4, 1.35rem);
+  line-height: 1.4;
+}
+.b61-rt-quote blockquote,
+.b61-rt-quote p { margin: 0; font-size: inherit; line-height: inherit; }
+.b61-rt-quote figcaption {
+  margin-top: 0.75rem;
+  font-family: var(--b61-font-ui);
+  font-style: normal;
+  font-size: var(--b61-text-label, 0.8rem);
+  font-weight: 600;
+  letter-spacing: var(--b61-eyebrow-tracking, 0.06em);
+  text-transform: uppercase;
+  color: var(--b61-muted);
+}
+.b61-rt-callout { margin: 1.75rem 0; }
+.b61-body-btn { margin: 1.5rem 0; }
+
+.b61-checklist { list-style: none; padding: 0; margin: 0 0 1rem; }
+.prose-blocks ul.b61-checklist { list-style: none; padding-left: 0; }
+.b61-checklist__item { position: relative; padding-left: 2rem; margin: 0.4rem 0; }
+.b61-checklist__item > p { margin: 0; }
+.b61-checklist__mark {
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 2px solid var(--b61-muted, #6b6b6b);
+  border-radius: 4px;
+}
+.b61-checklist__item--done .b61-checklist__mark {
+  border-color: var(--b61-primary, #1f3a5f);
+  background: var(--b61-primary, #1f3a5f);
+}
+.b61-checklist__item--done .b61-checklist__mark::after {
+  content: '';
+  position: absolute;
+  left: 0.32rem;
+  top: 0.08rem;
+  width: 0.3rem;
+  height: 0.6rem;
+  border: solid var(--b61-on-primary, #fff);
+  border-width: 0 2px 2px 0;
+  rotate: 45deg;
+}
