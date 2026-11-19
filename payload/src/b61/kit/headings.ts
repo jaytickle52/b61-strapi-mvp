@@ -1,10 +1,11 @@
+import { hasHeading } from './heading'
 /*
  * How many main headings (H1) a page's sections would render, from the
- * editor's form state (flat paths like `sections.0.lines.0.text`). Used by the
+ * editor's form state (flat paths like `sections.0.heading`). Used by the
  * page editor's heading note (admin/HeadingCheck.tsx). Same rule the site
  * renders by (groups.ts resolveHeadingLevel): Automatic is H1 only for the
  * first top-level section; elements inside containers never become H1 on
- * Automatic. A section without heading lines renders no heading at all.
+ * Automatic. A section with an empty Heading renders no heading at all.
  */
 
 type Block = { top: number | null; level: string; hasLines: boolean }
@@ -28,10 +29,9 @@ export function countH1(fields: Record<string, { value?: unknown } | undefined>)
   for (const [path, field] of Object.entries(fields)) {
     if (!path.startsWith('sections.')) continue
     any = true
-    const line = path.match(/^(.*)\.lines\.\d+\.text$/)
-    if (line) {
-      const b = blockOf(line[1])
-      if (b && typeof field?.value === 'string' && field.value.trim()) b.hasLines = true
+    if (path.endsWith('.heading')) {
+      const b = blockOf(path.slice(0, -'.heading'.length))
+      if (b && hasHeading(field?.value)) b.hasLines = true
       continue
     }
     if (path.endsWith('.headingLevel')) {

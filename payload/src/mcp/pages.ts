@@ -37,7 +37,8 @@ function outline(fields: Field[], depth = 0, lines: string[] = []): string[] {
       const vals = f.options.map((o: any) => (typeof o === 'string' ? o : o.value))
       line += ` = ${vals.slice(0, 12).join(' | ')}${vals.length > 12 ? ' | ...' : ''}`
     }
-    if (f.type === 'richText') line += ' (Lexical JSON: copy the shape from an existing page)'
+    if (f.custom?.mcpNote) line += ` (${f.custom.mcpNote})`
+    else if (f.type === 'richText') line += ' (Lexical JSON: copy the shape from an existing page)'
     lines.push(line)
     if (f.type === 'blocks') {
       const names = (f.blocks ?? []).map((b: Block) => b.slug)

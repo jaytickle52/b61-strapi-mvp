@@ -215,29 +215,30 @@ export interface Page {
         | {
             layoutMode?: ('cover' | 'band' | 'split' | 'type') | null;
             eyebrow?: string | null;
-            lines?:
-              | {
-                  text: string;
-                  emphasize?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3') | null;
             /**
-             * Two to four words, separated by commas. The first must be in a heading line exactly as typed; the others take its place in turn, once.
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            /**
+             * Words that take turns with the emphasized words, separated by commas. Works best at the end of the heading.
              */
             changingWords?: string | null;
-            subheadlineScale?: ('body' | 'display' | 'meta') | null;
             subheadline?: string | null;
-            /**
-             * e.g. "Grades PK-8", "Est. 1951".
-             */
-            metaItems?:
-              | {
-                  text: string;
-                  id?: string | null;
-                }[]
-              | null;
+            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3') | null;
             buttons?:
               | {
                   label: string;
@@ -251,7 +252,7 @@ export interface Page {
                     newTab?: boolean | null;
                   };
                   /**
-                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                    */
                   video?: string | null;
                   fullWidth?: boolean | null;
@@ -272,7 +273,7 @@ export interface Page {
             video?: (number | null) | Media;
             videoWebm?: (number | null) | Media;
             /**
-             * Plays muted on a loop behind the text. Videos are stored on Bunny Stream; keep this page open until the upload finishes.
+             * Plays muted on a loop behind the text. Keep this page open until the upload finishes.
              */
             bunnyVideo?: string | null;
             /**
@@ -315,20 +316,31 @@ export interface Page {
           }
         | {
             eyebrow?: string | null;
-            lines?:
-              | {
-                  text: string;
-                  emphasize?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             subheads?:
               | {
                   text: string;
                   id?: string | null;
                 }[]
               | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
             /**
              * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
              */
@@ -360,7 +372,7 @@ export interface Page {
                     newTab?: boolean | null;
                   };
                   /**
-                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                    */
                   video?: string | null;
                   fullWidth?: boolean | null;
@@ -382,7 +394,7 @@ export interface Page {
               | null;
             columns?: ('1' | '2' | '3') | null;
             /**
-             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
              */
             video?: string | null;
             imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
@@ -414,20 +426,31 @@ export interface Page {
           }
         | {
             eyebrow?: string | null;
-            lines?:
-              | {
-                  text: string;
-                  emphasize?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             subheads?:
               | {
                   text: string;
                   id?: string | null;
                 }[]
               | null;
+            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
             /**
              * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
              */
@@ -459,7 +482,7 @@ export interface Page {
                     newTab?: boolean | null;
                   };
                   /**
-                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                    */
                   video?: string | null;
                   fullWidth?: boolean | null;
@@ -490,14 +513,24 @@ export interface Page {
           }
         | {
             eyebrow?: string | null;
-            lines?:
-              | {
-                  text: string;
-                  emphasize?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             intro?: {
               root: {
                 type: string;
@@ -513,6 +546,7 @@ export interface Page {
               };
               [k: string]: unknown;
             } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
             source?: ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts') | null;
             limit?: number | null;
             mediaType?: ('image' | 'icon' | 'none') | null;
@@ -581,7 +615,7 @@ export interface Page {
                     newTab?: boolean | null;
                   };
                   /**
-                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                    */
                   video?: string | null;
                   fullWidth?: boolean | null;
@@ -632,14 +666,24 @@ export interface Page {
           }
         | {
             eyebrow?: string | null;
-            lines?:
-              | {
-                  text: string;
-                  emphasize?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             intro?: {
               root: {
                 type: string;
@@ -655,6 +699,7 @@ export interface Page {
               };
               [k: string]: unknown;
             } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
             stats?:
               | {
                   figure?: string | null;
@@ -676,7 +721,7 @@ export interface Page {
                     newTab?: boolean | null;
                   };
                   /**
-                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                    */
                   video?: string | null;
                   fullWidth?: boolean | null;
@@ -710,14 +755,24 @@ export interface Page {
           }
         | {
             eyebrow?: string | null;
-            lines?:
-              | {
-                  text: string;
-                  emphasize?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             intro?: {
               root: {
                 type: string;
@@ -733,6 +788,7 @@ export interface Page {
               };
               [k: string]: unknown;
             } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
             media?: ('photo' | 'gallery' | 'video') | null;
             /**
              * To set the focal point, click the pencil on the photo, then Edit image.
@@ -748,7 +804,7 @@ export interface Page {
               | null;
             scrollHint?: string | null;
             /**
-             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
              */
             video?: string | null;
             buttons?:
@@ -764,7 +820,7 @@ export interface Page {
                     newTab?: boolean | null;
                   };
                   /**
-                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                    */
                   video?: string | null;
                   fullWidth?: boolean | null;
@@ -823,14 +879,24 @@ export interface Page {
           }
         | {
             eyebrow?: string | null;
-            lines?:
-              | {
-                  text: string;
-                  emphasize?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             intro?: {
               root: {
                 type: string;
@@ -846,6 +912,7 @@ export interface Page {
               };
               [k: string]: unknown;
             } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
             items?:
               | {
                   title: string;
@@ -887,7 +954,7 @@ export interface Page {
                     newTab?: boolean | null;
                   };
                   /**
-                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                    */
                   video?: string | null;
                   fullWidth?: boolean | null;
@@ -915,14 +982,24 @@ export interface Page {
           }
         | {
             eyebrow?: string | null;
-            lines?:
-              | {
-                  text: string;
-                  emphasize?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             intro?: {
               root: {
                 type: string;
@@ -938,6 +1015,7 @@ export interface Page {
               };
               [k: string]: unknown;
             } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
             tabs?:
               | {
                   label: string;
@@ -974,20 +1052,31 @@ export interface Page {
                           }
                         | {
                             eyebrow?: string | null;
-                            lines?:
-                              | {
-                                  text: string;
-                                  emphasize?: boolean | null;
-                                  id?: string | null;
-                                }[]
-                              | null;
-                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            /**
+                             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                             */
+                            heading?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
                             subheads?:
                               | {
                                   text: string;
                                   id?: string | null;
                                 }[]
                               | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                             /**
                              * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                              */
@@ -1019,7 +1108,7 @@ export interface Page {
                                     newTab?: boolean | null;
                                   };
                                   /**
-                                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                                    */
                                   video?: string | null;
                                   fullWidth?: boolean | null;
@@ -1041,7 +1130,7 @@ export interface Page {
                               | null;
                             columns?: ('1' | '2' | '3') | null;
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
@@ -1073,20 +1162,31 @@ export interface Page {
                           }
                         | {
                             eyebrow?: string | null;
-                            lines?:
-                              | {
-                                  text: string;
-                                  emphasize?: boolean | null;
-                                  id?: string | null;
-                                }[]
-                              | null;
-                            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+                            /**
+                             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                             */
+                            heading?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
                             subheads?:
                               | {
                                   text: string;
                                   id?: string | null;
                                 }[]
                               | null;
+                            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
                             /**
                              * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                              */
@@ -1118,7 +1218,7 @@ export interface Page {
                                     newTab?: boolean | null;
                                   };
                                   /**
-                                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                                    */
                                   video?: string | null;
                                   fullWidth?: boolean | null;
@@ -1149,14 +1249,24 @@ export interface Page {
                           }
                         | {
                             eyebrow?: string | null;
-                            lines?:
-                              | {
-                                  text: string;
-                                  emphasize?: boolean | null;
-                                  id?: string | null;
-                                }[]
-                              | null;
-                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            /**
+                             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                             */
+                            heading?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
                             intro?: {
                               root: {
                                 type: string;
@@ -1172,6 +1282,7 @@ export interface Page {
                               };
                               [k: string]: unknown;
                             } | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                             source?:
                               | ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts')
                               | null;
@@ -1242,7 +1353,7 @@ export interface Page {
                                     newTab?: boolean | null;
                                   };
                                   /**
-                                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                                    */
                                   video?: string | null;
                                   fullWidth?: boolean | null;
@@ -1316,14 +1427,24 @@ export interface Page {
           }
         | {
             eyebrow?: string | null;
-            lines?:
-              | {
-                  text: string;
-                  emphasize?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             intro?: {
               root: {
                 type: string;
@@ -1339,6 +1460,7 @@ export interface Page {
               };
               [k: string]: unknown;
             } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
             items?:
               | {
                   title: string;
@@ -1384,14 +1506,24 @@ export interface Page {
           }
         | {
             eyebrow?: string | null;
-            lines?:
-              | {
-                  text: string;
-                  emphasize?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             intro?: {
               root: {
                 type: string;
@@ -1407,6 +1539,7 @@ export interface Page {
               };
               [k: string]: unknown;
             } | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
             /**
              * Used only when there is no heading.
              */
@@ -1444,20 +1577,31 @@ export interface Page {
                           }
                         | {
                             eyebrow?: string | null;
-                            lines?:
-                              | {
-                                  text: string;
-                                  emphasize?: boolean | null;
-                                  id?: string | null;
-                                }[]
-                              | null;
-                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                            /**
+                             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                             */
+                            heading?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
                             subheads?:
                               | {
                                   text: string;
                                   id?: string | null;
                                 }[]
                               | null;
+                            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                             /**
                              * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                              */
@@ -1489,7 +1633,7 @@ export interface Page {
                                     newTab?: boolean | null;
                                   };
                                   /**
-                                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                                    */
                                   video?: string | null;
                                   fullWidth?: boolean | null;
@@ -1511,7 +1655,7 @@ export interface Page {
                               | null;
                             columns?: ('1' | '2' | '3') | null;
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
@@ -1543,20 +1687,31 @@ export interface Page {
                           }
                         | {
                             eyebrow?: string | null;
-                            lines?:
-                              | {
-                                  text: string;
-                                  emphasize?: boolean | null;
-                                  id?: string | null;
-                                }[]
-                              | null;
-                            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+                            /**
+                             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                             */
+                            heading?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
                             subheads?:
                               | {
                                   text: string;
                                   id?: string | null;
                                 }[]
                               | null;
+                            headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
                             /**
                              * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                              */
@@ -1588,7 +1743,7 @@ export interface Page {
                                     newTab?: boolean | null;
                                   };
                                   /**
-                                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                                    */
                                   video?: string | null;
                                   fullWidth?: boolean | null;
@@ -1651,20 +1806,31 @@ export interface Page {
               | (
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       subheads?:
                         | {
                             text: string;
                             id?: string | null;
                           }[]
                         | null;
+                      headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
                       /**
                        * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                        */
@@ -1696,7 +1862,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -1727,20 +1893,31 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       subheads?:
                         | {
                             text: string;
                             id?: string | null;
                           }[]
                         | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       /**
                        * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                        */
@@ -1772,7 +1949,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -1794,7 +1971,7 @@ export interface Page {
                         | null;
                       columns?: ('1' | '2' | '3') | null;
                       /**
-                       * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                       * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                        */
                       video?: string | null;
                       imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
@@ -1826,14 +2003,24 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       intro?: {
                         root: {
                           type: string;
@@ -1849,6 +2036,7 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       source?:
                         ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts') | null;
                       limit?: number | null;
@@ -1918,7 +2106,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -1969,14 +2157,24 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       intro?: {
                         root: {
                           type: string;
@@ -1992,6 +2190,7 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       stats?:
                         | {
                             figure?: string | null;
@@ -2013,7 +2212,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -2047,14 +2246,24 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       intro?: {
                         root: {
                           type: string;
@@ -2070,6 +2279,7 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       media?: ('photo' | 'gallery' | 'video') | null;
                       /**
                        * To set the focal point, click the pencil on the photo, then Edit image.
@@ -2085,7 +2295,7 @@ export interface Page {
                         | null;
                       scrollHint?: string | null;
                       /**
-                       * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                       * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                        */
                       video?: string | null;
                       buttons?:
@@ -2101,7 +2311,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -2181,14 +2391,24 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       intro?: {
                         root: {
                           type: string;
@@ -2204,6 +2424,7 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       items?:
                         | {
                             title: string;
@@ -2245,7 +2466,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -2273,14 +2494,24 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       intro?: {
                         root: {
                           type: string;
@@ -2296,6 +2527,7 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       items?:
                         | {
                             title: string;
@@ -2341,20 +2573,31 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       subheads?:
                         | {
                             text: string;
                             id?: string | null;
                           }[]
                         | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       /**
                        * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                        */
@@ -2386,7 +2629,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -2427,20 +2670,31 @@ export interface Page {
                        */
                       form: number | Form;
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       subheads?:
                         | {
                             text: string;
                             id?: string | null;
                           }[]
                         | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       textAlign?: ('left' | 'center') | null;
                       widthStep?: number | null;
                       padTop?: ('normal' | 'tight' | 'none') | null;
@@ -2510,20 +2764,31 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       subheads?:
                         | {
                             text: string;
                             id?: string | null;
                           }[]
                         | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       logos?:
                         | {
                             /**
@@ -2578,7 +2843,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -2631,20 +2896,31 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       subheads?:
                         | {
                             text: string;
                             id?: string | null;
                           }[]
                         | null;
+                      headingLevel?: ('auto' | 'h1' | 'h2' | 'h3' | 'h4') | null;
                       /**
                        * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                        */
@@ -2676,7 +2952,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -2707,20 +2983,31 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       subheads?:
                         | {
                             text: string;
                             id?: string | null;
                           }[]
                         | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       /**
                        * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                        */
@@ -2752,7 +3039,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -2774,7 +3061,7 @@ export interface Page {
                         | null;
                       columns?: ('1' | '2' | '3') | null;
                       /**
-                       * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                       * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                        */
                       video?: string | null;
                       imageShape?: ('fixed' | 'portrait' | 'square' | 'landscape' | 'wide') | null;
@@ -2806,14 +3093,24 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       intro?: {
                         root: {
                           type: string;
@@ -2829,6 +3126,7 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       source?:
                         ('manual' | 'programs' | 'upcoming-events' | 'latest-news' | 'staff' | 'school-facts') | null;
                       limit?: number | null;
@@ -2898,7 +3196,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -2949,14 +3247,24 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       intro?: {
                         root: {
                           type: string;
@@ -2972,6 +3280,7 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       stats?:
                         | {
                             figure?: string | null;
@@ -2993,7 +3302,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -3027,14 +3336,24 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       intro?: {
                         root: {
                           type: string;
@@ -3050,6 +3369,7 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       media?: ('photo' | 'gallery' | 'video') | null;
                       /**
                        * To set the focal point, click the pencil on the photo, then Edit image.
@@ -3065,7 +3385,7 @@ export interface Page {
                         | null;
                       scrollHint?: string | null;
                       /**
-                       * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                       * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                        */
                       video?: string | null;
                       buttons?:
@@ -3081,7 +3401,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -3161,14 +3481,24 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       intro?: {
                         root: {
                           type: string;
@@ -3184,6 +3514,7 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       items?:
                         | {
                             title: string;
@@ -3225,7 +3556,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -3253,14 +3584,24 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       intro?: {
                         root: {
                           type: string;
@@ -3276,6 +3617,7 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       items?:
                         | {
                             title: string;
@@ -3321,20 +3663,31 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       subheads?:
                         | {
                             text: string;
                             id?: string | null;
                           }[]
                         | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       /**
                        * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
                        */
@@ -3366,7 +3719,7 @@ export interface Page {
                               newTab?: boolean | null;
                             };
                             /**
-                             * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                             * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                              */
                             video?: string | null;
                             fullWidth?: boolean | null;
@@ -3407,20 +3760,31 @@ export interface Page {
                        */
                       form: number | Form;
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       subheads?:
                         | {
                             text: string;
                             id?: string | null;
                           }[]
                         | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       textAlign?: ('left' | 'center') | null;
                       widthStep?: number | null;
                       padTop?: ('normal' | 'tight' | 'none') | null;
@@ -3490,20 +3854,31 @@ export interface Page {
                     }
                   | {
                       eyebrow?: string | null;
-                      lines?:
-                        | {
-                            text: string;
-                            emphasize?: boolean | null;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+                      /**
+                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+                       */
+                      heading?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
                       subheads?:
                         | {
                             text: string;
                             id?: string | null;
                           }[]
                         | null;
+                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
                       logos?:
                         | {
                             /**
@@ -3582,20 +3957,31 @@ export interface Page {
           }
         | {
             eyebrow?: string | null;
-            lines?:
-              | {
-                  text: string;
-                  emphasize?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             subheads?:
               | {
                   text: string;
                   id?: string | null;
                 }[]
               | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
             /**
              * Type as in a document. Use + or / for a Pull quote, Icon list, Emphasis line, Button, Callout or Table.
              */
@@ -3627,7 +4013,7 @@ export interface Page {
                     newTab?: boolean | null;
                   };
                   /**
-                   * YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.
+                   * A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.
                    */
                   video?: string | null;
                   fullWidth?: boolean | null;
@@ -3668,20 +4054,31 @@ export interface Page {
              */
             form: number | Form;
             eyebrow?: string | null;
-            lines?:
-              | {
-                  text: string;
-                  emphasize?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             subheads?:
               | {
                   text: string;
                   id?: string | null;
                 }[]
               | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
             textAlign?: ('left' | 'center') | null;
             widthStep?: number | null;
             padTop?: ('normal' | 'tight' | 'none') | null;
@@ -3772,20 +4169,31 @@ export interface Page {
           }
         | {
             eyebrow?: string | null;
-            lines?:
-              | {
-                  text: string;
-                  emphasize?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
+            /**
+             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
+             */
+            heading?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             subheads?:
               | {
                   text: string;
                   id?: string | null;
                 }[]
               | null;
+            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
             logos?:
               | {
                   /**
@@ -3948,7 +4356,7 @@ export interface FolderInterface {
   createdAt: string;
 }
 /**
- * Photos for the website. Add alt text so screen readers can describe each photo. PDFs go in Documents. Videos go to Bunny Stream: use "Upload a video" on the element that shows it.
+ * Photos for the website. Add alt text so screen readers can describe each photo. PDFs go in Documents. Videos: use "Upload a video" on the element that shows it.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
@@ -5917,23 +6325,10 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               layoutMode?: T;
               eyebrow?: T;
-              lines?:
-                | T
-                | {
-                    text?: T;
-                    emphasize?: T;
-                    id?: T;
-                  };
-              headingLevel?: T;
+              heading?: T;
               changingWords?: T;
-              subheadlineScale?: T;
               subheadline?: T;
-              metaItems?:
-                | T
-                | {
-                    text?: T;
-                    id?: T;
-                  };
+              headingLevel?: T;
               buttons?:
                 | T
                 | {
@@ -5993,20 +6388,14 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               eyebrow?: T;
-              lines?:
-                | T
-                | {
-                    text?: T;
-                    emphasize?: T;
-                    id?: T;
-                  };
-              headingLevel?: T;
+              heading?: T;
               subheads?:
                 | T
                 | {
                     text?: T;
                     id?: T;
                   };
+              headingLevel?: T;
               body?: T;
               buttons?:
                 | T
@@ -6063,20 +6452,14 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               eyebrow?: T;
-              lines?:
-                | T
-                | {
-                    text?: T;
-                    emphasize?: T;
-                    id?: T;
-                  };
-              headingLevel?: T;
+              heading?: T;
               subheads?:
                 | T
                 | {
                     text?: T;
                     id?: T;
                   };
+              headingLevel?: T;
               body?: T;
               buttons?:
                 | T
@@ -6119,15 +6502,9 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               eyebrow?: T;
-              lines?:
-                | T
-                | {
-                    text?: T;
-                    emphasize?: T;
-                    id?: T;
-                  };
-              headingLevel?: T;
+              heading?: T;
               intro?: T;
+              headingLevel?: T;
               source?: T;
               limit?: T;
               mediaType?: T;
@@ -6211,15 +6588,9 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               eyebrow?: T;
-              lines?:
-                | T
-                | {
-                    text?: T;
-                    emphasize?: T;
-                    id?: T;
-                  };
-              headingLevel?: T;
+              heading?: T;
               intro?: T;
+              headingLevel?: T;
               stats?:
                 | T
                 | {
@@ -6269,15 +6640,9 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               eyebrow?: T;
-              lines?:
-                | T
-                | {
-                    text?: T;
-                    emphasize?: T;
-                    id?: T;
-                  };
-              headingLevel?: T;
+              heading?: T;
               intro?: T;
+              headingLevel?: T;
               media?: T;
               image?: T;
               caption?: T;
@@ -6351,15 +6716,9 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               eyebrow?: T;
-              lines?:
-                | T
-                | {
-                    text?: T;
-                    emphasize?: T;
-                    id?: T;
-                  };
-              headingLevel?: T;
+              heading?: T;
               intro?: T;
+              headingLevel?: T;
               items?:
                 | T
                 | {
@@ -6409,15 +6768,9 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               eyebrow?: T;
-              lines?:
-                | T
-                | {
-                    text?: T;
-                    emphasize?: T;
-                    id?: T;
-                  };
-              headingLevel?: T;
+              heading?: T;
               intro?: T;
+              headingLevel?: T;
               tabs?:
                 | T
                 | {
@@ -6450,20 +6803,14 @@ export interface PagesSelect<T extends boolean = true> {
                             | T
                             | {
                                 eyebrow?: T;
-                                lines?:
-                                  | T
-                                  | {
-                                      text?: T;
-                                      emphasize?: T;
-                                      id?: T;
-                                    };
-                                headingLevel?: T;
+                                heading?: T;
                                 subheads?:
                                   | T
                                   | {
                                       text?: T;
                                       id?: T;
                                     };
+                                headingLevel?: T;
                                 body?: T;
                                 buttons?:
                                   | T
@@ -6520,20 +6867,14 @@ export interface PagesSelect<T extends boolean = true> {
                             | T
                             | {
                                 eyebrow?: T;
-                                lines?:
-                                  | T
-                                  | {
-                                      text?: T;
-                                      emphasize?: T;
-                                      id?: T;
-                                    };
-                                headingLevel?: T;
+                                heading?: T;
                                 subheads?:
                                   | T
                                   | {
                                       text?: T;
                                       id?: T;
                                     };
+                                headingLevel?: T;
                                 body?: T;
                                 buttons?:
                                   | T
@@ -6576,15 +6917,9 @@ export interface PagesSelect<T extends boolean = true> {
                             | T
                             | {
                                 eyebrow?: T;
-                                lines?:
-                                  | T
-                                  | {
-                                      text?: T;
-                                      emphasize?: T;
-                                      id?: T;
-                                    };
-                                headingLevel?: T;
+                                heading?: T;
                                 intro?: T;
+                                headingLevel?: T;
                                 source?: T;
                                 limit?: T;
                                 mediaType?: T;
@@ -6684,15 +7019,9 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               eyebrow?: T;
-              lines?:
-                | T
-                | {
-                    text?: T;
-                    emphasize?: T;
-                    id?: T;
-                  };
-              headingLevel?: T;
+              heading?: T;
               intro?: T;
+              headingLevel?: T;
               items?:
                 | T
                 | {
@@ -6719,15 +7048,9 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               eyebrow?: T;
-              lines?:
-                | T
-                | {
-                    text?: T;
-                    emphasize?: T;
-                    id?: T;
-                  };
-              headingLevel?: T;
+              heading?: T;
               intro?: T;
+              headingLevel?: T;
               label?: T;
               slides?:
                 | T
@@ -6761,20 +7084,14 @@ export interface PagesSelect<T extends boolean = true> {
                             | T
                             | {
                                 eyebrow?: T;
-                                lines?:
-                                  | T
-                                  | {
-                                      text?: T;
-                                      emphasize?: T;
-                                      id?: T;
-                                    };
-                                headingLevel?: T;
+                                heading?: T;
                                 subheads?:
                                   | T
                                   | {
                                       text?: T;
                                       id?: T;
                                     };
+                                headingLevel?: T;
                                 body?: T;
                                 buttons?:
                                   | T
@@ -6831,20 +7148,14 @@ export interface PagesSelect<T extends boolean = true> {
                             | T
                             | {
                                 eyebrow?: T;
-                                lines?:
-                                  | T
-                                  | {
-                                      text?: T;
-                                      emphasize?: T;
-                                      id?: T;
-                                    };
-                                headingLevel?: T;
+                                heading?: T;
                                 subheads?:
                                   | T
                                   | {
                                       text?: T;
                                       id?: T;
                                     };
+                                headingLevel?: T;
                                 body?: T;
                                 buttons?:
                                   | T
@@ -6912,20 +7223,14 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           subheads?:
                             | T
                             | {
                                 text?: T;
                                 id?: T;
                               };
+                          headingLevel?: T;
                           body?: T;
                           buttons?:
                             | T
@@ -6968,20 +7273,14 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           subheads?:
                             | T
                             | {
                                 text?: T;
                                 id?: T;
                               };
+                          headingLevel?: T;
                           body?: T;
                           buttons?:
                             | T
@@ -7038,15 +7337,9 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           intro?: T;
+                          headingLevel?: T;
                           source?: T;
                           limit?: T;
                           mediaType?: T;
@@ -7130,15 +7423,9 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           intro?: T;
+                          headingLevel?: T;
                           stats?:
                             | T
                             | {
@@ -7188,15 +7475,9 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           intro?: T;
+                          headingLevel?: T;
                           media?: T;
                           image?: T;
                           caption?: T;
@@ -7286,15 +7567,9 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           intro?: T;
+                          headingLevel?: T;
                           items?:
                             | T
                             | {
@@ -7344,15 +7619,9 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           intro?: T;
+                          headingLevel?: T;
                           items?:
                             | T
                             | {
@@ -7379,20 +7648,14 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           subheads?:
                             | T
                             | {
                                 text?: T;
                                 id?: T;
                               };
+                          headingLevel?: T;
                           body?: T;
                           buttons?:
                             | T
@@ -7433,20 +7696,14 @@ export interface PagesSelect<T extends boolean = true> {
                       | {
                           form?: T;
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           subheads?:
                             | T
                             | {
                                 text?: T;
                                 id?: T;
                               };
+                          headingLevel?: T;
                           textAlign?: T;
                           widthStep?: T;
                           padTop?: T;
@@ -7508,20 +7765,14 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           subheads?:
                             | T
                             | {
                                 text?: T;
                                 id?: T;
                               };
+                          headingLevel?: T;
                           logos?:
                             | T
                             | {
@@ -7604,20 +7855,14 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           subheads?:
                             | T
                             | {
                                 text?: T;
                                 id?: T;
                               };
+                          headingLevel?: T;
                           body?: T;
                           buttons?:
                             | T
@@ -7660,20 +7905,14 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           subheads?:
                             | T
                             | {
                                 text?: T;
                                 id?: T;
                               };
+                          headingLevel?: T;
                           body?: T;
                           buttons?:
                             | T
@@ -7730,15 +7969,9 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           intro?: T;
+                          headingLevel?: T;
                           source?: T;
                           limit?: T;
                           mediaType?: T;
@@ -7822,15 +8055,9 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           intro?: T;
+                          headingLevel?: T;
                           stats?:
                             | T
                             | {
@@ -7880,15 +8107,9 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           intro?: T;
+                          headingLevel?: T;
                           media?: T;
                           image?: T;
                           caption?: T;
@@ -7978,15 +8199,9 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           intro?: T;
+                          headingLevel?: T;
                           items?:
                             | T
                             | {
@@ -8036,15 +8251,9 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           intro?: T;
+                          headingLevel?: T;
                           items?:
                             | T
                             | {
@@ -8071,20 +8280,14 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           subheads?:
                             | T
                             | {
                                 text?: T;
                                 id?: T;
                               };
+                          headingLevel?: T;
                           body?: T;
                           buttons?:
                             | T
@@ -8125,20 +8328,14 @@ export interface PagesSelect<T extends boolean = true> {
                       | {
                           form?: T;
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           subheads?:
                             | T
                             | {
                                 text?: T;
                                 id?: T;
                               };
+                          headingLevel?: T;
                           textAlign?: T;
                           widthStep?: T;
                           padTop?: T;
@@ -8200,20 +8397,14 @@ export interface PagesSelect<T extends boolean = true> {
                       | T
                       | {
                           eyebrow?: T;
-                          lines?:
-                            | T
-                            | {
-                                text?: T;
-                                emphasize?: T;
-                                id?: T;
-                              };
-                          headingLevel?: T;
+                          heading?: T;
                           subheads?:
                             | T
                             | {
                                 text?: T;
                                 id?: T;
                               };
+                          headingLevel?: T;
                           logos?:
                             | T
                             | {
@@ -8272,20 +8463,14 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               eyebrow?: T;
-              lines?:
-                | T
-                | {
-                    text?: T;
-                    emphasize?: T;
-                    id?: T;
-                  };
-              headingLevel?: T;
+              heading?: T;
               subheads?:
                 | T
                 | {
                     text?: T;
                     id?: T;
                   };
+              headingLevel?: T;
               body?: T;
               buttons?:
                 | T
@@ -8326,20 +8511,14 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               form?: T;
               eyebrow?: T;
-              lines?:
-                | T
-                | {
-                    text?: T;
-                    emphasize?: T;
-                    id?: T;
-                  };
-              headingLevel?: T;
+              heading?: T;
               subheads?:
                 | T
                 | {
                     text?: T;
                     id?: T;
                   };
+              headingLevel?: T;
               textAlign?: T;
               widthStep?: T;
               padTop?: T;
@@ -8417,20 +8596,14 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               eyebrow?: T;
-              lines?:
-                | T
-                | {
-                    text?: T;
-                    emphasize?: T;
-                    id?: T;
-                  };
-              headingLevel?: T;
+              heading?: T;
               subheads?:
                 | T
                 | {
                     text?: T;
                     id?: T;
                   };
+              headingLevel?: T;
               logos?:
                 | T
                 | {

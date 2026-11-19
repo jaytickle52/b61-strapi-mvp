@@ -60,8 +60,8 @@ export const B61Gallery = defineElement({
       label: 'Photos',
       fields: [
         segmented('itemSize', 'Photo size', [['small', 'Small'], ['medium', 'Medium'], ['large', 'Large']], { default: 'medium', when: isStrip }),
-        dropdown('columns', 'Columns', [['2', 'Two'], ['3', 'Three'], ['4', 'Four']], { default: '3', when: notStrip }),
-        segmented(
+        segmented('columns', 'Columns', [['2', 'Two'], ['3', 'Three'], ['4', 'Four']], { default: '3', when: notStrip }),
+        dropdown(
           'imageShape',
           'Photo shape',
           [['fixed', 'Fixed height'], ['portrait', 'Portrait'], ['square', 'Square'], ['landscape', 'Landscape'], ['wide', 'Wide']],

@@ -3,6 +3,7 @@ import { resolveHeadingLevel } from '../../kit/groups'
 import { BandHead, eruleClass, revealAttr } from '../../kit/render/parts'
 import Inner from '../../kit/render/Inner'
 import CarouselInit from '../../kit/render/CarouselInit'
+import { headingText } from '../../kit/heading'
 
 /* Ported from elements/Carousel/html.twig and elements/Carousel_Slide/html.twig (plugin 1.77.1). */
 export default function B61Carousel({ block, index = 0, path }: { block: any; index?: number; path?: string }) {
@@ -18,8 +19,8 @@ export default function B61Carousel({ block, index = 0, path }: { block: any; in
   const showProg = block.showProgress !== false
   const uid = String(block.id ?? index)
   const id = `b61-car-${uid}`
-  const lines = (block.lines ?? []).filter((l: any) => l?.text)
-  const Wrap = lines.length ? 'section' : 'div'
+  const title = headingText(block.heading)
+  const Wrap = title ? 'section' : 'div'
   const head = BandHead({ block, prefix: 'b61-car', as, headingId: `${id}-heading`, ri, wrap: false, itemClass: 'b61-block' })
   const ha = block.headingAlign ?? 'left'
 
@@ -76,7 +77,7 @@ export default function B61Carousel({ block, index = 0, path }: { block: any; in
           .filter(Boolean)
           .join(' ')}
         data-b61-reveal={rv}
-        {...(lines.length ? { 'aria-labelledby': `${id}-heading` } : { 'data-b61-car-name': block.label || 'Carousel' })}
+        {...(title ? { 'aria-labelledby': `${id}-heading` } : { 'data-b61-car-name': block.label || 'Carousel' })}
       >
         <div className="b61-car__inner">
           {(head || cpos === 'top-right') && (

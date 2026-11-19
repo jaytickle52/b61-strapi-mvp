@@ -122,7 +122,7 @@ function summariseContent(fields: Field[]): ContentSummary[] {
     }
   }
   walk(fields)
-  const lead = out.findIndex((s) => s.name === 'lines')
+  const lead = out.findIndex((s) => s.name === 'heading')
   if (lead > 0) out.unshift(...out.splice(lead, 1))
   return [...out, ...choices]
 }

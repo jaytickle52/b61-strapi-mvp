@@ -37,7 +37,7 @@ export const B61Prose = defineElement({
   mode: { field: 'headPosition', labels: { above: 'Heading above', beside: 'Heading beside' } },
 
   content: [
-    panel('Heading', [...headingFields({ levels: ['h1', 'h2', 'h3', 'h4'] }), subheadsField()]),
+    panel('Heading', headingFields({ levels: ['h1', 'h2', 'h3', 'h4'], after: [subheadsField()] })),
     bodyField({ emphasisScale: true, dividers: true }),
     buttonsPanel(),
   ],

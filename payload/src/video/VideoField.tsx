@@ -19,11 +19,10 @@ type Phase =
  */
 export const VideoField: TextFieldClientComponent = (props) => {
   // uploadFirst (Hero background): one upload box that sends the file to
-  // Bunny; pasting a link is tucked behind "Paste a Bunny link instead".
+  // the video library; there is no link to paste.
   const uploadFirst = Boolean((props as any).uploadFirst)
   const path = props.path ?? props.field.name
   const { value, setValue } = useField<string>({ path })
-  const [showLink, setShowLink] = useState(false)
   const [over, setOver] = useState(false)
   const school = useFormFields(([f]) => f?.school?.value as number | string | undefined)
   const [enabled, setEnabled] = useState(false)
@@ -109,7 +108,7 @@ export const VideoField: TextFieldClientComponent = (props) => {
     <p className="field-description" role="status" style={{ color: phase.kind === 'error' ? 'var(--theme-error-500)' : undefined }}>
       {phase.kind === 'uploading' && 'Uploading… keep this page open.'}
       {phase.kind === 'processing' &&
-        `Uploaded. Bunny is preparing the video (${phase.label.toLowerCase()}${phase.progress != null ? `, ${phase.progress}%` : ''}). You can save now; it plays once it's ready.`}
+        `Uploaded. The video is being prepared (${phase.label.toLowerCase()}${phase.progress != null ? `, ${phase.progress}%` : ''}). You can save now; it plays once it's ready.`}
       {phase.kind === 'ready' && 'Ready to play. Save to keep it.'}
       {phase.kind === 'error' && phase.message}
     </p>
@@ -135,10 +134,7 @@ export const VideoField: TextFieldClientComponent = (props) => {
       <div className="field-type b61-video-field" style={{ marginBottom: 24 }}>
         <label className="field-label">{label}</label>
         {!enabled ? (
-          <>
-            <TextField {...props} />
-            <p className="field-description">Video uploads switch on once the Bunny Stream keys are added in Vercel.</p>
-          </>
+          <p className="field-description">Video uploads aren't switched on for this site yet.</p>
         ) : (
           <>
             {picker}
@@ -193,13 +189,6 @@ export const VideoField: TextFieldClientComponent = (props) => {
             </div>
             {status}
             {description && <p className="field-description">{description}</p>}
-            {showLink ? (
-              <TextField {...props} field={{ ...props.field, label: 'Bunny link', admin: { ...props.field.admin, description: undefined } } as any} />
-            ) : (
-              <Button buttonStyle="none" size="small" margin={false} onClick={() => setShowLink(true)}>
-                Paste a Bunny link instead
-              </Button>
-            )}
           </>
         )}
       </div>
@@ -237,10 +226,10 @@ export const VideoField: TextFieldClientComponent = (props) => {
             )}
           </div>
           <p className="field-description" role="status" style={{ color: phase.kind === 'error' ? 'var(--theme-error-500)' : undefined }}>
-            {phase.kind === 'idle' && 'Or upload a file from your computer; it goes to Bunny Stream and the link fills in. Keep this page open until it finishes.'}
+            {phase.kind === 'idle' && 'Or upload a file from your computer; the link fills in. Keep this page open until it finishes.'}
             {phase.kind === 'uploading' && 'Uploading… keep this page open.'}
             {phase.kind === 'processing' &&
-              `Uploaded. Bunny is preparing the video (${phase.label.toLowerCase()}${phase.progress != null ? `, ${phase.progress}%` : ''}). You can save now; it plays once it's ready.`}
+              `Uploaded. The video is being prepared (${phase.label.toLowerCase()}${phase.progress != null ? `, ${phase.progress}%` : ''}). You can save now; it plays once it's ready.`}
             {phase.kind === 'ready' && 'Ready to play. Save to keep it.'}
             {phase.kind === 'error' && phase.message}
           </p>

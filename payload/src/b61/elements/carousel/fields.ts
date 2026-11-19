@@ -1,3 +1,4 @@
+import { hasHeading } from '../../kit/heading'
 import { defineElement, panel } from '../../kit/element'
 import { dropdown, segmented, toggle } from '../../kit/controls'
 import { bandHeadFields, entranceField, eyebrowRuleField, headingAlignField, list, paddingFields, surfaceField } from '../../kit/groups'
@@ -15,7 +16,7 @@ export const B61Carousel = defineElement({
   content: [
     panel('Heading', [
       ...bandHeadFields({ intro: true }),
-      { name: 'label', label: 'Name for screen readers', type: 'text', admin: { description: 'Used only when there is no heading.', condition: (_, s) => !(s?.lines ?? []).length } },
+      { name: 'label', label: 'Name for screen readers', type: 'text', admin: { description: 'Used only when there is no heading.', condition: (_, s) => !hasHeading(s?.heading) } },
     ]),
     list('slides', 'Slides', 'Slide', [
       { name: 'label', label: 'Name for screen readers', type: 'text' },

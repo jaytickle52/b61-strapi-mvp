@@ -4,6 +4,7 @@ import { asMedia, focusOf, imgProps } from '../../lib/media'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { Buttons, ContentBlocks, HeadingLines, revealAttr } from '../../kit/render/parts'
 import { fromBody } from '../../kit/body'
+import { headingText } from '../../kit/heading'
 
 export type CtaBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Cta' }>
 
@@ -19,8 +20,8 @@ export default function B61Cta({ block, index = 0, nested = false }: { block: Ct
   const position = block.position === 'left' || block.position === 'center' ? block.position : align
   const pt = block.padTop ?? 'normal'
   const pb = block.padBottom ?? 'normal'
-  const lines = (block.lines ?? []).filter((l) => l?.text)
-  const hasHeading = lines.length > 0
+  const title = headingText(block.heading)
+  const hasHeading = Boolean(title)
   const headingId = `b61-cta-${block.id ?? index}-heading`
   const Wrap = hasHeading ? 'section' : 'div'
 
@@ -96,7 +97,7 @@ export default function B61Cta({ block, index = 0, nested = false }: { block: Ct
               {block.eyebrow}
             </span>
           )}
-          <HeadingLines as={Heading} id={headingId} className="b61-cta__heading b61-block" lineClass="b61-cta__heading-line" lines={lines} ri={ri} />
+          <HeadingLines as={Heading} id={headingId} className="b61-cta__heading b61-block" lineClass="b61-cta__heading-line" heading={block.heading} ri={ri} />
           {(block.subheads ?? [])
             .filter((s) => s?.text)
             .map((s, i) => (

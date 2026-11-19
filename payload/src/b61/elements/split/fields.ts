@@ -43,7 +43,7 @@ export const B61Split = defineElement({
   mode: { field: 'imageSide', labels: { right: 'Image right', left: 'Image left' } },
 
   content: [
-    panel('Heading', [...headingFields({ levels: ['h2', 'h3', 'h4'] }), subheadsField()]),
+    panel('Heading', headingFields({ levels: ['h2', 'h3', 'h4'], after: [subheadsField()] })),
 
     bodyField(),
 
@@ -83,7 +83,7 @@ export const B61Split = defineElement({
         { default: '2', when: isGallery },
       ),
       videoLinkField((s) => s?.media === 'video'),
-      segmented(
+      dropdown(
         'imageShape',
         'Photo shape',
         [

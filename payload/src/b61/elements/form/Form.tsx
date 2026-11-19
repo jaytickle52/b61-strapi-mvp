@@ -7,6 +7,7 @@ import { countryOptions, US_STATES } from '@/forms/places'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { HeadingLines, revealAttr } from '../../kit/render/parts'
 import FormClient, { type ClientQuestion } from './FormClient'
+import { headingText } from '../../kit/heading'
 
 export type FormBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Form' }>
 
@@ -35,8 +36,8 @@ export default async function B61Form({ block, index = 0 }: { block: FormBlock; 
   const pt = block.padTop ?? 'normal'
   const pb = block.padBottom ?? 'normal'
   const card = block.card === 'card' || surface === 'dark' || surface === 'accent'
-  const lines = (block.lines ?? []).filter((l) => l?.text)
-  const hasHeading = lines.length > 0
+  const title = headingText(block.heading)
+  const hasHeading = Boolean(title)
   const anchor = `b61-form-${block.id ?? index}`
   const headingId = `${anchor}-heading`
   const Wrap = hasHeading ? 'section' : 'div'
@@ -119,7 +120,7 @@ export default async function B61Form({ block, index = 0 }: { block: FormBlock; 
                 id={headingId}
                 className="b61-form__heading b61-block"
                 lineClass="b61-form__heading-line"
-                lines={lines}
+                heading={block.heading}
                 ri={ri}
               />
               {(block.subheads ?? [])

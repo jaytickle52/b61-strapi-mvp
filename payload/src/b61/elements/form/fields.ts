@@ -30,7 +30,7 @@ export const B61Form = defineElement({
         admin: { description: 'Questions, emails and the thank-you message are edited in Forms.' },
       },
     ]),
-    panel('Heading', [...headingFields({ levels: ['h2', 'h3', 'h4'] }), subheadsField()]),
+    panel('Heading', headingFields({ levels: ['h2', 'h3', 'h4'], after: [subheadsField()] })),
   ],
   design: {
     layout: [textAlignField()],

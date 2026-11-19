@@ -1,4 +1,5 @@
-import { simpleEditor } from './editors'
+import { headingEditor, simpleEditor } from './editors'
+import { toHeading } from './heading'
 import type { ArrayField, Condition, Field, FilterOptions, UploadField } from 'payload'
 import { dropdown, link, segmented, toggle, whenCondition, type When } from './controls'
 import { panel } from './element'
@@ -39,23 +40,29 @@ export function list(name: string, label: string, singular: string, fields: Fiel
 type Level = 'h1' | 'h2' | 'h3' | 'h4'
 
 /**
- * Eyebrow, heading lines (each can be emphasised), heading level.
- * `levels` are the fixed levels an element offers besides Automatic
+ * The Heading panel's fields, in order: Eyebrow, Heading, then `after` (the
+ * element's supporting text, Hero's Changing words), then Heading level, which
+ * people touch least. `levels` are the fixed levels besides Automatic
  * (Hero: H1-H3; bands: H2-H4).
+ *
+ * Heading is one box with one Emphasize button (kit/heading.ts). It also
+ * accepts text with *stars* for emphasis and new lines for breaks, so
+ * templates, demo content and the connector can write it simply.
  */
-export function headingFields(o: { levels?: Level[] } = {}): Field[] {
+export function headingFields(o: { levels?: Level[]; after?: Field[] } = {}): Field[] {
   const levels = o.levels ?? ['h1', 'h2', 'h3']
   return [
     { name: 'eyebrow', label: 'Eyebrow', type: 'text' },
-    list('lines', 'Heading lines', 'Line', [
-      {
-        type: 'row',
-        fields: [
-          { name: 'text', label: 'Line', type: 'text', required: true, admin: { width: '70%' } },
-          { ...toggle('emphasize', 'Emphasize'), admin: { width: '30%', style: { alignSelf: 'flex-end', paddingBottom: 10 } } },
-        ],
-      },
-    ], { admin: { initCollapsed: false } }),
+    {
+      name: 'heading',
+      label: 'Heading',
+      type: 'richText',
+      editor: headingEditor(),
+      hooks: { beforeValidate: [({ value }) => toHeading(value)] },
+      custom: { mcpNote: 'send plain text: *stars* emphasize words, a new line (\\n) is a line break; reads back as Lexical JSON' },
+      admin: { className: 'b61-heading-field', description: 'Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.' },
+    },
+    ...(o.after ?? []),
     dropdown('headingLevel', 'Heading level', [['auto', 'Automatic'], ...levels.map((l) => [l, l.toUpperCase()] as [string, string])], {
       default: 'auto',
     }),
@@ -274,9 +281,9 @@ export function textAlignField(): Field {
 
 /** The heading panel of a band: eyebrow, heading lines, level, subheadings and (optionally) an intro. */
 export function bandHeadFields(o: { levels?: ('h1' | 'h2' | 'h3' | 'h4')[]; intro?: boolean } = {}): Field[] {
-  return [
-    ...headingFields({ levels: o.levels ?? ['h2', 'h3', 'h4'] }),
-    // One supporting-text field (EDITING-STANDARD.md section 5): Intro on elements with items, else Subheadings.
-    ...(o.intro ? [{ name: 'intro', label: 'Intro', type: 'richText', editor: simpleEditor() } as Field] : [subheadsField()]),
-  ]
+  // One supporting-text field (EDITING-STANDARD.md section 5): Intro on elements with items, else Subheadings.
+  return headingFields({
+    levels: o.levels ?? ['h2', 'h3', 'h4'],
+    after: o.intro ? [{ name: 'intro', label: 'Intro', type: 'richText', editor: simpleEditor() } as Field] : [subheadsField()],
+  })
 }

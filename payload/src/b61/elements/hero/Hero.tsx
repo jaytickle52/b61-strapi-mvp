@@ -6,6 +6,7 @@ import HeroBehavior from './HeroBehavior'
 import { splitWords } from './words'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { bunnyBackground } from '../../kit/video'
+import { headingText } from '../../kit/heading'
 
 export type HeroBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Hero' }>
 
@@ -35,10 +36,9 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
   const ri = revealAttr(block.entrance)
   const Heading = resolveHeadingLevel(block.headingLevel, index)
 
-  const lines = (block.lines ?? []).filter((l) => l?.text)
-  const introStyle = block.subheadlineScale ?? 'body'
-  const metaItems = introStyle === 'meta' ? (block.metaItems ?? []).map((m) => m?.text).filter(Boolean) : []
-  const intro = introStyle === 'meta' ? '' : (block.subheadline ?? '')
+  const title = headingText(block.heading)
+  // One subheadline style: the body font (Jay, 19 Nov 2026).
+  const intro = block.subheadline ?? ''
   const buttons = (block.buttons ?? []).filter((b) => b?.label)
 
   const video = asMedia(block.video)
@@ -91,7 +91,7 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
   // The region is named by its heading, so it is a real landmark; without a
   // heading there is nothing to name it by, and it stays a div.
   const headingId = `b61-hero-${block.id ?? index}-title`
-  const Root = lines.length > 0 ? 'section' : 'div'
+  const Root = Boolean(title) ? 'section' : 'div'
   const isFirst = index === 0
   // First on the page and dark enough for white header text: a header set to
   // "Over the hero" (School settings > Style) may sit on it (chrome.css).
@@ -134,27 +134,15 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
         id={headingId}
         className="b61-hero__title"
         lineClass="b61-hero__title-line"
-        lines={lines}
+        heading={block.heading}
         ri={ri}
         rotate={splitWords((block as any).changingWords)}
       />
 
-      {introStyle === 'meta' ? (
-        metaItems.length > 0 && (
-          <ul className="b61-hero__meta" {...ri}>
-            {metaItems.map((m, i) => (
-              <li key={i} className="b61-hero__meta-item">
-                {m}
-              </li>
-            ))}
-          </ul>
-        )
-      ) : (
-        intro && (
-          <div className={`b61-hero__subhead${introStyle === 'display' ? ' b61-hero__subhead--display' : ''}`} {...ri}>
-            {intro}
-          </div>
-        )
+      {intro && (
+        <div className="b61-hero__subhead" {...ri}>
+          {intro}
+        </div>
       )}
 
       <Buttons buttons={buttons as any} className="b61-hero__actions" ri={ri} />

@@ -6,6 +6,7 @@ import { Buttons, ContentBlocks, HeadingLines, revealAttr } from '../../kit/rend
 import { fromBody } from '../../kit/body'
 import LiteVideo from '../../kit/render/LiteVideo'
 import { parseVideo } from '../../kit/video'
+import { headingText } from '../../kit/heading'
 
 export type SplitBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Split' }>
 
@@ -37,8 +38,8 @@ export default function B61Split({ block, index = 0 }: { block: SplitBlock; inde
   const panel = overlap && panelChoice === 'none' ? 'plain' : panelChoice
   const panelled = panel !== 'none'
   const colHeight = block.columnHeight === 'fill' && hasMedia ? 'fill' : 'fit'
-  const lines = (block.lines ?? []).filter((l) => l?.text)
-  const hasHeading = lines.length > 0
+  const title = headingText(block.heading)
+  const hasHeading = Boolean(title)
   const headingId = `b61-split-${block.id ?? index}-heading`
   const Wrap = hasHeading ? 'section' : 'div'
 
@@ -98,7 +99,7 @@ export default function B61Split({ block, index = 0 }: { block: SplitBlock; inde
                 {block.eyebrow}
               </span>
             )}
-            <HeadingLines as={Heading} id={headingId} className="b61-split__heading" lineClass="b61-split__heading-line" lines={lines} ri={ri} />
+            <HeadingLines as={Heading} id={headingId} className="b61-split__heading" lineClass="b61-split__heading-line" heading={block.heading} ri={ri} />
             {(block.subheads ?? [])
               .filter((s) => s?.text)
               .map((s, i) => (
@@ -116,7 +117,7 @@ export default function B61Split({ block, index = 0 }: { block: SplitBlock; inde
                 <div className={`b61-split__frame-media b61-split__frame-media--${frameKind}`}>
                   {frameKind === 'video' && video ? (
                     <div className="b61-split__video">
-                      <LiteVideo url={video} title={lines.map((l) => l.text).join(' ') || 'Video'} />
+                      <LiteVideo url={video} title={title || 'Video'} />
                     </div>
                   ) : frameKind === 'grid' ? (
                     <div className="b61-split__grid">
