@@ -46,10 +46,7 @@ export const B61CardGrid = defineElement({
   mode: { field: 'source', labels: { manual: 'Cards', programs: 'Programs', 'upcoming-events': 'Events', 'latest-news': 'News', staff: 'Staff', 'school-facts': 'School facts' } },
 
   content: [
-    panel('Heading', [
-      ...headingFields({ levels: ['h2', 'h3', 'h4'] }),
-      { name: 'intro', label: 'Intro', type: 'richText', editor: simpleEditor() },
-    ]),
+    panel('Heading', headingFields({ levels: ['h2', 'h3', 'h4'], after: [{ name: 'intro', label: 'Intro', type: 'richText', editor: simpleEditor() }] })),
     panel('Cards', [
       dropdown(
         'source',
@@ -207,7 +204,7 @@ export const B61CardGrid = defineElement({
           ],
           { default: 'bordered' },
         ),
-        segmented(
+        dropdown(
           'cardShape',
           'Photo shape',
           [
@@ -218,7 +215,7 @@ export const B61CardGrid = defineElement({
           ],
           { default: 'portrait', when: overlayImg },
         ),
-        segmented(
+        dropdown(
           'imageShape',
           'Photo shape',
           [

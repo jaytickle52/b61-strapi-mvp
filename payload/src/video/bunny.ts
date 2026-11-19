@@ -82,7 +82,7 @@ const STATES: Record<number, { label: string; ready?: boolean; failed?: boolean 
   2: { label: 'Processing' },
   3: { label: 'Processing' },
   4: { label: 'Ready to play', ready: true },
-  5: { label: 'Bunny could not process this video', failed: true },
+  5: { label: 'This video could not be prepared', failed: true },
   6: { label: 'The upload failed', failed: true },
 }
 

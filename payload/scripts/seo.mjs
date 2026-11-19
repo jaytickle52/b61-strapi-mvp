@@ -163,7 +163,7 @@ async function main() {
       title: `FAQ test ${RUN}`,
       slug: `faq-test-${RUN}`,
       _status: 'published',
-      sections: [{ blockType: 'b61Accordion', faq: true, lines: [{ text: 'Questions' }], items: [{ title: 'Is there a bus?', body: para('Yes, from Greer.') }] }],
+      sections: [{ blockType: 'b61Accordion', faq: true, heading: [{ text: 'Questions' }], items: [{ title: 'Is there a bus?', body: para('Yes, from Greer.') }] }],
     },
   })
   check(faqPage.status === 201, 'test page with an FAQ accordion saved')

@@ -30,7 +30,8 @@ export const bunnyEndpoints: Endpoint[] = [
         return Response.json(ticket)
       } catch (err: any) {
         req.payload.logger.error({ err }, 'Bunny upload ticket failed')
-        return Response.json({ message: `Couldn't start the upload: ${err?.message ?? err}` }, { status: 502 })
+        // The details stay in the log; editors don't need the video service's name or codes.
+        return Response.json({ message: "Couldn't start the upload. Please try again in a minute." }, { status: 502 })
       }
     },
   },

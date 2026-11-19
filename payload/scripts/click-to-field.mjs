@@ -29,8 +29,12 @@ const cases = []
 const hero = at('b61Hero')
 const heroBtn = sections[hero]?.buttons?.[1]?.label ?? sections[hero]?.buttons?.[0]?.label
 if (heroBtn) cases.push({ name: 'Hero button', text: heroBtn, field: new RegExp(`^field-sections__${hero}__buttons__\\d+__label$`) })
-const line = sections[hero]?.lines?.at(-1)?.text
-if (line) cases.push({ name: 'Heading line', text: line, field: new RegExp(`^field-sections__${hero}__lines__\\d+__text$`) })
+// The Heading is rich text: its last text run is a whole line in the demo (e.g. "Ready for life.").
+const runs = []
+const walk = (n) => (n?.type === 'text' ? runs.push(n.text) : (n?.children ?? []).forEach(walk))
+walk(sections[hero]?.heading?.root)
+const line = runs.at(-1)
+if (line) cases.push({ name: 'Heading', text: line, field: new RegExp(`^sections\\.${hero}\\.heading$`) })
 if (sections[hero]?.subheadline) cases.push({ name: 'Subheadline', text: sections[hero].subheadline, field: new RegExp(`^field-sections__${hero}__subheadline$`) })
 const stats = at('b61StatsBand')
 const stat = sections[stats]?.stats?.[1]
@@ -61,7 +65,11 @@ for (const c of cases) {
   let id = ''
   for (let i = 0; i < 100 && !c.field.test(id); i++) {
     await page.waitForTimeout(100)
-    id = await page.evaluate(() => document.activeElement?.id ?? '')
+    // Inputs carry an id; the Heading's rich text editor carries its path instead.
+    id = await page.evaluate(() => {
+      const a = document.activeElement
+      return a?.id || a?.closest('[data-field-path]')?.getAttribute('data-field-path') || ''
+    })
   }
   const ok = c.field.test(id)
   if (!ok) failed++

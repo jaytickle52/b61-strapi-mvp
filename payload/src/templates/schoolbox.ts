@@ -91,10 +91,9 @@ export function schoolboxHome(theme: ThemeName, c: SchoolboxCopy, photos: School
     blockType: 'b61Hero',
     eyebrow: t === 'warm' ? '' : c.heroEyebrow,
     headingLevel: 'auto',
-    lines: [{ text: c.tagline[0], emphasize: false }, { text: c.tagline[1], emphasize: t !== 'bold' }],
+    heading: [{ text: c.tagline[0], emphasize: false }, { text: c.tagline[1], emphasize: t !== 'bold' }],
     subheadline: c.intro,
-    subheadlineScale: 'body',
-    buttons: [
+      buttons: [
       // Warm's one button sits on the photo, so it is the light one.
       { label: 'Schedule a visit', link: url(visit), variant: t === 'warm' ? 'light' : 'primary' },
       ...(t === 'warm' ? [] : [{ label: t === 'heritage' ? 'Why us' : 'Request info', link: url('/inquire'), variant: 'light' }]),
@@ -111,7 +110,7 @@ export function schoolboxHome(theme: ThemeName, c: SchoolboxCopy, photos: School
   const diffCards = {
     blockType: 'b61CardGrid',
     headingLevel: 'auto',
-    lines: [],
+    heading: null,
     source: 'manual',
     mediaType: t === 'heritage' ? 'none' : 'icon',
     cards: c.differentiators.map((d) => ({ icon: d.icon, title: d.title, body: para(d.body) })),
@@ -135,7 +134,7 @@ export function schoolboxHome(theme: ThemeName, c: SchoolboxCopy, photos: School
     blockType: 'b61Split',
     eyebrow: c.problem.eyebrow,
     headingLevel: 'auto',
-    lines: heading(c.problem.lines[0], c.problem.lines[1]),
+    heading: heading(c.problem.lines[0], c.problem.lines[1]),
     body: toBody(c.problem.body.map((b) => ({ type: 'body', body: para(b) }))),
     buttons: [{ label: 'Our approach', link: url('/about'), variant: 'link' }],
     media: 'photo',
@@ -156,7 +155,7 @@ export function schoolboxHome(theme: ThemeName, c: SchoolboxCopy, photos: School
   const outcomes = {
     blockType: 'b61CardGrid',
     headingLevel: 'auto',
-    lines: heading(c.outcomes.heading),
+    heading: heading(c.outcomes.heading),
     intro: para(c.outcomes.intro),
     source: 'manual',
     mediaType: 'image',
@@ -194,7 +193,7 @@ export function schoolboxHome(theme: ThemeName, c: SchoolboxCopy, photos: School
   const events = {
     blockType: 'b61CardGrid',
     headingLevel: 'auto',
-    lines: heading('Upcoming events'),
+    heading: heading('Upcoming events'),
     source: 'upcoming-events',
     limit: 3,
     mediaType: 'none',
@@ -211,7 +210,7 @@ export function schoolboxHome(theme: ThemeName, c: SchoolboxCopy, photos: School
   const steps = {
     blockType: 'b61CardGrid',
     headingLevel: 'auto',
-    lines: heading('Admissions at a glance'),
+    heading: heading('Admissions at a glance'),
     intro: para('Three simple steps from first visit to first day.'),
     source: 'manual',
     mediaType: 'none',
@@ -230,7 +229,7 @@ export function schoolboxHome(theme: ThemeName, c: SchoolboxCopy, photos: School
   const cta = {
     blockType: 'b61Cta',
     headingLevel: 'auto',
-    lines: heading(c.cta.heading),
+    heading: heading(c.cta.heading),
     body: toBody([{ type: 'body', body: para(c.cta.body) }], { quotePhoto: false }),
     buttons: [
       { label: 'Schedule a visit', link: url(visit), variant: 'primary' },

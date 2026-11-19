@@ -3,6 +3,7 @@ import { asMedia, resolveLink } from '../../lib/media'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { BandHead, eruleClass, revealAttr } from '../../kit/render/parts'
 import LogosInit from './LogosInit'
+import { headingText } from '../../kit/heading'
 
 /*
  * LOGOS. Still: a centred, wrapping row. Scrolling: the row moves slowly
@@ -15,8 +16,8 @@ export default function B61Logos({ block, index = 0 }: { block: any; index?: num
   const as = resolveHeadingLevel(block.headingLevel, index)
   const surface = block.surface ?? 'none'
   const id = `b61-logos-${block.id ?? index}`
-  const lines = (block.lines ?? []).filter((l: any) => l?.text)
-  const Wrap = lines.length ? 'section' : 'div'
+  const title = headingText(block.heading)
+  const Wrap = title ? 'section' : 'div'
   const ha = block.headingAlign ?? 'left'
   const logos = ((block.logos ?? []) as any[]).filter((l) => asMedia(l?.image)?.url)
   const scroll = block.motion === 'scroll' && logos.length > 2
@@ -59,7 +60,7 @@ export default function B61Logos({ block, index = 0 }: { block: any; index?: num
           .join(' ')}
         style={{ '--b61-logo-h': `var(--b61-logo-h-${size})` } as CSSProperties}
         data-b61-reveal={rv}
-        {...(lines.length ? { 'aria-labelledby': `${id}-heading` } : {})}
+        {...(title ? { 'aria-labelledby': `${id}-heading` } : {})}
       >
         <BandHead block={block} prefix="b61-logos" as={as} headingId={`${id}-heading`} ri={ri} headClass={`b61-halign-${ha} b61-headw-${ha}`} itemClass="b61-block" />
         {logos.length > 0 &&

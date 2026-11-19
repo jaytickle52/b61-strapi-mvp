@@ -2,6 +2,7 @@ import { resolveHeadingLevel } from '../../kit/groups'
 import { BandHead, eruleClass, revealAttr } from '../../kit/render/parts'
 import Inner from '../../kit/render/Inner'
 import TabsInit from './TabsInit'
+import { headingText } from '../../kit/heading'
 
 /* Ported from elements/Tabs/html.twig and elements/Tab/html.twig (plugin 1.77.1). */
 export default function B61Tabs({ block, index = 0, path }: { block: any; index?: number; path?: string }) {
@@ -14,8 +15,8 @@ export default function B61Tabs({ block, index = 0, path }: { block: any; index?
   const openFirst = block.firstItemOpen !== false
   const uid = String(block.id ?? index)
   const id = `b61-tabs-${uid}`
-  const lines = (block.lines ?? []).filter((l: any) => l?.text)
-  const Wrap = lines.length ? 'section' : 'div'
+  const title = headingText(block.heading)
+  const Wrap = title ? 'section' : 'div'
   const tabs = (block.tabs ?? []).filter((t: any) => t?.label)
   const ha = block.headingAlign ?? 'left'
   return (
@@ -33,12 +34,12 @@ export default function B61Tabs({ block, index = 0, path }: { block: any; index?
           .filter(Boolean)
           .join(' ')}
         data-b61-reveal={rv}
-        {...(lines.length ? { 'aria-labelledby': `${id}-heading` } : {})}
+        {...(title ? { 'aria-labelledby': `${id}-heading` } : {})}
       >
         <BandHead block={block} prefix="b61-tabs" as={as} headingId={`${id}-heading`} ri={ri} headClass={`b61-halign-${ha} b61-headw-${ha}`} itemClass="b61-block" />
         <div className="b61-tabs__layout">
           {tabs.length > 0 && (
-            <div className="b61-tabs__tablist js-b61-tabs-list" {...ri} data-b61-orientation={pos === 'top' ? 'horizontal' : 'vertical'} data-b61-label={lines.map((l: any) => l.text).join(' ') || 'Tabs'}>
+            <div className="b61-tabs__tablist js-b61-tabs-list" {...ri} data-b61-orientation={pos === 'top' ? 'horizontal' : 'vertical'} data-b61-label={title || 'Tabs'}>
               {tabs.map((t: any, i: number) => {
                 const active = openFirst && i === 0
                 return (

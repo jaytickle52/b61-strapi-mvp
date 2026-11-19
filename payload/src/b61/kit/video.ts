@@ -34,10 +34,10 @@ export function embedUrl(v: VideoRef, opts: { autoplay?: boolean } = {}): string
   return `https://iframe.mediadelivery.net/embed/${v.library}/${v.id}?autoplay=${auto}&preload=${auto}&responsive=true`
 }
 
-export const VIDEO_HELP = 'YouTube, Vimeo or Bunny Stream. The player loads only when someone presses play.'
-export const VIDEO_PLACEHOLDER = 'https://www.youtube.com/watch?v=… · https://vimeo.com/… · https://iframe.mediadelivery.net/embed/…'
-const VIDEO_ERROR =
-  'Paste a YouTube, Vimeo or Bunny Stream link. For Bunny, open the video in Bunny Stream and copy its Embed or Play link (it contains mediadelivery.net).'
+export const VIDEO_HELP = 'A YouTube or Vimeo link, or upload a video. The player loads only when someone presses play.'
+export const VIDEO_PLACEHOLDER = 'https://www.youtube.com/watch?v=… · https://vimeo.com/…'
+// Uploaded videos fill in their own link (it still validates); editors only ever paste YouTube or Vimeo.
+const VIDEO_ERROR = 'Paste a YouTube or Vimeo link, or upload a video.'
 
 /** The "Video link" field, shown when `show` says so. */
 export function videoLinkField(show: (siblingData: any) => boolean): Field {
@@ -75,8 +75,7 @@ export function bunnyBackground(url?: string | null): { sources: string[]; poste
   return { sources: ['720p', '480p', '360p'].map((h) => `${base}/play_${h}.mp4`), poster: `${base}/thumbnail.jpg` }
 }
 
-const BUNNY_ONLY_ERROR =
-  'Paste a Bunny Stream link: open the video in Bunny Stream and copy its Embed or Play link (it contains mediadelivery.net).'
+const BUNNY_ONLY_ERROR = 'Upload the video here; a link from elsewhere can\'t play as a background.'
 
 /** The Hero's "Bunny video" field: a Bunny link (or upload), played as the background. */
 export function bunnyBackgroundField(show: (siblingData: any) => boolean): Field {
@@ -86,9 +85,8 @@ export function bunnyBackgroundField(show: (siblingData: any) => boolean): Field
     type: 'text',
     admin: {
       condition: (_, s) => show(s),
-      placeholder: 'https://iframe.mediadelivery.net/embed/…',
-      description:
-        'Plays muted on a loop behind the text. Videos are stored on Bunny Stream; keep this page open until the upload finishes.',
+      // Upload only (Jay, 19 Nov 2026): where videos are stored is ours to know, not the editor's.
+      description: 'Plays muted on a loop behind the text. Keep this page open until the upload finishes.',
       components: { Field: { path: '@/video/VideoField#VideoField', clientProps: { uploadFirst: true } } },
     },
     validate: (v: unknown, { siblingData }: any) => {

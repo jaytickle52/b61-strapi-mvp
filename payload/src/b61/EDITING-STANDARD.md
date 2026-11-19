@@ -24,8 +24,17 @@ without scrolling, and each panel says what is in it.
 1. **Shape choice first, above the panels.** If one choice changes what the editor
    is asked to supply (Cover vs Band, Image vs Video, Text vs Meta line), it sits
    at the top, because it decides which fields and panels appear.
-2. **Heading**: eyebrow, heading lines, heading level (Automatic by default), and the
-   element's one supporting-text field (Subheadline or Intro, section 5).
+2. **Heading**, in this order: Eyebrow, **Heading**, then the element's one supporting-text
+   field (Subheadline or Intro, section 5; Hero adds Changing words before it), then Heading
+   level (Automatic by default) last, because people touch it least. `headingFields({ after })`.
+   - **Heading is one box** typed like a sentence, with one **Emphasize** button: select any
+     words and press it (Jay, 19 Nov 2026; replaces heading lines). Shift+Enter starts a new
+     line. Stored as Lexical JSON (`kit/heading.ts`); emphasized words carry the highlight
+     format and render as `<em class="…-line--em">`, a line emphasized whole keeps the line's
+     `--em` class. Templates, demo content and the connector may write it as text:
+     `"Rooted in faith.\n*Ready for life.*"` (stars emphasize, a new line breaks).
+   - **On the page**, typed lines break on wider screens and each line is balanced; phones
+     run the lines together and balance the whole heading, so no word is left alone.
 3. **The element's main content**: the items list (cards, stats, slides, questions),
    the Content editor (Split, Prose, CTA Band) or the column of elements (Section).
    A list or editor stands on its own, outside the panels; a group of settings around
@@ -61,8 +70,10 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 
 ## 4. Controls
 
-- **Two to five fixed choices: segmented buttons**, with icons where an icon is
-  clearer than a word (alignment, position). Six or more: a dropdown.
+- **Segmented buttons only for up to five short choices** (about 36 characters together)
+  or icons, where an icon is clearer than a word (alignment, position). Anything longer
+  is a dropdown (Jay, 19 Nov 2026: Hero type crowded its row). One control keeps one form
+  in every element: Photo shape is always a dropdown, Surface always buttons.
 - **On/off: a toggle.** Never a two-option radio for yes/no.
 - **Site-wide scales (1–7): step slider** with named ends and a reset to the
   site default. Never a bare number box.
@@ -78,12 +89,12 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 - Terse labels, no parenthetical hints, no "Optional." in help text (an empty field
   already reads as optional). Help text only when the label cannot carry it, and then
   one short line. Units go after the field with `unit(field, '%')`, never in the label.
-- The same thing has the same name in every element: Eyebrow, Heading lines,
+- The same thing has the same name in every element: Eyebrow, Heading,
   Subheadline, Intro, Buttons, Surface, Padding, Entrance animation.
 - **One supporting-text field per element, never both** (decided 15 Nov 2026; applied
   16 Nov: `bandHeadFields({ intro: true })` leaves Subheadings out).
-  - Hero-type elements (Hero, CTA Band) get **Subheadline**: plain text,
-    display size, read as part of the heading.
+  - Hero-type elements (Hero, CTA Band) get **Subheadline**: plain text, read as part of
+    the heading. One style, the body font: no style choice, no Short facts (Jay, 19 Nov 2026).
   - Elements with their own items (Card Grid, Accordion, Stats, Tabbed Features, Tabs, Gallery,
     Carousel) get **Intro**: the short editor (section 10), body size, setting up the items.
   - If an Intro ever needs display size, that is a Design choice (Intro size:
@@ -108,8 +119,9 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 - **Stored values never change with a label.** Rename the words freely; to rename or
   move a stored value, ship a migration that rewrites old data, the defaults and the
   demo content in the same PR. CI catches a structure change without a migration, but
-  not a renamed option value. Where a label disagreed with its value (Hero's
-  Subheadline style), fix the label.
+  not a renamed option value. Where a label disagreed with its value, fix the label.
+- Editors never see where files are kept: no "Bunny", no service names, in labels, help
+  text or errors (Jay, 19 Nov 2026). Videos are "Upload a video"; links are YouTube or Vimeo.
 
 ## 6. Photos
 
@@ -284,10 +296,12 @@ arrangement choices are Banner 61-only; content a school updates stays where sta
   - Stats Band: **Band width** Full / Right part / Left part (wide screens) and **Pull up over the
     band above** (same hook as Section's pull-up, so the band above makes room).
 - **For school staff (Content):**
-  - Hero > Heading > **Changing words**: one text box, 2-4 words separated by commas. The first
-    must appear exactly in a heading line (checked on save). A text box, not a list, keeps the
-    Heading panel short. It plays once, ending on the first word, inside five seconds (WCAG 2.2.2),
-    and not at all for visitors who ask for less motion. The page text is the line as typed.
+  - Hero > Heading > **Changing words**: words that take turns with the heading's first
+    emphasized words, separated by commas (checked on save: something must be emphasized).
+    Works anywhere in the heading, best at the end. A text box, not a list, keeps the Heading
+    panel short. It plays once, ending on the emphasized words, inside five seconds (WCAG 2.2.2),
+    and not at all for visitors who ask for less motion. The page text is the heading as typed.
+    Older content listed every word with the first in the heading; that still plays.
     Styled by the Accent heading line dial.
   - Every Buttons list: **Opens: A link / A video**. A video plays in a pop-up over the page
     (`kit/render/VideoDialog.tsx`, mounted once in the layout); without JavaScript it is a link.
@@ -309,7 +323,7 @@ arrangement choices are Banner 61-only; content a school updates stays where sta
 
 Same rule as section 16: bigger layout choices are Banner 61-only (Design > Advanced).
 
-- **School settings > Look > Accent heading font** (optional): heading lines marked Emphasize, and
+- **School settings > Look > Accent heading font** (optional): emphasized heading words, and
   the Hero's changing word, use this second font and keep their letters as typed, even when
   Heading letters is Capitals ("AN EDUCATION THAT'S *personal*"). Loaded from Google Fonts with
   the others (400/500, upright and italic). `[data-b61-accent-font]` in `styles/style.css`.

@@ -34,8 +34,8 @@ export async function ensurePatternsDemo(payload: Payload, school: School) {
     {
       blockType: 'b61Hero', layoutMode: 'cover', backgroundType: 'image', image: pic(0), overlay: 'gradient', height: 'tall',
       eyebrow: `${school.name}`,
-      lines: [{ text: 'Excellence in Learning.' }, { text: 'Christ in everything.', emphasize: true }],
-      changingWords: 'Learning, Missions, Athletics',
+      heading: 'Excellence in *Learning*.\n*Christ in everything.*',
+      changingWords: 'Missions, Athletics',
       buttons: [
         { label: 'Request information', variant: 'light', action: 'link', link: go('inquire') },
         { label: 'Watch our story', variant: 'link', action: 'video', video },
@@ -48,7 +48,7 @@ export async function ensurePatternsDemo(payload: Payload, school: School) {
       itemStyle: 'plain', columns: '3', bandWidth: 'right', pullUp: true,
     },
     {
-      blockType: 'b61Split', eyebrow: 'The experience', lines: [{ text: 'Shaping the leaders' }, { text: 'of tomorrow', emphasize: true }],
+      blockType: 'b61Split', eyebrow: 'The experience', heading: [{ text: 'Shaping the leaders' }, { text: 'of tomorrow', emphasize: true }],
       media: 'photo', image: pic(1), badge: pic(3), imageSide: 'left', overlap: true, textPanel: 'soft',
       body: toBody([{ type: 'body', body: para('We are more than a school: a family rooted in faith and committed to excellence, from the classroom to the field.') }]),
       buttons: [{ label: 'Our beliefs', variant: 'primary', action: 'link', link: go('about') }],
@@ -58,7 +58,7 @@ export async function ensurePatternsDemo(payload: Payload, school: School) {
       content: [
         {
           blockType: 'b61CardGrid', headBeside: true, stagger: true, hoverReveal: true, altTint: true,
-          lines: [{ text: 'What our graduates carry' }], headingLevel: 'h2',
+          heading: [{ text: 'What our graduates carry' }], headingLevel: 'h2',
           intro: para('Graduates are sent out to make a difference. We do this by teaching:'),
           source: 'manual', mediaType: 'image', arrangement: 'grid', columns: '2', cardStyle: 'overlay', cardShape: 'landscape', cardOverlay: 'gradient',
           padTop: 'none', padBottom: 'none',
@@ -74,7 +74,7 @@ export async function ensurePatternsDemo(payload: Payload, school: School) {
     },
     {
       blockType: 'b61CardGrid', headBeside: true, bleed: true, surface: 'soft',
-      eyebrow: 'Academics', lines: [{ text: 'Find your place' }],
+      eyebrow: 'Academics', heading: [{ text: 'Find your place' }],
       intro: para('Christian education is more than knowledge: it is a Biblical worldview in every subject.'),
       source: 'manual', mediaType: 'image', arrangement: 'carousel', columns: '3', peek: 'medium', advance: 'one', controlsPosition: 'bottom-left',
       cardStyle: 'overlay', cardShape: 'portrait', cardOverlay: 'gradient',
@@ -144,7 +144,7 @@ export async function ensurePatternsDemo2(payload: Payload, school: School) {
 
   const sections: any[] = [
     {
-      blockType: 'b61Pillars', scrollStory: true, lines: [{ text: 'An education that is' }, { text: 'personal', emphasize: true }],
+      blockType: 'b61Pillars', scrollStory: true, heading: [{ text: 'An education that is' }, { text: 'personal', emphasize: true }],
       intro: para('No two students are alike, so no two educations here are the same.'),
       items: [
         ['Broad, rich curriculum', 'A wide range of courses builds the foundation colleges look for and room to find new interests.'],
@@ -154,7 +154,7 @@ export async function ensurePatternsDemo2(payload: Payload, school: School) {
       ].map(([title, body], i) => ({ title, body: para(body), image: pic(i) })),
     },
     {
-      blockType: 'b61Tabs', lines: [{ text: 'Well-balanced' }, { text: 'well-being', emphasize: true }], tabPosition: 'top', tabAlign: 'center',
+      blockType: 'b61Tabs', heading: [{ text: 'Well-balanced' }, { text: 'well-being', emphasize: true }], tabPosition: 'top', tabAlign: 'center',
       tabs: [
         { label: 'Student life', content: [cardSet(['Healthy connections', 'A vibrant community', 'Try something new'], 0)] },
         { label: 'Athletics', content: [cardSet(['Team first', 'Game day', 'Every level'], 2)] },
@@ -162,16 +162,16 @@ export async function ensurePatternsDemo2(payload: Payload, school: School) {
       ],
     },
     {
-      blockType: 'b61CardGrid', duotone: true, lines: [{ text: 'A culture of' }, { text: 'community', emphasize: true }],
+      blockType: 'b61CardGrid', duotone: true, heading: [{ text: 'A culture of' }, { text: 'community', emphasize: true }],
       source: 'manual', mediaType: 'image', arrangement: 'grid', columns: '4', cardStyle: 'overlay', cardShape: 'portrait', cardOverlay: 'gradient',
       cards: ['Faith', 'Service', 'Friendship', 'Belonging'].map((title, i) => ({ title, image: pic(i + 1) })),
     },
     {
-      blockType: 'b61Gallery', duotone: true, eyebrow: 'Our people', lines: [{ text: 'Faces of the school' }], media: 'gallery', galleryLayout: 'grid', columns: '4',
+      blockType: 'b61Gallery', duotone: true, eyebrow: 'Our people', heading: [{ text: 'Faces of the school' }], media: 'gallery', galleryLayout: 'grid', columns: '4',
       images: [0, 1, 2, 3].map((i) => ({ image: pic(i + 2) })),
     },
     {
-      blockType: 'b61Logos', eyebrow: 'Where graduates go', lines: [{ text: 'Colleges our seniors chose' }], motion: 'scroll', oneColour: true,
+      blockType: 'b61Logos', eyebrow: 'Where graduates go', heading: [{ text: 'Colleges our seniors chose' }], motion: 'scroll', oneColour: true,
       logos: [0, 1, 2, 3, 4, 5, 6, 7].map((i) => ({ image: pic(i) })),
     },
     {

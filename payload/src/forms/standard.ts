@@ -299,7 +299,7 @@ export async function ensureStandardForms(payload: Payload, school: School, req?
             {
               blockType: 'b61Form',
               form: form.id,
-              lines: [{ text: s.page.heading }],
+              heading: [{ text: s.page.heading }],
               subheads: [{ text: s.page.intro }],
               surface: s.key === 'apply' ? 'soft' : 'none',
               card: s.key === 'apply' ? 'card' : 'none',

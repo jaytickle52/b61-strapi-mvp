@@ -39,7 +39,7 @@ export function plainText(value: unknown, max = 20000): string {
 // names are left out: they read badly as a description.
 const PROSE_KEYS = new Set(['text', 'quote', 'summary', 'subheadline', 'caption', 'intro', 'body', 'description'])
 // Parts that are headings or buttons, whatever their inner fields are called.
-const NOT_PROSE = new Set(['lines', 'subheads', 'eyebrow', 'buttons', 'primary', 'secondary', 'button', 'link', 'links', 'cta'])
+const NOT_PROSE = new Set(['heading', 'lines', 'subheads', 'eyebrow', 'buttons', 'primary', 'secondary', 'button', 'link', 'links', 'cta'])
 
 /**
  * A search-result description (about 155 characters) from a page's own words,

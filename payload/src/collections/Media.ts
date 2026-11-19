@@ -50,7 +50,7 @@ export const Media: CollectionConfig = {
   admin: {
     group: 'Files',
     description:
-      'Photos for the website. Add alt text so screen readers can describe each photo. PDFs go in Documents. Videos go to Bunny Stream: use "Upload a video" on the element that shows it.',
+      'Photos for the website. Add alt text so screen readers can describe each photo. PDFs go in Documents. Videos: use "Upload a video" on the element that shows it.',
     defaultColumns: ['filename', 'alt', 'folder', 'updatedAt'],
     // "Write missing alt text" (only when ANTHROPIC_API_KEY is set; src/media/autoAlt.ts).
     components: { beforeListTable: ['@/media/FillAlt#FillAlt'] },

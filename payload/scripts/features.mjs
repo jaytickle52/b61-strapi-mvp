@@ -226,7 +226,7 @@ async function main() {
     school: cedar,
     title: `Video ${RUN}`,
     slug: `video-${RUN}-${Math.random().toString(36).slice(2, 6)}`,
-    sections: [{ blockType: 'b61Split', lines: [{ text: 'Watch' }], media: 'video', video }],
+    sections: [{ blockType: 'b61Split', heading: [{ text: 'Watch' }], media: 'video', video }],
     // Drafts save without checks (by design); publishing checks every field.
     _status: 'published',
   })
@@ -244,7 +244,7 @@ async function main() {
     school: cedar,
     title: `Hero video ${RUN}`,
     slug: `hero-video-${RUN}-${Math.random().toString(36).slice(2, 6)}`,
-    sections: [{ blockType: 'b61Hero', layoutMode: 'cover', backgroundType: 'video', lines: [{ text: 'Welcome' }], bunnyVideo }],
+    sections: [{ blockType: 'b61Hero', layoutMode: 'cover', backgroundType: 'video', heading: [{ text: 'Welcome' }], bunnyVideo }],
     _status: 'published',
   })
   const heroOk = await api('POST', '/pages', { token: admin, body: hero('https://iframe.mediadelivery.net/embed/123456/0b1c2d3e-4f50-6172-8394-a5b6c7d8e9f0') })
@@ -506,7 +506,7 @@ async function main() {
   {
     const li = visible((await page('/layout-ideas', 'cedar-ridge')).text)
     check(/data-b61-rotate="\[&quot;Learning&quot;,&quot;Missions&quot;,&quot;Athletics&quot;\]"/.test(li), 'the hero carries its changing words')
-    check(/<h1[^>]*>[\s\S]*Excellence in <span class="b61-rotate"[^>]*><span class="b61-rotate__word">Learning<\/span><\/span>\./.test(li), '… and its heading reads as typed')
+    check(/<h1[^>]*>[\s\S]*Excellence in (<em[^>]*>)?<span class="b61-rotate"[^>]*><span class="b61-rotate__word">Learning<\/span><\/span>(<\/em>)?\./.test(li), '… and its heading reads as typed')
     check(/class="b61-link b61-btn--video" href="https:\/\/www\.youtube\.com\/watch\?v=[^"]+" data-b61-video=/.test(li), 'a button set to a video links to it and opens the pop-up player')
     check(li.includes('b61-stats--part b61-stats--part-right') && li.includes('b61-stats--pull'), 'a Stats Band can sit on the right and pull up')
     check(li.includes('class="b61-split__badge"'), 'a Split shows its corner badge')
@@ -515,12 +515,22 @@ async function main() {
     check(li.includes('aria-label="Quick links"') && li.includes('b61-quick__label">Apply<'), 'Side buttons show on Cedar Ridge')
     check(!visible((await page('/layout-ideas', 'harbor-oaks')).text).includes('aria-label="Quick links"'), '… and not at a school without them')
 
-    // Changing words: the first must be in a heading line.
+    // Changing words take turns with the heading's emphasized words.
     const bad = await api('POST', '/pages', {
       token: admin,
-      body: { school: harbor, title: `Words ${RUN}`, slug: `words-${RUN}`, _status: 'published', sections: [{ blockType: 'b61Hero', lines: [{ text: 'A place to grow' }], changingWords: 'Learning, Faith' }] },
+      body: { school: harbor, title: `Words ${RUN}`, slug: `words-${RUN}`, _status: 'published', sections: [{ blockType: 'b61Hero', heading: 'A place to grow', changingWords: 'Learning, Faith' }] },
     })
-    check(bad.status >= 400, 'changing words whose first word is not in the heading are refused')
+    check(bad.status >= 400, 'changing words with nothing emphasized in the heading are refused')
+    const good = await api('POST', '/pages', {
+      token: admin,
+      body: { school: harbor, title: `Words ok ${RUN}`, slug: `words-ok-${RUN}`, _status: 'published', sections: [{ blockType: 'b61Hero', heading: 'A place to grow in *faith*', changingWords: 'Learning, Service' }] },
+    })
+    check(good.status < 400, '… and accepted once words are emphasized')
+    if (good.status < 400) {
+      const html = (await page(`/words-ok-${RUN}`, 'harbor-oaks')).text
+      check(html.includes('data-b61-rotate="[&quot;faith&quot;,&quot;Learning&quot;,&quot;Service&quot;]"'), '… and the emphasized words rotate')
+      check(/<h1[^>]*>[\s\S]*?<em class="b61-hero__title-line--em">/.test(html), 'emphasized words inside a heading line are an <em>')
+    }
 
     // Banner 61-only options: a school Contributor's save keeps them.
     const lp = (await api('GET', `/pages?where[school][equals]=${cedar}&where[slug][equals]=layout-ideas&depth=0&draft=true`, { token: admin })).json?.docs?.[0]
@@ -572,7 +582,7 @@ async function main() {
   console.log('\nSection colour')
   {
     const stats = (label) => ({ blockType: 'b61StatsBand', eyebrow: label, stats: [{ value: '12', label: 'Teams' }, { value: '9', label: 'Clubs' }] })
-    const cta = (label) => ({ blockType: 'b61Cta', lines: [{ text: label }] })
+    const cta = (label) => ({ blockType: 'b61Cta', heading: [{ text: label }] })
     const made = await api('POST', '/pages', {
       token: admin,
       body: {

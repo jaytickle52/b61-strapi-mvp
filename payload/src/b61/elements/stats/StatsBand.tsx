@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react'
 import type { Page } from '@/payload-types'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { BandHead, Buttons, eruleClass, revealAttr } from '../../kit/render/parts'
+import { hasHeading } from '../../kit/heading'
 
 export type StatsBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61StatsBand' }>
 
@@ -16,8 +17,8 @@ export default function B61StatsBand({ block, index = 0, nested = false }: { blo
   const istyle = block.itemStyle ?? 'plain'
   const flush = istyle === 'divided' && block.flushEdges
   const headingId = `b61-stats-${block.id ?? index}-heading`
-  const hasHeading = (block.lines ?? []).some((l) => l?.text)
-  const Wrap = hasHeading ? 'section' : 'div'
+  const showHeading = hasHeading(block.heading)
+  const Wrap = showHeading ? 'section' : 'div'
   const stats = (block.stats ?? []).filter((s) => s?.figure || s?.label)
   return (
     <div
@@ -49,7 +50,7 @@ export default function B61StatsBand({ block, index = 0, nested = false }: { blo
           .filter(Boolean)
           .join(' ')}
         data-b61-reveal={rv}
-        {...(hasHeading ? { 'aria-labelledby': headingId } : {})}
+        {...(showHeading ? { 'aria-labelledby': headingId } : {})}
       >
         <BandHead block={block as any} prefix="b61-stats" as={resolveHeadingLevel(block.headingLevel, index)} headingId={headingId} ri={ri} />
         {stats.length > 0 && (

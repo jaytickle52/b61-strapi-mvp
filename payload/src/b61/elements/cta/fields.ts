@@ -35,7 +35,7 @@ export const B61Cta = defineElement({
   mode: { field: 'surface', labels: { none: 'No surface', soft: 'Light wash', dark: 'Dark', accent: 'Accent' } },
 
   content: [
-    panel('Heading', [...headingFields({ levels: ['h2', 'h3', 'h4'] }), subheadsField()]),
+    panel('Heading', headingFields({ levels: ['h2', 'h3', 'h4'], after: [subheadsField()] })),
     bodyField({ quotePhoto: false }),
     buttonsPanel(),
     panel('Background', [

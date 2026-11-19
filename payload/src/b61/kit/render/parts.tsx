@@ -5,6 +5,7 @@ import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical
 import { imgProps, resolveLink } from '../../lib/media'
 import { B61Icon } from './icons'
 import { parseVideo } from '../video'
+import { hasHeading, headingLines } from '../heading'
 
 /*
  * Shared front-end parts. Same markup and classes as the plugin's twig, so the
@@ -14,15 +15,19 @@ import { parseVideo } from '../video'
 export type RevealAttr = { 'data-b61-reveal-item'?: string }
 export const revealAttr = (entrance?: string | null): RevealAttr => (entrance === 'off' ? {} : { 'data-b61-reveal-item': '' })
 
-type Line = { text?: string | null; emphasize?: boolean | null; id?: string | null }
-
-/** One heading tag, one span per line; a real space keeps the accessible name readable. */
+/**
+ * One heading tag, one span per line (kit/heading.ts); a real space between
+ * lines keeps the accessible name readable. A line that is emphasized whole
+ * keeps the line class `--em`, as heading lines always did; emphasized words
+ * inside a line are an <em> with the same class, which every element's CSS
+ * already styles. `b61-hline` lets phones run the lines together (style.css).
+ */
 export function HeadingLines({
   as: Tag,
   id,
   className,
   lineClass,
-  lines,
+  heading,
   ri,
   rotate,
 }: {
@@ -30,25 +35,52 @@ export function HeadingLines({
   id?: string
   className: string
   lineClass: string
-  lines: Line[]
+  heading: unknown
   ri: RevealAttr
-  /** Changing words (Hero): the first must appear in a line; the others take turns with it. */
+  /** Changing words (Hero): they take turns with the first emphasized words. */
   rotate?: string[] | null
 }) {
-  const shown = lines.filter((l) => l?.text)
-  if (!shown.length) return null
+  const lines = headingLines(heading)
+  if (!lines.length) return null
   const words = (rotate ?? []).map((w) => w.trim()).filter(Boolean)
-  const at = words.length > 1 ? shown.findIndex((l) => l.text!.includes(words[0])) : -1
+  // Which run rotates, and through which words.
+  let at: [number, number] | null = null
+  let turns: string[] = []
+  if (words.length) {
+    // Older content: the first changing word is in the heading as typed, and the list holds them all.
+    if (words.length > 1) lines.forEach((l, i) => l.forEach((r, j) => !at && r.text.includes(words[0]) && (at = [i, j])))
+    if (at) turns = words
+    else {
+      lines.forEach((l, i) => l.forEach((r, j) => !at && r.em && r.text.trim() && (at = [i, j])))
+      if (at) {
+        const own = lines[at[0]][at[1]].text.trim()
+        turns = [own, ...words.filter((w) => w !== own)]
+      }
+    }
+  }
   return (
     <Tag className={className} id={id}>
-      {shown.map((l, i) => (
-        <Fragment key={l.id ?? i}>
-          {i > 0 && ' '}
-          <span className={`${lineClass}${l.emphasize ? ` ${lineClass}--em` : ''}`} {...ri}>
-            {i === at ? <RotatingWord text={l.text!} words={words} /> : l.text}
-          </span>
-        </Fragment>
-      ))}
+      {lines.map((line, i) => {
+        const whole = line.every((r) => r.em || !r.text.trim())
+        return (
+          <Fragment key={i}>
+            {i > 0 && ' '}
+            <span className={`${lineClass} b61-hline${whole ? ` ${lineClass}--em` : ''}`} {...ri}>
+              {line.map((r, j) => {
+                const rotating = at && at[0] === i && at[1] === j && turns.length > 1
+                const body = rotating ? <RotatingWord text={r.text} words={turns} /> : r.text
+                return r.em && !whole ? (
+                  <em key={j} className={`${lineClass}--em`}>
+                    {body}
+                  </em>
+                ) : (
+                  <Fragment key={j}>{body}</Fragment>
+                )
+              })}
+            </span>
+          </Fragment>
+        )
+      })}
     </Tag>
   )
 }
@@ -293,7 +325,7 @@ export function BandHead({
   headClass = '',
   itemClass = '',
 }: {
-  block: { eyebrow?: string | null; lines?: Line[] | null; subheads?: { id?: string | null; text?: string | null }[] | null; intro?: unknown }
+  block: { eyebrow?: string | null; heading?: unknown; subheads?: { id?: string | null; text?: string | null }[] | null; intro?: unknown }
   prefix: string
   as: 'h1' | 'h2' | 'h3' | 'h4'
   headingId: string
@@ -305,9 +337,8 @@ export function BandHead({
   itemClass?: string
 }) {
   const x = itemClass ? ` ${itemClass}` : ''
-  const lines = (block.lines ?? []).filter((l) => l?.text)
   const subs = (block.subheads ?? []).filter((s) => s?.text)
-  if (!block.eyebrow && !lines.length && !subs.length && !block.intro) return null
+  if (!block.eyebrow && !hasHeading(block.heading) && !subs.length && !block.intro) return null
   const inner = (
     <>
       {block.eyebrow && (
@@ -315,7 +346,7 @@ export function BandHead({
           {block.eyebrow}
         </span>
       )}
-      <HeadingLines as={as} id={headingId} className={`${prefix}__heading${x}`} lineClass={`${prefix}__heading-line`} lines={lines} ri={ri} />
+      <HeadingLines as={as} id={headingId} className={`${prefix}__heading${x}`} lineClass={`${prefix}__heading-line`} heading={block.heading} ri={ri} />
       {subs.map((s, i) => (
         <p key={s.id ?? i} className={`${prefix}__subhead${x}`} {...ri}>
           {s.text}

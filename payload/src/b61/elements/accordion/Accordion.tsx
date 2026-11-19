@@ -7,6 +7,7 @@ import { BandHead, Buttons, eruleClass, revealAttr } from '../../kit/render/part
 import AccordionInit from './AccordionInit'
 import JsonLd from '@/seo/JsonLd'
 import { faqSchema } from '@/seo/schema'
+import { headingText } from '../../kit/heading'
 
 const NEXT: Record<string, string> = { h1: 'h2', h2: 'h3', h3: 'h4', h4: 'h5' }
 
@@ -23,8 +24,8 @@ export default function B61Accordion({ block, index = 0 }: { block: any; index?:
   const shownum = block.showNumbers !== false
   const openFirst = block.firstItemOpen !== false
   const id = `b61-acc-${block.id ?? index}`
-  const lines = (block.lines ?? []).filter((l: any) => l?.text)
-  const Wrap = lines.length ? 'section' : 'div'
+  const title = headingText(block.heading)
+  const Wrap = title ? 'section' : 'div'
   const wStep = block.widthStep ? Math.min(Math.max(Math.round(block.widthStep), 1), 7) : null
   const items = (block.items ?? []).filter((i: any) => i?.title)
   const faq = block.faq ? faqSchema(items) : null
@@ -46,7 +47,7 @@ export default function B61Accordion({ block, index = 0 }: { block: any; index?:
           .join(' ')}
         style={wStep ? ({ '--acc-measure': `var(--b61-box-${wStep})` } as CSSProperties) : undefined}
         data-b61-reveal={rv}
-        {...(lines.length ? { 'aria-labelledby': `${id}-heading` } : {})}
+        {...(title ? { 'aria-labelledby': `${id}-heading` } : {})}
       >
         <BandHead block={block} prefix="b61-acc" as={as} headingId={`${id}-heading`} ri={ri} headClass={`b61-halign-${block.headingAlign ?? 'left'}`} />
         {items.length > 0 && (

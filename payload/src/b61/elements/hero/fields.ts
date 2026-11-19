@@ -1,7 +1,8 @@
 import { defineElement, panel } from '../../kit/element'
 import { bunnyBackgroundField } from '../../kit/video'
 import { splitWords } from './words'
-import { segmented, step, unit, type WhenRule } from '../../kit/controls'
+import { emphasizedPhrase, headingText } from '../../kit/heading'
+import { dropdown, segmented, step, unit, type WhenRule } from '../../kit/controls'
 import type { NumberField } from 'payload'
 import {
   buttonsPanel,
@@ -23,19 +24,21 @@ import {
  * Differences from the Breakdance form, on purpose:
  * - Cover / Band is the first choice on Content, because it decides what the
  *   editor supplies (background vs collage).
- * - Subheadline style comes before the text it switches; the subheadline sits in the Heading panel.
  * - Column balance sits in Layout (it is arrangement, and Band only).
  * - Heading level defaults to Automatic (H1 first on the page, H2 after).
  */
 
+/**
+ * Changing words take turns with the heading's first emphasized words. Older
+ * content listed every word, the first of them in the heading as typed; that
+ * still works (parts.tsx).
+ */
 function validateChangingWords(value: unknown, { siblingData }: any): true | string {
   const words = splitWords(value)
   if (!words.length) return true
-  if (words.length < 2) return 'Add at least one more word, separated by a comma.'
-  const lines: any[] = siblingData?.lines ?? []
-  return lines.some((l) => typeof l?.text === 'string' && l.text.includes(words[0]))
-    ? true
-    : `The first word ("${words[0]}") must appear exactly as typed in a heading line.`
+  if (words.length > 1 && headingText(siblingData?.heading).includes(words[0])) return true
+  if (emphasizedPhrase(siblingData?.heading)) return true
+  return 'Emphasize the words in the heading that should change (select them, then press Emphasize).'
 }
 
 const cover: WhenRule = { field: 'layoutMode', in: ['cover'] }
@@ -54,55 +57,38 @@ export const B61Hero = defineElement({
   mode: { field: 'layoutMode', labels: { cover: 'Cover', band: 'Band', split: 'Split', type: 'Big headline' } },
 
   content: [
-    segmented(
+    // A dropdown: four two-word choices crowd a row of buttons (EDITING-STANDARD.md section 4).
+    dropdown(
       'layoutMode',
       'Hero type',
       [
-        ['cover', 'Cover photo', 'cover'],
-        ['band', 'Band with collage', 'band'],
-        ['split', 'Split screen', 'split'],
-        ['type', 'Big headline', 'type'],
+        ['cover', 'Cover photo'],
+        ['band', 'Band with collage'],
+        ['split', 'Split screen'],
+        ['type', 'Big headline'],
       ],
       { default: 'cover' },
     ),
 
-    panel('Heading', [
-      ...headingFields(),
-      {
-        name: 'changingWords',
-        label: 'Changing words',
-        type: 'text',
-        validate: validateChangingWords,
-        admin: {
-          placeholder: 'e.g. Learning, Missions, Athletics',
-          description: 'Two to four words, separated by commas. The first must be in a heading line exactly as typed; the others take its place in turn, once.',
-        },
-      },
-      segmented(
-        'subheadlineScale',
-        'Subheadline style',
-        // Labels say what each stored value does (audit 1.78.0: they read inverted):
-        // body = the body font, display = the heading font, meta = a row of short facts.
-        [
-          ['body', 'Standard'],
-          ['display', 'Display'],
-          ['meta', 'Short facts'],
+    panel(
+      'Heading',
+      headingFields({
+        after: [
+          {
+            name: 'changingWords',
+            label: 'Changing words',
+            type: 'text',
+            validate: validateChangingWords,
+            admin: {
+              placeholder: 'e.g. Learning, Missions, Athletics',
+              description: 'Words that take turns with the emphasized words, separated by commas. Works best at the end of the heading.',
+            },
+          },
+          // One subheadline style (Jay, 19 Nov 2026): the body font.
+          { name: 'subheadline', label: 'Subheadline', type: 'textarea', admin: { rows: 2 } },
         ],
-        { default: 'body' },
-      ),
-      {
-        name: 'subheadline',
-        label: 'Subheadline',
-        type: 'textarea',
-        admin: { rows: 2, condition: (_, s) => s?.subheadlineScale !== 'meta' },
-      },
-      list('metaItems', 'Short facts', 'Fact', [{ name: 'text', label: 'Text', type: 'text', required: true }], {
-        admin: {
-          condition: (_, s) => s?.subheadlineScale === 'meta',
-          description: 'e.g. "Grades PK-8", "Est. 1951".',
-        },
       }),
-    ]),
+    ),
 
     buttonsPanel(),
 

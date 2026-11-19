@@ -10,6 +10,7 @@ import { B61Icon } from '../../kit/render/icons'
 import CarouselInit from '../../kit/render/CarouselInit'
 import { formatDate, getEvents, getNews, getPrograms, getSettings, getStaff, eventWhen } from '@/lib/data'
 import { schoolFacts } from '@/school/facts'
+import { headingText } from '../../kit/heading'
 
 export type CardGridBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61CardGrid' }>
 
@@ -77,8 +78,8 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
   const cards = await loadCards(block)
   const ri = revealAttr(block.entrance)
   const rv = block.entrance === 'off' ? 'off' : 'on'
-  const lines = (block.lines ?? []).filter((l) => l?.text)
-  const hasHeading = lines.length > 0
+  const title = headingText(block.heading)
+  const hasHeading = Boolean(title)
   const Heading = resolveHeadingLevel(block.headingLevel, index)
   // Card titles sit one level under the grid's heading. With no heading they take
   // its level, but never H1: a page has one H1, and a row of them is not it.
@@ -163,7 +164,7 @@ export default async function B61CardGrid({ block, index = 0 }: { block: CardGri
           {block.eyebrow}
         </span>
       )}
-      <HeadingLines as={Heading} id={headingId} className="b61-cards__heading" lineClass="b61-cards__heading-line" lines={lines} ri={ri} />
+      <HeadingLines as={Heading} id={headingId} className="b61-cards__heading" lineClass="b61-cards__heading-line" heading={block.heading} ri={ri} />
       {Boolean(block.intro) && (
         <div className="b61-cards__intro breakdance-rich-text-styles" {...ri}>
           <RichText data={block.intro as SerializedEditorState} disableContainer converters={b61Converters} />

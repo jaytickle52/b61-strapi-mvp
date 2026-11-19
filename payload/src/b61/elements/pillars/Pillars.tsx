@@ -7,6 +7,7 @@ import { resolveHeadingLevel } from '../../kit/groups'
 import { BandHead, eruleClass, revealAttr } from '../../kit/render/parts'
 import PillarsInit from './PillarsInit'
 import ScrollStory from '../../kit/render/ScrollStory'
+import { headingText } from '../../kit/heading'
 
 /* Ported from elements/Pillars/html.twig (plugin 1.77.1). */
 export default function B61Pillars({ block, index = 0 }: { block: any; index?: number }) {
@@ -18,10 +19,10 @@ export default function B61Pillars({ block, index = 0 }: { block: any; index?: n
   const talign = block.tabAlign ?? 'left'
   const openFirst = block.firstItemOpen !== false
   const id = `b61-pillars-${block.id ?? index}`
-  const lines = (block.lines ?? []).filter((l: any) => l?.text)
-  const Wrap = lines.length ? 'section' : 'div'
+  const title = headingText(block.heading)
+  const Wrap = title ? 'section' : 'div'
   const items = (block.items ?? []).filter((i: any) => i?.title)
-  const label = lines.map((l: any) => l.text).join(' ') || 'Pillars'
+  const label = title || 'Pillars'
   const ha = block.headingAlign ?? 'left'
   // Design > Advanced (Banner 61): every pillar shown, scrolling past with its title list in view.
   const story = Boolean(block.scrollStory) && items.length > 0
@@ -41,7 +42,7 @@ export default function B61Pillars({ block, index = 0 }: { block: any; index?: n
           .filter(Boolean)
           .join(' ')}
         data-b61-reveal={rv}
-        {...(lines.length ? { 'aria-labelledby': `${id}-heading` } : {})}
+        {...(title ? { 'aria-labelledby': `${id}-heading` } : {})}
       >
         <BandHead block={block} prefix="b61-pillars" as={as} headingId={`${id}-heading`} ri={ri} headClass={`b61-halign-${ha} b61-headw-${ha}`} itemClass="b61-block" />
         {story && (

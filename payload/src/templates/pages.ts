@@ -49,9 +49,8 @@ const hero = (o: { eyebrow: string; lines: string[]; sub: string; buttons?: [str
   blockType: 'b61Hero',
   eyebrow: o.eyebrow,
   headingLevel: 'auto',
-  lines: lines(...o.lines),
+  heading: lines(...o.lines),
   subheadline: o.sub,
-  subheadlineScale: 'body',
   buttons: (o.buttons ?? []).map(([label, href], i) => ({ label, link: url(href), variant: i === 0 ? 'primary' : 'light' })),
   layoutMode: 'band',
   bandSize: o.size ?? 'standard',
@@ -64,7 +63,7 @@ const prose = (o: { eyebrow?: string; heading: string; text: string[]; emphasis?
   blockType: 'b61Prose',
   ...(o.eyebrow ? { eyebrow: o.eyebrow } : {}),
   headingLevel: 'auto',
-  lines: [{ text: o.heading, emphasize: false }],
+  heading: [{ text: o.heading, emphasize: false }],
   body: toBody(
     [...o.text.map((t) => ({ type: 'body', body: para(t) })), ...(o.emphasis ? [{ type: 'emphasis', scale: 'display', text: o.emphasis }] : [])],
     { emphasisScale: true, dividers: true },
@@ -90,7 +89,7 @@ const cards = (heading: string, intro: string | null, items: [string, string, st
 const faq = (heading: string, items: [string, string][], eyebrow = 'Questions') => ({
   blockType: 'b61Accordion',
   eyebrow,
-  lines: [{ text: heading }],
+  heading: [{ text: heading }],
   itemStyle: 'divided',
   items: items.map(([title, body]) => ({ title, body: para(body) })),
 })
@@ -100,7 +99,7 @@ const quote = (q: string, who: string) => ({ blockType: 'b61Testimonial', eyebro
 const cta = (heading: string, body: string, buttons: [string, string][], surface = 'accent') => ({
   blockType: 'b61Cta',
   headingLevel: 'auto',
-  lines: [{ text: heading, emphasize: false }],
+  heading: [{ text: heading, emphasize: false }],
   body: toBody([{ type: 'body', body: para(body) }], { quotePhoto: false }),
   buttons: buttons.map(([label, href], i) => ({ label, link: url(href), variant: i === 0 ? 'primary' : 'light' })),
   textAlign: 'center',
@@ -112,7 +111,7 @@ const cta = (heading: string, body: string, buttons: [string, string][], surface
 })
 
 const form = (id: number | string | undefined, heading: string, eyebrow: string) =>
-  id ? [{ blockType: 'b61Form', form: id, eyebrow, lines: [{ text: heading }], surface: 'soft', card: 'card' }] : []
+  id ? [{ blockType: 'b61Form', form: id, eyebrow, heading: [{ text: heading }], surface: 'soft', card: 'card' }] : []
 
 const buttonBar = (a: [string, string], b: [string, string]) => ({
   blockType: 'b61ButtonBar', firstLabel: a[0], firstLink: url(a[1]), secondLabel: b[0], secondLink: url(b[1]), size: 'large',

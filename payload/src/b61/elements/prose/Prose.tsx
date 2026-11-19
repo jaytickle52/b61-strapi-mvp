@@ -3,6 +3,7 @@ import type { Page } from '@/payload-types'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { Buttons, ContentBlocks, HeadingLines, revealAttr } from '../../kit/render/parts'
 import { fromBody } from '../../kit/body'
+import { headingText } from '../../kit/heading'
 
 export type ProseBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Prose' }>
 
@@ -22,8 +23,8 @@ export default function B61Prose({ block, index = 0 }: { block: ProseBlock; inde
   const beside = block.headPosition === 'beside'
   const headFull = !beside && block.headingWidth === 'full'
   const linkList = block.iconlistStyle === 'links'
-  const lines = (block.lines ?? []).filter((l) => l?.text)
-  const hasHeading = lines.length > 0
+  const title = headingText(block.heading)
+  const hasHeading = Boolean(title)
   const headingId = `b61-prose-${block.id ?? index}-heading`
   const Wrap = hasHeading ? 'section' : 'div'
 
@@ -51,7 +52,7 @@ export default function B61Prose({ block, index = 0 }: { block: ProseBlock; inde
           {block.eyebrow}
         </span>
       )}
-      <HeadingLines as={Heading} id={headingId} className="b61-prose__heading b61-block" lineClass="b61-prose__heading-line" lines={lines} ri={ri} />
+      <HeadingLines as={Heading} id={headingId} className="b61-prose__heading b61-block" lineClass="b61-prose__heading-line" heading={block.heading} ri={ri} />
       {(block.subheads ?? [])
         .filter((s) => s?.text)
         .map((s, i) => (

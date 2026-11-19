@@ -6,6 +6,7 @@ import { BandHead, Buttons, eruleClass, revealAttr } from '../../kit/render/part
 import LiteVideo from '../../kit/render/LiteVideo'
 import { parseVideo } from '../../kit/video'
 import GalleryInit from './GalleryInit'
+import { headingText } from '../../kit/heading'
 
 export type GalleryBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Gallery' }>
 
@@ -29,8 +30,8 @@ export default function B61Gallery({ block, index = 0 }: { block: GalleryBlock; 
   const shape = block.imageShape ?? 'fixed'
   const isStrip = media === 'image' && imode === 'gallery' && mode === 'strip'
   const beside = block.textPosition === 'beside' && !isStrip
-  const lines = (block.lines ?? []).filter((l) => l?.text)
-  const hasHeading = lines.length > 0
+  const title = headingText(block.heading)
+  const hasHeading = Boolean(title)
   const headingId = `b61-gallery-${block.id ?? index}-heading`
   const Wrap = hasHeading ? 'section' : 'div'
   const head = BandHead({ block, prefix: 'b61-gallery', as, headingId, ri, wrap: false })
@@ -61,7 +62,7 @@ export default function B61Gallery({ block, index = 0 }: { block: GalleryBlock; 
       {media === 'video' ? (
         video && (
           <div className="b61-gallery__media b61-gallery__video">
-            <LiteVideo url={video} title={lines.map((l) => l.text).join(' ') || 'Video'} />
+            <LiteVideo url={video} title={title || 'Video'} />
           </div>
         )
       ) : imode === 'single' ? (
@@ -80,7 +81,7 @@ export default function B61Gallery({ block, index = 0 }: { block: GalleryBlock; 
               className={`b61-gallery__strip js-b61-gal-strip${mode === 'masonry' ? ' js-b61-gal-masonry' : ''}`}
               {...ri}
               // A scrolling strip must take keyboard focus so arrow keys can scroll it (WCAG 2.1.1).
-              {...(mode === 'strip' ? { tabIndex: 0, role: 'region', 'aria-label': `${lines.map((l) => l.text).join(' ') || 'Photo'} gallery, scrolls sideways` } : {})}
+              {...(mode === 'strip' ? { tabIndex: 0, role: 'region', 'aria-label': `${title || 'Photo'} gallery, scrolls sideways` } : {})}
             >
               {images.map((it, i) => {
                 const f = focusOf(it.image)

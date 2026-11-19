@@ -252,9 +252,8 @@ export function demoHeroes(opts: { tagline: string; mission: string; phone?: str
       blockType: 'b61Hero',
       eyebrow: 'Now enrolling',
       headingLevel: 'auto',
-      lines: taglineLines,
+      heading: taglineLines,
       subheadline: opts.mission,
-      subheadlineScale: 'body',
       buttons: [
         { label: 'Schedule a tour', link: { type: 'url', url: '/visit' }, variant: 'primary' },
         { label: 'Our programs', link: { type: 'url', url: '/programs' }, variant: 'light' },
@@ -273,12 +272,11 @@ export function demoHeroes(opts: { tagline: string; mission: string; phone?: str
       blockType: 'b61Hero',
       eyebrow: 'About us',
       headingLevel: 'auto',
-      lines: [
+      heading: [
         { text: 'A school that knows', emphasize: false },
         { text: 'every child by name', emphasize: true },
       ],
       subheadline: opts.mission,
-      subheadlineScale: 'display',
       buttons: [{ label: 'Meet our team', link: { type: 'url', url: '/staff' }, variant: 'link' }],
       collage: [{ image: img2 }, { image: img3 }, { image: img4 }],
       layoutMode: 'band',
@@ -291,12 +289,11 @@ export function demoHeroes(opts: { tagline: string; mission: string; phone?: str
       blockType: 'b61Hero',
       eyebrow: 'Visit',
       headingLevel: 'auto',
-      lines: [
+      heading: [
         { text: 'Come see it', emphasize: false },
         { text: 'for yourself', emphasize: true },
       ],
-      subheadlineScale: 'meta',
-      metaItems: [{ text: 'Tours Tue–Thu' }, { text: '9:00–11:00 AM' }, ...(opts.phone ? [{ text: opts.phone }] : [])],
+      subheadline: `Tours Tuesday to Thursday, 9:00 to 11:00 AM${opts.phone ? `. Call ${opts.phone}.` : '.'}`,
       buttons: [{ label: 'Call to book a tour', link: { type: 'url', url: opts.phone ? `tel:${opts.phone.replace(/[^0-9+]/g, '')}` : '/visit' }, variant: 'primary' }],
       backgroundType: 'slideshow',
       slides: [{ image: img1 }, { image: img3 }, { image: img4 }],
@@ -335,7 +332,7 @@ export function demoSplits(opts: { name: string; mission: string; phone?: string
       blockType: 'b61Split',
       eyebrow: 'Our mission',
       headingLevel: 'auto',
-      lines: [
+      heading: [
         { text: 'Why families', emphasize: false },
         { text: `choose ${short}`, emphasize: true },
       ],
@@ -364,7 +361,7 @@ export function demoSplits(opts: { name: string; mission: string; phone?: string
       blockType: 'b61Split',
       eyebrow: 'Life at school',
       headingLevel: 'auto',
-      lines: [
+      heading: [
         { text: 'A day in the life', emphasize: false },
         { text: 'of our students', emphasize: true },
       ],
@@ -407,7 +404,7 @@ export function demoProse(opts: { heading?: string; body?: unknown; phone?: stri
     blockType: 'b61Prose',
     eyebrow: 'Plan your visit',
     headingLevel: 'auto',
-    lines: [{ text: opts.heading || 'How to schedule', emphasize: false }],
+    heading: [{ text: opts.heading || 'How to schedule', emphasize: false }],
     body: toBody([
       {
         type: 'body',
@@ -448,7 +445,7 @@ export function demoCta(opts: {
     blockType: 'b61Cta',
     eyebrow: 'Admissions',
     headingLevel: 'auto',
-    lines: [{ text: opts.heading || 'See it for yourself', emphasize: false }],
+    heading: [{ text: opts.heading || 'See it for yourself', emphasize: false }],
     body: toBody([{ type: 'body', body: para(opts.body || 'The best way to know if we are the right fit is to visit.') }], { quotePhoto: false }),
     buttons: [
       { label: opts.buttonLabel || 'Schedule a tour', link: { type: 'url', url: opts.buttonUrl || '/visit' }, variant: 'primary' },
@@ -484,7 +481,7 @@ export function cardsFrom(o: {
   return {
     blockType: 'b61CardGrid',
     headingLevel: 'auto',
-    lines: o.heading ? [{ text: o.heading, emphasize: false }] : [],
+    heading: o.heading ? [{ text: o.heading, emphasize: false }] : [],
     ...(o.intro ? { intro: para(o.intro) } : {}),
     source,
     limit: o.limit ?? 3,
@@ -511,7 +508,7 @@ export function statsFrom(o: { heading?: string | null; tone?: string | null; st
   return {
     blockType: 'b61StatsBand' as const,
     eyebrow: o.eyebrow,
-    lines: o.heading ? [{ text: o.heading }] : [],
+    heading: o.heading ? [{ text: o.heading }] : [],
     stats: o.stats.map((s) => ({ figure: s.value ?? '', label: s.label ?? '' })),
     columns: String(Math.min(Math.max(o.stats.length, 1), 4)),
     surface: surface[o.tone ?? 'light'] ?? 'soft',
