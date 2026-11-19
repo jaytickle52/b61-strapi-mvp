@@ -512,6 +512,7 @@ export interface Page {
             blockType: 'b61Prose';
           }
         | {
+            cardText?: ('below' | 'on') | null;
             eyebrow?: string | null;
             /**
              * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
@@ -569,8 +570,14 @@ export interface Page {
                         | 'people'
                         | 'cross'
                         | 'school'
+                        | 'custom'
                       )
                     | null;
+                  /**
+                   * An SVG or PNG on a see-through background. It takes the text colour, like the other icons.
+                   */
+                  iconImage?: (number | null) | Media;
+                  iconColours?: boolean | null;
                   eyebrow?: string | null;
                   title?: string | null;
                   body?: {
@@ -626,14 +633,13 @@ export interface Page {
             columns?: ('1' | '2' | '3' | '4') | null;
             textAlign?: ('left' | 'center') | null;
             advance?: ('one' | 'view') | null;
-            peek?: ('none' | 'small' | 'medium' | 'large') | null;
             controlsPosition?:
               ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
             showCounter?: boolean | null;
             showProgress?: boolean | null;
             padTop?: ('normal' | 'tight' | 'none') | null;
             padBottom?: ('normal' | 'tight' | 'none') | null;
-            cardStyle?: ('plain' | 'flat' | 'bordered' | 'overlay') | null;
+            cardStyle?: ('plain' | 'flat' | 'bordered') | null;
             cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
             imageShape?: ('fixed' | 'custom') | null;
             ratioW?: number | null;
@@ -642,8 +648,6 @@ export interface Page {
             mediaRound?: boolean | null;
             iconSize?: ('sm' | 'md' | 'lg') | null;
             showNumbers?: boolean | null;
-            ctaCase?: ('upper' | 'normal') | null;
-            ctaSize?: ('sm' | 'md' | 'lg') | null;
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             cardSurface?: ('light' | 'soft' | 'primary') | null;
             cardOverlay?: ('none' | 'gradient' | 'wash') | null;
@@ -1248,6 +1252,7 @@ export interface Page {
                             blockType: 'b61Prose';
                           }
                         | {
+                            cardText?: ('below' | 'on') | null;
                             eyebrow?: string | null;
                             /**
                              * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
@@ -1307,8 +1312,14 @@ export interface Page {
                                         | 'people'
                                         | 'cross'
                                         | 'school'
+                                        | 'custom'
                                       )
                                     | null;
+                                  /**
+                                   * An SVG or PNG on a see-through background. It takes the text colour, like the other icons.
+                                   */
+                                  iconImage?: (number | null) | Media;
+                                  iconColours?: boolean | null;
                                   eyebrow?: string | null;
                                   title?: string | null;
                                   body?: {
@@ -1364,7 +1375,6 @@ export interface Page {
                             columns?: ('1' | '2' | '3' | '4') | null;
                             textAlign?: ('left' | 'center') | null;
                             advance?: ('one' | 'view') | null;
-                            peek?: ('none' | 'small' | 'medium' | 'large') | null;
                             controlsPosition?:
                               | ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden')
                               | null;
@@ -1372,7 +1382,7 @@ export interface Page {
                             showProgress?: boolean | null;
                             padTop?: ('normal' | 'tight' | 'none') | null;
                             padBottom?: ('normal' | 'tight' | 'none') | null;
-                            cardStyle?: ('plain' | 'flat' | 'bordered' | 'overlay') | null;
+                            cardStyle?: ('plain' | 'flat' | 'bordered') | null;
                             cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
                             imageShape?: ('fixed' | 'custom') | null;
                             ratioW?: number | null;
@@ -1381,8 +1391,6 @@ export interface Page {
                             mediaRound?: boolean | null;
                             iconSize?: ('sm' | 'md' | 'lg') | null;
                             showNumbers?: boolean | null;
-                            ctaCase?: ('upper' | 'normal') | null;
-                            ctaSize?: ('sm' | 'md' | 'lg') | null;
                             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                             cardSurface?: ('light' | 'soft' | 'primary') | null;
                             cardOverlay?: ('none' | 'gradient' | 'wash') | null;
@@ -1780,7 +1788,6 @@ export interface Page {
             perView?: ('1' | '2' | '3' | '4') | null;
             headingAlign?: ('left' | 'center') | null;
             advance?: ('one' | 'view') | null;
-            peek?: ('none' | 'small' | 'medium' | 'large') | null;
             controlsPosition?:
               ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
             showCounter?: boolean | null;
@@ -2002,6 +2009,7 @@ export interface Page {
                       blockType: 'b61Split';
                     }
                   | {
+                      cardText?: ('below' | 'on') | null;
                       eyebrow?: string | null;
                       /**
                        * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
@@ -2060,8 +2068,14 @@ export interface Page {
                                   | 'people'
                                   | 'cross'
                                   | 'school'
+                                  | 'custom'
                                 )
                               | null;
+                            /**
+                             * An SVG or PNG on a see-through background. It takes the text colour, like the other icons.
+                             */
+                            iconImage?: (number | null) | Media;
+                            iconColours?: boolean | null;
                             eyebrow?: string | null;
                             title?: string | null;
                             body?: {
@@ -2117,14 +2131,13 @@ export interface Page {
                       columns?: ('1' | '2' | '3' | '4') | null;
                       textAlign?: ('left' | 'center') | null;
                       advance?: ('one' | 'view') | null;
-                      peek?: ('none' | 'small' | 'medium' | 'large') | null;
                       controlsPosition?:
                         ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
                       showCounter?: boolean | null;
                       showProgress?: boolean | null;
                       padTop?: ('normal' | 'tight' | 'none') | null;
                       padBottom?: ('normal' | 'tight' | 'none') | null;
-                      cardStyle?: ('plain' | 'flat' | 'bordered' | 'overlay') | null;
+                      cardStyle?: ('plain' | 'flat' | 'bordered') | null;
                       cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
                       imageShape?: ('fixed' | 'custom') | null;
                       ratioW?: number | null;
@@ -2133,8 +2146,6 @@ export interface Page {
                       mediaRound?: boolean | null;
                       iconSize?: ('sm' | 'md' | 'lg') | null;
                       showNumbers?: boolean | null;
-                      ctaCase?: ('upper' | 'normal') | null;
-                      ctaSize?: ('sm' | 'md' | 'lg') | null;
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       cardSurface?: ('light' | 'soft' | 'primary') | null;
                       cardOverlay?: ('none' | 'gradient' | 'wash') | null;
@@ -2871,8 +2882,14 @@ export interface Page {
                                   | 'people'
                                   | 'cross'
                                   | 'school'
+                                  | 'custom'
                                 )
                               | null;
+                            /**
+                             * An SVG or PNG on a see-through background. It takes the text colour, like the other icons.
+                             */
+                            iconImage?: (number | null) | Media;
+                            iconColours?: boolean | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -3092,6 +3109,7 @@ export interface Page {
                       blockType: 'b61Split';
                     }
                   | {
+                      cardText?: ('below' | 'on') | null;
                       eyebrow?: string | null;
                       /**
                        * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
@@ -3150,8 +3168,14 @@ export interface Page {
                                   | 'people'
                                   | 'cross'
                                   | 'school'
+                                  | 'custom'
                                 )
                               | null;
+                            /**
+                             * An SVG or PNG on a see-through background. It takes the text colour, like the other icons.
+                             */
+                            iconImage?: (number | null) | Media;
+                            iconColours?: boolean | null;
                             eyebrow?: string | null;
                             title?: string | null;
                             body?: {
@@ -3207,14 +3231,13 @@ export interface Page {
                       columns?: ('1' | '2' | '3' | '4') | null;
                       textAlign?: ('left' | 'center') | null;
                       advance?: ('one' | 'view') | null;
-                      peek?: ('none' | 'small' | 'medium' | 'large') | null;
                       controlsPosition?:
                         ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
                       showCounter?: boolean | null;
                       showProgress?: boolean | null;
                       padTop?: ('normal' | 'tight' | 'none') | null;
                       padBottom?: ('normal' | 'tight' | 'none') | null;
-                      cardStyle?: ('plain' | 'flat' | 'bordered' | 'overlay') | null;
+                      cardStyle?: ('plain' | 'flat' | 'bordered') | null;
                       cardShape?: ('portrait' | 'square' | 'landscape' | 'custom') | null;
                       imageShape?: ('fixed' | 'custom') | null;
                       ratioW?: number | null;
@@ -3223,8 +3246,6 @@ export interface Page {
                       mediaRound?: boolean | null;
                       iconSize?: ('sm' | 'md' | 'lg') | null;
                       showNumbers?: boolean | null;
-                      ctaCase?: ('upper' | 'normal') | null;
-                      ctaSize?: ('sm' | 'md' | 'lg') | null;
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       cardSurface?: ('light' | 'soft' | 'primary') | null;
                       cardOverlay?: ('none' | 'gradient' | 'wash') | null;
@@ -5470,7 +5491,7 @@ export interface SchoolSetting {
     headingTracking?: ('tight' | 'normal' | 'wide') | null;
     typeScale?: ('compact' | 'standard' | 'dramatic') | null;
     /**
-     * How a heading line marked Emphasize is set.
+     * How emphasized heading words are set.
      */
     emphasis?: ('italic' | 'colour' | 'underline') | null;
     /**
@@ -5478,6 +5499,15 @@ export interface SchoolSetting {
      */
     eyebrow?: ('line' | 'none') | null;
     eyebrowCase?: ('capitals' | 'typed') | null;
+    /**
+     * The "Read more" style link at the foot of a card, site-wide.
+     */
+    cardLinkCase?: ('capitals' | 'typed') | null;
+    cardLinkSize?: ('small' | 'medium' | 'large') | null;
+    /**
+     * How much of the next card or slide shows at the edge of every carousel.
+     */
+    carouselPeek?: ('none' | 'small' | 'medium' | 'large') | null;
     frames?: ('offset' | 'close' | 'none') | null;
     spacing?: ('compact' | 'standard' | 'airy') | null;
     width?: ('narrow' | 'standard' | 'wide') | null;
@@ -5607,8 +5637,14 @@ export interface SchoolSetting {
               | 'people'
               | 'cross'
               | 'school'
+              | 'custom'
             )
           | null;
+        /**
+         * An SVG or PNG on a see-through background. It takes the text colour, like the other icons.
+         */
+        iconImage?: (number | null) | Media;
+        iconColours?: boolean | null;
         link?: {
           type?: ('page' | 'document' | 'url') | null;
           page?: (number | null) | Page;
@@ -6501,6 +6537,7 @@ export interface PagesSelect<T extends boolean = true> {
         b61CardGrid?:
           | T
           | {
+              cardText?: T;
               eyebrow?: T;
               heading?: T;
               intro?: T;
@@ -6513,6 +6550,8 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     image?: T;
                     icon?: T;
+                    iconImage?: T;
+                    iconColours?: T;
                     eyebrow?: T;
                     title?: T;
                     body?: T;
@@ -6551,7 +6590,6 @@ export interface PagesSelect<T extends boolean = true> {
               columns?: T;
               textAlign?: T;
               advance?: T;
-              peek?: T;
               controlsPosition?: T;
               showCounter?: T;
               showProgress?: T;
@@ -6566,8 +6604,6 @@ export interface PagesSelect<T extends boolean = true> {
               mediaRound?: T;
               iconSize?: T;
               showNumbers?: T;
-              ctaCase?: T;
-              ctaSize?: T;
               surface?: T;
               cardSurface?: T;
               cardOverlay?: T;
@@ -6916,6 +6952,7 @@ export interface PagesSelect<T extends boolean = true> {
                           b61CardGrid?:
                             | T
                             | {
+                                cardText?: T;
                                 eyebrow?: T;
                                 heading?: T;
                                 intro?: T;
@@ -6928,6 +6965,8 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       image?: T;
                                       icon?: T;
+                                      iconImage?: T;
+                                      iconColours?: T;
                                       eyebrow?: T;
                                       title?: T;
                                       body?: T;
@@ -6966,7 +7005,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 columns?: T;
                                 textAlign?: T;
                                 advance?: T;
-                                peek?: T;
                                 controlsPosition?: T;
                                 showCounter?: T;
                                 showProgress?: T;
@@ -6981,8 +7019,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 mediaRound?: T;
                                 iconSize?: T;
                                 showNumbers?: T;
-                                ctaCase?: T;
-                                ctaSize?: T;
                                 surface?: T;
                                 cardSurface?: T;
                                 cardOverlay?: T;
@@ -7200,7 +7236,6 @@ export interface PagesSelect<T extends boolean = true> {
               perView?: T;
               headingAlign?: T;
               advance?: T;
-              peek?: T;
               controlsPosition?: T;
               showCounter?: T;
               showProgress?: T;
@@ -7336,6 +7371,7 @@ export interface PagesSelect<T extends boolean = true> {
                     b61CardGrid?:
                       | T
                       | {
+                          cardText?: T;
                           eyebrow?: T;
                           heading?: T;
                           intro?: T;
@@ -7348,6 +7384,8 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 image?: T;
                                 icon?: T;
+                                iconImage?: T;
+                                iconColours?: T;
                                 eyebrow?: T;
                                 title?: T;
                                 body?: T;
@@ -7386,7 +7424,6 @@ export interface PagesSelect<T extends boolean = true> {
                           columns?: T;
                           textAlign?: T;
                           advance?: T;
-                          peek?: T;
                           controlsPosition?: T;
                           showCounter?: T;
                           showProgress?: T;
@@ -7401,8 +7438,6 @@ export interface PagesSelect<T extends boolean = true> {
                           mediaRound?: T;
                           iconSize?: T;
                           showNumbers?: T;
-                          ctaCase?: T;
-                          ctaSize?: T;
                           surface?: T;
                           cardSurface?: T;
                           cardOverlay?: T;
@@ -7833,6 +7868,8 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 icon?: T;
+                                iconImage?: T;
+                                iconColours?: T;
                                 link?:
                                   | T
                                   | {
@@ -7968,6 +8005,7 @@ export interface PagesSelect<T extends boolean = true> {
                     b61CardGrid?:
                       | T
                       | {
+                          cardText?: T;
                           eyebrow?: T;
                           heading?: T;
                           intro?: T;
@@ -7980,6 +8018,8 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 image?: T;
                                 icon?: T;
+                                iconImage?: T;
+                                iconColours?: T;
                                 eyebrow?: T;
                                 title?: T;
                                 body?: T;
@@ -8018,7 +8058,6 @@ export interface PagesSelect<T extends boolean = true> {
                           columns?: T;
                           textAlign?: T;
                           advance?: T;
-                          peek?: T;
                           controlsPosition?: T;
                           showCounter?: T;
                           showProgress?: T;
@@ -8033,8 +8072,6 @@ export interface PagesSelect<T extends boolean = true> {
                           mediaRound?: T;
                           iconSize?: T;
                           showNumbers?: T;
-                          ctaCase?: T;
-                          ctaSize?: T;
                           surface?: T;
                           cardSurface?: T;
                           cardOverlay?: T;
@@ -9300,6 +9337,9 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
         emphasis?: T;
         eyebrow?: T;
         eyebrowCase?: T;
+        cardLinkCase?: T;
+        cardLinkSize?: T;
+        carouselPeek?: T;
         frames?: T;
         spacing?: T;
         width?: T;
@@ -9410,6 +9450,8 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
     | {
         label?: T;
         icon?: T;
+        iconImage?: T;
+        iconColours?: T;
         link?:
           | T
           | {

@@ -26,7 +26,7 @@ export default function B61Rail({ block, index = 0 }: { block: any; index?: numb
             <li key={l.id ?? i} className="b61-rail__item">
               <a className="b61-link b61-rail__link" href={href ?? undefined} {...(newTab ? { target: '_blank', rel: 'noopener' } : {})}>
                 <span className={`b61-link-arrow b61-rail__arrow${icon ? ' b61-rail__arrow--icon' : ''}`} aria-hidden="true">
-                  {icon ? <B61Icon name={icon} /> : '→'}
+                  {icon ? <B61Icon name={icon} image={l.iconImage} keepColours={l.iconColours} /> : '→'}
                 </span>
                 <span className="b61-rail__link-text">{l.label}</span>
               </a>

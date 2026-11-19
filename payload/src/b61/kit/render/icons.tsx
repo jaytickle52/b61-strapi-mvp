@@ -21,7 +21,34 @@ const P: Record<string, string> = {
   school: 'M12 3 1 9l11 6 9-4.9V17h2V9zM5 13.2V17c0 1.7 3.1 3 7 3s7-1.3 7-3v-3.8l-7 3.8z',
 }
 
-export function B61Icon({ name }: { name?: string | null }) {
+/**
+ * An icon: a built-in glyph by name, or the school's own ("custom") from Photos
+ * and videos. A custom icon is drawn inside the same 24px svg, so every place
+ * that sizes and colours the built-in icons sizes it too. By default it is a
+ * mask over the text colour (its shape, our colour), like the built-in set;
+ * Keep its colours shows the file as it is.
+ */
+export function B61Icon({ name, image, keepColours }: { name?: string | null; image?: unknown; keepColours?: boolean | null }) {
+  if (name === 'custom') {
+    const media = image && typeof image === 'object' ? (image as { id?: string | number; url?: string | null }) : null
+    if (!media?.url) return null
+    if (keepColours)
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="b61-icon-own">
+          <image href={media.url} x="0" y="0" width="24" height="24" preserveAspectRatio="xMidYMid meet" />
+        </svg>
+      )
+    // One mask per photo: the same icon used twice on a page shares it.
+    const id = `b61-icon-${media.id ?? encodeURIComponent(media.url)}`
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="b61-icon-own">
+        <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24" style={{ maskType: 'alpha' }}>
+          <image href={media.url} x="0" y="0" width="24" height="24" preserveAspectRatio="xMidYMid meet" />
+        </mask>
+        <rect x="0" y="0" width="24" height="24" mask={`url(#${id})`} style={{ fill: 'currentColor', stroke: 'none' }} />
+      </svg>
+    )
+  }
   const d = name ? P[name] : undefined
   if (!d) return null
   return (

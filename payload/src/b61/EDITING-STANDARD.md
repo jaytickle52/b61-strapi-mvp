@@ -101,7 +101,7 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
     Normal / Large), not a second field.
 - A control shows only when it does something (Eyebrow rule only with an
   eyebrow; Column balance only in Band; Prose's Icon list panel only once the text has
-  an Icon list; Card Grid's link text styles only once a card has link text). A Design
+  an Icon list; Card Grid's Card media only when the text sits below the photo). A Design
   part panel takes a `condition` for this. Split and Framed Image's Frame color is the
   accepted exception: a site whose tokens set no frame can't hide it.
 - **One vocabulary** (audit of plugin 1.78.0, applied 16 Nov 2026):
@@ -236,7 +236,8 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 
 - School settings > Look > **Style (Banner 61)**: a **Theme** (Classic, Heritage, Warm, Bold) and
   the dials: corners, button shape and letters, heading letters, weight, spacing and sizes, accent heading
-  line, eyebrow line and letters, photo frames, section spacing, page width, hero edge line, entrance motion.
+  line, eyebrow line and letters, photo frames, section spacing, page width, hero edge line, entrance motion,
+  card link letters and size, and how much of the next carousel card peeks in.
   An empty dial follows the theme; a set dial overrides it. Classic is the original B61 look and emits nothing.
 - Banner 61 admins only (group access + hidden for school staff). School staff keep colours, fonts and every
   element's Design tab, as before.
@@ -289,7 +290,7 @@ arrangement choices are Banner 61-only; content a school updates stays where sta
   keeps what Banner 61 set. Use it for layout, not for words or photos.
   - Card Grid: **Heading beside the cards** (head, carousel arrows and buttons in a side column),
     **Staggered cards** (every other column lower, wide screens), **Run off the screen edge**
-    (carousel + heading beside; top-level bands only), **Show card text on hover** (overlay cards;
+    (carousel + heading beside; top-level bands only), **Show card text on hover** (text on the photo;
     touch screens always show it; keyboard focus opens it), **Accent tint on every other photo**
     (grey photo multiplied by the accent, so contrast only improves).
   - Section: **Duotone photo** (the background photo in greys, so the wash tints it one colour).
@@ -356,3 +357,22 @@ starting value (`surfaceField({ standalone: 'soft' })`): on their own they show 
 a container they show None. The editor highlights the choice in effect (Segmented's `unset`,
 nesting read from the field's path) and the element applies the same rule (`Inner` passes
 `nested`). Picking any Surface stores it and wins in both places.
+
+## 19. Card Grid review (Jay, 19 Nov 2026)
+
+- **Card text: Below the photo / On the photo** is the first Content control. On the photo is
+  what used to be the Overlay card style: it always uses a photo, so Card media, the card style
+  (Plain · Flat · Bordered) and the card fill hide, and a card without a photo is refused on save.
+  The migration moved every Overlay grid to On the photo.
+- **Your own icons.** Every icon picker (Card Grid cards, Rail links, Prose icon rows, header
+  Quick links) ends with **Your own…**, which shows **Your icon** (an SVG or PNG on a see-through
+  background) and **Keep its colours**. By default the icon takes the text colour, like the
+  built-in set (drawn through its own shape as a mask); Keep its colours shows it as drawn. One
+  helper builds the three fields: `iconChoice()` in `kit/groups.ts`; `B61Icon` renders it.
+- **Set once per site, not per carousel** (Banner 61 style dials, section 14): how much of the
+  next card peeks in (None · Small · Medium · Large), and card link letters (Capitals · As typed)
+  and size (Small · Medium · Large). The per-grid Peek, Link text case and Link text size are gone.
+- Carousel controls at the bottom left: the arrows come first, then the counter and the progress
+  line to their right. Centred and top-right controls are unchanged.
+- Text on the photo at the top or the middle uses a long, eased gradient across the whole card
+  (no band behind the words), so the photo fades in without a visible edge.

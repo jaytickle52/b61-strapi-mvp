@@ -29,7 +29,6 @@ export const B61Carousel = defineElement({
       headingAlignField(),
       panel('Carousel', [
         segmented('advance', 'Advance by', [['one', 'One slide'], ['view', 'A full view']], { default: 'one' }),
-        dropdown('peek', 'Next slide peek', [['none', 'None'], ['small', 'Small'], ['medium', 'Medium'], ['large', 'Large']], { default: 'medium' }),
         dropdown(
           'controlsPosition',
           'Controls',

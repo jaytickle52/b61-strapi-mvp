@@ -1,6 +1,6 @@
 import type { Field } from 'payload'
 import { link, segmented } from '../kit/controls'
-import { ICON_OPTIONS, list, photo } from '../kit/groups'
+import { ICON_OPTIONS, iconChoice, list, photo } from '../kit/groups'
 import { profileUrl } from '../../school/fields'
 
 /*
@@ -85,11 +85,12 @@ export const headerFields: Field[] = [
             label: 'Icon',
             type: 'select',
             defaultValue: 'link',
-            options: ICON_OPTIONS.filter(([v]) => v !== 'dot').map(([value, label]) => ({ value, label })),
+            options: [...ICON_OPTIONS.filter(([v]) => v !== 'dot'), ['custom', 'Your own…']].map(([value, label]) => ({ value, label })),
             admin: { width: '40%', isClearable: false },
           },
         ],
       },
+      ...iconChoice([], { default: 'link' }).slice(1),
       link(),
     ],
     {

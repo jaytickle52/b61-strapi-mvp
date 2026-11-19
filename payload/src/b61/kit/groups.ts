@@ -208,6 +208,32 @@ export function buttonsPanel(): Field {
   return panel('Buttons', [{ ...f, admin: { ...f.admin, className: 'b61-list b61-list--bare' } } as Field])
 }
 
+/**
+ * An icon choice: the built-in set plus "Your own…", which asks for an image
+ * from Photos and videos (an SVG or PNG on a see-through background) and
+ * whether it keeps its colours. Stored as `${name}`, `${name}Image`,
+ * `${name}Colours`; the renderer is kit/render/icons.tsx B61Icon.
+ */
+export function iconChoice(
+  options: [string, string][],
+  o: { name?: string; default: string; width?: string; condition?: Condition } = { default: 'star' },
+): Field[] {
+  const name = o.name ?? 'icon'
+  const isOwn: Condition = (data, sib, ctx) => sib?.[name] === 'custom' && (o.condition ? o.condition(data, sib, ctx) : true)
+  return [
+    dropdown(name, 'Icon', [...options, ['custom', 'Your own…']], { default: o.default, width: o.width, condition: o.condition }),
+    {
+      name: `${name}Image`,
+      label: 'Your icon',
+      type: 'upload',
+      relationTo: 'media',
+      filterOptions: onlyImages,
+      admin: { condition: isOwn, description: 'An SVG or PNG on a see-through background. It takes the text colour, like the other icons.' },
+    } as Field,
+    { ...toggle(`${name}Colours`, 'Keep its colours'), admin: { condition: isOwn } } as Field,
+  ]
+}
+
 /** A photo field. Focal point and crop live on the photo itself, in Media. */
 export function photo(name: string, label: string, o: { when?: When; condition?: Condition; required?: boolean } = {}): UploadField {
   return {
