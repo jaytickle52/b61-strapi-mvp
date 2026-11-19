@@ -52,6 +52,8 @@ import Reveal from '@/b61/reveal/Reveal'
 import { getAnnouncements, getSettings, hiddenFromSearch, isPreview, siteOrigin } from '@/lib/data'
 import AnalyticsTag from '@/analytics/Tag'
 import Announcements, { type Notice } from '@/b61/chrome/Announcements'
+import B61Form from '@/b61/elements/form/Form'
+import type { Announcement } from '@/payload-types'
 import QuickLinks from '@/b61/chrome/QuickLinks'
 import VideoDialog from '@/b61/kit/render/VideoDialog'
 import '@/b61/styles/patterns.css'
@@ -104,6 +106,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const gaTag = !preview && !hidden ? settings.gaMeasurementId : null
   const notices: Notice[] = announcements.map((a) => {
     const { href, newTab } = resolveLink(a.button?.link as any)
+    const popup = a.display === 'popup'
+    const formId = popup && a.form ? (typeof a.form === 'object' ? a.form.id : a.form) : null
     return {
       id: a.id,
       title: a.title,
@@ -112,12 +116,32 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       href,
       newTab,
       linkLabel: a.button?.label,
-      homeOnly: a.showOn === 'home',
-      dismissible: a.dismissible !== false,
+      paths: noticePaths(a),
+      dismissible: popup || a.dismissible !== false,
       version: String(a.updatedAt ?? ''),
-      popup: (a as any).display === 'popup',
-      image: (a as any).display === 'popup' ? (imgProps((a as any).image, '(max-width: 640px) 92vw, 560px') ?? null) : null,
-      imageAlt: asMedia((a as any).image)?.alt ?? '',
+      popup,
+      position: a.popupPosition === 'corner' ? 'corner' : 'center',
+      opens: a.popupOpens === 'later' || a.popupOpens === 'scroll' ? a.popupOpens : 'soon',
+      repeat: a.popupRepeat === 'week' || a.popupRepeat === 'visit' ? a.popupRepeat : 'once',
+      image: popup ? (imgProps(a.image as any, '(max-width: 640px) 92vw, 560px') ?? null) : null,
+      imageAlt: asMedia(a.image as any)?.alt ?? '',
+      // The school's form, drawn on the server like the Form element (no heading, no padding).
+      form: formId ? (
+        <B61Form
+          index={1}
+          block={
+            {
+              blockType: 'b61Form',
+              id: `popup-${a.id}`,
+              form: formId,
+              surface: 'none',
+              padTop: 'none',
+              padBottom: 'none',
+              entrance: 'off',
+            } as any
+          }
+        />
+      ) : null,
     }
   })
   const heading = settings.headingFont ?? 'Fraunces'
@@ -169,7 +193,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         {preview && <PreviewBanner />}
         {preview && <LivePreviewListener />}
         {preview && <EditOverlay />}
-        <Announcements notices={notices} />
+        <Announcements notices={notices} preview={preview} />
         {preview && <EditMark tab="Header" label="Header" />}
         <Header
           brand={{
@@ -190,4 +214,20 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       </body>
     </html>
   )
+}
+
+/**
+ * The page addresses an announcement shows on: null for every page, otherwise
+ * a list ("/" is the home page). "Only the pages I choose" with no page that
+ * can be found shows nowhere.
+ */
+function noticePaths(a: Announcement): string[] | null {
+  if (a.showOn === 'home') return ['/']
+  if (a.showOn !== 'pages') return null
+  const school = a.school && typeof a.school === 'object' ? a.school.id : a.school
+  return (a.pages ?? [])
+    // Only this school's pages (the API could be handed another school's page).
+    .filter((p) => p && typeof p === 'object' && (typeof p.school === 'object' ? p.school?.id : p.school) === school)
+    .map((p) => (p && typeof p === 'object' ? (p.slug === 'home' ? '/' : p.slug ? `/${p.slug}` : null) : null))
+    .filter((p): p is string => Boolean(p))
 }

@@ -550,8 +550,65 @@ async function main() {
       body: { school: harbor, title: `Pop-up ${RUN}`, display: 'popup', style: 'standard', showOn: 'all', startsAt: new Date(Date.now() - 60000).toISOString(), _status: 'published' },
     })
     const hp2 = visible((await page('/', 'harbor-oaks')).text)
-    check(/<dialog class="b61-popup b61-popup--standard"[^>]*>[\s\S]*?Pop-up /.test(hp2) && !/<dialog class="b61-popup[^"]*" open/.test(hp2), 'a pop-up announcement is a closed dialog on load')
+    check(/<dialog class="b61-popup b61-popup--center b61-popup--standard"[^>]*>[\s\S]*?Pop-up /.test(hp2) && !/<dialog class="b61-popup[^"]*" open/.test(hp2), 'a pop-up announcement is a closed dialog on load')
     check(!new RegExp(`b61-notice__title">Pop-up ${RUN}`).test(hp2), '… and not a bar')
+
+    // Pop-up options (19 Nov 2026): corner, chosen pages, a form, its own slots.
+    const started = new Date(Date.now() - 60000).toISOString()
+    const inquire = (await api('GET', `/pages?where[school][equals]=${harbor}&where[slug][equals]=inquire&depth=0&draft=true`, { token: admin })).json?.docs?.[0]
+    const hForm = (await api('GET', `/forms?where[school][equals]=${harbor}&limit=1&depth=0`, { token: admin })).json?.docs?.[0]
+    check(Boolean(inquire && hForm), 'Harbor Oaks has an Inquire page and a form')
+    const pp = await api('POST', '/announcements', {
+      token: admin,
+      body: {
+        school: harbor, title: `Pages pop-up ${RUN}`, display: 'popup', popupOpens: 'scroll', popupRepeat: 'week',
+        style: 'celebrate', showOn: 'pages', pages: [inquire?.id], form: hForm?.id, message: 'x'.repeat(300), startsAt: started, _status: 'published',
+      },
+    })
+    check(pp.status === 201 && pp.json?.doc?.popupOpens === 'scroll' && pp.json?.doc?.popupRepeat === 'week', 'a pop-up saves its opening and repeat choices')
+    check(pp.status === 201, '… and its message can be longer than a bar (300 characters)')
+    const longBar = await api('POST', '/announcements', {
+      token: admin,
+      body: { school: harbor, title: `Long bar ${RUN}`, display: 'bar', style: 'standard', showOn: 'all', message: 'x'.repeat(300), startsAt: started, _status: 'published' },
+    })
+    check(longBar.status >= 400, 'a bar message over 200 characters is refused')
+    const longPop = await api('POST', '/announcements', {
+      token: admin,
+      body: { school: harbor, title: `Long pop-up ${RUN}`, display: 'popup', style: 'standard', showOn: 'all', message: 'x'.repeat(450), startsAt: started, _status: 'published' },
+    })
+    check(longPop.status >= 400, 'a pop-up message over 400 characters is refused')
+    const noPages = await api('POST', '/announcements', {
+      token: admin,
+      body: { school: harbor, title: `No pages ${RUN}`, style: 'standard', showOn: 'pages', pages: [], startsAt: started, _status: 'published' },
+    })
+    check(noPages.status >= 400, '"Only the pages I choose" needs at least one page')
+    // Celebration ranks before Standard, so on /inquire this one is the pop-up.
+    const inq = visible((await page('/inquire', 'harbor-oaks')).text)
+    const dlg = inq.match(/<dialog class="b61-popup b61-popup--center b61-popup--celebrate b61-popup--has-form"[\s\S]*?<\/dialog>/)?.[0] ?? ''
+    check(dlg.includes(`Pages pop-up ${RUN}`), 'a pop-up for chosen pages shows on that page')
+    check(dlg.includes('class="b61-form') && dlg.includes('b61-popup__form'), '… with the school form inside it')
+    check(!visible((await page('/', 'harbor-oaks')).text).includes(`Pages pop-up ${RUN}`), '… and not on other pages')
+    // A corner pop-up (urgent, so it is the home page's pop-up) waits closed.
+    await api('POST', '/announcements', {
+      token: admin,
+      body: { school: harbor, title: `Corner pop-up ${RUN}`, display: 'popup', popupPosition: 'corner', style: 'urgent', showOn: 'home', startsAt: started, _status: 'published' },
+    })
+    const home3 = visible((await page('/', 'harbor-oaks')).text)
+    check(home3.includes('aria-live="polite"') && !home3.includes('b61-popup--corner'), 'a corner pop-up is not over the page on load')
+    check(!/<dialog class="b61-popup b61-popup--center b61-popup--standard"/.test(home3), '… and only one pop-up is on the page')
+    // Pop-ups don't use up the three bar slots.
+    for (const n of [1, 2, 3]) {
+      await api('POST', '/announcements', {
+        token: admin,
+        body: { school: harbor, title: `Bar ${n} ${RUN}`, display: 'bar', style: 'standard', showOn: 'all', startsAt: started, _status: 'published' },
+      })
+    }
+    const home4 = visible((await page('/', 'harbor-oaks')).text)
+    check([1, 2, 3].every((n) => home4.includes(`Bar ${n} ${RUN}`)), 'three bars still show alongside pop-ups')
+    for (const n of [1, 2, 3]) {
+      const b = (await api('GET', `/announcements?where[title][equals]=${encodeURIComponent(`Bar ${n} ${RUN}`)}&depth=0`, { token: admin })).json?.docs?.[0]
+      if (b) await api('DELETE', `/announcements/${b.id}`, { token: admin })
+    }
   }
 
   // ----- Layout options (Canterbury patterns) ----------------------------------

@@ -227,7 +227,7 @@ export async function getProgram(slug: string) {
 
 export const getStaff = (limit = 100) => find<Staff>('staff', { sort: '_order', limit })
 
-/** Announcements showing right now: started, not yet ended. Urgent ones first. */
+/** Announcements showing right now: started, not yet ended. Urgent ones first; bars, then pop-ups. */
 export const getAnnouncements = cache(async () => {
   // The query uses 15-minute steps so it can be cached; the exact Show from /
   // Hide after times are checked here, on every visit.
@@ -246,7 +246,12 @@ export const getAnnouncements = cache(async () => {
   const now = Date.now()
   const showing = docs.filter((a) => new Date(a.startsAt).getTime() <= now && (!a.endsAt || new Date(a.endsAt).getTime() > now))
   const rank = { urgent: 0, celebrate: 1, standard: 2 } as Record<string, number>
-  return showing.sort((a, b) => (rank[a.style] ?? 2) - (rank[b.style] ?? 2)).slice(0, 3)
+  const sorted = showing.sort((a, b) => (rank[a.style] ?? 2) - (rank[b.style] ?? 2))
+  // Up to 3 bars, and a few pop-ups for the page to choose from (it shows one
+  // at a time: the first that fits the page and the visitor hasn't closed).
+  const bars = sorted.filter((a) => a.display !== 'popup').slice(0, 3)
+  const popups = sorted.filter((a) => a.display === 'popup').slice(0, 5)
+  return [...bars, ...popups]
 })
 
 /**
