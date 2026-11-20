@@ -75,21 +75,22 @@ export async function syncElementLibrary(payload: Payload, school: School) {
         { title: 'Do you offer before and after care?', subtitle: 'Daily life', body: para('Care opens at 7:15 and runs until 5:30 for students in every grade.') },
       ],
     },
-    label('Tabs', 'Each tab shows its own elements. Here, a Prose and a Split.'),
+    label('Tabs: on top', 'Each tab has its own words and photo.'),
     {
-      blockType: 'b61Tabs', heading: [{ text: 'A path for every stage' }], tabPosition: 'top', surface: 'soft',
+      blockType: 'b61Tabs', layout: 'top', heading: [{ text: 'A path for every stage' }], surface: 'soft',
       tabs: [
-        { label: 'Grammar School', content: [{ blockType: 'b61Prose', headingLevel: 'h3', heading: [{ text: 'Wonder and memory' }], body: toBody([{ type: 'body', body: para('Songs, chants and stories build a store of knowledge and a love of learning.') }], { emphasisScale: true, dividers: true }), padTop: 'none', padBottom: 'none' }] },
-        { label: 'Logic School', content: [{ blockType: 'b61Split', headingLevel: 'h3', heading: [{ text: 'Asking why' }], media: 'photo', image: pic(2), body: toBody([{ type: 'body', body: para('Students learn to reason, argue fairly and follow an idea to its source.') }]), padTop: 'none', padBottom: 'none' }] },
+        { label: 'Grammar School', body: para('Songs, chants and stories build a store of knowledge and a love of learning.'), image: pic(1) },
+        { label: 'Logic School', body: para('Students learn to reason, argue fairly and follow an idea to its source.'), image: pic(2) },
+        { label: 'Rhetoric School', body: para('Seniors write and speak with clarity, conviction and grace.'), image: pic(3) },
       ],
     },
-    label('Tabbed Features', 'Tabs with a photo for each.'),
+    label('Tabs: feature list', 'Titles with their words beside one photo.'),
     {
-      blockType: 'b61Pillars', heading: [{ text: 'What makes us different' }], tabPosition: 'left',
-      items: [
-        { title: 'Known by name', body: para('Small classes mean every teacher knows every child.'), image: pic(0) },
-        { title: 'Great books', body: para('Students read whole books, not excerpts, from the first grade on.'), image: pic(2) },
-        { title: 'Faith and reason', body: para('We teach that faith and learning belong together.'), image: pic(3) },
+      blockType: 'b61Tabs', layout: 'list', side: 'left', heading: [{ text: 'What makes us different' }],
+      tabs: [
+        { label: 'Known by name', body: para('Small classes mean every teacher knows every child.'), image: pic(0) },
+        { label: 'Great books', body: para('Students read whole books, not excerpts, from the first grade on.'), image: pic(2) },
+        { label: 'Faith and reason', body: para('We teach that faith and learning belong together.'), image: pic(3) },
       ],
     },
     label('Carousel', 'Slides of any element. Here, testimonials.'),

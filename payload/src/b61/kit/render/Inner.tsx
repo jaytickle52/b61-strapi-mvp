@@ -11,7 +11,7 @@ import B61Divider from '../../elements/divider/Divider'
 import B61Logos from '../../elements/logos/Logos'
 import B61ButtonBar from '../../elements/buttonbar/ButtonBar'
 import B61Accordion from '../../elements/accordion/Accordion'
-import B61Pillars from '../../elements/pillars/Pillars'
+import B61Tabs from '../../elements/tabs/Tabs'
 import B61Rail from '../../elements/rail/Rail'
 import B61Form from '../../elements/form/Form'
 import EditMark, { elementName } from '../preview/EditMark'
@@ -30,7 +30,8 @@ export const INNER: Record<string, (p: { block: any; index?: number; nested?: bo
   b61Logos: B61Logos,
   b61ButtonBar: B61ButtonBar,
   b61Accordion: B61Accordion,
-  b61Pillars: B61Pillars,
+  // A Tabs inside a container only comes from an old nested Tabbed Features (20 Nov 2026).
+  b61Tabs: B61Tabs,
   b61Rail: B61Rail,
   b61Form: B61Form,
 }

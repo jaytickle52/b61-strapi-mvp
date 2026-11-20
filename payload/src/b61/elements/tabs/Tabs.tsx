@@ -3,14 +3,24 @@ import { BandHead, eruleClass, revealAttr } from '../../kit/render/parts'
 import Inner from '../../kit/render/Inner'
 import TabsInit from './TabsInit'
 import { headingText } from '../../kit/heading'
+import { RichText } from '@payloadcms/richtext-lexical/react'
+import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
+import type { CSSProperties } from 'react'
+import { b61Converters } from '../../kit/render/converters'
+import { asMedia, focusOf, imgProps } from '../../lib/media'
+import B61Pillars from '../pillars/Pillars'
 
-/* Ported from elements/Tabs/html.twig and elements/Tab/html.twig (plugin 1.77.1). */
+/* Ported from elements/Tabs/html.twig and elements/Tab/html.twig (plugin 1.77.1).
+ * One element for all tab patterns (20 Nov 2026): Feature list and Scroll
+ * story are drawn by the Pillars renderer; Tabs on top / beside here, each
+ * pane showing the tab's text and photo, then any "More in this tab" elements. */
 export default function B61Tabs({ block, index = 0, path }: { block: any; index?: number; path?: string }) {
+  if (block.layout === 'list' || block.layout === 'story') return <B61Pillars block={block} index={index} />
   const ri = revealAttr(block.entrance)
   const rv = block.entrance === 'off' ? 'off' : 'on'
   const as = resolveHeadingLevel(block.headingLevel, index)
   const surface = block.surface ?? 'none'
-  const pos = block.tabPosition ?? 'top'
+  const pos = block.layout === 'beside' ? (block.side === 'right' ? 'right' : 'left') : 'top'
   const talign = block.tabAlign ?? 'left'
   const openFirst = block.firstItemOpen !== false
   const uid = String(block.id ?? index)
@@ -55,6 +65,7 @@ export default function B61Tabs({ block, index = 0, path }: { block: any; index?
               <div key={t.id ?? i} className="b61-pane">
                 <h3 className="b61-pane__label js-b61-pane-label">{t.label}</h3>
                 <div className="b61-pane__content">
+                  <TabFeature tab={t} />
                   <Inner blocks={t.content} path={path && `${path}.tabs.${i}.content`} />
                 </div>
               </div>
@@ -63,6 +74,28 @@ export default function B61Tabs({ block, index = 0, path }: { block: any; index?
         </div>
       </Wrap>
       <TabsInit />
+    </div>
+  )
+}
+
+/** A tab's own text and photo, side by side (stacked on phones). */
+function TabFeature({ tab }: { tab: any }) {
+  const hasBody = Boolean(tab.body?.root?.children?.some((c: any) => c?.children?.length || c?.type === 'block'))
+  const img = imgProps(tab.image, '(max-width: 900px) 100vw, 640px')
+  if (!hasBody && !img) return null
+  const f = focusOf(tab.image)
+  return (
+    <div className={`b61-tabs__feature${img ? '' : ' b61-tabs__feature--text'}${hasBody ? '' : ' b61-tabs__feature--photo'}`}>
+      {hasBody && (
+        <div className="b61-tabs__feature-body breakdance-rich-text-styles">
+          <RichText data={tab.body as SerializedEditorState} disableContainer converters={b61Converters} />
+        </div>
+      )}
+      {img && (
+        <figure className="b61-tabs__feature-media" style={f ? ({ '--b61-photo-focus': f } as CSSProperties) : undefined}>
+          <img {...img} alt={asMedia(tab.image)?.alt ?? ''} loading="lazy" />
+        </figure>
+      )}
     </div>
   )
 }

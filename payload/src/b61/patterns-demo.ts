@@ -144,17 +144,17 @@ export async function ensurePatternsDemo2(payload: Payload, school: School) {
 
   const sections: any[] = [
     {
-      blockType: 'b61Pillars', scrollStory: true, heading: [{ text: 'An education that is' }, { text: 'personal', emphasize: true }],
+      blockType: 'b61Tabs', layout: 'story', heading: [{ text: 'An education that is' }, { text: 'personal', emphasize: true }],
       intro: para('No two students are alike, so no two educations here are the same.'),
-      items: [
+      tabs: [
         ['Broad, rich curriculum', 'A wide range of courses builds the foundation colleges look for and room to find new interests.'],
         ['Challenge and support', 'Rigour that stretches every student, with teachers alongside at every step.'],
         ['Tradition and innovation', 'Classic texts and new tools: clear writing, careful thinking and digital skill.'],
         ['Adults in your corner', 'Advisors, coaches and teachers who know each student by name.'],
-      ].map(([title, body], i) => ({ title, body: para(body), image: pic(i) })),
+      ].map(([label, body], i) => ({ label, body: para(body), image: pic(i) })),
     },
     {
-      blockType: 'b61Tabs', heading: [{ text: 'Well-balanced' }, { text: 'well-being', emphasize: true }], tabPosition: 'top', tabAlign: 'center',
+      blockType: 'b61Tabs', layout: 'top', heading: [{ text: 'Well-balanced' }, { text: 'well-being', emphasize: true }], tabAlign: 'center',
       tabs: [
         { label: 'Student life', content: [cardSet(['Healthy connections', 'A vibrant community', 'Try something new'], 0)] },
         { label: 'Athletics', content: [cardSet(['Team first', 'Game day', 'Every level'], 2)] },

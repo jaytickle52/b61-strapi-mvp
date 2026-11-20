@@ -980,6 +980,7 @@ export interface Page {
             blockType: 'b61Accordion';
           }
         | {
+            layout?: ('top' | 'beside' | 'list' | 'story') | null;
             eyebrow?: string | null;
             /**
              * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
@@ -1019,7 +1020,29 @@ export interface Page {
               | {
                   label: string;
                   /**
-                   * What shows when this tab is selected.
+                   * Use + or / to add a button.
+                   */
+                  body?: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: any;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  } | null;
+                  /**
+                   * To set the focal point, click the pencil on the photo, then Edit image.
+                   */
+                  image?: (number | null) | Media;
+                  /**
+                   * Other elements under the text and photo.
                    */
                   content?:
                     | (
@@ -1408,7 +1431,7 @@ export interface Page {
                 }[]
               | null;
             firstItemOpen?: boolean | null;
-            tabPosition?: ('top' | 'left' | 'right') | null;
+            side?: ('left' | 'right') | null;
             tabAlign?: ('left' | 'center' | 'full') | null;
             headingAlign?: ('left' | 'center') | null;
             padTop?: ('normal' | 'tight' | 'none') | null;
@@ -1423,85 +1446,6 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'b61Tabs';
-          }
-        | {
-            eyebrow?: string | null;
-            /**
-             * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
-             */
-            heading?: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            } | null;
-            intro?: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            } | null;
-            headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-            items?:
-              | {
-                  title: string;
-                  body?: {
-                    root: {
-                      type: string;
-                      children: {
-                        type: any;
-                        version: number;
-                        [k: string]: unknown;
-                      }[];
-                      direction: ('ltr' | 'rtl') | null;
-                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                      indent: number;
-                      version: number;
-                    };
-                    [k: string]: unknown;
-                  } | null;
-                  /**
-                   * To set the focal point, click the pencil on the photo, then Edit image.
-                   */
-                  image?: (number | null) | Media;
-                  id?: string | null;
-                }[]
-              | null;
-            firstItemOpen?: boolean | null;
-            tabPosition?: ('left' | 'right' | 'top') | null;
-            tabAlign?: ('left' | 'center' | 'full') | null;
-            headingAlign?: ('left' | 'center') | null;
-            padTop?: ('normal' | 'tight' | 'none') | null;
-            padBottom?: ('normal' | 'tight' | 'none') | null;
-            surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
-            eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
-            entrance?: ('on' | 'off') | null;
-            scrollStory?: boolean | null;
-            /**
-             * Banner 61 only. Style it in School settings > Look > Custom CSS.
-             */
-            cssClass?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'b61Pillars';
           }
         | {
             eyebrow?: string | null;
@@ -2487,85 +2431,6 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Accordion';
-                    }
-                  | {
-                      eyebrow?: string | null;
-                      /**
-                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
-                       */
-                      heading?: {
-                        root: {
-                          type: string;
-                          children: {
-                            type: any;
-                            version: number;
-                            [k: string]: unknown;
-                          }[];
-                          direction: ('ltr' | 'rtl') | null;
-                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                          indent: number;
-                          version: number;
-                        };
-                        [k: string]: unknown;
-                      } | null;
-                      intro?: {
-                        root: {
-                          type: string;
-                          children: {
-                            type: any;
-                            version: number;
-                            [k: string]: unknown;
-                          }[];
-                          direction: ('ltr' | 'rtl') | null;
-                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                          indent: number;
-                          version: number;
-                        };
-                        [k: string]: unknown;
-                      } | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-                      items?:
-                        | {
-                            title: string;
-                            body?: {
-                              root: {
-                                type: string;
-                                children: {
-                                  type: any;
-                                  version: number;
-                                  [k: string]: unknown;
-                                }[];
-                                direction: ('ltr' | 'rtl') | null;
-                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                                indent: number;
-                                version: number;
-                              };
-                              [k: string]: unknown;
-                            } | null;
-                            /**
-                             * To set the focal point, click the pencil on the photo, then Edit image.
-                             */
-                            image?: (number | null) | Media;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      firstItemOpen?: boolean | null;
-                      tabPosition?: ('left' | 'right' | 'top') | null;
-                      tabAlign?: ('left' | 'center' | 'full') | null;
-                      headingAlign?: ('left' | 'center') | null;
-                      padTop?: ('normal' | 'tight' | 'none') | null;
-                      padBottom?: ('normal' | 'tight' | 'none') | null;
-                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
-                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
-                      entrance?: ('on' | 'off') | null;
-                      scrollStory?: boolean | null;
-                      /**
-                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
-                       */
-                      cssClass?: string | null;
-                      id?: string | null;
-                      blockName?: string | null;
-                      blockType: 'b61Pillars';
                     }
                   | {
                       eyebrow?: string | null;
@@ -3577,85 +3442,6 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'b61Accordion';
-                    }
-                  | {
-                      eyebrow?: string | null;
-                      /**
-                       * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
-                       */
-                      heading?: {
-                        root: {
-                          type: string;
-                          children: {
-                            type: any;
-                            version: number;
-                            [k: string]: unknown;
-                          }[];
-                          direction: ('ltr' | 'rtl') | null;
-                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                          indent: number;
-                          version: number;
-                        };
-                        [k: string]: unknown;
-                      } | null;
-                      intro?: {
-                        root: {
-                          type: string;
-                          children: {
-                            type: any;
-                            version: number;
-                            [k: string]: unknown;
-                          }[];
-                          direction: ('ltr' | 'rtl') | null;
-                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                          indent: number;
-                          version: number;
-                        };
-                        [k: string]: unknown;
-                      } | null;
-                      headingLevel?: ('auto' | 'h2' | 'h3' | 'h4') | null;
-                      items?:
-                        | {
-                            title: string;
-                            body?: {
-                              root: {
-                                type: string;
-                                children: {
-                                  type: any;
-                                  version: number;
-                                  [k: string]: unknown;
-                                }[];
-                                direction: ('ltr' | 'rtl') | null;
-                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                                indent: number;
-                                version: number;
-                              };
-                              [k: string]: unknown;
-                            } | null;
-                            /**
-                             * To set the focal point, click the pencil on the photo, then Edit image.
-                             */
-                            image?: (number | null) | Media;
-                            id?: string | null;
-                          }[]
-                        | null;
-                      firstItemOpen?: boolean | null;
-                      tabPosition?: ('left' | 'right' | 'top') | null;
-                      tabAlign?: ('left' | 'center' | 'full') | null;
-                      headingAlign?: ('left' | 'center') | null;
-                      padTop?: ('normal' | 'tight' | 'none') | null;
-                      padBottom?: ('normal' | 'tight' | 'none') | null;
-                      surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
-                      eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
-                      entrance?: ('on' | 'off') | null;
-                      scrollStory?: boolean | null;
-                      /**
-                       * Banner 61 only. Style it in School settings > Look > Custom CSS.
-                       */
-                      cssClass?: string | null;
-                      id?: string | null;
-                      blockName?: string | null;
-                      blockType: 'b61Pillars';
                     }
                   | {
                       eyebrow?: string | null;
@@ -6747,6 +6533,7 @@ export interface PagesSelect<T extends boolean = true> {
         b61Tabs?:
           | T
           | {
+              layout?: T;
               eyebrow?: T;
               heading?: T;
               intro?: T;
@@ -6755,6 +6542,8 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     label?: T;
+                    body?: T;
+                    image?: T;
                     content?:
                       | T
                       | {
@@ -6979,7 +6768,7 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               firstItemOpen?: T;
-              tabPosition?: T;
+              side?: T;
               tabAlign?: T;
               headingAlign?: T;
               padTop?: T;
@@ -6987,35 +6776,6 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
-              cssClass?: T;
-              id?: T;
-              blockName?: T;
-            };
-        b61Pillars?:
-          | T
-          | {
-              eyebrow?: T;
-              heading?: T;
-              intro?: T;
-              headingLevel?: T;
-              items?:
-                | T
-                | {
-                    title?: T;
-                    body?: T;
-                    image?: T;
-                    id?: T;
-                  };
-              firstItemOpen?: T;
-              tabPosition?: T;
-              tabAlign?: T;
-              headingAlign?: T;
-              padTop?: T;
-              padBottom?: T;
-              surface?: T;
-              eyebrowRule?: T;
-              entrance?: T;
-              scrollStory?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -7577,35 +7337,6 @@ export interface PagesSelect<T extends boolean = true> {
                           itemSurface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
-                          cssClass?: T;
-                          id?: T;
-                          blockName?: T;
-                        };
-                    b61Pillars?:
-                      | T
-                      | {
-                          eyebrow?: T;
-                          heading?: T;
-                          intro?: T;
-                          headingLevel?: T;
-                          items?:
-                            | T
-                            | {
-                                title?: T;
-                                body?: T;
-                                image?: T;
-                                id?: T;
-                              };
-                          firstItemOpen?: T;
-                          tabPosition?: T;
-                          tabAlign?: T;
-                          headingAlign?: T;
-                          padTop?: T;
-                          padBottom?: T;
-                          surface?: T;
-                          eyebrowRule?: T;
-                          entrance?: T;
-                          scrollStory?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -8198,35 +7929,6 @@ export interface PagesSelect<T extends boolean = true> {
                           itemSurface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
-                          cssClass?: T;
-                          id?: T;
-                          blockName?: T;
-                        };
-                    b61Pillars?:
-                      | T
-                      | {
-                          eyebrow?: T;
-                          heading?: T;
-                          intro?: T;
-                          headingLevel?: T;
-                          items?:
-                            | T
-                            | {
-                                title?: T;
-                                body?: T;
-                                image?: T;
-                                id?: T;
-                              };
-                          firstItemOpen?: T;
-                          tabPosition?: T;
-                          tabAlign?: T;
-                          headingAlign?: T;
-                          padTop?: T;
-                          padBottom?: T;
-                          surface?: T;
-                          eyebrowRule?: T;
-                          entrance?: T;
-                          scrollStory?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;

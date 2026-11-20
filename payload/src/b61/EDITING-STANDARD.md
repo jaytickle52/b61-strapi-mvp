@@ -98,7 +98,7 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
   16 Nov: `bandHeadFields({ intro: true })` leaves Subheadings out).
   - Hero-type elements (Hero, CTA Band) get **Subheadline**: plain text, read as part of
     the heading. One style, the body font: no style choice, no Short facts (Jay, 19 Nov 2026).
-  - Elements with their own items (Card Grid, Accordion, Stats, Tabbed Features, Tabs, Gallery,
+  - Elements with their own items (Card Grid, Accordion, Stats, Tabs, Gallery,
     Carousel) get **Intro**: the short editor (section 10), body size, setting up the items.
   - If an Intro ever needs display size, that is a Design choice (Intro size:
     Normal / Large), not a second field.
@@ -151,8 +151,9 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
 
 ## 8. Containers
 
-- Tabs, Carousel and Section hold other elements. Each tab, slide or column is a row
-  whose content is a list of elements, added with the same block picker as a page.
+- Tabs, Carousel and Section hold other elements. Each slide or column is a row whose
+  content is a list of elements, added with the same block picker as a page. A tab has its
+  own Title, Text and Photo, and its **More in this tab** list holds elements (section 21).
 - Only one level of nesting: a container offers the elements in `src/b61/inner.ts`,
   which leaves containers out. A Section's side column also offers the B61 Rail.
 - Inside a container, Automatic heading level means H2 (never H1).
@@ -183,7 +184,7 @@ values in the header ("Padding · Normal / Tight"), so nothing is hidden.
   `npm run generate:importmap` and committing `importMap.js`, or the editor breaks.
 - Built-in items that break the design are left out: Heading 1, uploads, relationships,
   check lists, plain blockquotes. Headings are H2-H4.
-- Intros and item bodies (accordion, pillars, cards) use a short editor: paragraphs,
+- Intros and item bodies (accordion, cards) use a short editor: paragraphs,
   bold, italic, links and lists. Accordion answers add a **Button** from + or / (Jay, 19 Nov
   2026; `itemBodyWithButtonEditor()` in `kit/body.ts`).
 
@@ -343,7 +344,7 @@ Same rule as section 16: bigger layout choices are Banner 61-only (Design > Adva
 - **Duotone photos** (Card Grid and Gallery > Advanced): photos in greys, tinted with the
   primary colour. With Card text on the photo the tint multiplies (darkens, so
   contrast holds); otherwise it screens (colour in the shadows, pale highlights).
-- **Scroll story** (`kit/render/ScrollStory.tsx` + `ScrollStoryInit.tsx`; Tabbed Features > Advanced): a
+- **Scroll story** (`kit/render/ScrollStory.tsx` + `ScrollStoryInit.tsx`; now Tabs > Layout, section 21): a
   shared arrangement, not an element. Titles stay in view on one side as a list of links with a
   progress line; each item (photo + words on a card) scrolls past on the other side and its
   title lights up at mid-screen. Every item is in the page and readable without a script;
@@ -409,3 +410,24 @@ nesting read from the field's path) and the element applies the same rule (`Inne
 - **CTA Band:** Heritage's short rule under the heading follows the band's text alignment.
 - **Add Section** shows a sketch of each element (`public/b61/blocks/<slug>.svg`, set by
   `defineElement` as the block's `imageURL`). A new element needs its own sketch there.
+
+## 21. One Tabs element (Jay, 20 Nov 2026)
+
+- **Tabs and Tabbed Features are one element, Tabs.** They looked alike on the page (click a
+  name, see its content) and editors couldn't tell which to use; what differed was what a tab
+  held, so that is now per tab, not a choice of element.
+- **Layout** is the first Content choice: Tabs on top · Tabs beside · Feature list (titles with
+  their text beside one photo; was Tabbed Features) · Scroll story (was a Banner 61-only switch).
+  Design > Layout has **Tab side** (beside, list, story) and **Tab alignment** (on top).
+- **Every tab** has Title, Text (the short editor plus a Button) and Photo. With Tabs on top or
+  beside, the tab shows its text and photo side by side (photo first on phones), then anything
+  in **More in this tab** (Prose, Split, Testimonial, Card Grid). Feature list and Scroll story
+  use the text and photo only.
+- **In the editor the tabs are a row of names**, like the site (`kit/admin/TabStrip.tsx`):
+  click one to edit that tab alone; **+ Add tab**, move left/right and **Remove tab** sit beside
+  the row. It is Payload's array field underneath, with every row but the selected one hidden,
+  so validation, autosave and click-to-field are unchanged (the selected tab is the open row).
+- Migration `tabs_merge` moved every Tabbed Features section into Tabs in place (Feature list,
+  or Scroll story / Tabs on top as it was set) and turned old Tabs positions into Layout and
+  Tab side. Tabs isn't offered inside a Section column (one level of nesting); an old nested
+  Tabbed Features still renders.
