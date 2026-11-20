@@ -25,7 +25,7 @@ export const Announcements: CollectionConfig = {
   admin: {
     group: 'Website',
     useAsTitle: 'title',
-    defaultColumns: ['title', 'display', 'style', 'startsAt', 'endsAt', '_status'],
+    defaultColumns: ['title', 'status', 'display', 'style', 'startsAt', 'endsAt'],
     description:
       'A message on the website between two dates: a bar across the top (closings, deadlines, big news) or a pop-up (open house, enrollment, a short form).',
     // The preview opens this one at once (and on any page), even if it was closed before.
@@ -64,6 +64,19 @@ export const Announcements: CollectionConfig = {
       type: 'group',
       label: 'Link (optional)',
       fields: [{ name: 'label', type: 'text', admin: { placeholder: 'e.g. Read more' } }, link()],
+    },
+    // Where it stands, in words: on the website or not, and why (20 Nov 2026).
+    {
+      name: 'statusNote',
+      type: 'ui',
+      admin: { position: 'sidebar', components: { Field: '@/announcements/StatusNote#StatusNote' }, disableListColumn: true },
+    },
+    {
+      name: 'status',
+      label: 'Status',
+      type: 'ui',
+      // A list column only: no field in the editor.
+      admin: { components: { Cell: '@/announcements/StatusCell#StatusCell' } },
     },
     {
       name: 'display',

@@ -20,6 +20,8 @@ type Props = {
   formId: number | string
   anchor: string
   stamp: string
+  /** The pop-up this form sits in, if any. */
+  fromAnnouncement?: number | string
   questions: ClientQuestion[]
   submitLabel: string
   redirect?: string
@@ -161,6 +163,7 @@ export default function FormClient(p: Props) {
     >
       <input type="hidden" name="form" value={String(p.formId)} />
       <input type="hidden" name="b61_t" value={p.stamp} />
+      {p.fromAnnouncement != null && <input type="hidden" name="b61_from" value={String(p.fromAnnouncement)} />}
       {internal && <input type="hidden" name="b61_done" value={internal} />}
       <div className="b61-form__hp" aria-hidden="true">
         <label>

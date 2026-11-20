@@ -674,6 +674,50 @@ async function main() {
     const home3 = visible((await page('/', 'harbor-oaks')).text)
     check(home3.includes('aria-live="polite"') && !home3.includes('b61-popup--corner'), 'a corner pop-up is not over the page on load')
     check(!/<dialog class="b61-popup b61-popup--center b61-popup--standard"/.test(home3), '… and only one pop-up is on the page')
+
+    // A form answer sent from a pop-up records which pop-up (20 Nov 2026); a
+    // pop-up from another school is ignored.
+    {
+      const contact = (await api('GET', `/forms?where[school][equals]=${harbor}&where[title][equals]=Contact us&limit=1&depth=0`, { token: admin })).json?.docs?.[0]
+      const cp = await api('POST', '/announcements', {
+        token: admin,
+        body: { school: harbor, title: `Contact pop-up ${RUN}`, display: 'popup', style: 'urgent', showOn: 'pages', pages: [inquire?.id], form: contact?.id, startsAt: started, _status: 'published' },
+      })
+      const html = (await page('/inquire', 'harbor-oaks')).text
+      const dlg2 = html.slice(html.indexOf(`Contact pop-up ${RUN}`) - 2000)
+      const val = (name) => dlg2.match(new RegExp(`name="${name}" value="([^"]*)"`))?.[1]
+      const topic = dlg2.match(/<select[^>]*name="topic"[\s\S]*?<option[^>]*value="([^"]+)"/)?.[1] ?? 'Admissions'
+      check(val('b61_from') === String(cp.json?.doc?.id), "a pop-up's form carries which pop-up it is in")
+      const send = async (from) => {
+        const fd = new FormData()
+        fd.set('form', val('form') ?? String(contact?.id))
+        fd.set('b61_t', val('b61_t') ?? '')
+        fd.set('b61_from', String(from))
+        fd.set('name', `Pop-up Tester ${from} ${RUN}`)
+        fd.set('email', 'popup-test@example.com')
+        fd.set('topic', topic)
+        fd.set('message', 'Sent from a pop-up.')
+        const r = await fetch(`${BASE}/next/form`, { method: 'POST', body: fd, headers: { accept: 'application/json', cookie: 'b61-school=harbor-oaks' } })
+        const res = await r.json().catch(() => ({}))
+        // The site's reply has no id: find the answer by the name sent.
+        const found = (await api('GET', `/form-submissions?where[summary][like]=${encodeURIComponent(`Pop-up Tester ${from} ${RUN}`)}&depth=0&limit=1`, { token: admin })).json?.docs?.[0]
+        return { ok: res.ok, id: found?.id }
+      }
+      await new Promise((r) => setTimeout(r, 3200)) // the form refuses answers sent faster than a person types
+      const ok = await send(cp.json?.doc?.id)
+      check(ok.ok === true, '… and its answer is saved')
+      const sub = ok.id ? (await api('GET', `/form-submissions/${ok.id}?depth=0`, { token: admin })).json : null
+      check(sub && String(sub.fromAnnouncement) === String(cp.json?.doc?.id), '… with "Came from pop-up" set')
+      const other = (await api('GET', `/announcements?where[school][equals]=${cedar}&limit=1&depth=0`, { token: admin })).json?.docs?.[0]
+      if (other) {
+        const forged = await send(other.id)
+        const sub2 = forged.id ? (await api('GET', `/form-submissions/${forged.id}?depth=0`, { token: admin })).json : null
+        check(forged.ok === true && sub2 && !sub2.fromAnnouncement, "… and another school's pop-up is never recorded")
+        if (forged.id) await api('DELETE', `/form-submissions/${forged.id}`, { token: admin })
+      }
+      if (ok.id) await api('DELETE', `/form-submissions/${ok.id}`, { token: admin })
+      if (cp.json?.doc?.id) await api('DELETE', `/announcements/${cp.json.doc.id}`, { token: admin })
+    }
     // Pop-ups don't use up the three bar slots.
     for (const n of [1, 2, 3]) {
       await api('POST', '/announcements', {

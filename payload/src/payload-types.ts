@@ -4973,6 +4973,7 @@ export interface FormSubmission {
         id?: string | null;
       }[]
     | null;
+  fromAnnouncement?: (number | null) | Announcement;
   updatedAt: string;
   createdAt: string;
 }
@@ -8813,6 +8814,7 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         value?: T;
         id?: T;
       };
+  fromAnnouncement?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -38,6 +38,7 @@ import * as migration_20261119_182905_rich_descriptions_staff_bio from './202611
 import * as migration_20261119_184651_programs_are_pages from './20261119_184651_programs_are_pages';
 import * as migration_20261120_184144_tabs_merge from './20261120_184144_tabs_merge';
 import * as migration_20261120_195000_drop_old_programs from './20261120_195000_drop_old_programs';
+import * as migration_20261120_195659_announcement_status_tracking from './20261120_195659_announcement_status_tracking';
 
 export const migrations = [
   {
@@ -233,11 +234,16 @@ export const migrations = [
   {
     up: migration_20261120_184144_tabs_merge.up,
     down: migration_20261120_184144_tabs_merge.down,
-    name: '20261120_184144_tabs_merge'
+    name: '20261120_184144_tabs_merge',
   },
   {
     up: migration_20261120_195000_drop_old_programs.up,
     down: migration_20261120_195000_drop_old_programs.down,
     name: '20261120_195000_drop_old_programs'
+  },
+  {
+    up: migration_20261120_195659_announcement_status_tracking.up,
+    down: migration_20261120_195659_announcement_status_tracking.down,
+    name: '20261120_195659_announcement_status_tracking'
   },
 ];

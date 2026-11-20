@@ -110,6 +110,7 @@ async function Body({ req, school, days }: { req: any; school: any; days: Period
       {problem && <p className="b61-an__problem">{problem}</p>}
       {report && <Report report={report} site={schoolSiteUrl(school)} />}
       {forms && <Forms forms={forms} days={days} />}
+      <Popups events={report?.popups} byPopup={forms?.byPopup} days={days} />
       {report && !demo && (
         <p className="b61-an__foot">
           Visitor numbers from Google Analytics, through yesterday, compared with the {days} days before. Updated about once an hour.
@@ -260,8 +261,9 @@ function Report({ report, site }: { report: SchoolReport; site: string }) {
 const cleanTitle = (t: string) => (t && t !== '(not set)' ? t.split(' | ')[0] : '')
 
 type FormCount = { id: string | number; title: string; count: number }
+type FormStats = { total: number; byForm: FormCount[]; byPopup: FormCount[] }
 
-async function formAnswers(req: any, schoolId: number | string, days: Period): Promise<{ total: number; byForm: FormCount[] }> {
+async function formAnswers(req: any, schoolId: number | string, days: Period): Promise<FormStats> {
   const since = new Date(Date.now() - days * 86_400_000).toISOString()
   const res = await req.payload.find({
     collection: 'form-submissions',
@@ -269,22 +271,65 @@ async function formAnswers(req: any, schoolId: number | string, days: Period): P
     depth: 1,
     limit: 5000,
     pagination: false,
-    select: { form: true },
+    select: { form: true, fromAnnouncement: true },
     overrideAccess: true,
   })
-  const map = new Map<string, FormCount>()
-  for (const doc of res.docs as any[]) {
-    const f = doc.form
-    const id = typeof f === 'object' && f ? f.id : f
-    const key = String(id ?? 'none')
-    const row = map.get(key) ?? { id: id ?? key, title: (typeof f === 'object' && f?.title) || 'Form', count: 0 }
-    row.count++
-    map.set(key, row)
+  const count = (list: any[], fallback: string) => {
+    const map = new Map<string, FormCount>()
+    for (const ref of list) {
+      const id = typeof ref === 'object' && ref ? ref.id : ref
+      const key = String(id ?? 'none')
+      const row = map.get(key) ?? { id: id ?? key, title: (typeof ref === 'object' && ref?.title) || fallback, count: 0 }
+      row.count++
+      map.set(key, row)
+    }
+    return [...map.values()].sort((a, b) => b.count - a.count)
   }
-  return { total: res.docs.length, byForm: [...map.values()].sort((a, b) => b.count - a.count) }
+  const docs = res.docs as any[]
+  return {
+    total: docs.length,
+    byForm: count(docs.map((d) => d.form), 'Form'),
+    // Answers sent from a form inside a pop-up announcement, by pop-up.
+    byPopup: count(docs.filter((d) => d.fromAnnouncement).map((d) => d.fromAnnouncement), 'Pop-up'),
+  }
 }
 
-function Forms({ forms, days }: { forms: { total: number; byForm: FormCount[] }; days: Period }) {
+/**
+ * Pop-ups: how often they were shown, clicked and closed (from Google
+ * Analytics: the site sends popup_view / popup_click / popup_close) and the
+ * form answers sent from inside each one (this site's database).
+ */
+function Popups({ events, byPopup, days }: { events?: SchoolReport['popups']; byPopup?: FormCount[]; days: Period }) {
+  const hasEvents = Boolean(events && (events.views || events.clicks || events.closes))
+  if (!hasEvents && !byPopup?.length) return null
+  const rate = events && events.views ? Math.round((events.clicks / events.views) * 100) : null
+  return (
+    <section className="b61-an__panel">
+      <h2>Pop-ups in the last {days} days</h2>
+      {hasEvents && events && (
+        <p className="b61-an__lead">
+          Shown <strong>{n(events.views)}</strong> {events.views === 1 ? 'time' : 'times'}, button clicked <strong>{n(events.clicks)}</strong>
+          {rate != null ? ` (${rate}%)` : ''}, closed <strong>{n(events.closes)}</strong>.
+        </p>
+      )}
+      {byPopup && byPopup.length > 0 && (
+        <>
+          <p className="b61-an__lead">Form answers sent from a pop-up:</p>
+          <ul className="b61-an__list">
+            {byPopup.map((p) => (
+              <li key={String(p.id)}>
+                <a href={`/admin/collections/announcements/${p.id}`}>{p.title}</a>
+                <strong>{n(p.count)}</strong>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </section>
+  )
+}
+
+function Forms({ forms, days }: { forms: FormStats; days: Period }) {
   return (
     <section className="b61-an__panel">
       <h2>Form answers in the last {days} days</h2>
