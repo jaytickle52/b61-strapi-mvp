@@ -9,23 +9,24 @@ import PillarsInit from './PillarsInit'
 import ScrollStory from '../../kit/render/ScrollStory'
 import { headingText } from '../../kit/heading'
 
-/* Ported from elements/Pillars/html.twig (plugin 1.77.1). */
+/* Ported from elements/Pillars/html.twig (plugin 1.77.1). Since 20 Nov 2026 it
+ * draws the Tabs element's Feature list and Scroll story layouts (there is no
+ * separate Tabbed Features element): titles with their text beside one photo. */
 export default function B61Pillars({ block, index = 0 }: { block: any; index?: number }) {
   const ri = revealAttr(block.entrance)
   const rv = block.entrance === 'off' ? 'off' : 'on'
   const as = resolveHeadingLevel(block.headingLevel, index)
   const surface = block.surface ?? 'none'
-  const pos = block.tabPosition ?? 'left'
-  const talign = block.tabAlign ?? 'left'
+  const pos = block.side === 'right' ? 'right' : 'left'
   const openFirst = block.firstItemOpen !== false
   const id = `b61-pillars-${block.id ?? index}`
   const title = headingText(block.heading)
   const Wrap = title ? 'section' : 'div'
-  const items = (block.items ?? []).filter((i: any) => i?.title)
+  const items = (block.tabs ?? []).filter((t: any) => t?.label).map((t: any) => ({ ...t, title: t.label }))
   const label = title || 'Pillars'
   const ha = block.headingAlign ?? 'left'
   // Design > Advanced (Banner 61): every pillar shown, scrolling past with its title list in view.
-  const story = Boolean(block.scrollStory) && items.length > 0
+  const story = block.layout === 'story' && items.length > 0
   return (
     <div className={['b61-pillars', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
       <Wrap
@@ -35,7 +36,6 @@ export default function B61Pillars({ block, index = 0 }: { block: any; index?: n
           surface !== 'none' && `b61-band--${surface}`,
           `b61-pillars__region--tabs-${pos}`,
           story && 'b61-pillars__region--story',
-          pos === 'top' && `b61-pillars__region--align-${talign}`,
           `b61-pillars__region--pt-${block.padTop ?? 'normal'}`,
           `b61-pillars__region--pb-${block.padBottom ?? 'normal'}`,
         ]
@@ -61,7 +61,7 @@ export default function B61Pillars({ block, index = 0 }: { block: any; index?: n
         )}
         {!story && items.length > 0 && (
           <div className="b61-pillars__layout" style={{ '--b61-pillars-rows': items.length * 2 } as CSSProperties}>
-            <div className="b61-pillars__tabs" {...ri} role="tablist" aria-orientation={pos === 'top' ? 'horizontal' : 'vertical'} aria-label={label}>
+            <div className="b61-pillars__tabs" {...ri} role="tablist" aria-orientation="vertical" aria-label={label}>
               {items.map((it: any, i: number) => {
                 const active = openFirst && i === 0
                 return (

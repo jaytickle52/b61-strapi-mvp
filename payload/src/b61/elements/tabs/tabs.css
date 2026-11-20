@@ -499,3 +499,30 @@
     padding-inline: 0;
   }
 }
+
+/* A tab's own text and photo (Tabs on top / beside, 20 Nov 2026): side by side,
+   the photo after the words; stacked on phones, photo first. Payload-only. */
+.b61-tabs__feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--b61-space-xl, 2.5rem);
+  align-items: center;
+}
+.b61-tabs__feature--text,
+.b61-tabs__feature--photo { grid-template-columns: minmax(0, 1fr); }
+.b61-tabs__feature--text .b61-tabs__feature-body { max-width: var(--b61-measure, 68ch); }
+.b61-tabs__feature-body > :first-child { margin-top: 0; }
+.b61-tabs__feature-body > :last-child { margin-bottom: 0; }
+.b61-tabs__feature-media { margin: 0; }
+.b61-tabs__feature-media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: var(--b61-photo-focus, 50% 50%);
+  border-radius: var(--b61-radius-media, 0);
+}
+@media (max-width: 767px) {
+  .b61-tabs__feature { grid-template-columns: minmax(0, 1fr); gap: var(--b61-space-lg, 1.5rem); }
+  .b61-tabs__feature-media { order: -1; }
+}

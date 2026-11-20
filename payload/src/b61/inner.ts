@@ -10,7 +10,6 @@ import { B61FramedImage } from './elements/framed/fields'
 import { B61Divider } from './elements/divider/fields'
 import { B61ButtonBar } from './elements/buttonbar/fields'
 import { B61Accordion } from './elements/accordion/fields'
-import { B61Pillars } from './elements/pillars/fields'
 import { B61Rail } from './elements/rail/fields'
 import { B61Form } from './elements/form/fields'
 import { B61Logos } from './elements/logos/fields'
@@ -29,7 +28,6 @@ export const innerBlocks: Block[] = [
   B61Testimonial,
   B61FramedImage,
   B61Accordion,
-  B61Pillars,
   B61Cta,
   B61Form,
   B61ButtonBar,
