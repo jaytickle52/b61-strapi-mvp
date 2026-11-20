@@ -1042,7 +1042,7 @@ export interface Page {
                    */
                   image?: (number | null) | Media;
                   /**
-                   * Other elements under the text and photo (Tabs on top or beside only).
+                   * Other elements under the text and photo.
                    */
                   content?:
                     | (
