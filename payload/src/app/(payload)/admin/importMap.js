@@ -67,6 +67,7 @@ import { TOTPField as TOTPField_4eaf6cb33cfb75be01716613e3c9a512 } from 'payload
 import { InviteForm as InviteForm_3d308d2e6080724a74ef0384d9cf30a9 } from '@/users/InviteForm'
 import { WatchTenantCollection as WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a } from '@payloadcms/plugin-multi-tenant/client'
 import { BackToNews as BackToNews_ae430fd4103f3d388c847198199894b5 } from '@/admin/CategoryLinks'
+import { AllSwitches as AllSwitches_fdbeab8c532a37581acb1d1cc8566677 } from '@/mcp/AllSwitches'
 import { FolderTypeField as FolderTypeField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
 import { Icon as Icon_bc915ec787340c93699e0fbd50bf9eef } from '@/brand/Logo'
 import { Logo as Logo_bc915ec787340c93699e0fbd50bf9eef } from '@/brand/Logo'
@@ -155,6 +156,7 @@ export const importMap = {
   "@/users/InviteForm#InviteForm": InviteForm_3d308d2e6080724a74ef0384d9cf30a9,
   "@payloadcms/plugin-multi-tenant/client#WatchTenantCollection": WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a,
   "@/admin/CategoryLinks#BackToNews": BackToNews_ae430fd4103f3d388c847198199894b5,
+  "@/mcp/AllSwitches#AllSwitches": AllSwitches_fdbeab8c532a37581acb1d1cc8566677,
   "@payloadcms/next/client#FolderTypeField": FolderTypeField_2b8867833a34864a02ddf429b0728a40,
   "@/brand/Logo#Icon": Icon_bc915ec787340c93699e0fbd50bf9eef,
   "@/brand/Logo#Logo": Logo_bc915ec787340c93699e0fbd50bf9eef,

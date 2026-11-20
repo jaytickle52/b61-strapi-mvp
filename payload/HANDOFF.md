@@ -239,6 +239,10 @@ WordPress sites. Code in `src/mcp/` (`config.ts`, `pages.ts`), checks in `script
 - **Pages:** the generated page create/update tools were ~170 KB each, so pages use custom
   `createPage` / `updatePage` (data as JSON) and `pageSections` (compact field outline).
   `editorLinks` returns the editor address after a change.
+- **Turn all on / off:** above the switches on a key (`src/mcp/AllSwitches.tsx`). The list of switches
+  is worked out from the keys collection's fields (`switchPaths` in `config.ts`), so new collections and
+  tools are covered automatically. "Enable API key" stays a separate tick. Checked in a real browser
+  by `scripts/mcp-switches.mjs` (CI).
 - **Signing in:** `Authorization: Bearer <key>`, or `/api/mcp?key=<key>` for clients that can't
   send headers (can appear in request logs; prefer the header).
 - Any new collection Claude should see goes in `collections` in `src/mcp/config.ts` (and in

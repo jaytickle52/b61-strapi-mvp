@@ -1,4 +1,4 @@
-import type { CollectionConfig, CollectionSlug, Config, Plugin, PayloadRequest } from 'payload'
+import type { CollectionConfig, CollectionSlug, Config, Field, Plugin, PayloadRequest } from 'payload'
 import { mcpPlugin } from '@payloadcms/plugin-mcp'
 import { UnauthorizedError } from 'payload'
 import { z } from 'zod/v3'
@@ -157,8 +157,31 @@ const instructions = `Banner 61 school websites (Payload CMS). One app serves ma
 - A school in Setup or Review: previewLink gives a signed link to its drafts, for its leaders.
 - Use \`select\` to fetch only the fields you need; pages are large.`
 
+/**
+ * Form paths of every permission switch on a key (`schools.find`,
+ * `payload-mcp-tool.updatePage`, ...): the checkboxes inside the plugin's
+ * groups. Feeds "Turn all on / off" (`AllSwitches.tsx`).
+ */
+export const switchPaths = (fields: Field[], prefix = ''): string[] =>
+  fields.flatMap((f: any): string[] => {
+    if (f.type === 'collapsible' || f.type === 'row') return switchPaths(f.fields ?? [], prefix)
+    if (f.type === 'group' && f.name) return switchPaths(f.fields ?? [], `${prefix}${f.name}.`)
+    if (f.type === 'checkbox' && f.name && prefix) return [`${prefix}${f.name}`]
+    return []
+  })
+
+const allSwitchesField = (fields: Field[]): Field => ({
+  name: 'allSwitches',
+  type: 'ui',
+  admin: {
+    position: 'sidebar',
+    components: { Field: { path: '@/mcp/AllSwitches#AllSwitches', clientProps: { paths: switchPaths(fields) } } },
+  },
+})
+
 const apiKeys = (collection: CollectionConfig): CollectionConfig => ({
   ...collection,
+  fields: [allSwitchesField(collection.fields), ...collection.fields],
   labels: { singular: 'MCP key', plural: 'MCP keys' },
   admin: {
     ...collection.admin,
