@@ -37,6 +37,7 @@ import * as migration_20261119_173616_announcement_popups from './20261119_17361
 import * as migration_20261119_182905_rich_descriptions_staff_bio from './20261119_182905_rich_descriptions_staff_bio';
 import * as migration_20261119_184651_programs_are_pages from './20261119_184651_programs_are_pages';
 import * as migration_20261120_184144_tabs_merge from './20261120_184144_tabs_merge';
+import * as migration_20261120_195000_drop_old_programs from './20261120_195000_drop_old_programs';
 
 export const migrations = [
   {
@@ -233,5 +234,10 @@ export const migrations = [
     up: migration_20261120_184144_tabs_merge.up,
     down: migration_20261120_184144_tabs_merge.down,
     name: '20261120_184144_tabs_merge'
+  },
+  {
+    up: migration_20261120_195000_drop_old_programs.up,
+    down: migration_20261120_195000_drop_old_programs.down,
+    name: '20261120_195000_drop_old_programs'
   },
 ];
