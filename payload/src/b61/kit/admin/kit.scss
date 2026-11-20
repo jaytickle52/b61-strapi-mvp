@@ -190,3 +190,38 @@
   &__remove:hover { color: var(--theme-error-500); border-color: var(--theme-error-500); }
   &__empty { color: var(--theme-elevation-500); font-size: 13px; }
 }
+
+/* Announcements: Status column and the status note (20 Nov 2026). */
+.b61-notice-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--theme-elevation-100);
+  color: var(--theme-elevation-800);
+}
+.b61-notice-status--showing { background: #e3f4e8; color: #17572c; }
+.b61-notice-status--scheduled { background: #e6eefb; color: #1d3f7a; }
+.b61-notice-status--ended { background: var(--theme-elevation-100); color: var(--theme-elevation-600); }
+.b61-notice-status--draft { background: #fdf1dc; color: #6b4300; }
+html[data-theme='dark'] .b61-notice-status--showing { background: #173a24; color: #bfe8cc; }
+html[data-theme='dark'] .b61-notice-status--scheduled { background: #1c2c4a; color: #c7d8f7; }
+html[data-theme='dark'] .b61-notice-status--draft { background: #3d2c0d; color: #f3d9a6; }
+
+.b61-notice-note {
+  margin-bottom: var(--base);
+  padding: 12px 14px;
+  border-radius: 6px;
+  border-left: 4px solid #2e8a4d;
+  background: var(--theme-elevation-50);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.b61-notice-note--wait { border-left-color: #2f5fb3; }
+.b61-notice-note--off { border-left-color: #a33; }
+.b61-notice-note p { margin: 0 0 6px; }
+.b61-notice-note p:last-child { margin-bottom: 0; }
+.b61-notice-note__lead { color: var(--theme-elevation-600); }
+.b61-notice-note__head { font-weight: 600; }

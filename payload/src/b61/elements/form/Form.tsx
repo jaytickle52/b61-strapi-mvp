@@ -16,7 +16,8 @@ export type FormBlock = Extract<NonNullable<Page['sections']>[number], { blockTy
  * the server; FormClient adds "Show only when", the signature pad and sending.
  * Without JavaScript the form still posts to /next/form.
  */
-export default async function B61Form({ block, index = 0 }: { block: FormBlock; index?: number }) {
+/** `fromAnnouncement`: the pop-up this form sits in, recorded with each answer (Analytics counts them). */
+export default async function B61Form({ block, index = 0, fromAnnouncement }: { block: FormBlock; index?: number; fromAnnouncement?: number | string }) {
   const ref = block.form as any
   const id = ref && typeof ref === 'object' ? ref.id : ref
   if (!id) return null
@@ -145,6 +146,7 @@ export default async function B61Form({ block, index = 0 }: { block: FormBlock; 
               formId={form.id}
               anchor={anchor}
               stamp={formStamp(form.id)}
+              fromAnnouncement={fromAnnouncement}
               questions={questions}
               submitLabel={form.submitButtonLabel || 'Send'}
               redirect={redirect}

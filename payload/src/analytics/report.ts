@@ -16,6 +16,8 @@ export type SchoolReport = {
   /** Visits sent by AI assistants (ChatGPT, Perplexity, Claude, Copilot, Gemini), by assistant. */
   aiAssistants: { name: string; visits: number }[]
   devices: { name: string; visitors: number }[]
+  /** Pop-up announcements (events the site sends: popup_view / popup_click / popup_close). */
+  popups: { views: number; clicks: number; closes: number }
   fetchedAt: string
 }
 
@@ -91,8 +93,8 @@ async function fetchReport(propertyId: string, days: Period): Promise<SchoolRepo
     { dateRanges: [current], dimensions: [{ name: 'deviceCategory' }], metrics: [{ name: 'activeUsers' }], orderBys: [{ metric: { metricName: 'activeUsers' }, desc: true }] },
   ])
 
-  // GA allows five reports per batch: the AI assistants report goes on its own.
-  const [ai] = await batchRunReports(propertyId, [
+  // GA allows five reports per batch: the AI assistants and pop-up reports go in a second one.
+  const [ai, popupEvents] = await batchRunReports(propertyId, [
     {
       dateRanges: [current],
       dimensions: [{ name: 'sessionSource' }],
@@ -101,7 +103,14 @@ async function fetchReport(propertyId: string, days: Period): Promise<SchoolRepo
       orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
       limit: 50,
     },
-  ]).catch(() => [{ rows: [] } as any])
+    {
+      dateRanges: [current],
+      dimensions: [{ name: 'eventName' }],
+      metrics: [{ name: 'eventCount' }],
+      dimensionFilter: { filter: { fieldName: 'eventName', inListFilter: { values: ['popup_view', 'popup_click', 'popup_close'] } } },
+    },
+  ]).catch(() => [{ rows: [] } as any, { rows: [] } as any])
+  const eventCount = (name: string) => num((popupEvents?.rows ?? []).find((r: GARow) => dim(r, 0) === name), 0)
 
   // With two date ranges GA adds a dateRange dimension: date_range_0 / date_range_1.
   const byRange = (key: string) => (totals.rows ?? []).find((r) => r.dimensionValues?.some((d) => d.value === key))
@@ -131,6 +140,7 @@ async function fetchReport(propertyId: string, days: Period): Promise<SchoolRepo
     sources: (sources.rows ?? []).map((r) => ({ name: SOURCE_NAMES[dim(r, 0)] ?? dim(r, 0), visits: num(r, 0) })),
     aiAssistants: groupAiAssistants((ai?.rows ?? []).map((r: GARow) => ({ source: dim(r, 0), visits: num(r, 0) }))),
     devices: (devices.rows ?? []).map((r) => ({ name: dim(r, 0).replace(/^./, (c) => c.toUpperCase()), visitors: num(r, 0) })),
+    popups: { views: eventCount('popup_view'), clicks: eventCount('popup_click'), closes: eventCount('popup_close') },
     fetchedAt: new Date().toISOString(),
   }
 }

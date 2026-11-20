@@ -1,5 +1,6 @@
 import { twoFactorPending } from '@/users/two-factor-rules'
 import type { Payload } from 'payload'
+import { STALE_DAYS, staleDays } from '../announcements/status'
 import { headers } from 'next/headers'
 import { canManagePeopleAt, canPublishAt, isB61Admin, roleAt, SCHOOL_ROLES } from '@/access'
 import { selectedSchool, schoolSiteUrl } from './school'
@@ -42,9 +43,9 @@ export async function Welcome({ payload, user }: { payload: Payload; user?: any 
     ...(site ? [{ href: site, label: 'View the website', hint: 'Opens in a new tab', external: true }] : []),
   ]
 
-  const [glance, drafts, hiddenLive] = school
-    ? await Promise.all([atAGlance(payload, school.id, publisher), unpublished(payload, school.id), hiddenWithDomain(payload, school)])
-    : [[], [], false]
+  const [glance, drafts, hiddenLive, stale] = school
+    ? await Promise.all([atAGlance(payload, school.id, publisher), unpublished(payload, school.id), hiddenWithDomain(payload, school), staleAnnouncements(payload, school.id)])
+    : [[], [], false, []]
 
   return (
     <div className="b61-welcome">
@@ -73,6 +74,20 @@ export async function Welcome({ payload, user }: { payload: Payload; user?: any 
             'ask an Editor or School Admin to turn it off in School settings'
           )}
           .
+        </div>
+      )}
+
+      {stale.length > 0 && (
+        <div className="b61-welcome__check" role="status">
+          <strong>{stale.length === 1 ? 'An announcement has' : `${stale.length} announcements have`} been up for over a month with no end date.</strong>{' '}
+          Still needed?{' '}
+          {stale.map((a, i) => (
+            <span key={a.id}>
+              {i > 0 && ', '}
+              <a href={`/admin/collections/announcements/${a.id}`}>{a.title}</a> ({a.days} days)
+            </span>
+          ))}
+          . Set &quot;Hide after&quot; or unpublish it.
         </div>
       )}
 
@@ -218,6 +233,20 @@ async function unpublished(payload: Payload, schoolId: number | string) {
  * True when a school with its own domain still has "Hide this whole site from
  * search engines" on: fine while building, a problem once the site is live.
  */
+/** Announcements up for over a month with no "Hide after" (the snow-day banner still up in March). */
+async function staleAnnouncements(payload: Payload, schoolId: number | string) {
+  const cutoff = new Date(Date.now() - STALE_DAYS * 86_400_000).toISOString()
+  const res = await payload.find({
+    collection: 'announcements',
+    where: { and: [{ school: { equals: schoolId } }, { _status: { equals: 'published' } }, { endsAt: { exists: false } }, { startsAt: { less_than_equal: cutoff } }] },
+    limit: 5,
+    depth: 0,
+    overrideAccess: true,
+    select: { title: true, startsAt: true },
+  })
+  return res.docs.map((a: any) => ({ id: a.id, title: a.title as string, days: staleDays(a) ?? STALE_DAYS }))
+}
+
 async function hiddenWithDomain(payload: Payload, school: { id: number | string; domains?: { domain?: string | null }[] | null }) {
   if (!(school.domains ?? []).some((d) => d?.domain)) return false
   const res = await payload.find({

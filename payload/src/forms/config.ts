@@ -205,6 +205,14 @@ export const formBuilderConfig: FormBuilderPluginConfig = {
     fields: ({ defaultFields }) => [
       { name: 'summary', label: 'From', type: 'text', admin: { readOnly: true } },
       ...defaultFields,
+      // Sent from a form inside a pop-up announcement (20 Nov 2026).
+      {
+        name: 'fromAnnouncement',
+        label: 'Came from pop-up',
+        type: 'relationship',
+        relationTo: 'announcements',
+        admin: { readOnly: true, position: 'sidebar', condition: (data) => Boolean(data?.fromAnnouncement) },
+      },
     ],
     hooks: { beforeChange: [submissionBeforeChange] },
   },

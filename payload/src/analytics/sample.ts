@@ -57,6 +57,7 @@ export function sampleReport(days: Period, seed = 61): SchoolReport {
       { name: 'Desktop', visitors: Math.round(visitors * 0.36) },
       { name: 'Tablet', visitors: Math.round(visitors * 0.03) },
     ],
+    popups: { views: Math.round(visitors * 0.4), clicks: Math.round(visitors * 0.04), closes: Math.round(visitors * 0.31) },
     fetchedAt: new Date().toISOString(),
   }
 }

@@ -129,6 +129,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       form: formId ? (
         <B61Form
           index={1}
+          fromAnnouncement={a.id}
           block={
             {
               blockType: 'b61Form',

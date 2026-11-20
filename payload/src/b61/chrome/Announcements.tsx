@@ -37,6 +37,19 @@ export type Notice = {
   form?: ReactNode
 }
 
+/**
+ * Google Analytics events (20 Nov 2026), when the school's site has GA (the
+ * tag loads only on its real domain, never in staff previews). Pop-ups:
+ * popup_view, popup_click, popup_close. Bars: announcement_click,
+ * announcement_close (a bar shows on every page, so views say nothing).
+ * The Analytics page totals the pop-up ones.
+ */
+function track(event: string, n: Notice) {
+  try {
+    ;(window as any).gtag?.('event', event, { announcement_id: String(n.id), announcement_title: n.title, announcement_type: n.popup ? 'popup' : 'bar' })
+  } catch {}
+}
+
 const KEY = 'b61-closed-notices'
 const SESSION_KEY = 'b61-closed-notices-visit'
 const WEEK = 7 * 24 * 60 * 60 * 1000
@@ -115,6 +128,7 @@ export default function Announcements({ notices, preview = false }: { notices: N
   const [popupClosedOn, setPopupClosedOn] = useState<string | null>(null)
   const closedMark = (n: Notice) => (isEditing(n) ? `${path}|${noticeKey(n)}` : path)
   const close = (n: Notice) => {
+    track(n.popup ? 'popup_close' : 'announcement_close', n)
     // Closing the one being edited in its preview isn't remembered.
     if (!isEditing(n)) remember(n)
     setLists({ local: readList('local'), session: readList('session') })
@@ -191,7 +205,10 @@ function ModalPopup({ n, preview, onClose }: { n: Notice; preview: boolean; onCl
   useOpenWhen(n.opens, preview, () => {
     const d = ref.current
     // Don't open over another dialog (a menu, a gallery photo).
-    if (d && !d.open && !document.querySelector('dialog[open]')) d.showModal()
+    if (d && !d.open && !document.querySelector('dialog[open]')) {
+      d.showModal()
+      if (!preview) track('popup_view', n)
+    }
   })
   const headingId = `b61-popup-${n.id}`
   return (
@@ -218,7 +235,10 @@ function ModalPopup({ n, preview, onClose }: { n: Notice; preview: boolean; onCl
  */
 function CornerPopup({ n, preview, onClose }: { n: Notice; preview: boolean; onClose: () => void }) {
   const [open, setOpen] = useState(false)
-  useOpenWhen(n.opens, preview, () => setOpen(true))
+  useOpenWhen(n.opens, preview, () => {
+    setOpen(true)
+    if (!preview) track('popup_view', n)
+  })
   useEffect(() => {
     if (!open) return
     // Escape closes it only when nothing else is using Escape: focus is on the
@@ -269,6 +289,7 @@ function PopupContent({ n, headingId, onCloseClick }: { n: Notice; headingId: st
           <a
             className="b61-btn b61-btn--primary b61-popup__btn"
             href={n.href}
+            onClick={() => track('popup_click', n)}
             {...(n.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
           >
             {n.linkLabel || 'Learn more'}
@@ -296,7 +317,7 @@ function Bars({ notices: shown, close }: { notices: Notice[]; close: (n: Notice)
               {n.href && (
                 <>
                   {' '}
-                  <a className="b61-notice__link" href={n.href} {...(n.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+                  <a className="b61-notice__link" href={n.href} onClick={() => track('announcement_click', n)} {...(n.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
                     {n.linkLabel || 'Learn more'}
                     <span aria-hidden="true"> →</span>
                   </a>

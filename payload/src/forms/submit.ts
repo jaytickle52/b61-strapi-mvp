@@ -252,9 +252,18 @@ export async function submitForm(
       }
     }
 
+    // Sent from a pop-up: record which one (only this school's announcements).
+    const fromId = Number(input.get('b61_from'))
+    let fromAnnouncement: number | undefined
+    if (fromId) {
+      const a: any = await payload.findByID({ collection: 'announcements', id: fromId, depth: 0, overrideAccess: true }).catch(() => null)
+      const aSchool = a?.school && typeof a.school === 'object' ? a.school.id : a?.school
+      if (a && aSchool === school) fromAnnouncement = a.id
+    }
+
     const doc = await payload.create({
       collection: 'form-submissions',
-      data: { form: formId, school, submissionData } as any,
+      data: { form: formId, school, submissionData, ...(fromAnnouncement ? { fromAnnouncement } : {}) } as any,
       overrideAccess: true,
       context: { b61Files: files },
     })

@@ -107,6 +107,15 @@ html[data-theme='dark'] .b61-logo__img--dark { display: block; }
   line-height: 1.5;
   a { text-decoration: underline; font-weight: 600; }
 }
+.b61-welcome__check {
+  margin: 20px 0 0;
+  padding: 12px 16px;
+  border-left: 4px solid #2f5fb3;
+  border-radius: 6px;
+  background: var(--theme-elevation-50);
+  line-height: 1.5;
+  a { text-decoration: underline; font-weight: 600; }
+}
 .b61-hidden-note,
 .b61-heading-check {
   margin: -8px 0 16px;
