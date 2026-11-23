@@ -13,6 +13,7 @@
 
 const BASE = (process.env.BASE_URL || 'http://localhost:3000').replace(/\/$/, '')
 const FALLBACK_SCHOOLS = (process.env.SMOKE_SCHOOLS || 'cedar-ridge,harbor-oaks').split(',').map((s) => s.trim()).filter(Boolean)
+const DEMO_SLUGS = ['cedar-ridge', 'harbor-oaks']
 const EMAIL = process.env.SMOKE_EMAIL
 const PASSWORD = process.env.SMOKE_PASSWORD
 
@@ -62,7 +63,10 @@ async function checkSchool(school, auth) {
   // The shared demo address picks a school with this link.
   await get(`/next/school/${school.slug}`, { expect: [302, 303, 307, 308], html: false })
 
-  for (const path of ['/', '/events', '/events?view=month', '/calendar.ics', '/news', '/programs', '/staff']) await get(path, { cookie })
+  for (const path of ['/', '/events', '/events?view=month', '/calendar.ics', '/news', '/staff']) await get(path, { cookie })
+  // Since #64, /programs is an ordinary page: the demo schools have one, a real
+  // school may not (signed in, every published page is checked below anyway).
+  if (DEMO_SLUGS.includes(school.slug)) await get('/programs', { cookie })
 
   if (!auth) return []
   const pages = await items('pages', school, auth)
