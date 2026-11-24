@@ -4,7 +4,7 @@ import { previewUrl } from './content'
 import { footerFields, headerFields } from '../b61/chrome/fields'
 import { testEmailEndpoint } from '../email/endpoints'
 import { colorField } from '../branding/fields'
-import { validateFontFamily } from '../branding/fonts'
+import { validateBrandFontRole, validateFontFamily } from '../branding/fonts'
 import { BODY_FONTS, HEADING_FONTS, UI_FONTS } from '../b61/lib/theme'
 import { CUSTOM_CSS_MAX } from '../b61/lib/custom-css'
 import { styleGroup } from '../b61/lib/style-fields'
@@ -107,17 +107,17 @@ export const SchoolSettings: CollectionConfig = {
             {
               name: 'buttonColor',
               label: 'Button color',
-              type: 'select',
+              type: 'radio',
               defaultValue: 'primary',
               options: [
-                { label: 'Primary (same as headings)', value: 'primary' },
+                { label: 'Primary', value: 'primary' },
                 { label: 'Secondary', value: 'secondary' },
                 { label: 'Accent', value: 'accent' },
               ],
               admin: {
-                isClearable: false,
+                layout: 'horizontal',
                 description:
-                  'The fill of main buttons. Accent uses "Accent for small text" below when it is set. Keep button text readable: the preview above shows the contrast.',
+                  'The fill of main buttons. Primary matches the headings. Accent uses "Accent for small text" below when it is set. The letters turn dark when white would be hard to read.',
               },
             },
             {
@@ -201,9 +201,9 @@ export const SchoolSettings: CollectionConfig = {
                 {
                   type: 'row',
                   fields: [
-                    { name: 'headingFontBrand', label: 'Headings use', type: 'text', validate: validateFontFamily, admin: { width: '33%', placeholder: 'Google font above' } },
-                    { name: 'bodyFontBrand', label: 'Body uses', type: 'text', validate: validateFontFamily, admin: { width: '33%', placeholder: 'Google font above' } },
-                    { name: 'uiFontBrand', label: 'Buttons and labels use', type: 'text', validate: validateFontFamily, admin: { width: '34%', placeholder: 'Google font above' } },
+                    { name: 'headingFontBrand', label: 'Headings use', type: 'text', validate: validateBrandFontRole, admin: { width: '33%', placeholder: 'Google font above' } },
+                    { name: 'bodyFontBrand', label: 'Body uses', type: 'text', validate: validateBrandFontRole, admin: { width: '33%', placeholder: 'Google font above' } },
+                    { name: 'uiFontBrand', label: 'Buttons and labels use', type: 'text', validate: validateBrandFontRole, admin: { width: '34%', placeholder: 'Google font above' } },
                   ],
                 },
               ],

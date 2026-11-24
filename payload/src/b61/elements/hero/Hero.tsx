@@ -129,10 +129,16 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
           <ol>
             {trail.map((c: any, i: number) => {
               const last = i === trail.length - 1
-              const { href } = last ? { href: null } : resolveLink(c.link)
+              const { href, newTab } = last ? { href: null, newTab: false } : resolveLink(c.link)
               return (
                 <li key={c.id ?? i}>
-                  {href ? <a href={href}>{c.label}</a> : <span {...(last ? { 'aria-current': 'page' as const } : {})}>{c.label}</span>}
+                  {href ? (
+                    <a href={href} {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+                      {c.label}
+                    </a>
+                  ) : (
+                    <span {...(last ? { 'aria-current': 'page' as const } : {})}>{c.label}</span>
+                  )}
                 </li>
               )
             })}

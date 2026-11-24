@@ -214,6 +214,21 @@ export interface Page {
     | (
         | {
             layoutMode?: ('cover' | 'band' | 'split' | 'type') | null;
+            /**
+             * The pages above this one, in order, shown above the eyebrow. The last step is this page and needs no link; a step with no link shows as plain text.
+             */
+            breadcrumb?:
+              | {
+                  label: string;
+                  link?: {
+                    type?: ('page' | 'document' | 'url') | null;
+                    page?: (number | null) | Page;
+                    document?: (number | null) | Document;
+                    url?: string | null;
+                  };
+                  id?: string | null;
+                }[]
+              | null;
             eyebrow?: string | null;
             /**
              * Select words and press Emphasize to set them apart. Shift+Enter starts a new line on wider screens.
@@ -255,21 +270,6 @@ export interface Page {
                    */
                   video?: string | null;
                   fullWidth?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            /**
-             * Optional. The pages above this one, in order; the last step is this page and needs no link. Leave a step's link empty to show it as plain text.
-             */
-            breadcrumb?:
-              | {
-                  label: string;
-                  link?: {
-                    type?: ('page' | 'document' | 'url') | null;
-                    page?: (number | null) | Page;
-                    document?: (number | null) | Document;
-                    url?: string | null;
-                  };
                   id?: string | null;
                 }[]
               | null;
@@ -321,7 +321,7 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             /**
@@ -434,7 +434,7 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             /**
@@ -524,7 +524,7 @@ export interface Page {
             headingRule?: ('site' | 'none' | 'trailing') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             /**
@@ -677,7 +677,7 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             headBeside?: boolean | null;
@@ -774,7 +774,7 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             bandWidth?: ('full' | 'right' | 'left') | null;
@@ -876,7 +876,7 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             duotone?: boolean | null;
@@ -907,7 +907,7 @@ export interface Page {
             markRoom?: boolean | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             /**
@@ -1016,7 +1016,7 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             /**
@@ -1113,7 +1113,7 @@ export interface Page {
                             markRoom?: boolean | null;
                             entrance?: ('on' | 'off') | null;
                             /**
-                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                              */
                             anchor?: string | null;
                             /**
@@ -1226,7 +1226,7 @@ export interface Page {
                             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                             entrance?: ('on' | 'off') | null;
                             /**
-                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                              */
                             anchor?: string | null;
                             /**
@@ -1316,7 +1316,7 @@ export interface Page {
                             headingRule?: ('site' | 'none' | 'trailing') | null;
                             entrance?: ('on' | 'off') | null;
                             /**
-                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                              */
                             anchor?: string | null;
                             /**
@@ -1472,7 +1472,7 @@ export interface Page {
                             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                             entrance?: ('on' | 'off') | null;
                             /**
-                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                              */
                             anchor?: string | null;
                             headBeside?: boolean | null;
@@ -1505,7 +1505,7 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             /**
@@ -1580,7 +1580,7 @@ export interface Page {
                             markRoom?: boolean | null;
                             entrance?: ('on' | 'off') | null;
                             /**
-                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                              */
                             anchor?: string | null;
                             /**
@@ -1693,7 +1693,7 @@ export interface Page {
                             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                             entrance?: ('on' | 'off') | null;
                             /**
-                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                              */
                             anchor?: string | null;
                             /**
@@ -1783,7 +1783,7 @@ export interface Page {
                             headingRule?: ('site' | 'none' | 'trailing') | null;
                             entrance?: ('on' | 'off') | null;
                             /**
-                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                              */
                             anchor?: string | null;
                             /**
@@ -1812,7 +1812,7 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             /**
@@ -1908,7 +1908,7 @@ export interface Page {
                       headingRule?: ('site' | 'none' | 'trailing') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -2021,7 +2021,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -2175,7 +2175,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       headBeside?: boolean | null;
@@ -2272,7 +2272,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       bandWidth?: ('full' | 'right' | 'left') | null;
@@ -2374,7 +2374,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       duotone?: boolean | null;
@@ -2405,7 +2405,7 @@ export interface Page {
                       markRoom?: boolean | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -2430,7 +2430,7 @@ export interface Page {
                       frameColor?: ('primary' | 'secondary' | 'accent') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -2539,7 +2539,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -2635,7 +2635,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -2689,7 +2689,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -2720,7 +2720,7 @@ export interface Page {
                       secondColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -2743,7 +2743,7 @@ export interface Page {
                       lineColor?: ('accent' | 'ink' | 'muted') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -2806,7 +2806,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -2886,7 +2886,7 @@ export interface Page {
                       sticky?: boolean | null;
                       surface?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -2976,7 +2976,7 @@ export interface Page {
                       headingRule?: ('site' | 'none' | 'trailing') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -3089,7 +3089,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -3243,7 +3243,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       headBeside?: boolean | null;
@@ -3340,7 +3340,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       bandWidth?: ('full' | 'right' | 'left') | null;
@@ -3442,7 +3442,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       duotone?: boolean | null;
@@ -3473,7 +3473,7 @@ export interface Page {
                       markRoom?: boolean | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -3498,7 +3498,7 @@ export interface Page {
                       frameColor?: ('primary' | 'secondary' | 'accent') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -3607,7 +3607,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -3703,7 +3703,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -3757,7 +3757,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -3788,7 +3788,7 @@ export interface Page {
                       secondColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -3811,7 +3811,7 @@ export interface Page {
                       lineColor?: ('accent' | 'ink' | 'muted') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -3874,7 +3874,7 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
-                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
                        */
                       anchor?: string | null;
                       /**
@@ -3920,7 +3920,7 @@ export interface Page {
             surface?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             duotone?: boolean | null;
@@ -4017,7 +4017,7 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             /**
@@ -4071,7 +4071,7 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             /**
@@ -4096,7 +4096,7 @@ export interface Page {
             frameColor?: ('primary' | 'secondary' | 'accent') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             /**
@@ -4127,7 +4127,7 @@ export interface Page {
             secondColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             /**
@@ -4150,7 +4150,7 @@ export interface Page {
             lineColor?: ('accent' | 'ink' | 'muted') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             /**
@@ -4213,7 +4213,7 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
-             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             * Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
              */
             anchor?: string | null;
             /**
@@ -5339,7 +5339,7 @@ export interface SchoolSetting {
    */
   paperColor?: string | null;
   /**
-   * The fill of main buttons. Accent uses "Accent for small text" below when it is set. Keep button text readable: the preview above shows the contrast.
+   * The fill of main buttons. Primary matches the headings. Accent uses "Accent for small text" below when it is set. The letters turn dark when white would be hard to read.
    */
   buttonColor?: ('primary' | 'secondary' | 'accent') | null;
   primaryDeep?: string | null;
@@ -6333,6 +6333,20 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               layoutMode?: T;
+              breadcrumb?:
+                | T
+                | {
+                    label?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                        };
+                    id?: T;
+                  };
               eyebrow?: T;
               heading?: T;
               changingWords?: T;
@@ -6354,20 +6368,6 @@ export interface PagesSelect<T extends boolean = true> {
                         };
                     video?: T;
                     fullWidth?: T;
-                    id?: T;
-                  };
-              breadcrumb?:
-                | T
-                | {
-                    label?: T;
-                    link?:
-                      | T
-                      | {
-                          type?: T;
-                          page?: T;
-                          document?: T;
-                          url?: T;
-                        };
                     id?: T;
                   };
               backgroundType?: T;

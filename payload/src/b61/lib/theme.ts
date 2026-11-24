@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { readableOn } from '../../branding/color'
+import { contrast, readableOn } from '../../branding/color'
 
 const HEX = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i
 
@@ -146,20 +146,47 @@ type Settings = {
 /**
  * School settings > Look > Button color. Primary keeps tokens.css as it is
  * (buttons match the headings). Secondary or accent fills main buttons with
- * that colour instead, with white letters, and darkens it on hover.
+ * that colour instead, on every ground that uses the primary fill: the page
+ * itself and the White and Light wash bands (utilities.css reads
+ * --b61-btn-primary-fill there). Dark and accent bands keep their own buttons.
+ *
+ * The letters are white when white is readable on the fill (4.5:1), otherwise
+ * near-black when that is, otherwise whichever reads better.
  */
 function buttonOverrides(s: Settings, c: { secondary: string; accent: string }): Record<string, string> {
+  let fill: string
+  let hover: string
   if (s.buttonColor === 'secondary') {
-    const deep = s.primaryDeep ? 'var(--b61-palette-primary-deep)' : mix(c.secondary, '#000', 78)
-    return { '--b61-btn-bg': c.secondary, '--b61-btn-bg-hover': deep, '--b61-btn-outline-color': c.secondary }
-  }
-  if (s.buttonColor === 'accent') {
+    fill = c.secondary
+    hover = mix(c.secondary, '#000', 78)
+  } else if (s.buttonColor === 'accent') {
     // "Accent for small text" is the shade meant to carry letters, so prefer it.
-    const fill = s.accentStrong ? color(s.accentStrong, c.accent) : c.accent
-    const hover = s.accentDeep ? color(s.accentDeep, c.accent) : mix(fill, '#000', 85)
-    return { '--b61-btn-bg': fill, '--b61-btn-bg-hover': hover }
+    fill = s.accentStrong ? color(s.accentStrong, c.accent) : c.accent
+    hover = s.accentDeep ? color(s.accentDeep, c.accent) : mix(fill, '#000', 85)
+  } else {
+    return {}
   }
-  return {}
+  const label = buttonLabel(fill)
+  const vars: Record<string, string> = {
+    '--b61-btn-bg': fill,
+    '--b61-btn-bg-hover': hover,
+    '--b61-btn-text': label,
+    '--b61-btn-text-hover': label,
+    '--b61-btn-primary-fill': fill,
+    '--b61-btn-primary-fill-hover': hover,
+    '--b61-btn-primary-label': label,
+  }
+  if (s.buttonColor === 'secondary') vars['--b61-btn-outline-color'] = c.secondary
+  return vars
+}
+
+/** White or near-black letters for a button fill (see buttonOverrides). */
+export function buttonLabel(fill: string): string {
+  const white = contrast('#ffffff', fill)
+  const ink = contrast('#111111', fill)
+  if (white >= 4.5) return '#ffffff'
+  if (ink >= 4.5) return '#111111'
+  return white >= ink ? '#ffffff' : '#111111'
 }
 
 export type SiteTone = 'light' | 'dark'

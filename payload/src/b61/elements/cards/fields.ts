@@ -257,9 +257,16 @@ export const B61CardGrid = defineElement({
           { default: 'sm', when: isIcon },
         ),
         toggle('showNumbers', 'Show numbers', { when: { field: 'mediaType', in: ['image', 'none'] } }),
-        // Numbered cards as a row of steps: a filled number joined to the next by a line (wide screens only).
+        // Numbered cards as a row of steps: a ring number joined to the next by a line (wide screens only).
         toggle('connectSteps', 'Join as steps', {
-          condition: (_d: unknown, sib: any) => Boolean(sib?.showNumbers) && ['image', 'none'].includes(sib?.mediaType ?? 'image') && sib?.arrangement !== 'carousel',
+          when: {
+            all: [
+              { field: 'showNumbers', in: [true] },
+              { field: 'mediaType', in: ['image', 'none'] },
+              { field: 'arrangement', in: ['grid', null] },
+              { field: 'cardText', in: ['below', null] },
+            ],
+          },
         }),
         // Link text letters and size are site-wide: Style > Card link letters / size (Jay, 19 Nov 2026).
       ],

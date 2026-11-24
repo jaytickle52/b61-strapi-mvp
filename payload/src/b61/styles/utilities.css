@@ -74,9 +74,9 @@
   --b61-rule-ink: var(--b61-ink);
   --b61-rule-muted: var(--b61-muted);
   --b61-btn-bg: var(--b61-btn-primary-fill);
-  --b61-btn-text: var(--b61-white);
+  --b61-btn-text: var(--b61-btn-primary-label);
   --b61-btn-bg-hover: var(--b61-btn-primary-fill-hover);
-  --b61-btn-text-hover: var(--b61-white);
+  --b61-btn-text-hover: var(--b61-btn-primary-label);
   --b61-btn-outline-color: var(--b61-primary);
   --b61-btn-secondary-hover-scrim: rgb(var(--b61-scrim-rgb) / 0.06);
   --b61-btn-light-border: var(--b61-primary);
@@ -96,9 +96,9 @@
   --b61-rule-ink: var(--b61-on-surface-soft);
   --b61-rule-muted: var(--b61-on-soft-muted);
   --b61-btn-bg: var(--b61-btn-primary-fill);
-  --b61-btn-text: var(--b61-white);
+  --b61-btn-text: var(--b61-btn-primary-label);
   --b61-btn-bg-hover: var(--b61-btn-primary-fill-hover);
-  --b61-btn-text-hover: var(--b61-white);
+  --b61-btn-text-hover: var(--b61-btn-primary-label);
   --b61-btn-outline-color: var(--b61-primary);
   --b61-btn-secondary-hover-scrim: rgb(var(--b61-scrim-rgb) / 0.06);
   --b61-btn-light-border: var(--b61-primary);

@@ -72,30 +72,8 @@ export const B61Hero = defineElement({
 
     panel(
       'Heading',
-      headingFields({
-        after: [
-          {
-            name: 'changingWords',
-            label: 'Changing words',
-            type: 'text',
-            validate: validateChangingWords,
-            admin: {
-              placeholder: 'e.g. Learning, Missions, Athletics',
-              description: 'Words that take turns with the emphasized words, separated by commas. Works best at the end of the heading.',
-            },
-          },
-          // One subheadline style (Jay, 19 Nov 2026): the body font.
-          { name: 'subheadline', label: 'Subheadline', type: 'textarea', admin: { rows: 2 } },
-        ],
-      }),
-    ),
-
-    buttonsPanel(),
-
-    // A trail above the eyebrow on inner pages, e.g. Banner Connect / Use Cases / For Enrollment.
-    panel(
-      'Breadcrumb',
       [
+        // A trail above the eyebrow on inner pages, e.g. Banner Connect / Use Cases / For Enrollment.
         list(
           'breadcrumb',
           'Breadcrumb',
@@ -107,14 +85,31 @@ export const B61Hero = defineElement({
           {
             maxRows: 5,
             admin: {
-              description: 'Optional. The pages above this one, in order; the last step is this page and needs no link. Leave a step\'s link empty to show it as plain text.',
+              description: "The pages above this one, in order, shown above the eyebrow. The last step is this page and needs no link; a step with no link shows as plain text.",
               initCollapsed: true,
             },
           },
         ),
+        ...headingFields({
+          after: [
+            {
+              name: 'changingWords',
+              label: 'Changing words',
+              type: 'text',
+              validate: validateChangingWords,
+              admin: {
+                placeholder: 'e.g. Learning, Missions, Athletics',
+                description: 'Words that take turns with the emphasized words, separated by commas. Works best at the end of the heading.',
+              },
+            },
+            // One subheadline style (Jay, 19 Nov 2026): the body font.
+            { name: 'subheadline', label: 'Subheadline', type: 'textarea', admin: { rows: 2 } },
+          ],
+        }),
       ],
-      { open: false },
     ),
+
+    buttonsPanel(),
 
     panel(
       'Background',

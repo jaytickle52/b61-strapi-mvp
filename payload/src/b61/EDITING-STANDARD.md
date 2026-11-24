@@ -62,7 +62,7 @@ How the kit does it (`defineElement`, nothing per element):
 | *Element's part* (e.g. Cards) | treatment of the element's own items |
 | Color | surface, overlay, item colours |
 | Accents | eyebrow rule, frames, entrance animation |
-| Advanced | CSS class (Banner 61 admins only; school staff never see it) |
+| Advanced | Anchor (everyone; section 21); CSS class and Banner 61 layout options (Banner 61 admins only; school staff never see them) |
 
 A panel with nothing to show for the current choices is left out.
 Layout opens by default; the others start closed and show their current
@@ -294,7 +294,8 @@ Added after reviewing wakechristianacademy.com. Rule: **school staff keep a shor
 arrangement choices are Banner 61-only; content a school updates stays where staff already work.
 
 - **Design > Advanced (Banner 61 only).** `defineElement({ design: { advanced: [...] } })` puts
-  fields above the CSS class in the Advanced panel, which school staff never see. `bannerOnly()`
+  fields above the CSS class in the Advanced panel, hidden from school staff (they see only the
+  Anchor there, section 21). `bannerOnly()`
   (kit/element.ts) gives each one create/update access for Banner 61 admins only, so a staff save
   keeps what Banner 61 set. Use it for layout, not for words or photos.
   - Card Grid: **Heading beside the cards** (the head in a side column; section 19),
@@ -431,3 +432,27 @@ nesting read from the field's path) and the element applies the same rule (`Inne
   or Scroll story / Tabs on top as it was set) and turned old Tabs positions into Layout and
   Tab side. Tabs isn't offered inside a Section column (one level of nesting); an old nested
   Tabbed Features still renders.
+
+## 21. Design fidelity options (Nov 2026)
+
+From the first custom build on Payload (Banner 61's own site, from a Claude Design canvas). Each
+closes a gap between a design and what the section library could show, for every school.
+
+- **Design > Advanced > Anchor** (every element, school staff included). A name such as
+  `pricing`; a button or menu link to `#pricing` (or `/page#pricing`) jumps there. The id goes on
+  the element's own root (`kit/render/anchor.ts`), never a wrapper, so neighbour rules keep
+  working; `html { scroll-padding-top }` (chrome.css) keeps it clear of the sticky header.
+  Lower-case letters, digits and hyphens; one per page; `main` and `b61-*` are the page's own.
+- **School settings > Look > Button color**: Primary (default, matches headings), Secondary or
+  Accent. Sets the primary fill on the page and on White and Light wash bands
+  (`--b61-btn-primary-fill`); the letters turn dark when white wouldn't read (4.5:1).
+- **School settings > Look > Brand fonts (uploaded)**: a school's licensed font files (WOFF2,
+  WOFF, OTF, TTF in Documents), one row per weight and style, then Headings / Body / Buttons
+  pointed at a family by name. The Google font above stays the fallback. Served from the site's
+  own address (`/next/brand-font/<id>?v=…`) because Blob is another domain; the version changes
+  when the file is replaced. Upload only fonts licensed for the web.
+- **Hero > Heading > Breadcrumb**: up to five steps above the eyebrow; the last is the current
+  page (no link). For inner pages such as a product's use case.
+- **Card Grid > Cards > Join as steps** (Show numbers on, grid, text below): the numbers sit in
+  rings in the card's accent, joined by a line to the next card on wide screens.
+

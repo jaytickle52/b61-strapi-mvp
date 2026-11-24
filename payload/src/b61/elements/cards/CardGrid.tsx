@@ -185,7 +185,7 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
     surfaced && `b61-cards__region--csurf-${csurf}`,
     `b61-cards__region--a${talign}`,
     `b61-cards__region--media-${mtype}`,
-    block.showNumbers && (block as any).connectSteps && !car && mtype !== 'icon' && 'b61-cards__region--steps',
+    block.showNumbers && (block as any).connectSteps && !car && !ov && mtype !== 'icon' && 'b61-cards__region--steps',
     mtype === 'icon' && isize !== 'sm' && `b61-cards__region--icon-${isize}`,
     mround && 'b61-cards__region--img-round',
     customRatio && 'b61-cards__region--ratio',

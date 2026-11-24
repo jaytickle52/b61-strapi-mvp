@@ -1008,9 +1008,3 @@
   white-space: nowrap;
   border: 0;
 }
-
-/* Design > Advanced > Anchor: a link to #name lands with the section's top
-   clear of the sticky header instead of hidden under it (kit/render/anchor.ts). */
-main [id] {
-  scroll-margin-top: calc(var(--b61-sticky-h, 76px) + 16px);
-}

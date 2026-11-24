@@ -181,9 +181,13 @@ function designPanel(label: string, fields: Field[] | undefined, open: boolean, 
 
 const adminOnly = (_data: unknown, _sibling: unknown, ctx: any) => isB61Admin(ctx?.user)
 
-/** Hides a field (and the fields inside a row or collapsible) from school staff. */
+/** Hides a field from school staff, keeping its own show/hide rule for Banner 61 admins. */
 function hiddenFromStaff(fields: Field[]): Field[] {
-  return fields.map((f) => ({ ...f, admin: { ...((f as any).admin ?? {}), condition: adminOnly } }) as Field)
+  return fields.map((f) => {
+    const own = (f as any).admin?.condition as Condition | undefined
+    const condition: Condition = (data, sibling, ctx) => adminOnly(data, sibling, ctx) && (own ? own(data, sibling, ctx) : true)
+    return { ...f, admin: { ...((f as any).admin ?? {}), condition } } as Field
+  })
 }
 
 /**
@@ -211,7 +215,7 @@ function advancedPanel(extra: Field[] = []): Field[] {
           validate: validateAnchor,
           admin: {
             placeholder: 'e.g. pricing',
-            description: 'Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.',
+            description: 'Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.',
           },
         },
         ...hiddenFromStaff(bannerOnly(extra)),

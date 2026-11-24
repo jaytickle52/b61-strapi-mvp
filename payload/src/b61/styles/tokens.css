@@ -1027,6 +1027,9 @@
   --b61-btn-stroke: 2px;
   --b61-btn-primary-fill: var(--b61-primary);
   --b61-btn-primary-fill-hover: var(--b61-palette-primary-deep);
+  /* The letters on that fill. White unless School settings > Button color picks
+     a fill white can't be read on (lib/theme.ts buttonOverrides). */
+  --b61-btn-primary-label: var(--b61-white);
   --b61-btn-primary-fill-on-dark: var(--b61-on-surface-dark);
   --b61-btn-primary-label-on-dark: var(--b61-surface-dark);
   --b61-btn-primary-fill-hover-on-dark: var(--b61-surface-soft);
