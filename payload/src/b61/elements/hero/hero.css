@@ -826,6 +826,11 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: var(--b61-space-xl);
   }
+  /* Text only (Big headline, a band with no collage): one column at every width.
+     The two-column rule above squeezed the words into half the width on tablets. */
+  .b61-hero__grid--text-only {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .b61-hero__collage {
     gap: var(--b61-space-md);
   }

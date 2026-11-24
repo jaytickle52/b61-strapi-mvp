@@ -178,3 +178,22 @@
   box-shadow: 0 -6px 48px rgba(17, 24, 39, 0.1);
 }
 .b61-hero__showcase-frame img { display: block; width: 100%; height: auto; max-height: 560px; object-fit: cover; object-position: var(--b61-photo-focus, 50% 0%); }
+
+/* The showcase rises into place as the page scrolls (Jay, 24 Nov 2026). Scroll-driven,
+   so it follows the reader rather than a timer; only where the browser supports scroll
+   timelines (others show it in place), never with reduced motion, and not when the hero's Entrance is Off. */
+@keyframes b61-showcase-rise {
+  from { transform: translateY(var(--b61-showcase-rise, 96px)); }
+  to { transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .b61-hero__inner[data-b61-reveal='on'] .b61-hero__showcase-frame {
+      /* The page's own scroll, not view(): the hero clips its overflow, which would
+         make it the nearest scroller and freeze the timeline. Done by 560px of scroll. */
+      animation: b61-showcase-rise linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 560px;
+    }
+  }
+}

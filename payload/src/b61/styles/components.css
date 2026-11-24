@@ -476,6 +476,18 @@
   text-decoration-thickness: 2px;
 }
 
+/* A link that ends in an arrow is a flex row, so an underline breaks at the gap
+   and draws a second, separate line under the arrow (Jay, 24 Nov 2026). The
+   arrow already says "this goes somewhere", so these links carry no underline;
+   hover moves the arrow, focus keeps the ring. Links without an arrow keep theirs. */
+.b61-link:has(.b61-link-arrow),
+.b61-link:has(.b61-link-arrow):hover,
+.b61-link:has(.b61-link-arrow):focus-visible,
+.b61-cards__card--linked:hover .b61-cards__cta:has(.b61-link-arrow),
+.b61-cards__card--linked:focus-within .b61-cards__cta:has(.b61-link-arrow) {
+  text-decoration: none;
+}
+
 .b61-link:focus-visible {
   outline: var(--b61-focus-width) solid var(--b61-focus, var(--b61-ink));
   outline-offset: var(--b61-focus-offset);

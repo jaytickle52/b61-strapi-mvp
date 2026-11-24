@@ -299,7 +299,8 @@ html.b61-hdr-lock { overflow: hidden; }
 .b61-hdr__mtop[aria-current='page'] { color: var(--b61-primary-text, var(--b61-primary)); }
 .b61-hdr__msub { padding: 0 0 14px; }
 .b61-hdr__msub .b61-hdr__colhead { padding: 10px 0 2px; margin: 0; }
-.b61-hdr__mlink { display: block; padding: 9px 0; color: var(--b61-ink); text-decoration: none; }
+/* Sub-links sit closer together (Jay, 24 Nov 2026); each row stays over 32px tall, above the 24px target minimum. */
+.b61-hdr__mlink { display: block; padding: 6px 0; line-height: 1.35; color: var(--b61-ink); text-decoration: none; }
 .b61-hdr__mlink[aria-current='page'] { color: var(--b61-primary-text, var(--b61-primary)); font-weight: 600; }
 .b61-hdr__mend { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin-top: auto; padding-top: var(--b61-space-lg); }
 .b61-hdr__mend .b61-hdr__util { display: inline-block; padding: 4px 0; font-size: 1rem; }
