@@ -27,6 +27,9 @@ type Card = {
   href?: string | null
   newTab?: boolean
   linkText?: string | null
+  figure?: string | null
+  badge?: string | null
+  featured?: boolean
 }
 
 const SIZES: Record<string, string> = {
@@ -69,6 +72,7 @@ async function loadCards(block: CardGridBlock): Promise<Card[]> {
           key: c.id ?? String(i), image: c.image, icon: c.icon, iconImage: (c as any).iconImage, iconColours: (c as any).iconColours, eyebrow: c.eyebrow, title: c.title,
           body: c.body ? <RichText data={c.body as SerializedEditorState} disableContainer converters={b61Converters} /> : null,
           href, newTab, linkText: c.linkText,
+          figure: (c as any).figure, badge: (c as any).badge, featured: Boolean((c as any).featured),
         }
       })
   }
@@ -127,6 +131,9 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
   const feature = !car && cols === '3' && Boolean(bx.featureMiddle)
   const duotone = Boolean(bx.duotone)
   const Wrap = hasHeading ? 'section' : 'div'
+  const linkButtons = !ov && bx.cardLinkStyle === 'button'
+  const headAlign = !beside && (bx.headingAlign === 'left' || bx.headingAlign === 'center') ? bx.headingAlign : null
+  const actionsBeside = !beside && bx.buttonsPlacement === 'heading' && (block.buttons ?? []).length > 0
 
   const controls = car ? (
     <div className="b61-car__controls js-b61-car-controls" hidden>
@@ -162,7 +169,7 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
 
   const hasHead = Boolean(block.eyebrow || hasHeading || block.intro)
   const head = hasHead ? (
-    <div className="b61-cards__head">
+    <div className={`b61-cards__head${headAlign ? ` b61-halign-${headAlign}` : ''}`}>
       {block.eyebrow && (
         <span className="b61-cards__eyebrow" {...ri}>
           {block.eyebrow}
@@ -199,6 +206,7 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
     reveal && 'b61-cards__region--reveal',
     altTint && 'b61-cards__region--alt-tint',
     feature && 'b61-cards__region--feature',
+    linkButtons && 'b61-cards__region--link-buttons',
     duotone && `b61-cards__region--duotone b61-duotone--${ov ? 'deep' : 'light'}`,
   ]
     .filter(Boolean)
@@ -220,7 +228,7 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
         return (
           <article
             key={card.key}
-            className={`b61-cards__card${linked || cta ? ' b61-cards__card--linked' : ''}`}
+            className={`b61-cards__card${linked || cta ? ' b61-cards__card--linked' : ''}${card.featured ? ' b61-cards__card--featured' : ''}${card.badge ? ' b61-cards__card--badged' : ''}`}
             {...ri}
             style={focus ? ({ '--b61-photo-focus': focus } as CSSProperties) : undefined}
             {...(car && card.title ? { 'data-b61-slide-label': card.title } : {})}
@@ -241,6 +249,7 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
                   <span className="b61-cards__num-text">{String(i + 1).padStart(2, '0')}</span>
                 </span>
               )}
+              {card.badge && <span className="b61-cards__badge">{card.badge}</span>}
               {card.eyebrow && <span className="b61-cards__eyebrow-item">{card.eyebrow}</span>}
               {card.title && (
                 <CardHeading className="b61-cards__title">
@@ -253,8 +262,13 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
                   )}
                 </CardHeading>
               )}
+              {card.figure && <p className="b61-cards__figure">{card.figure}</p>}
               {card.body && <div className="b61-cards__body breakdance-rich-text-styles">{card.body}</div>}
-              {cta && (
+              {cta && linkButtons ? (
+                <a className={`b61-btn b61-btn--${card.featured ? 'primary' : 'secondary'} b61-cards__button`} href={card.href!} {...linkProps}>
+                  {card.linkText}
+                </a>
+              ) : cta && (
                 <a className="b61-link b61-cards__cta" href={card.href!} {...linkProps}>
                   {card.linkText}
                   <span className="b61-link-arrow b61-cards__cta-arrow" aria-hidden="true">
@@ -329,11 +343,16 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
             {head}
             {controls}
           </div>
+        ) : actionsBeside ? (
+          <div className="b61-cards__toprow">
+            {head}
+            {buttons}
+          </div>
         ) : (
           head
         )}
         {body}
-        {buttons}
+        {!actionsBeside && buttons}
       </Wrap>
     </div>
   )

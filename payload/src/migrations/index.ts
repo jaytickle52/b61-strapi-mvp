@@ -40,6 +40,7 @@ import * as migration_20261120_184144_tabs_merge from './20261120_184144_tabs_me
 import * as migration_20261120_195000_drop_old_programs from './20261120_195000_drop_old_programs';
 import * as migration_20261120_195659_announcement_status_tracking from './20261120_195659_announcement_status_tracking';
 import * as migration_20261124_110930_design_fidelity from './20261124_110930_design_fidelity';
+import * as migration_20261124_165737_design_match_elements from './20261124_165737_design_match_elements';
 
 export const migrations = [
   {
@@ -250,6 +251,11 @@ export const migrations = [
   {
     up: migration_20261124_110930_design_fidelity.up,
     down: migration_20261124_110930_design_fidelity.down,
-    name: '20261124_110930_design_fidelity'
+    name: '20261124_110930_design_fidelity',
+  },
+  {
+    up: migration_20261124_165737_design_match_elements.up,
+    down: migration_20261124_165737_design_match_elements.down,
+    name: '20261124_165737_design_match_elements'
   },
 ];

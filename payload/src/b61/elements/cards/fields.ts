@@ -120,7 +120,16 @@ export const B61CardGrid = defineElement({
               { name: 'title', label: 'Title', type: 'text', admin: { width: '60%' } },
             ],
           },
+          // A large figure under the title, such as a price or a number (design fidelity, Nov 2026).
+          { name: 'figure', label: 'Large figure', type: 'text', admin: { placeholder: 'e.g. $0, $249 a month, 98%', description: 'Optional. Shows large under the title, e.g. a price.' } },
           { name: 'body', label: 'Body', type: 'richText', editor: simpleEditor() },
+          {
+            type: 'row',
+            fields: [
+              { name: 'badge', label: 'Badge', type: 'text', admin: { width: '50%', placeholder: 'e.g. Recommended', description: 'Optional. A small label in the corner.' } },
+              { ...toggle('featured', 'Highlight this card', { width: '50%' }), admin: { width: '50%', description: 'An outline in the accent colour; its link button is filled.' } } as any,
+            ],
+          },
           link(),
           { name: 'linkText', label: 'Link text', type: 'text', admin: { description: 'Shows a "Read more"-style link. Leave empty to link the title.' } },
         ],
@@ -152,6 +161,16 @@ export const B61CardGrid = defineElement({
         ],
         { default: '3' },
       ),
+      // Buttons beside the heading: a "See all" link at the right of the heading row (Nov 2026).
+      segmented(
+        'buttonsPlacement',
+        'Buttons',
+        [
+          ['below', 'Below the cards'],
+          ['heading', 'Beside the heading'],
+        ],
+        { default: 'below', condition: (_: unknown, s: any) => (s?.buttons ?? []).length > 0 && !s?.headBeside },
+      ),
       segmented(
         'textAlign',
         'Text alignment',
@@ -160,6 +179,17 @@ export const B61CardGrid = defineElement({
           ['center', 'Center', 'align-center'],
         ],
         { default: 'left', iconOnly: true },
+      ),
+      // A centred heading over left-aligned cards, e.g. pricing (design fidelity, Nov 2026).
+      segmented(
+        'headingAlign',
+        'Heading alignment',
+        [
+          ['match', 'Match cards'],
+          ['left', 'Left'],
+          ['center', 'Center'],
+        ],
+        { default: 'match', condition: (_: unknown, s: any) => !s?.headBeside },
       ),
       panel(
         'Carousel',
@@ -246,6 +276,16 @@ export const B61CardGrid = defineElement({
           { default: 'bottom', iconOnly: true, when: overlayImg },
         ),
         toggle('mediaRound', 'Round image corners', { when: surfacedImg }),
+        // Card links as buttons across the card's foot (pricing, plans); a highlighted card's is filled.
+        segmented(
+          'cardLinkStyle',
+          'Card link',
+          [
+            ['text', 'Text link'],
+            ['button', 'Button'],
+          ],
+          { default: 'text', when: below },
+        ),
         segmented(
           'iconSize',
           'Icon size',

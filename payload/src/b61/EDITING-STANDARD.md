@@ -456,3 +456,25 @@ closes a gap between a design and what the section library could show, for every
 - **Card Grid > Cards > Join as steps** (Show numbers on, grid, text below): the numbers sit in
   rings in the card's accent, joined by a line to the next card on wide screens.
 
+
+## 22. Design-match options (Nov 2026)
+
+From matching Banner 61's own product pages to their Claude Design artboards. Each is general:
+any school's design with the same pattern can use it. All are opt-in; existing pages don't change.
+
+- **Hero > Big headline > Background > Showcase picture**: a wide screenshot or photo under the
+  centred words, in a window-like frame (rounded top, soft shadow) whose bottom edge meets the next
+  band. The hero's height then follows its content and its edge line is hidden.
+- **Tabs > Design > Layout > Tab style: Pills** (Tabs on top): rounded buttons, the open one filled
+  in the ink colour; on Dark and Accent bands the open pill turns light with dark words.
+- **Card Grid, per card**: **Large figure** (a price or number under the title), **Badge** (a small
+  label in the corner, e.g. Recommended) and **Highlight this card** (an outline in the secondary
+  colour and a lifted shadow).
+- **Card Grid > Design > Cards > Card link: Button**: each card's link becomes a full-width button
+  at the card's foot, filled on a highlighted card and outlined on the others (pricing, plans).
+- **Card Grid > Design > Layout > Buttons: Beside the heading**: the grid's buttons sit at the
+  right of the heading row (a "See all" link). Not with Heading beside the cards.
+- **Card Grid > Design > Layout > Heading alignment**: Match cards (default, as before), Left or
+  Center, so a centred heading can sit over left-aligned cards.
+- **CTA Band > Design > Layout > Buttons: Beside the words** (left-aligned bands): the words on the
+  left, the buttons at the right, centred on them; stacked again below 900px.

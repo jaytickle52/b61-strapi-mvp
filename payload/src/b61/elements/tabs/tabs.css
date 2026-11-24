@@ -526,3 +526,39 @@
   .b61-tabs__feature { grid-template-columns: minmax(0, 1fr); gap: var(--b61-space-lg, 1.5rem); }
   .b61-tabs__feature-media { order: -1; }
 }
+
+/* ---- Tab style: Pills (design fidelity, Nov 2026) ----------------------------
+   Tabs on top as rounded buttons; the open one is filled in the ink colour, so
+   it shows by fill and contrast, not colour alone (WCAG 1.4.1). */
+.b61-tabs.is-ready .b61-tabs__region--pills .b61-tabs__tablist {
+  gap: var(--b61-space-xs, 8px);
+  border-bottom: 0;
+  margin-bottom: var(--b61-space-xl, 32px);
+}
+.b61-tabs__region--pills .b61-tabs__tab {
+  padding: 12px 22px;
+  min-height: 44px;
+  border: 1px solid var(--tab-line);
+  border-radius: var(--b61-radius-btn, 999px);
+  background: var(--b61-white, #fff);
+  color: var(--tab-ink);
+}
+.b61-tabs__region--pills .b61-tabs__title {
+  font-family: var(--b61-font-ui);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.2;
+}
+.b61-tabs.is-ready .b61-tabs__region--pills .b61-tabs__tab[aria-selected="true"] {
+  background: var(--tab-ink);
+  border-color: var(--tab-ink);
+  color: var(--b61-white, #fff);
+  box-shadow: none;
+}
+/* On a Dark or Accent band the ink is light: unpicked pills go clear and the
+   open one takes the light fill with the page's dark ink for its words. */
+.b61-band--dark.b61-tabs__region--pills .b61-tabs__tab,
+.b61-band--accent.b61-tabs__region--pills .b61-tabs__tab { background: transparent; }
+.b61-tabs.is-ready .b61-band--dark.b61-tabs__region--pills .b61-tabs__tab[aria-selected="true"],
+.b61-tabs.is-ready .b61-band--accent.b61-tabs__region--pills .b61-tabs__tab[aria-selected="true"] { color: var(--b61-ink); }

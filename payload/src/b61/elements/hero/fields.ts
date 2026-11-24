@@ -126,6 +126,15 @@ export const B61Hero = defineElement({
         ),
         // Split screen uses the same photo field: one photo filling its half.
         photo('image', 'Photo', { condition: (d: unknown, s: any) => coverBg('image')(d, s) || s?.layoutMode === 'split' }),
+        // Big headline only: a wide picture (a product screenshot, a site) under the words,
+        // framed like a window and running into the next band (design fidelity, Nov 2026).
+        {
+          ...photo('showcase', 'Showcase picture', { when: { field: 'layoutMode', in: ['type'] } }),
+          admin: {
+            condition: (_: unknown, s: any) => s?.layoutMode === 'type',
+            description: 'Optional. A wide screenshot or photo under the headline, in a rounded frame that runs into the next band.',
+          },
+        } as any,
         list('slides', 'Slides', 'Slide', [{ name: 'image', type: 'upload', relationTo: 'media', filterOptions: onlyImages, required: true }], {
           minRows: 2,
           admin: { condition: coverBg('slideshow') },

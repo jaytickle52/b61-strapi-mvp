@@ -881,3 +881,55 @@
     content: none;
   }
 }
+
+/* ---- Pricing and plan cards (design fidelity, Nov 2026) ---------------------
+   Large figure, badge, highlighted card, link as a button, and buttons beside
+   the heading. Each is opt-in per card or per grid; nothing changes without it. */
+.b61-cards__figure {
+  margin: 12px 0 14px;
+  font-family: var(--b61-font-display);
+  font-weight: 700;
+  font-size: clamp(2.25rem, 1.8rem + 1.2vw, 2.75rem);
+  line-height: 1;
+  color: var(--cards-title, var(--cards-ink));
+}
+.b61-cards__card--badged { position: relative; }
+.b61-cards__badge {
+  position: absolute;
+  top: var(--cards-pad-t);
+  right: var(--cards-pad-x);
+  padding: 4px 10px;
+  border-radius: var(--b61-radius-pill, 999px);
+  background: var(--b61-palette-secondary-soft);
+  color: var(--b61-ink);
+  font-family: var(--b61-font-ui);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.b61-cards__card--badged .b61-cards__title { padding-right: 7.5em; }
+.b61-cards__card--featured {
+  border-color: var(--b61-palette-secondary) !important;
+  box-shadow: 0 0 0 1px var(--b61-palette-secondary), 0 18px 48px rgba(17, 24, 39, 0.1);
+}
+.b61-cards__button.b61-btn {
+  margin-top: auto;
+  width: 100%;
+  justify-content: flex-start;
+}
+.b61-cards__region--link-buttons .b61-cards__body { margin-bottom: 18px; }
+.b61-cards__toprow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0 var(--b61-space-xl, 32px);
+  max-width: var(--b61-width);
+  margin-inline: auto;
+}
+.b61-cards__toprow > .b61-cards__head { flex: 1 1 520px; margin-inline: 0; }
+.b61-cards__toprow > .b61-cards__actions { margin: 0 0 44px; }
+/* Heading alignment set on its own (Match cards = no class, as before). */
+.b61-cards__head.b61-halign-left,
+.b61-cards__head.b61-halign-center { text-align: var(--b61-align-text); }
+.b61-cards__head.b61-halign-center .b61-cards__eyebrow { justify-content: center; }

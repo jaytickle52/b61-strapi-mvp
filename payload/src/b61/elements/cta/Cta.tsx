@@ -40,6 +40,7 @@ export default function B61Cta({ block, index = 0, nested = false }: { block: Ct
   const shade = Math.min(Math.max(Math.round(set), 0), 100)
   const focus = focusOf(block.image)
 
+  const besideButtons = align === 'left' && (block as any).buttonsSide === 'beside' && (block.buttons ?? []).length > 0
   const wStep = block.widthStep ? Math.min(Math.max(Math.round(block.widthStep), 1), 7) : null
   const rootClass = [
     'b61-cta',
@@ -89,25 +90,43 @@ export default function B61Cta({ block, index = 0, nested = false }: { block: Ct
             `b61-cta__inner--p${position}`,
             'b61-cta__inner--wstandard',
             panelled && `b61-cta__inner--panel b61-surface--${panel} b61-band--${panel} b61-card`,
+            besideButtons && 'b61-cta__inner--beside',
           ]
             .filter(Boolean)
             .join(' ')}
         >
-          {block.eyebrow && (
-            <span className="b61-cta__eyebrow b61-block" {...ri}>
-              {block.eyebrow}
-            </span>
-          )}
-          <HeadingLines as={Heading} id={headingId} className="b61-cta__heading b61-block" lineClass="b61-cta__heading-line" heading={block.heading} ri={ri} />
-          {(block.subheads ?? [])
-            .filter((s) => s?.text)
-            .map((s, i) => (
-              <p key={s.id ?? i} className="b61-cta__subhead b61-block" {...ri}>
-                {s.text}
-              </p>
-            ))}
-          <ContentBlocks blocks={fromBody(block.body)} prefix="b61-cta" ri={ri} />
-          <Buttons buttons={block.buttons as any} ri={ri} />
+          {(() => {
+            const words = (
+              <>
+                {block.eyebrow && (
+                  <span className="b61-cta__eyebrow b61-block" {...ri}>
+                    {block.eyebrow}
+                  </span>
+                )}
+                <HeadingLines as={Heading} id={headingId} className="b61-cta__heading b61-block" lineClass="b61-cta__heading-line" heading={block.heading} ri={ri} />
+                {(block.subheads ?? [])
+                  .filter((s) => s?.text)
+                  .map((s, i) => (
+                    <p key={s.id ?? i} className="b61-cta__subhead b61-block" {...ri}>
+                      {s.text}
+                    </p>
+                  ))}
+                <ContentBlocks blocks={fromBody(block.body)} prefix="b61-cta" ri={ri} />
+              </>
+            )
+            const actions = <Buttons buttons={block.buttons as any} ri={ri} />
+            return besideButtons ? (
+              <>
+                <div className="b61-cta__words">{words}</div>
+                <div className="b61-cta__side">{actions}</div>
+              </>
+            ) : (
+              <>
+                {words}
+                {actions}
+              </>
+            )
+          })()}
         </div>
       </Wrap>
     </div>

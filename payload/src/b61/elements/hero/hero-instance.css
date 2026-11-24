@@ -155,3 +155,26 @@
 .b61-hero__crumbs a { color: inherit; text-decoration: none; }
 .b61-hero__crumbs a:hover, .b61-hero__crumbs a:focus-visible { text-decoration: underline; text-underline-offset: 0.2em; }
 .b61-hero__inner--tcenter .b61-hero__crumbs ol { justify-content: center; }
+
+/* Big headline > Showcase picture (design fidelity, Nov 2026): a wide screenshot or photo
+ * under the words, in a window-like frame whose bottom edge meets the next band. */
+.b61-hero--showcase.b61-hero--type-standard,
+.b61-hero--showcase.b61-hero--type-compact { min-height: 0; }
+.b61-hero--showcase .b61-hero__inner { flex-direction: column; align-items: stretch; padding-bottom: 0; }
+.b61-hero__showcase {
+  width: 100%;
+  max-width: min(1120px, var(--b61-width));
+  margin: clamp(40px, 5vw, 64px) auto 0;
+  padding: 0;
+}
+/* The frame meets the next band, so the hero's edge line would cut across it. */
+.b61-hero--showcase .b61-hero__edge { display: none; }
+.b61-hero__showcase-frame {
+  overflow: hidden;
+  background: var(--b61-white, #fff);
+  border: 1px solid var(--b61-border);
+  border-bottom: 0;
+  border-radius: var(--b61-radius-card) var(--b61-radius-card) 0 0;
+  box-shadow: 0 -6px 48px rgba(17, 24, 39, 0.1);
+}
+.b61-hero__showcase-frame img { display: block; width: 100%; height: auto; max-height: 560px; object-fit: cover; object-position: var(--b61-photo-focus, 50% 0%); }
