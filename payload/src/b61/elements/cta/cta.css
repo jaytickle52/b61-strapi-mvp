@@ -417,8 +417,10 @@
 
 /* ---- Buttons beside the words (design fidelity, Nov 2026) --------------------
    Left-aligned bands only: the words take the room, the buttons sit at the
-   right, centred on them. Stacks again below 900px. */
-@media (min-width: 900px) {
+   right, centred on them. Decided by the band's own width (a container query),
+   so a CTA in a narrow Section column stays stacked. */
+.b61-cta__region:has(.b61-cta__inner--beside) { container-type: inline-size; }
+@container (min-width: 900px) {
   .b61-cta__inner--beside {
     display: flex;
     align-items: center;

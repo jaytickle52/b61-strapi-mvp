@@ -75,7 +75,7 @@ export const B61Cta = defineElement({
           ['below', 'Below the words'],
           ['beside', 'Beside the words'],
         ],
-        { default: 'below', when: { field: 'textAlign', in: ['left'] } },
+        { default: 'below', when: { field: 'textAlign', in: ['left'] }, description: 'Side by side on wide bands; works best with Width set towards Wide.' },
       ),
     ],
     // Block position sits by Width, which it depends on (audit 1.78.0).

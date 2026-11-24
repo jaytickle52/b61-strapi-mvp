@@ -279,7 +279,7 @@ export interface Page {
              */
             image?: (number | null) | Media;
             /**
-             * Optional. A wide screenshot or photo under the headline, in a rounded frame that runs into the next band.
+             * A wide screenshot or photo under the headline, in a rounded frame that runs into the next band. To set the focal point, click the pencil on the photo, then Edit image.
              */
             showcase?: (number | null) | Media;
             slides?:
@@ -621,7 +621,7 @@ export interface Page {
                   eyebrow?: string | null;
                   title?: string | null;
                   /**
-                   * Optional. Shows large under the title, e.g. a price.
+                   * Shows large under the title: a price or a number.
                    */
                   figure?: string | null;
                   body?: {
@@ -640,11 +640,11 @@ export interface Page {
                     [k: string]: unknown;
                   } | null;
                   /**
-                   * Optional. A small label in the corner.
+                   * A small label beside the title.
                    */
                   badge?: string | null;
                   /**
-                   * An outline in the accent colour; its link button is filled.
+                   * A stronger outline in the secondary colour; with Card link set to Button, its button is filled. White, Light wash or Dark cards only.
                    */
                   featured?: boolean | null;
                   link?: {
@@ -1442,7 +1442,7 @@ export interface Page {
                                   eyebrow?: string | null;
                                   title?: string | null;
                                   /**
-                                   * Optional. Shows large under the title, e.g. a price.
+                                   * Shows large under the title: a price or a number.
                                    */
                                   figure?: string | null;
                                   body?: {
@@ -1461,11 +1461,11 @@ export interface Page {
                                     [k: string]: unknown;
                                   } | null;
                                   /**
-                                   * Optional. A small label in the corner.
+                                   * A small label beside the title.
                                    */
                                   badge?: string | null;
                                   /**
-                                   * An outline in the accent colour; its link button is filled.
+                                   * A stronger outline in the secondary colour; with Card link set to Button, its button is filled. White, Light wash or Dark cards only.
                                    */
                                   featured?: boolean | null;
                                   link?: {
@@ -2174,7 +2174,7 @@ export interface Page {
                             eyebrow?: string | null;
                             title?: string | null;
                             /**
-                             * Optional. Shows large under the title, e.g. a price.
+                             * Shows large under the title: a price or a number.
                              */
                             figure?: string | null;
                             body?: {
@@ -2193,11 +2193,11 @@ export interface Page {
                               [k: string]: unknown;
                             } | null;
                             /**
-                             * Optional. A small label in the corner.
+                             * A small label beside the title.
                              */
                             badge?: string | null;
                             /**
-                             * An outline in the accent colour; its link button is filled.
+                             * A stronger outline in the secondary colour; with Card link set to Button, its button is filled. White, Light wash or Dark cards only.
                              */
                             featured?: boolean | null;
                             link?: {
@@ -2709,6 +2709,9 @@ export interface Page {
                        */
                       overlayStrength?: number | null;
                       textAlign?: ('left' | 'center') | null;
+                      /**
+                       * Side by side on wide bands; works best with Width set towards Wide.
+                       */
                       buttonsSide?: ('below' | 'beside') | null;
                       widthStep?: number | null;
                       position?: ('left' | 'center') | null;
@@ -3282,7 +3285,7 @@ export interface Page {
                             eyebrow?: string | null;
                             title?: string | null;
                             /**
-                             * Optional. Shows large under the title, e.g. a price.
+                             * Shows large under the title: a price or a number.
                              */
                             figure?: string | null;
                             body?: {
@@ -3301,11 +3304,11 @@ export interface Page {
                               [k: string]: unknown;
                             } | null;
                             /**
-                             * Optional. A small label in the corner.
+                             * A small label beside the title.
                              */
                             badge?: string | null;
                             /**
-                             * An outline in the accent colour; its link button is filled.
+                             * A stronger outline in the secondary colour; with Card link set to Button, its button is filled. White, Light wash or Dark cards only.
                              */
                             featured?: boolean | null;
                             link?: {
@@ -3817,6 +3820,9 @@ export interface Page {
                        */
                       overlayStrength?: number | null;
                       textAlign?: ('left' | 'center') | null;
+                      /**
+                       * Side by side on wide bands; works best with Width set towards Wide.
+                       */
                       buttonsSide?: ('below' | 'beside') | null;
                       widthStep?: number | null;
                       position?: ('left' | 'center') | null;
@@ -4132,6 +4138,9 @@ export interface Page {
              */
             overlayStrength?: number | null;
             textAlign?: ('left' | 'center') | null;
+            /**
+             * Side by side on wide bands; works best with Width set towards Wide.
+             */
             buttonsSide?: ('below' | 'beside') | null;
             widthStep?: number | null;
             position?: ('left' | 'center') | null;

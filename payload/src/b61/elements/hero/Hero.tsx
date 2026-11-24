@@ -258,9 +258,9 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
           text
         )}
         {showcase && (
-          <figure className="b61-hero__showcase" {...ri}>
+          <figure className="b61-hero__showcase" style={focusOf((block as any).showcase) ? ({ '--b61-photo-focus': focusOf((block as any).showcase) } as CSSProperties) : undefined}>
             <div className="b61-hero__showcase-frame">
-              <img {...showcase} alt={asMedia((block as any).showcase)?.alt ?? ''} {...(isFirst ? {} : { loading: 'lazy' as const })} />
+              <img {...showcase} alt={asMedia((block as any).showcase)?.alt ?? ''} {...(isFirst ? { fetchPriority: 'high' as const } : { loading: 'lazy' as const })} />
             </div>
           </figure>
         )}

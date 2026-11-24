@@ -132,7 +132,7 @@ export const B61Hero = defineElement({
           ...photo('showcase', 'Showcase picture', { when: { field: 'layoutMode', in: ['type'] } }),
           admin: {
             condition: (_: unknown, s: any) => s?.layoutMode === 'type',
-            description: 'Optional. A wide screenshot or photo under the headline, in a rounded frame that runs into the next band.',
+            description: 'A wide screenshot or photo under the headline, in a rounded frame that runs into the next band. To set the focal point, click the pencil on the photo, then Edit image.',
           },
         } as any,
         list('slides', 'Slides', 'Slide', [{ name: 'image', type: 'upload', relationTo: 'media', filterOptions: onlyImages, required: true }], {

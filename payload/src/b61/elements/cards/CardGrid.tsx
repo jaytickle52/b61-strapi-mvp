@@ -132,8 +132,11 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
   const duotone = Boolean(bx.duotone)
   const Wrap = hasHeading ? 'section' : 'div'
   const linkButtons = !ov && bx.cardLinkStyle === 'button'
+  // A link button takes its colours from the card it sits on, not the band around it.
+  const buttonBand = !surfaced ? null : csurf === 'primary' ? 'dark' : csurf === 'soft' ? 'soft' : 'plain'
   const headAlign = !beside && (bx.headingAlign === 'left' || bx.headingAlign === 'center') ? bx.headingAlign : null
-  const actionsBeside = !beside && bx.buttonsPlacement === 'heading' && (block.buttons ?? []).length > 0
+  // Not with a carousel's top-right controls (they share that row) or with no heading to sit beside.
+  const actionsBeside = !beside && !(car && (block.controlsPosition ?? 'top-right') === 'top-right') && bx.buttonsPlacement === 'heading' && (block.buttons ?? []).length > 0 && Boolean(block.eyebrow || title || block.intro)
 
   const controls = car ? (
     <div className="b61-car__controls js-b61-car-controls" hidden>
@@ -228,7 +231,7 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
         return (
           <article
             key={card.key}
-            className={`b61-cards__card${linked || cta ? ' b61-cards__card--linked' : ''}${card.featured ? ' b61-cards__card--featured' : ''}${card.badge ? ' b61-cards__card--badged' : ''}`}
+            className={`b61-cards__card${linked || (cta && !linkButtons) ? ' b61-cards__card--linked' : ''}${card.featured && surfaced ? ' b61-cards__card--featured' : ''}${card.badge && !ov ? ' b61-cards__card--badged' : ''}`}
             {...ri}
             style={focus ? ({ '--b61-photo-focus': focus } as CSSProperties) : undefined}
             {...(car && card.title ? { 'data-b61-slide-label': card.title } : {})}
@@ -249,7 +252,6 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
                   <span className="b61-cards__num-text">{String(i + 1).padStart(2, '0')}</span>
                 </span>
               )}
-              {card.badge && <span className="b61-cards__badge">{card.badge}</span>}
               {card.eyebrow && <span className="b61-cards__eyebrow-item">{card.eyebrow}</span>}
               {card.title && (
                 <CardHeading className="b61-cards__title">
@@ -262,10 +264,11 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
                   )}
                 </CardHeading>
               )}
+              {card.badge && !ov && <span className="b61-cards__badge">{card.badge}</span>}
               {card.figure && <p className="b61-cards__figure">{card.figure}</p>}
               {card.body && <div className="b61-cards__body breakdance-rich-text-styles">{card.body}</div>}
               {cta && linkButtons ? (
-                <a className={`b61-btn b61-btn--${card.featured ? 'primary' : 'secondary'} b61-cards__button`} href={card.href!} {...linkProps}>
+                <a className={`b61-btn b61-btn--${card.featured ? 'primary' : 'secondary'} b61-cards__button${buttonBand ? ` b61-band--${buttonBand}` : ''}`} href={card.href!} {...linkProps}>
                   {card.linkText}
                 </a>
               ) : cta && (

@@ -47,7 +47,7 @@
   background: currentColor;
   opacity: 0.45;
 }
-[data-b61-theme='heritage'] .b61-cards__head:has(.b61-cards__heading) { text-align: center; --b61-align-inline: auto; }
+[data-b61-theme='heritage'] .b61-cards__head:not(.b61-halign-left):has(.b61-cards__heading) { text-align: center; --b61-align-inline: auto; }
 /* CTA Band: the rule follows the band's text alignment (--b61-align-inline from
    b61-talign-*), so a left-aligned band has its rule on the left (Jay, 19 Nov 2026). */
 

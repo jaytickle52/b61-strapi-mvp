@@ -121,13 +121,13 @@ export const B61CardGrid = defineElement({
             ],
           },
           // A large figure under the title, such as a price or a number (design fidelity, Nov 2026).
-          { name: 'figure', label: 'Large figure', type: 'text', admin: { placeholder: 'e.g. $0, $249 a month, 98%', description: 'Optional. Shows large under the title, e.g. a price.' } },
+          { name: 'figure', label: 'Large figure', type: 'text', admin: { placeholder: '$249 a month', description: 'Shows large under the title: a price or a number.' } },
           { name: 'body', label: 'Body', type: 'richText', editor: simpleEditor() },
           {
             type: 'row',
             fields: [
-              { name: 'badge', label: 'Badge', type: 'text', admin: { width: '50%', placeholder: 'e.g. Recommended', description: 'Optional. A small label in the corner.' } },
-              { ...toggle('featured', 'Highlight this card', { width: '50%' }), admin: { width: '50%', description: 'An outline in the accent colour; its link button is filled.' } } as any,
+              { name: 'badge', label: 'Badge', type: 'text', admin: { width: '50%', placeholder: 'Recommended', description: 'A small label beside the title.' } },
+              { ...toggle('featured', 'Highlight this card', { width: '50%' }), admin: { width: '50%', description: 'A stronger outline in the secondary colour; with Card link set to Button, its button is filled. White, Light wash or Dark cards only.' } } as any,
             ],
           },
           link(),
@@ -169,7 +169,12 @@ export const B61CardGrid = defineElement({
           ['below', 'Below the cards'],
           ['heading', 'Beside the heading'],
         ],
-        { default: 'below', condition: (_: unknown, s: any) => (s?.buttons ?? []).length > 0 && !s?.headBeside },
+        {
+          default: 'below',
+          when: { field: 'headBeside', in: [false, null] },
+          condition: (_: unknown, s: any) =>
+            (s?.buttons ?? []).length > 0 && !s?.headBeside && !(s?.arrangement === 'carousel' && (s?.controlsPosition ?? 'top-right') === 'top-right'),
+        },
       ),
       segmented(
         'textAlign',
@@ -189,7 +194,7 @@ export const B61CardGrid = defineElement({
           ['left', 'Left'],
           ['center', 'Center'],
         ],
-        { default: 'match', condition: (_: unknown, s: any) => !s?.headBeside },
+        { default: 'match', when: { field: 'headBeside', in: [false, null] } },
       ),
       panel(
         'Carousel',

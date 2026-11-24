@@ -893,24 +893,33 @@
   line-height: 1;
   color: var(--cards-title, var(--cards-ink));
 }
-.b61-cards__card--badged { position: relative; }
 .b61-cards__badge {
-  position: absolute;
-  top: var(--cards-pad-t);
-  right: var(--cards-pad-x);
+  display: inline-block;
+  align-self: flex-start;
+  margin: 0 0 10px;
   padding: 4px 10px;
   border-radius: var(--b61-radius-pill, 999px);
   background: var(--b61-palette-secondary-soft);
-  color: var(--b61-ink);
+  color: var(--b61-on-secondary, #000);
   font-family: var(--b61-font-ui);
   font-size: 0.75rem;
   font-weight: 700;
   line-height: 1.4;
 }
-.b61-cards__card--badged .b61-cards__title { padding-right: 7.5em; }
+/* Wide enough cards: the badge moves up beside the title (it follows it in the reading order). */
+@media (min-width: 768px) {
+  .b61-cards__grid:is(.b61-cards__grid--c1, .b61-cards__grid--c2, .b61-cards__grid--c3) .b61-cards__card--badged { position: relative; }
+  .b61-cards__grid:is(.b61-cards__grid--c1, .b61-cards__grid--c2, .b61-cards__grid--c3) .b61-cards__card--badged .b61-cards__badge {
+    position: absolute;
+    top: max(var(--cards-pad-t), 12px);
+    right: max(var(--cards-pad-x), 12px);
+    margin: 0;
+  }
+  .b61-cards__grid:is(.b61-cards__grid--c1, .b61-cards__grid--c2, .b61-cards__grid--c3) .b61-cards__card--badged .b61-cards__title { padding-right: 8.5rem; }
+}
 .b61-cards__card--featured {
   border-color: var(--b61-palette-secondary) !important;
-  box-shadow: 0 0 0 1px var(--b61-palette-secondary), 0 18px 48px rgba(17, 24, 39, 0.1);
+  box-shadow: 0 0 0 2px var(--b61-palette-secondary), 0 18px 48px rgba(17, 24, 39, 0.1);
 }
 .b61-cards__button.b61-btn {
   margin-top: auto;
@@ -930,6 +939,6 @@
 .b61-cards__toprow > .b61-cards__head { flex: 1 1 520px; margin-inline: 0; }
 .b61-cards__toprow > .b61-cards__actions { margin: 0 0 44px; }
 /* Heading alignment set on its own (Match cards = no class, as before). */
-.b61-cards__head.b61-halign-left,
-.b61-cards__head.b61-halign-center { text-align: var(--b61-align-text); }
+.b61-cards .b61-cards__head.b61-halign-left,
+.b61-cards .b61-cards__head.b61-halign-center { text-align: var(--b61-align-text); }
 .b61-cards__head.b61-halign-center .b61-cards__eyebrow { justify-content: center; }
