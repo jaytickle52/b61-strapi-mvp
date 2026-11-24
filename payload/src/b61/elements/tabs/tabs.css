@@ -526,3 +526,44 @@
   .b61-tabs__feature { grid-template-columns: minmax(0, 1fr); gap: var(--b61-space-lg, 1.5rem); }
   .b61-tabs__feature-media { order: -1; }
 }
+
+/* ---- Tab style: Pills (design fidelity, Nov 2026) ----------------------------
+   Tabs on top as rounded buttons. Colours come only from the band's own pair:
+   unpicked pills are clear with the band's ink; the open one is filled with
+   that ink and its words take the band's ground colour (--tab-ground), so it
+   reads on light and dark bands and on dark-tone sites alike. */
+.b61-tabs__region--pills { --tab-ground: var(--b61-page, var(--b61-surface)); }
+.b61-tabs__region--pills.b61-surface--soft { --tab-ground: var(--b61-surface-soft); }
+.b61-tabs__region--pills.b61-surface--dark { --tab-ground: var(--b61-surface-dark); }
+.b61-tabs__region--pills.b61-surface--accent { --tab-ground: var(--b61-surface-accent); }
+.b61-tabs.is-ready .b61-tabs__region--pills .b61-tabs__tablist,
+.b61-tabs.is-ready .b61-tabs__region--pills.b61-tabs__region--align-full .b61-tabs__tablist {
+  gap: var(--b61-space-xs, 8px);
+  border-bottom: 0;
+  margin-bottom: var(--b61-space-xl, 32px);
+}
+.b61-tabs__region--pills .b61-tabs__tab,
+.b61-tabs.is-ready .b61-tabs__region--pills .b61-tabs__tab,
+.b61-tabs.is-ready .b61-tabs__region--pills.b61-tabs__region--align-full .b61-tabs__tab {
+  padding: 12px 22px;
+  min-height: 44px;
+  border: 1px solid var(--tab-line);
+  border-radius: var(--b61-radius-btn, 999px);
+  background: transparent;
+  color: var(--tab-ink);
+}
+.b61-tabs__region--pills .b61-tabs__tab:hover { border-color: var(--tab-ink); }
+.b61-tabs__region--pills .b61-tabs__tab:focus-visible { outline-offset: 2px; }
+.b61-tabs__region--pills .b61-tabs__title {
+  font-family: var(--b61-font-ui);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.2;
+}
+.b61-tabs.is-ready .b61-tabs__region--pills .b61-tabs__tab[aria-selected="true"] {
+  background: var(--tab-ink);
+  border-color: var(--tab-ink);
+  color: var(--tab-ground);
+  box-shadow: none;
+}

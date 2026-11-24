@@ -64,6 +64,11 @@ export const B61Tabs = defineElement({
         default: 'left',
         when: { field: 'layout', in: ['top', null] },
       }),
+      // Pills: rounded buttons, the open one filled (design fidelity, Nov 2026).
+      segmented('tabStyle', 'Tab style', [['line', 'Underline'], ['pills', 'Pills']], {
+        default: 'line',
+        when: { field: 'layout', in: ['top', null] },
+      }),
       headingAlignField(),
     ],
     size: [paddingFields()],

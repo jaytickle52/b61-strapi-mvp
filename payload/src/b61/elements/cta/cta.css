@@ -414,3 +414,20 @@
 .b61-cta__inner .b61-btn-group {
   margin-top: var(--b61-cta-actions-space);
 }
+
+/* ---- Buttons beside the words (design fidelity, Nov 2026) --------------------
+   Left-aligned bands only: the words take the room, the buttons sit at the
+   right, centred on them. Decided by the band's own width (a container query),
+   so a CTA in a narrow Section column stays stacked. */
+.b61-cta__region:has(.b61-cta__inner--beside) { container-type: inline-size; }
+@container (min-width: 900px) {
+  .b61-cta__inner--beside {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--b61-space-xl, 32px) var(--b61-space-2xl, 48px);
+  }
+  .b61-cta__inner--beside .b61-cta__words { flex: 1 1 auto; min-width: 0; max-width: 760px; }
+  .b61-cta__inner--beside .b61-cta__side { flex: 0 0 auto; }
+  .b61-cta__inner--beside .b61-cta__side > * { margin-top: 0; }
+}

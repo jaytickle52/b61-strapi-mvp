@@ -97,6 +97,18 @@ export const ICON_OPTIONS: [string, string][] = [
   ['people', 'People'],
   ['cross', 'Cross'],
   ['school', 'School'],
+  ['chat', 'Chat'],
+  ['share', 'Share'],
+  ['document', 'Document'],
+  ['pencil', 'Pencil'],
+  ['mobile', 'Phone (mobile)'],
+  ['bolt', 'Lightning'],
+  ['eye', 'Eye'],
+  ['search', 'Search'],
+  ['grid', 'Grid'],
+  ['chart', 'Bar chart'],
+  ['trend', 'Trend line'],
+  ['upload', 'Upload'],
 ]
 
 /**

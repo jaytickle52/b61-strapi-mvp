@@ -39,6 +39,7 @@ export default function B61Tabs({ block, index = 0, path }: { block: any; index?
           surface !== 'none' && `b61-band--${surface}`,
           `b61-tabs__region--tabs-${pos}`,
           pos === 'top' && `b61-tabs__region--align-${talign}`,
+          pos === 'top' && block.tabStyle === 'pills' && 'b61-tabs__region--pills',
           `b61-tabs__region--pt-${block.padTop ?? 'normal'}`,
           `b61-tabs__region--pb-${block.padBottom ?? 'normal'}`,
         ]

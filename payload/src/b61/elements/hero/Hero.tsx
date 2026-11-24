@@ -49,6 +49,8 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
   const slides = (block.slides ?? []).map((s) => s?.image).filter((m) => asMedia(m)?.url)
   const collage = (block.collage ?? []).map((c) => c?.image).filter((m) => asMedia(m)?.url).slice(0, 3)
   const bgImage = imgProps(block.image)
+  // Big headline's showcase picture: framed under the words (design fidelity, Nov 2026).
+  const showcase = kind === 'type' ? imgProps((block as any).showcase, '(max-width: 1200px) 100vw, 1120px') : null
 
   const hasMotion = (bgtype === 'video' && (bunny || video?.url)) || (bgtype === 'slideshow' && slides.length > 0)
   const hasMedia =
@@ -73,6 +75,7 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
     !hasMedia && 'b61-hero--no-media',
     kind === 'split' && `b61-hero--split b61-hero--split-${side}`,
     kind === 'type' && `b61-hero--type b61-hero--type-${block.bandSize === 'compact' ? 'compact' : 'standard'}`,
+    showcase && 'b61-hero--showcase',
     // Split's surface is painted on the root, behind both halves.
     kind === 'split' && `b61-hero__band--${surface}`,
     hasMedia && mode === 'band' && `b61-hero--band-${block.bandSize === 'compact' ? 'compact' : 'standard'}`,
@@ -253,6 +256,13 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
           </div>
         ) : (
           text
+        )}
+        {showcase && (
+          <figure className="b61-hero__showcase" style={focusOf((block as any).showcase) ? ({ '--b61-photo-focus': focusOf((block as any).showcase) } as CSSProperties) : undefined}>
+            <div className="b61-hero__showcase-frame">
+              <img {...showcase} alt={asMedia((block as any).showcase)?.alt ?? ''} {...(isFirst ? { fetchPriority: 'high' as const } : { loading: 'lazy' as const })} />
+            </div>
+          </figure>
         )}
       </div>
       <span className="b61-hero__edge" aria-hidden="true" />

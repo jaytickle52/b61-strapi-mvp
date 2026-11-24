@@ -278,6 +278,10 @@ export interface Page {
              * To set the focal point, click the pencil on the photo, then Edit image.
              */
             image?: (number | null) | Media;
+            /**
+             * A wide screenshot or photo under the headline, in a rounded frame that runs into the next band. To set the focal point, click the pencil on the photo, then Edit image.
+             */
+            showcase?: (number | null) | Media;
             slides?:
               | {
                   image: number | Media;
@@ -594,6 +598,18 @@ export interface Page {
                         | 'people'
                         | 'cross'
                         | 'school'
+                        | 'chat'
+                        | 'share'
+                        | 'document'
+                        | 'pencil'
+                        | 'mobile'
+                        | 'bolt'
+                        | 'eye'
+                        | 'search'
+                        | 'grid'
+                        | 'chart'
+                        | 'trend'
+                        | 'upload'
                         | 'custom'
                       )
                     | null;
@@ -604,6 +620,10 @@ export interface Page {
                   iconColours?: boolean | null;
                   eyebrow?: string | null;
                   title?: string | null;
+                  /**
+                   * Shows large under the title: a price or a number.
+                   */
+                  figure?: string | null;
                   body?: {
                     root: {
                       type: string;
@@ -619,6 +639,14 @@ export interface Page {
                     };
                     [k: string]: unknown;
                   } | null;
+                  /**
+                   * A small label beside the title.
+                   */
+                  badge?: string | null;
+                  /**
+                   * A stronger outline in the secondary colour; with Card link set to Button, its button is filled. White, Light wash or Dark cards only.
+                   */
+                  featured?: boolean | null;
                   link?: {
                     type?: ('page' | 'document' | 'url') | null;
                     page?: (number | null) | Page;
@@ -653,7 +681,9 @@ export interface Page {
               | null;
             arrangement?: ('grid' | 'carousel') | null;
             columns?: ('1' | '2' | '3' | '4') | null;
+            buttonsPlacement?: ('below' | 'heading') | null;
             textAlign?: ('left' | 'center') | null;
+            headingAlign?: ('match' | 'left' | 'center') | null;
             advance?: ('one' | 'view') | null;
             controlsPosition?:
               ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
@@ -668,6 +698,7 @@ export interface Page {
             ratioH?: number | null;
             cardTextPosition?: ('top' | 'center' | 'bottom') | null;
             mediaRound?: boolean | null;
+            cardLinkStyle?: ('text' | 'button') | null;
             iconSize?: ('sm' | 'md' | 'lg') | null;
             showNumbers?: boolean | null;
             connectSteps?: boolean | null;
@@ -1388,6 +1419,18 @@ export interface Page {
                                         | 'people'
                                         | 'cross'
                                         | 'school'
+                                        | 'chat'
+                                        | 'share'
+                                        | 'document'
+                                        | 'pencil'
+                                        | 'mobile'
+                                        | 'bolt'
+                                        | 'eye'
+                                        | 'search'
+                                        | 'grid'
+                                        | 'chart'
+                                        | 'trend'
+                                        | 'upload'
                                         | 'custom'
                                       )
                                     | null;
@@ -1398,6 +1441,10 @@ export interface Page {
                                   iconColours?: boolean | null;
                                   eyebrow?: string | null;
                                   title?: string | null;
+                                  /**
+                                   * Shows large under the title: a price or a number.
+                                   */
+                                  figure?: string | null;
                                   body?: {
                                     root: {
                                       type: string;
@@ -1413,6 +1460,14 @@ export interface Page {
                                     };
                                     [k: string]: unknown;
                                   } | null;
+                                  /**
+                                   * A small label beside the title.
+                                   */
+                                  badge?: string | null;
+                                  /**
+                                   * A stronger outline in the secondary colour; with Card link set to Button, its button is filled. White, Light wash or Dark cards only.
+                                   */
+                                  featured?: boolean | null;
                                   link?: {
                                     type?: ('page' | 'document' | 'url') | null;
                                     page?: (number | null) | Page;
@@ -1447,7 +1502,9 @@ export interface Page {
                               | null;
                             arrangement?: ('grid' | 'carousel') | null;
                             columns?: ('1' | '2' | '3' | '4') | null;
+                            buttonsPlacement?: ('below' | 'heading') | null;
                             textAlign?: ('left' | 'center') | null;
+                            headingAlign?: ('match' | 'left' | 'center') | null;
                             advance?: ('one' | 'view') | null;
                             controlsPosition?:
                               | ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden')
@@ -1463,6 +1520,7 @@ export interface Page {
                             ratioH?: number | null;
                             cardTextPosition?: ('top' | 'center' | 'bottom') | null;
                             mediaRound?: boolean | null;
+                            cardLinkStyle?: ('text' | 'button') | null;
                             iconSize?: ('sm' | 'md' | 'lg') | null;
                             showNumbers?: boolean | null;
                             connectSteps?: boolean | null;
@@ -1498,6 +1556,7 @@ export interface Page {
             firstItemOpen?: boolean | null;
             side?: ('left' | 'right') | null;
             tabAlign?: ('left' | 'center' | 'full') | null;
+            tabStyle?: ('line' | 'pills') | null;
             headingAlign?: ('left' | 'center') | null;
             padTop?: ('normal' | 'tight' | 'none') | null;
             padBottom?: ('normal' | 'tight' | 'none') | null;
@@ -2092,6 +2151,18 @@ export interface Page {
                                   | 'people'
                                   | 'cross'
                                   | 'school'
+                                  | 'chat'
+                                  | 'share'
+                                  | 'document'
+                                  | 'pencil'
+                                  | 'mobile'
+                                  | 'bolt'
+                                  | 'eye'
+                                  | 'search'
+                                  | 'grid'
+                                  | 'chart'
+                                  | 'trend'
+                                  | 'upload'
                                   | 'custom'
                                 )
                               | null;
@@ -2102,6 +2173,10 @@ export interface Page {
                             iconColours?: boolean | null;
                             eyebrow?: string | null;
                             title?: string | null;
+                            /**
+                             * Shows large under the title: a price or a number.
+                             */
+                            figure?: string | null;
                             body?: {
                               root: {
                                 type: string;
@@ -2117,6 +2192,14 @@ export interface Page {
                               };
                               [k: string]: unknown;
                             } | null;
+                            /**
+                             * A small label beside the title.
+                             */
+                            badge?: string | null;
+                            /**
+                             * A stronger outline in the secondary colour; with Card link set to Button, its button is filled. White, Light wash or Dark cards only.
+                             */
+                            featured?: boolean | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -2151,7 +2234,9 @@ export interface Page {
                         | null;
                       arrangement?: ('grid' | 'carousel') | null;
                       columns?: ('1' | '2' | '3' | '4') | null;
+                      buttonsPlacement?: ('below' | 'heading') | null;
                       textAlign?: ('left' | 'center') | null;
+                      headingAlign?: ('match' | 'left' | 'center') | null;
                       advance?: ('one' | 'view') | null;
                       controlsPosition?:
                         ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
@@ -2166,6 +2251,7 @@ export interface Page {
                       ratioH?: number | null;
                       cardTextPosition?: ('top' | 'center' | 'bottom') | null;
                       mediaRound?: boolean | null;
+                      cardLinkStyle?: ('text' | 'button') | null;
                       iconSize?: ('sm' | 'md' | 'lg') | null;
                       showNumbers?: boolean | null;
                       connectSteps?: boolean | null;
@@ -2623,6 +2709,10 @@ export interface Page {
                        */
                       overlayStrength?: number | null;
                       textAlign?: ('left' | 'center') | null;
+                      /**
+                       * Side by side on wide bands; works best with Width set towards Wide.
+                       */
+                      buttonsSide?: ('below' | 'beside') | null;
                       widthStep?: number | null;
                       position?: ('left' | 'center') | null;
                       padTop?: ('normal' | 'tight' | 'none') | null;
@@ -2865,6 +2955,18 @@ export interface Page {
                                   | 'people'
                                   | 'cross'
                                   | 'school'
+                                  | 'chat'
+                                  | 'share'
+                                  | 'document'
+                                  | 'pencil'
+                                  | 'mobile'
+                                  | 'bolt'
+                                  | 'eye'
+                                  | 'search'
+                                  | 'grid'
+                                  | 'chart'
+                                  | 'trend'
+                                  | 'upload'
                                   | 'custom'
                                 )
                               | null;
@@ -3160,6 +3262,18 @@ export interface Page {
                                   | 'people'
                                   | 'cross'
                                   | 'school'
+                                  | 'chat'
+                                  | 'share'
+                                  | 'document'
+                                  | 'pencil'
+                                  | 'mobile'
+                                  | 'bolt'
+                                  | 'eye'
+                                  | 'search'
+                                  | 'grid'
+                                  | 'chart'
+                                  | 'trend'
+                                  | 'upload'
                                   | 'custom'
                                 )
                               | null;
@@ -3170,6 +3284,10 @@ export interface Page {
                             iconColours?: boolean | null;
                             eyebrow?: string | null;
                             title?: string | null;
+                            /**
+                             * Shows large under the title: a price or a number.
+                             */
+                            figure?: string | null;
                             body?: {
                               root: {
                                 type: string;
@@ -3185,6 +3303,14 @@ export interface Page {
                               };
                               [k: string]: unknown;
                             } | null;
+                            /**
+                             * A small label beside the title.
+                             */
+                            badge?: string | null;
+                            /**
+                             * A stronger outline in the secondary colour; with Card link set to Button, its button is filled. White, Light wash or Dark cards only.
+                             */
+                            featured?: boolean | null;
                             link?: {
                               type?: ('page' | 'document' | 'url') | null;
                               page?: (number | null) | Page;
@@ -3219,7 +3345,9 @@ export interface Page {
                         | null;
                       arrangement?: ('grid' | 'carousel') | null;
                       columns?: ('1' | '2' | '3' | '4') | null;
+                      buttonsPlacement?: ('below' | 'heading') | null;
                       textAlign?: ('left' | 'center') | null;
+                      headingAlign?: ('match' | 'left' | 'center') | null;
                       advance?: ('one' | 'view') | null;
                       controlsPosition?:
                         ('top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'sides' | 'hidden') | null;
@@ -3234,6 +3362,7 @@ export interface Page {
                       ratioH?: number | null;
                       cardTextPosition?: ('top' | 'center' | 'bottom') | null;
                       mediaRound?: boolean | null;
+                      cardLinkStyle?: ('text' | 'button') | null;
                       iconSize?: ('sm' | 'md' | 'lg') | null;
                       showNumbers?: boolean | null;
                       connectSteps?: boolean | null;
@@ -3691,6 +3820,10 @@ export interface Page {
                        */
                       overlayStrength?: number | null;
                       textAlign?: ('left' | 'center') | null;
+                      /**
+                       * Side by side on wide bands; works best with Width set towards Wide.
+                       */
+                      buttonsSide?: ('below' | 'beside') | null;
                       widthStep?: number | null;
                       position?: ('left' | 'center') | null;
                       padTop?: ('normal' | 'tight' | 'none') | null;
@@ -4005,6 +4138,10 @@ export interface Page {
              */
             overlayStrength?: number | null;
             textAlign?: ('left' | 'center') | null;
+            /**
+             * Side by side on wide bands; works best with Width set towards Wide.
+             */
+            buttonsSide?: ('below' | 'beside') | null;
             widthStep?: number | null;
             position?: ('left' | 'center') | null;
             padTop?: ('normal' | 'tight' | 'none') | null;
@@ -4328,6 +4465,8 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4397,6 +4536,7 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
+  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -5206,6 +5346,8 @@ export interface FormSubmission {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -5618,6 +5760,18 @@ export interface SchoolSetting {
               | 'people'
               | 'cross'
               | 'school'
+              | 'chat'
+              | 'share'
+              | 'document'
+              | 'pencil'
+              | 'mobile'
+              | 'bolt'
+              | 'eye'
+              | 'search'
+              | 'grid'
+              | 'chart'
+              | 'trend'
+              | 'upload'
               | 'custom'
             )
           | null;
@@ -6372,6 +6526,7 @@ export interface PagesSelect<T extends boolean = true> {
                   };
               backgroundType?: T;
               image?: T;
+              showcase?: T;
               slides?:
                 | T
                 | {
@@ -6541,7 +6696,10 @@ export interface PagesSelect<T extends boolean = true> {
                     iconColours?: T;
                     eyebrow?: T;
                     title?: T;
+                    figure?: T;
                     body?: T;
+                    badge?: T;
+                    featured?: T;
                     link?:
                       | T
                       | {
@@ -6573,7 +6731,9 @@ export interface PagesSelect<T extends boolean = true> {
                   };
               arrangement?: T;
               columns?: T;
+              buttonsPlacement?: T;
               textAlign?: T;
+              headingAlign?: T;
               advance?: T;
               controlsPosition?: T;
               showCounter?: T;
@@ -6587,6 +6747,7 @@ export interface PagesSelect<T extends boolean = true> {
               ratioH?: T;
               cardTextPosition?: T;
               mediaRound?: T;
+              cardLinkStyle?: T;
               iconSize?: T;
               showNumbers?: T;
               connectSteps?: T;
@@ -6961,7 +7122,10 @@ export interface PagesSelect<T extends boolean = true> {
                                       iconColours?: T;
                                       eyebrow?: T;
                                       title?: T;
+                                      figure?: T;
                                       body?: T;
+                                      badge?: T;
+                                      featured?: T;
                                       link?:
                                         | T
                                         | {
@@ -6993,7 +7157,9 @@ export interface PagesSelect<T extends boolean = true> {
                                     };
                                 arrangement?: T;
                                 columns?: T;
+                                buttonsPlacement?: T;
                                 textAlign?: T;
+                                headingAlign?: T;
                                 advance?: T;
                                 controlsPosition?: T;
                                 showCounter?: T;
@@ -7007,6 +7173,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 ratioH?: T;
                                 cardTextPosition?: T;
                                 mediaRound?: T;
+                                cardLinkStyle?: T;
                                 iconSize?: T;
                                 showNumbers?: T;
                                 connectSteps?: T;
@@ -7033,6 +7200,7 @@ export interface PagesSelect<T extends boolean = true> {
               firstItemOpen?: T;
               side?: T;
               tabAlign?: T;
+              tabStyle?: T;
               headingAlign?: T;
               padTop?: T;
               padBottom?: T;
@@ -7354,7 +7522,10 @@ export interface PagesSelect<T extends boolean = true> {
                                 iconColours?: T;
                                 eyebrow?: T;
                                 title?: T;
+                                figure?: T;
                                 body?: T;
+                                badge?: T;
+                                featured?: T;
                                 link?:
                                   | T
                                   | {
@@ -7386,7 +7557,9 @@ export interface PagesSelect<T extends boolean = true> {
                               };
                           arrangement?: T;
                           columns?: T;
+                          buttonsPlacement?: T;
                           textAlign?: T;
+                          headingAlign?: T;
                           advance?: T;
                           controlsPosition?: T;
                           showCounter?: T;
@@ -7400,6 +7573,7 @@ export interface PagesSelect<T extends boolean = true> {
                           ratioH?: T;
                           cardTextPosition?: T;
                           mediaRound?: T;
+                          cardLinkStyle?: T;
                           iconSize?: T;
                           showNumbers?: T;
                           connectSteps?: T;
@@ -7652,6 +7826,7 @@ export interface PagesSelect<T extends boolean = true> {
                           image?: T;
                           overlayStrength?: T;
                           textAlign?: T;
+                          buttonsSide?: T;
                           widthStep?: T;
                           position?: T;
                           padTop?: T;
@@ -7961,7 +8136,10 @@ export interface PagesSelect<T extends boolean = true> {
                                 iconColours?: T;
                                 eyebrow?: T;
                                 title?: T;
+                                figure?: T;
                                 body?: T;
+                                badge?: T;
+                                featured?: T;
                                 link?:
                                   | T
                                   | {
@@ -7993,7 +8171,9 @@ export interface PagesSelect<T extends boolean = true> {
                               };
                           arrangement?: T;
                           columns?: T;
+                          buttonsPlacement?: T;
                           textAlign?: T;
+                          headingAlign?: T;
                           advance?: T;
                           controlsPosition?: T;
                           showCounter?: T;
@@ -8007,6 +8187,7 @@ export interface PagesSelect<T extends boolean = true> {
                           ratioH?: T;
                           cardTextPosition?: T;
                           mediaRound?: T;
+                          cardLinkStyle?: T;
                           iconSize?: T;
                           showNumbers?: T;
                           connectSteps?: T;
@@ -8259,6 +8440,7 @@ export interface PagesSelect<T extends boolean = true> {
                           image?: T;
                           overlayStrength?: T;
                           textAlign?: T;
+                          buttonsSide?: T;
                           widthStep?: T;
                           position?: T;
                           padTop?: T;
@@ -8444,6 +8626,7 @@ export interface PagesSelect<T extends boolean = true> {
               image?: T;
               overlayStrength?: T;
               textAlign?: T;
+              buttonsSide?: T;
               widthStep?: T;
               position?: T;
               padTop?: T;
@@ -8745,6 +8928,7 @@ export interface MediaSelect<T extends boolean = true> {
   altAuto?: T;
   caption?: T;
   credit?: T;
+  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8820,6 +9004,8 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
+  prefix?: T;
+  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -9124,6 +9310,8 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

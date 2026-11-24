@@ -67,6 +67,16 @@ export const B61Cta = defineElement({
         ],
         { default: 'center', iconOnly: true },
       ),
+      // Buttons to the right of the words on wide screens (design fidelity, Nov 2026).
+      segmented(
+        'buttonsSide',
+        'Buttons',
+        [
+          ['below', 'Below the words'],
+          ['beside', 'Beside the words'],
+        ],
+        { default: 'below', when: { field: 'textAlign', in: ['left'] }, description: 'Side by side on wide bands; works best with Width set towards Wide.' },
+      ),
     ],
     // Block position sits by Width, which it depends on (audit 1.78.0).
     size: [
