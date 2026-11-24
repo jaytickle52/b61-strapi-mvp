@@ -8,6 +8,7 @@ import { resolveHeadingLevel } from '../../kit/groups'
 import { HeadingLines, revealAttr } from '../../kit/render/parts'
 import FormClient, { type ClientQuestion } from './FormClient'
 import { headingText } from '../../kit/heading'
+import { anchorAttr } from '../../kit/render/anchor'
 
 export type FormBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Form' }>
 
@@ -84,7 +85,7 @@ export default async function B61Form({ block, index = 0, fromAnnouncement }: { 
   }
 
   return (
-    <div
+    <div {...anchorAttr(block)}
       className={[
         'b61-form',
         `b61-talign-${align}`,

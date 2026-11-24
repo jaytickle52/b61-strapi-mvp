@@ -4,6 +4,7 @@ import { resolveHeadingLevel } from '../../kit/groups'
 import { BandHead, eruleClass, revealAttr } from '../../kit/render/parts'
 import LogosInit from './LogosInit'
 import { headingText } from '../../kit/heading'
+import { anchorAttr } from '../../kit/render/anchor'
 
 /*
  * LOGOS. Still: a centred, wrapping row. Scrolling: the row moves slowly
@@ -45,7 +46,7 @@ export default function B61Logos({ block, index = 0 }: { block: any; index?: num
   )
 
   return (
-    <div className={['b61-logos', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
+    <div {...anchorAttr(block)} className={['b61-logos', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
       <Wrap
         className={[
           'b61-logos__region',

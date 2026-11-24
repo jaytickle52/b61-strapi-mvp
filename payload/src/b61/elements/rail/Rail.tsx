@@ -1,6 +1,7 @@
 import { resolveLink } from '../../lib/media'
 import { Buttons } from '../../kit/render/parts'
 import { B61Icon } from '../../kit/render/icons'
+import { anchorAttr } from '../../kit/render/anchor'
 
 /* Ported from elements/Rail/html.twig (plugin 1.77.1). */
 export default function B61Rail({ block, index = 0 }: { block: any; index?: number }) {
@@ -37,7 +38,7 @@ export default function B61Rail({ block, index = 0 }: { block: any; index?: numb
     </nav>
   )
   return (
-    <div className="b61-rail">
+    <div {...anchorAttr(block)} className="b61-rail">
       <div className={`b61-rail__inner${block.sticky ? ' b61-rail__inner--sticky' : ''}`}>
         <div className={`b61-rail__panel${painted ? ` b61-surface--${surface} b61-band--${surface} b61-card` : ''}`}>
           {block.actionsPosition === 'bottom' ? (

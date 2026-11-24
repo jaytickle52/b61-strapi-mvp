@@ -1,5 +1,6 @@
 import type { Page } from '@/payload-types'
 import { resolveLink } from '../../lib/media'
+import { anchorAttr } from '../../kit/render/anchor'
 
 export type ButtonBarBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61ButtonBar' }>
 
@@ -13,7 +14,7 @@ export default function B61ButtonBar({ block }: { block: ButtonBarBlock; index?:
   ].filter((s) => s.label)
   if (!slots.length) return null
   return (
-    <div className="b61-btnbar">
+    <div {...anchorAttr(block)} className="b61-btnbar">
       <div className={`b61-btnbar__row b61-btnbar__row--n${slots.length} b61-btnbar__row--${block.size ?? 'standard'}`} data-b61-reveal={rv}>
         {slots.map((s, i) => {
           const { href, newTab } = resolveLink(s.link as any)

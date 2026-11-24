@@ -43,6 +43,7 @@ import '@/b61/styles/calendar.css'
 import '@/b61/styles/tone.css'
 import '@/b61/styles/style.css'
 import { b61Theme, FONT_STACKS, fontsHref, toneOf } from '@/b61/lib/theme'
+import { brandFontFaces, brandFontVars } from '@/branding/fonts'
 import { customCssTag } from '@/b61/lib/custom-css'
 import { b61Style, headingWeightFor } from '@/b61/lib/style'
 import { inlineFontCss } from '@/b61/lib/fonts'
@@ -158,19 +159,26 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const customCss = customCssTag(settings.customCss)
   // Inlined so the first paint doesn't wait on Google (src/b61/lib/fonts.ts); a <link> if Google is unreachable.
   const fontsCss = await inlineFontCss(fontsUrl)
+  // Brand fonts the school uploaded (School settings > Look > Brand fonts), in front of the Google fonts.
+  const brandFaces = brandFontFaces(settings as any)
+  const brandVars = brandFontVars(settings as any, {
+    display: FONT_STACKS[heading] ?? FONT_STACKS.Fraunces,
+    body: FONT_STACKS[body] ?? FONT_STACKS.Inter,
+    ui: FONT_STACKS[ui] ?? FONT_STACKS.Montserrat,
+  })
 
   // The school's colors and fonts become CSS variables every component uses.
   const theme = {
     '--brand': settings.primaryColor || '#1f3a5f',
     '--accent': settings.secondaryColor || '#c8a24a',
-    '--font-heading': FONT_STACKS[heading] ?? FONT_STACKS.Fraunces,
-    '--font-body': FONT_STACKS[body] ?? FONT_STACKS.Inter,
+    '--font-heading': brandVars['--b61-font-display'] ?? FONT_STACKS[heading] ?? FONT_STACKS.Fraunces,
+    '--font-body': brandVars['--b61-font-body'] ?? FONT_STACKS[body] ?? FONT_STACKS.Inter,
   } as CSSProperties
 
   return (
     // The B61 palette goes on <html>: tokens.css derives its role tokens on
     // :root, so the raw values have to be set there to flow through.
-    <html lang="en" className="h-full antialiased" data-b61-tone={toneOf(settings)} {...((settings as any).accentFont ? { 'data-b61-accent-font': '' } : {})} {...style.attrs} style={{ ...b61Theme(settings), ...style.vars }}>
+    <html lang="en" className="h-full antialiased" data-b61-tone={toneOf(settings)} {...((settings as any).accentFont ? { 'data-b61-accent-font': '' } : {})} {...style.attrs} style={{ ...b61Theme(settings), ...style.vars, ...brandVars } as CSSProperties}>
       <head>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         {fontsCss ? (
@@ -181,6 +189,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             <link rel="stylesheet" href={fontsUrl} />
           </>
         )}
+        {brandFaces && <style id="b61-brand-fonts" dangerouslySetInnerHTML={{ __html: brandFaces }} />}
         {/* The news feed, for feed readers and AI tools. */}
         <link rel="alternate" type="application/rss+xml" title={`${settings.schoolName} news`} href="/news/feed.xml" />
         {/* Banner 61's custom CSS for this school, last so it wins over the element styles. */}

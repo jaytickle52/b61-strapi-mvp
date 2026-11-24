@@ -3,6 +3,7 @@ import type { Page } from '@/payload-types'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { BandHead, Buttons, eruleClass, revealAttr } from '../../kit/render/parts'
 import { hasHeading } from '../../kit/heading'
+import { anchorAttr } from '../../kit/render/anchor'
 
 export type StatsBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61StatsBand' }>
 
@@ -21,7 +22,7 @@ export default function B61StatsBand({ block, index = 0, nested = false }: { blo
   const Wrap = showHeading ? 'section' : 'div'
   const stats = (block.stats ?? []).filter((s) => s?.figure || s?.label)
   return (
-    <div
+    <div {...anchorAttr(block)}
       className={[
         'b61-stats',
         `b61-stats--ta-${align}`,

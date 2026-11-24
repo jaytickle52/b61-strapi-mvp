@@ -31,6 +31,7 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   // Public pages, plus the editor's pages (path header only, see above). Not the
-  // API, Next.js files or files with an extension in /public.
-  matcher: ['/admin', '/admin/:path*', '/((?!admin(?:/|$)|api/|_next/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|txt|xml|ics|woff2?)$).*)'],
+  // API, Next.js files, files with an extension in /public, or brand fonts
+  // (next/brand-font sets its own long cache; the header below would undo it).
+  matcher: ['/admin', '/admin/:path*', '/((?!admin(?:/|$)|api/|_next/|next/brand-font/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|txt|xml|ics|woff2?)$).*)'],
 }

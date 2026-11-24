@@ -838,3 +838,46 @@
     transform: none;
   }
 }
+
+/* ---- Join as steps (Design > Cards > Join as steps) ----------------------
+   Numbered cards read as a row of steps: each number sits in a ring in the
+   card's accent (so it reads on every card fill and band), joined to the next
+   card's by a line across the gap. Wide screens only, where the grid has its
+   full column count; the last card of each row has no line. Not offered for
+   text-on-photo cards or carousels (CardGrid.tsx). */
+.b61-cards__region--steps .b61-cards__num {
+  display: flex;
+  align-items: center;
+  margin: 0 0 16px;
+}
+.b61-cards__region--steps .b61-cards__num-text {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+  color: var(--cards-accent);
+  font-size: var(--b61-text-sm, 0.875rem);
+  letter-spacing: 0.02em;
+}
+@media (min-width: 1024px) {
+  .b61-cards__region--steps .b61-cards__card { overflow: visible; }
+  .b61-cards__region--steps .b61-cards__num::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 2px;
+    margin-left: 12px;
+    /* Out past the card's right padding and border, across the gap to the next card. */
+    margin-right: calc(-1 * (var(--cards-pad-x, 30px) + var(--cards-border-w, 1px) + var(--b61-cards-grid-gap, 24px)));
+    background: var(--cards-accent);
+    opacity: 0.4;
+  }
+  .b61-cards__region--steps .b61-cards__card:last-child .b61-cards__num::after,
+  .b61-cards__region--steps .b61-cards__grid--c2 > .b61-cards__card:nth-child(2n) .b61-cards__num::after,
+  .b61-cards__region--steps .b61-cards__grid--c3 > .b61-cards__card:nth-child(3n) .b61-cards__num::after,
+  .b61-cards__region--steps .b61-cards__grid--c4 > .b61-cards__card:nth-child(4n) .b61-cards__num::after {
+    content: none;
+  }
+}

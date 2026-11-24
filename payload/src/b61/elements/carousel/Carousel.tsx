@@ -4,6 +4,7 @@ import { BandHead, eruleClass, revealAttr } from '../../kit/render/parts'
 import Inner from '../../kit/render/Inner'
 import CarouselInit from '../../kit/render/CarouselInit'
 import { headingText } from '../../kit/heading'
+import { anchorAttr } from '../../kit/render/anchor'
 
 /* Ported from elements/Carousel/html.twig and elements/Carousel_Slide/html.twig (plugin 1.77.1). */
 export default function B61Carousel({ block, index = 0, path }: { block: any; index?: number; path?: string }) {
@@ -63,7 +64,7 @@ export default function B61Carousel({ block, index = 0, path }: { block: any; in
   )
 
   return (
-    <div className={['b61-car', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
+    <div {...anchorAttr(block)} className={['b61-car', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
       <Wrap
         className={[
           'b61-car__region js-b61-car',

@@ -7,6 +7,7 @@ import LiteVideo from '../../kit/render/LiteVideo'
 import { parseVideo } from '../../kit/video'
 import GalleryInit from './GalleryInit'
 import { headingText } from '../../kit/heading'
+import { anchorAttr } from '../../kit/render/anchor'
 
 export type GalleryBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Gallery' }>
 
@@ -100,7 +101,7 @@ export default function B61Gallery({ block, index = 0 }: { block: GalleryBlock; 
   )
 
   return (
-    <div className={['b61-gallery', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
+    <div {...anchorAttr(block)} className={['b61-gallery', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
       <Wrap
         className={[
           'b61-gallery__region',

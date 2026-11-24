@@ -11,6 +11,7 @@ import CarouselInit from '../../kit/render/CarouselInit'
 import { formatDate, getEvents, getNews, getPrograms, getSettings, getStaff, eventWhen } from '@/lib/data'
 import { schoolFacts } from '@/school/facts'
 import { headingText } from '../../kit/heading'
+import { anchorAttr } from '../../kit/render/anchor'
 
 export type CardGridBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61CardGrid' }>
 
@@ -184,6 +185,7 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
     surfaced && `b61-cards__region--csurf-${csurf}`,
     `b61-cards__region--a${talign}`,
     `b61-cards__region--media-${mtype}`,
+    block.showNumbers && (block as any).connectSteps && !car && !ov && mtype !== 'icon' && 'b61-cards__region--steps',
     mtype === 'icon' && isize !== 'sm' && `b61-cards__region--icon-${isize}`,
     mround && 'b61-cards__region--img-round',
     customRatio && 'b61-cards__region--ratio',
@@ -236,7 +238,7 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
             <OverlayWrap on={ov} ovl={ovl}>
               {block.showNumbers && mtype !== 'icon' && (
                 <span className="b61-cards__num" aria-hidden="true">
-                  {String(i + 1).padStart(2, '0')}
+                  <span className="b61-cards__num-text">{String(i + 1).padStart(2, '0')}</span>
                 </span>
               )}
               {card.eyebrow && <span className="b61-cards__eyebrow-item">{card.eyebrow}</span>}
@@ -320,7 +322,7 @@ export default async function B61CardGrid({ block, index = 0, nested = false }: 
   }
 
   return (
-    <div className={outerClass}>
+    <div {...anchorAttr(block)} className={outerClass}>
       <Wrap {...regionProps}>
         {carTop ? (
           <div className="b61-car__headrow b61-cards__headrow">

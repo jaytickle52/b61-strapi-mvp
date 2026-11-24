@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import { asMedia, focusOf, imgProps } from '../../lib/media'
 import Inner from '../../kit/render/Inner'
+import { anchorAttr } from '../../kit/render/anchor'
 
 /* Ported from elements/Section/html.twig and elements/Sidebar (plugin 1.77.1). */
 export default function B61Section({ block, path }: { block: any; index?: number; path?: string }) {
@@ -36,7 +37,7 @@ export default function B61Section({ block, path }: { block: any; index?: number
   if (block.watermarkOn && block.watermarkStrength > 0) style['--b61-watermark-opacity'] = String(Math.min(Number(block.watermarkStrength), 30) / 100)
 
   return (
-    <div className={`b61-section${block.pullUp ? ' b61-section--pull' : ''}`}>
+    <div {...anchorAttr(block)} className={`b61-section${block.pullUp ? ' b61-section--pull' : ''}`}>
       <div
         className={[
           'b61-section__region',

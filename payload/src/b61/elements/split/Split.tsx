@@ -7,6 +7,7 @@ import { fromBody } from '../../kit/body'
 import LiteVideo from '../../kit/render/LiteVideo'
 import { parseVideo } from '../../kit/video'
 import { headingText } from '../../kit/heading'
+import { anchorAttr } from '../../kit/render/anchor'
 
 export type SplitBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Split' }>
 
@@ -62,7 +63,7 @@ export default function B61Split({ block, index = 0 }: { block: SplitBlock; inde
   const badge = imgProps((block as any).badge, '160px')
 
   return (
-    <div className={rootClass} style={rootStyle}>
+    <div {...anchorAttr(block)} className={rootClass} style={rootStyle}>
       <Wrap
         className={[
           'b61-split__region',

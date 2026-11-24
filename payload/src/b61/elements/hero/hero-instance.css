@@ -145,3 +145,13 @@
   .b61-hero.b61-hero--type-standard,
   .b61-hero.b61-hero--type-compact { min-height: 0; }
 }
+
+/* Breadcrumb (Hero > Content > Breadcrumb): a quiet trail above the eyebrow. */
+.b61-hero__crumbs { margin: 0 0 var(--b61-space-md, 16px); font-family: var(--b61-font-ui); font-size: 0.875rem; }
+.b61-hero__crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25em 0.5em; margin: 0; padding: 0; list-style: none; }
+.b61-hero__crumbs li { display: inline-flex; align-items: center; gap: 0.5em; color: inherit; opacity: 0.78; }
+.b61-hero__crumbs li + li::before { content: "/"; opacity: 0.6; }
+.b61-hero__crumbs li:last-child { opacity: 1; font-weight: 600; }
+.b61-hero__crumbs a { color: inherit; text-decoration: none; }
+.b61-hero__crumbs a:hover, .b61-hero__crumbs a:focus-visible { text-decoration: underline; text-underline-offset: 0.2em; }
+.b61-hero__inner--tcenter .b61-hero__crumbs ol { justify-content: center; }

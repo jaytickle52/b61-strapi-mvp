@@ -9,6 +9,7 @@ import type { CSSProperties } from 'react'
 import { b61Converters } from '../../kit/render/converters'
 import { asMedia, focusOf, imgProps } from '../../lib/media'
 import B61Pillars from '../pillars/Pillars'
+import { anchorAttr } from '../../kit/render/anchor'
 
 /* Ported from elements/Tabs/html.twig and elements/Tab/html.twig (plugin 1.77.1).
  * One element for all tab patterns (20 Nov 2026): Feature list and Scroll
@@ -30,7 +31,7 @@ export default function B61Tabs({ block, index = 0, path }: { block: any; index?
   const tabs = (block.tabs ?? []).filter((t: any) => t?.label)
   const ha = block.headingAlign ?? 'left'
   return (
-    <div className={['b61-tabs', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
+    <div {...anchorAttr(block)} className={['b61-tabs', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
       <Wrap
         className={[
           'b61-tabs__region',

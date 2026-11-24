@@ -2,7 +2,7 @@ import { defineElement, panel } from '../../kit/element'
 import { bunnyBackgroundField } from '../../kit/video'
 import { splitWords } from './words'
 import { emphasizedPhrase, headingText } from '../../kit/heading'
-import { dropdown, segmented, step, unit, type WhenRule } from '../../kit/controls'
+import { dropdown, link, segmented, step, unit, type WhenRule } from '../../kit/controls'
 import type { NumberField } from 'payload'
 import {
   buttonsPanel,
@@ -72,22 +72,41 @@ export const B61Hero = defineElement({
 
     panel(
       'Heading',
-      headingFields({
-        after: [
+      [
+        // A trail above the eyebrow on inner pages, e.g. Banner Connect / Use Cases / For Enrollment.
+        list(
+          'breadcrumb',
+          'Breadcrumb',
+          'Step',
+          [
+            { name: 'label', type: 'text', required: true },
+            link(),
+          ],
           {
-            name: 'changingWords',
-            label: 'Changing words',
-            type: 'text',
-            validate: validateChangingWords,
+            maxRows: 5,
             admin: {
-              placeholder: 'e.g. Learning, Missions, Athletics',
-              description: 'Words that take turns with the emphasized words, separated by commas. Works best at the end of the heading.',
+              description: "The pages above this one, in order, shown above the eyebrow. The last step is this page and needs no link; a step with no link shows as plain text.",
+              initCollapsed: true,
             },
           },
-          // One subheadline style (Jay, 19 Nov 2026): the body font.
-          { name: 'subheadline', label: 'Subheadline', type: 'textarea', admin: { rows: 2 } },
-        ],
-      }),
+        ),
+        ...headingFields({
+          after: [
+            {
+              name: 'changingWords',
+              label: 'Changing words',
+              type: 'text',
+              validate: validateChangingWords,
+              admin: {
+                placeholder: 'e.g. Learning, Missions, Athletics',
+                description: 'Words that take turns with the emphasized words, separated by commas. Works best at the end of the heading.',
+              },
+            },
+            // One subheadline style (Jay, 19 Nov 2026): the body font.
+            { name: 'subheadline', label: 'Subheadline', type: 'textarea', admin: { rows: 2 } },
+          ],
+        }),
+      ],
     ),
 
     buttonsPanel(),

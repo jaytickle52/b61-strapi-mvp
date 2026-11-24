@@ -8,6 +8,7 @@ import { BandHead, eruleClass, revealAttr } from '../../kit/render/parts'
 import PillarsInit from './PillarsInit'
 import ScrollStory from '../../kit/render/ScrollStory'
 import { headingText } from '../../kit/heading'
+import { anchorAttr } from '../../kit/render/anchor'
 
 /* Ported from elements/Pillars/html.twig (plugin 1.77.1). Since 20 Nov 2026 it
  * draws the Tabs element's Feature list and Scroll story layouts (there is no
@@ -28,7 +29,7 @@ export default function B61Pillars({ block, index = 0 }: { block: any; index?: n
   // Design > Advanced (Banner 61): every pillar shown, scrolling past with its title list in view.
   const story = block.layout === 'story' && items.length > 0
   return (
-    <div className={['b61-pillars', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
+    <div {...anchorAttr(block)} className={['b61-pillars', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
       <Wrap
         className={[
           'b61-pillars__region',

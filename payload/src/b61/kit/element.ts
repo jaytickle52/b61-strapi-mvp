@@ -2,6 +2,7 @@ import type { Block, Condition, Field } from 'payload'
 import { whenCondition, type When } from './controls'
 import { isB61Admin } from '../../access'
 import { validateCssClass } from '../lib/custom-css'
+import { validateAnchor } from './render/anchor'
 
 /*
  * defineElement(): the one way to build a B61 element's form.
@@ -178,11 +179,24 @@ function designPanel(label: string, fields: Field[] | undefined, open: boolean, 
   ]
 }
 
+const adminOnly = (_data: unknown, _sibling: unknown, ctx: any) => isB61Admin(ctx?.user)
+
+/** Hides a field from school staff, keeping its own show/hide rule for Banner 61 admins. */
+function hiddenFromStaff(fields: Field[]): Field[] {
+  return fields.map((f) => {
+    const own = (f as any).admin?.condition as Condition | undefined
+    const condition: Condition = (data, sibling, ctx) => adminOnly(data, sibling, ctx) && (own ? own(data, sibling, ctx) : true)
+    return { ...f, admin: { ...((f as any).admin ?? {}), condition } } as Field
+  })
+}
+
 /**
- * Design > Advanced: a CSS class for this one element, so the school's Custom
- * CSS (School settings > Look) can target it. Banner 61 admins only; school
- * staff never see it. The class goes on a wrapper around the element (see
- * kit/render/custom-class.tsx), so no element's own markup changes.
+ * Design > Advanced: everyone sees the Anchor (a name a link can jump to, e.g.
+ * #pricing). Banner 61 admins also see the CSS class for this one element, so
+ * the school's Custom CSS (School settings > Look) can target it, and any
+ * Banner 61 layout options. The class goes on a wrapper around the element
+ * (see kit/render/custom-class.tsx); the anchor goes on the element's own root
+ * (kit/render/anchor.ts).
  */
 function advancedPanel(extra: Field[] = []): Field[] {
   return [
@@ -192,10 +206,19 @@ function advancedPanel(extra: Field[] = []): Field[] {
       admin: {
         initCollapsed: true,
         className: 'b61-panel',
-        condition: (_data: unknown, _sibling: unknown, ctx: any) => isB61Admin(ctx?.user),
       },
       fields: [
-        ...bannerOnly(extra),
+        {
+          name: 'anchor',
+          label: 'Anchor',
+          type: 'text',
+          validate: validateAnchor,
+          admin: {
+            placeholder: 'e.g. pricing',
+            description: 'Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.',
+          },
+        },
+        ...hiddenFromStaff(bannerOnly(extra)),
         {
           name: 'cssClass',
           label: 'CSS class',
@@ -205,7 +228,11 @@ function advancedPanel(extra: Field[] = []): Field[] {
             create: ({ req }) => isB61Admin(req.user),
             update: ({ req }) => isB61Admin(req.user),
           },
-          admin: { placeholder: 'e.g. ls-hero-tilt', description: 'Banner 61 only. Style it in School settings > Look > Custom CSS.' },
+          admin: {
+            condition: adminOnly,
+            placeholder: 'e.g. ls-hero-tilt',
+            description: 'Banner 61 only. Style it in School settings > Look > Custom CSS.',
+          },
         },
       ],
     } as Field,

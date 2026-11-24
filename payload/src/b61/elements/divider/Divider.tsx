@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import type { Page } from '@/payload-types'
 import { imgProps } from '../../lib/media'
+import { anchorAttr } from '../../kit/render/anchor'
 
 export type DividerBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Divider' }>
 
@@ -12,7 +13,7 @@ export default function B61Divider({ block }: { block: DividerBlock; index?: num
   const style = wStep ? ({ '--b61-div-len': `var(--b61-rule-len-${wStep})` } as CSSProperties) : undefined
   const orn = block.lineStyle === 'ornament' ? imgProps(block.ornament, '120px') : null
   return (
-    <div className={`b61-rule${wStep ? ' b61-rule--wstep' : ''}`} style={style}>
+    <div {...anchorAttr(block)} className={`b61-rule${wStep ? ' b61-rule--wstep' : ''}`} style={style}>
       <div className={`b61-rule__inner b61-rule__inner--a${block.alignment ?? 'center'}${reveal ? ' b61-rule__inner--reveal' : ''}`} aria-hidden="true">
         {orn ? (
           <span className={`b61-rule__ornament b61-rule__ornament--w${w}`}>

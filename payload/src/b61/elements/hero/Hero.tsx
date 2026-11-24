@@ -1,12 +1,13 @@
 import type { CSSProperties } from 'react'
 import type { Page } from '@/payload-types'
-import { asMedia, focusOf, imgProps } from '../../lib/media'
+import { asMedia, focusOf, imgProps, resolveLink } from '../../lib/media'
 import { Buttons, HeadingLines, revealAttr } from '../../kit/render/parts'
 import HeroBehavior from './HeroBehavior'
 import { splitWords } from './words'
 import { resolveHeadingLevel } from '../../kit/groups'
 import { bunnyBackground } from '../../kit/video'
 import { headingText } from '../../kit/heading'
+import { anchorAttr } from '../../kit/render/anchor'
 
 export type HeroBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Hero' }>
 
@@ -120,8 +121,30 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
     .filter(Boolean)
     .join(' ')
 
+  const trail = ((block as any).breadcrumb ?? []).filter((c: any) => c?.label)
   const text = (
     <>
+      {trail.length > 0 && (
+        <nav className="b61-hero__crumbs" aria-label="Breadcrumb" {...ri}>
+          <ol>
+            {trail.map((c: any, i: number) => {
+              const last = i === trail.length - 1
+              const { href, newTab } = last ? { href: null, newTab: false } : resolveLink(c.link)
+              return (
+                <li key={c.id ?? i}>
+                  {href ? (
+                    <a href={href} {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+                      {c.label}
+                    </a>
+                  ) : (
+                    <span {...(last ? { 'aria-current': 'page' as const } : {})}>{c.label}</span>
+                  )}
+                </li>
+              )
+            })}
+          </ol>
+        </nav>
+      )}
       {block.eyebrow && (
         <span className="b61-hero__eyebrow" {...ri}>
           <span className="b61-hero__eyebrow-rule" aria-hidden="true" />
@@ -150,7 +173,7 @@ export default function B61Hero({ block, index = 0 }: { block: HeroBlock; index?
   )
 
   return (
-    <Root className={rootClass} style={rootStyle} data-b61-hero="" {...(overOk ? { 'data-b61-over-ok': '' } : {})} {...(Root === 'section' ? { 'aria-labelledby': headingId } : {})}>
+    <Root {...anchorAttr(block)} className={rootClass} style={rootStyle} data-b61-hero="" {...(overOk ? { 'data-b61-over-ok': '' } : {})} {...(Root === 'section' ? { 'aria-labelledby': headingId } : {})}>
       {mode !== 'band' && (
         <>
           <div className={`b61-hero__bg b61-hero__bg--${bgtype}`} aria-hidden="true" style={bgStyle}>

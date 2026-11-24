@@ -4,6 +4,7 @@ import { previewUrl } from './content'
 import { footerFields, headerFields } from '../b61/chrome/fields'
 import { testEmailEndpoint } from '../email/endpoints'
 import { colorField } from '../branding/fields'
+import { validateBrandFontRole, validateFontFamily } from '../branding/fonts'
 import { BODY_FONTS, HEADING_FONTS, UI_FONTS } from '../b61/lib/theme'
 import { CUSTOM_CSS_MAX } from '../b61/lib/custom-css'
 import { styleGroup } from '../b61/lib/style-fields'
@@ -104,6 +105,22 @@ export const SchoolSettings: CollectionConfig = {
               ],
             },
             {
+              name: 'buttonColor',
+              label: 'Button color',
+              type: 'radio',
+              defaultValue: 'primary',
+              options: [
+                { label: 'Primary', value: 'primary' },
+                { label: 'Secondary', value: 'secondary' },
+                { label: 'Accent', value: 'accent' },
+              ],
+              admin: {
+                layout: 'horizontal',
+                description:
+                  'The fill of main buttons. Primary matches the headings. Accent uses "Accent for small text" below when it is set. The letters turn dark when white would be hard to read.',
+              },
+            },
+            {
               type: 'collapsible',
               label: 'Color shades',
               admin: {
@@ -145,6 +162,51 @@ export const SchoolSettings: CollectionConfig = {
                 placeholder: 'Same as headings',
                 description: 'Optional. A second font for heading lines marked Emphasize, e.g. an italic serif beside capitals. Those lines keep their letters as typed.',
               },
+            },
+            {
+              type: 'collapsible',
+              label: 'Brand fonts (uploaded)',
+              admin: {
+                initCollapsed: true,
+                description:
+                  "Use a school's own licensed font instead of the Google font above. Upload each file under Website > Documents (WOFF2 is best; WOFF, OTF and TTF also work), add one row per weight, then type the family name into the role it replaces. The Google font above stays as the fallback. Only upload fonts the school is licensed to use on the web.",
+              },
+              fields: [
+                {
+                  name: 'brandFonts',
+                  label: 'Font files',
+                  type: 'array',
+                  labels: { singular: 'Font file', plural: 'Font files' },
+                  fields: [
+                    {
+                      type: 'row',
+                      fields: [
+                        { name: 'family', label: 'Family name', type: 'text', required: true, validate: validateFontFamily, admin: { width: '40%', placeholder: 'e.g. DIN Pro Condensed' } },
+                        { name: 'file', label: 'Font file', type: 'upload', relationTo: 'documents', required: true, admin: { width: '30%' } },
+                        { name: 'weight', type: 'number', defaultValue: 400, min: 100, max: 900, admin: { width: '15%', step: 100 } },
+                        {
+                          name: 'style',
+                          type: 'select',
+                          defaultValue: 'normal',
+                          options: [
+                            { label: 'Upright', value: 'normal' },
+                            { label: 'Italic', value: 'italic' },
+                          ],
+                          admin: { width: '15%', isClearable: false },
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'headingFontBrand', label: 'Headings use', type: 'text', validate: validateBrandFontRole, admin: { width: '33%', placeholder: 'Google font above' } },
+                    { name: 'bodyFontBrand', label: 'Body uses', type: 'text', validate: validateBrandFontRole, admin: { width: '33%', placeholder: 'Google font above' } },
+                    { name: 'uiFontBrand', label: 'Buttons and labels use', type: 'text', validate: validateBrandFontRole, admin: { width: '34%', placeholder: 'Google font above' } },
+                  ],
+                },
+              ],
             },
             styleGroup(),
             {
