@@ -8,6 +8,7 @@ import AccordionInit from './AccordionInit'
 import JsonLd from '@/seo/JsonLd'
 import { faqSchema } from '@/seo/schema'
 import { headingText } from '../../kit/heading'
+import { anchorAttr } from '../../kit/render/anchor'
 
 const NEXT: Record<string, string> = { h1: 'h2', h2: 'h3', h3: 'h4', h4: 'h5' }
 
@@ -30,7 +31,7 @@ export default function B61Accordion({ block, index = 0 }: { block: any; index?:
   const items = (block.items ?? []).filter((i: any) => i?.title)
   const faq = block.faq ? faqSchema(items) : null
   return (
-    <div className={['b61-acc', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
+    <div {...anchorAttr(block)} className={['b61-acc', eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
       {faq && <JsonLd data={faq} />}
       <Wrap
         className={[

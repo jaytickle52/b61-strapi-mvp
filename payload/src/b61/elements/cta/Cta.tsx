@@ -5,6 +5,7 @@ import { resolveHeadingLevel } from '../../kit/groups'
 import { Buttons, ContentBlocks, HeadingLines, revealAttr } from '../../kit/render/parts'
 import { fromBody } from '../../kit/body'
 import { headingText } from '../../kit/heading'
+import { anchorAttr } from '../../kit/render/anchor'
 
 export type CtaBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Cta' }>
 
@@ -52,7 +53,7 @@ export default function B61Cta({ block, index = 0, nested = false }: { block: Ct
   const rootStyle = wStep ? ({ '--b61-cta-wstep': `var(--b61-box-${wStep})` } as CSSProperties) : undefined
 
   return (
-    <div className={rootClass} style={rootStyle}>
+    <div {...anchorAttr(block)} className={rootClass} style={rootStyle}>
       <Wrap
         className={[
           'b61-cta__region',

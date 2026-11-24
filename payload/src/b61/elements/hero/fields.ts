@@ -2,7 +2,7 @@ import { defineElement, panel } from '../../kit/element'
 import { bunnyBackgroundField } from '../../kit/video'
 import { splitWords } from './words'
 import { emphasizedPhrase, headingText } from '../../kit/heading'
-import { dropdown, segmented, step, unit, type WhenRule } from '../../kit/controls'
+import { dropdown, link, segmented, step, unit, type WhenRule } from '../../kit/controls'
 import type { NumberField } from 'payload'
 import {
   buttonsPanel,
@@ -91,6 +91,30 @@ export const B61Hero = defineElement({
     ),
 
     buttonsPanel(),
+
+    // A trail above the eyebrow on inner pages, e.g. Banner Connect / Use Cases / For Enrollment.
+    panel(
+      'Breadcrumb',
+      [
+        list(
+          'breadcrumb',
+          'Breadcrumb',
+          'Step',
+          [
+            { name: 'label', type: 'text', required: true },
+            link(),
+          ],
+          {
+            maxRows: 5,
+            admin: {
+              description: 'Optional. The pages above this one, in order; the last step is this page and needs no link. Leave a step\'s link empty to show it as plain text.',
+              initCollapsed: true,
+            },
+          },
+        ),
+      ],
+      { open: false },
+    ),
 
     panel(
       'Background',

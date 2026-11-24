@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react'
 import type { Page } from '@/payload-types'
 import { imgProps } from '../../lib/media'
 import { eruleClass, revealAttr } from '../../kit/render/parts'
+import { anchorAttr } from '../../kit/render/anchor'
 
 export type TestimonialBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Testimonial' }>
 
@@ -16,7 +17,7 @@ export default function B61Testimonial({ block }: { block: TestimonialBlock; ind
   const wm = imgProps(block.watermark, '600px')
   const attribution = (block.attribution ?? '').trim()
   return (
-    <div className={['b61-quote', `b61-palign-${ta}`, eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
+    <div {...anchorAttr(block)} className={['b61-quote', `b61-palign-${ta}`, eruleClass(block.eyebrowRule)].filter(Boolean).join(' ')}>
       <div
         className={[
           'b61-quote__region',

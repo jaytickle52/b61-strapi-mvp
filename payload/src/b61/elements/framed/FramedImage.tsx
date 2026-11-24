@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import type { Page } from '@/payload-types'
 import { asMedia, focusOf, imgProps } from '../../lib/media'
+import { anchorAttr } from '../../kit/render/anchor'
 
 export type FramedImageBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61FramedImage' }>
 
@@ -23,7 +24,7 @@ export default function B61FramedImage({ block }: { block: FramedImageBlock; ind
   const wStep = block.widthStep ? Math.min(Math.max(Math.round(block.widthStep), 1), 7) : null
   const img = imgProps(block.image, '100vw')
   return (
-    <div className="b61-fimg" style={wStep ? ({ '--b61-fimg-max': `var(--b61-box-${wStep})` } as CSSProperties) : undefined}>
+    <div {...anchorAttr(block)} className="b61-fimg" style={wStep ? ({ '--b61-fimg-max': `var(--b61-box-${wStep})` } as CSSProperties) : undefined}>
       <div
         className={[
           'b61-fimg__frame',

@@ -140,6 +140,26 @@ type Settings = {
   accentFont?: string | null
   bodyFont?: string | null
   uiFont?: string | null
+  buttonColor?: string | null
+}
+
+/**
+ * School settings > Look > Button color. Primary keeps tokens.css as it is
+ * (buttons match the headings). Secondary or accent fills main buttons with
+ * that colour instead, with white letters, and darkens it on hover.
+ */
+function buttonOverrides(s: Settings, c: { secondary: string; accent: string }): Record<string, string> {
+  if (s.buttonColor === 'secondary') {
+    const deep = s.primaryDeep ? 'var(--b61-palette-primary-deep)' : mix(c.secondary, '#000', 78)
+    return { '--b61-btn-bg': c.secondary, '--b61-btn-bg-hover': deep, '--b61-btn-outline-color': c.secondary }
+  }
+  if (s.buttonColor === 'accent') {
+    // "Accent for small text" is the shade meant to carry letters, so prefer it.
+    const fill = s.accentStrong ? color(s.accentStrong, c.accent) : c.accent
+    const hover = s.accentDeep ? color(s.accentDeep, c.accent) : mix(fill, '#000', 85)
+    return { '--b61-btn-bg': fill, '--b61-btn-bg-hover': hover }
+  }
+  return {}
 }
 
 export type SiteTone = 'light' | 'dark'
@@ -202,5 +222,6 @@ export function b61Theme(s: Settings): CSSProperties {
     '--b61-font-body': FONT_STACKS[s.bodyFont ?? ''] ?? FONT_STACKS.Inter,
     '--b61-font-ui': FONT_STACKS[s.uiFont ?? ''] ?? FONT_STACKS.Montserrat,
     ...(s.accentFont && FONT_STACKS[s.accentFont] ? { '--b61-font-accent': FONT_STACKS[s.accentFont] } : {}),
+    ...buttonOverrides(s, { secondary, accent }),
   } as CSSProperties
 }

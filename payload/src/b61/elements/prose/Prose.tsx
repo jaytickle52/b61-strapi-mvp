@@ -4,6 +4,7 @@ import { resolveHeadingLevel } from '../../kit/groups'
 import { Buttons, ContentBlocks, HeadingLines, revealAttr } from '../../kit/render/parts'
 import { fromBody } from '../../kit/body'
 import { headingText } from '../../kit/heading'
+import { anchorAttr } from '../../kit/render/anchor'
 
 export type ProseBlock = Extract<NonNullable<Page['sections']>[number], { blockType: 'b61Prose' }>
 
@@ -77,7 +78,7 @@ export default function B61Prose({ block, index = 0 }: { block: ProseBlock; inde
   )
 
   return (
-    <div className={rootClass} style={rootStyle}>
+    <div {...anchorAttr(block)} className={rootClass} style={rootStyle}>
       <Wrap
         className={[
           'b61-prose__region',

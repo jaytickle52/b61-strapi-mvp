@@ -258,6 +258,21 @@ export interface Page {
                   id?: string | null;
                 }[]
               | null;
+            /**
+             * Optional. The pages above this one, in order; the last step is this page and needs no link. Leave a step's link empty to show it as plain text.
+             */
+            breadcrumb?:
+              | {
+                  label: string;
+                  link?: {
+                    type?: ('page' | 'document' | 'url') | null;
+                    page?: (number | null) | Page;
+                    document?: (number | null) | Document;
+                    url?: string | null;
+                  };
+                  id?: string | null;
+                }[]
+              | null;
             backgroundType?: ('image' | 'slideshow' | 'video') | null;
             /**
              * To set the focal point, click the pencil on the photo, then Edit image.
@@ -305,6 +320,10 @@ export interface Page {
             surface?: ('light' | 'primary' | 'secondary') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -415,6 +434,10 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
+            /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
             cssClass?: string | null;
@@ -500,6 +523,10 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             headingRule?: ('site' | 'none' | 'trailing') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -643,11 +670,16 @@ export interface Page {
             mediaRound?: boolean | null;
             iconSize?: ('sm' | 'md' | 'lg') | null;
             showNumbers?: boolean | null;
+            connectSteps?: boolean | null;
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             cardSurface?: ('light' | 'soft' | 'primary') | null;
             cardOverlay?: ('none' | 'gradient' | 'wash') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
             headBeside?: boolean | null;
             stagger?: boolean | null;
             bleed?: boolean | null;
@@ -741,6 +773,10 @@ export interface Page {
             itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
             bandWidth?: ('full' | 'right' | 'left') | null;
             pullUp?: boolean | null;
             /**
@@ -839,6 +875,10 @@ export interface Page {
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
             duotone?: boolean | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
@@ -866,6 +906,10 @@ export interface Page {
             showMark?: boolean | null;
             markRoom?: boolean | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -972,6 +1016,10 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
+            /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
             cssClass?: string | null;
@@ -1064,6 +1112,10 @@ export interface Page {
                             showMark?: boolean | null;
                             markRoom?: boolean | null;
                             entrance?: ('on' | 'off') | null;
+                            /**
+                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             */
+                            anchor?: string | null;
                             /**
                              * Banner 61 only. Style it in School settings > Look > Custom CSS.
                              */
@@ -1174,6 +1226,10 @@ export interface Page {
                             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                             entrance?: ('on' | 'off') | null;
                             /**
+                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             */
+                            anchor?: string | null;
+                            /**
                              * Banner 61 only. Style it in School settings > Look > Custom CSS.
                              */
                             cssClass?: string | null;
@@ -1259,6 +1315,10 @@ export interface Page {
                             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                             headingRule?: ('site' | 'none' | 'trailing') | null;
                             entrance?: ('on' | 'off') | null;
+                            /**
+                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             */
+                            anchor?: string | null;
                             /**
                              * Banner 61 only. Style it in School settings > Look > Custom CSS.
                              */
@@ -1405,11 +1465,16 @@ export interface Page {
                             mediaRound?: boolean | null;
                             iconSize?: ('sm' | 'md' | 'lg') | null;
                             showNumbers?: boolean | null;
+                            connectSteps?: boolean | null;
                             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                             cardSurface?: ('light' | 'soft' | 'primary') | null;
                             cardOverlay?: ('none' | 'gradient' | 'wash') | null;
                             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                             entrance?: ('on' | 'off') | null;
+                            /**
+                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             */
+                            anchor?: string | null;
                             headBeside?: boolean | null;
                             stagger?: boolean | null;
                             bleed?: boolean | null;
@@ -1439,6 +1504,10 @@ export interface Page {
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -1510,6 +1579,10 @@ export interface Page {
                             showMark?: boolean | null;
                             markRoom?: boolean | null;
                             entrance?: ('on' | 'off') | null;
+                            /**
+                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             */
+                            anchor?: string | null;
                             /**
                              * Banner 61 only. Style it in School settings > Look > Custom CSS.
                              */
@@ -1620,6 +1693,10 @@ export interface Page {
                             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                             entrance?: ('on' | 'off') | null;
                             /**
+                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             */
+                            anchor?: string | null;
+                            /**
                              * Banner 61 only. Style it in School settings > Look > Custom CSS.
                              */
                             cssClass?: string | null;
@@ -1706,6 +1783,10 @@ export interface Page {
                             headingRule?: ('site' | 'none' | 'trailing') | null;
                             entrance?: ('on' | 'off') | null;
                             /**
+                             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                             */
+                            anchor?: string | null;
+                            /**
                              * Banner 61 only. Style it in School settings > Look > Custom CSS.
                              */
                             cssClass?: string | null;
@@ -1730,6 +1811,10 @@ export interface Page {
             surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -1823,6 +1908,10 @@ export interface Page {
                       headingRule?: ('site' | 'none' | 'trailing') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
+                      /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
                       cssClass?: string | null;
@@ -1931,6 +2020,10 @@ export interface Page {
                       frameColor?: ('primary' | 'secondary' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -2075,11 +2168,16 @@ export interface Page {
                       mediaRound?: boolean | null;
                       iconSize?: ('sm' | 'md' | 'lg') | null;
                       showNumbers?: boolean | null;
+                      connectSteps?: boolean | null;
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       cardSurface?: ('light' | 'soft' | 'primary') | null;
                       cardOverlay?: ('none' | 'gradient' | 'wash') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       headBeside?: boolean | null;
                       stagger?: boolean | null;
                       bleed?: boolean | null;
@@ -2173,6 +2271,10 @@ export interface Page {
                       itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       bandWidth?: ('full' | 'right' | 'left') | null;
                       pullUp?: boolean | null;
                       /**
@@ -2271,6 +2373,10 @@ export interface Page {
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       duotone?: boolean | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
@@ -2299,6 +2405,10 @@ export interface Page {
                       markRoom?: boolean | null;
                       entrance?: ('on' | 'off') | null;
                       /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
+                      /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
                       cssClass?: string | null;
@@ -2319,6 +2429,10 @@ export interface Page {
                       widthStep?: number | null;
                       frameColor?: ('primary' | 'secondary' | 'accent') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -2425,6 +2539,10 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
+                      /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
                       cssClass?: string | null;
@@ -2517,6 +2635,10 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
+                      /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
                       cssClass?: string | null;
@@ -2567,6 +2689,10 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
+                      /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
                       cssClass?: string | null;
@@ -2594,6 +2720,10 @@ export interface Page {
                       secondColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
+                      /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
                       cssClass?: string | null;
@@ -2612,6 +2742,10 @@ export interface Page {
                       weight?: ('hairline' | 'regular' | 'heavy') | null;
                       lineColor?: ('accent' | 'ink' | 'muted') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -2671,6 +2805,10 @@ export interface Page {
                       oneColour?: boolean | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -2747,6 +2885,10 @@ export interface Page {
                       actionsPosition?: ('top' | 'bottom') | null;
                       sticky?: boolean | null;
                       surface?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -2834,6 +2976,10 @@ export interface Page {
                       headingRule?: ('site' | 'none' | 'trailing') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
+                      /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
                       cssClass?: string | null;
@@ -2942,6 +3088,10 @@ export interface Page {
                       frameColor?: ('primary' | 'secondary' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -3086,11 +3236,16 @@ export interface Page {
                       mediaRound?: boolean | null;
                       iconSize?: ('sm' | 'md' | 'lg') | null;
                       showNumbers?: boolean | null;
+                      connectSteps?: boolean | null;
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       cardSurface?: ('light' | 'soft' | 'primary') | null;
                       cardOverlay?: ('none' | 'gradient' | 'wash') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       headBeside?: boolean | null;
                       stagger?: boolean | null;
                       bleed?: boolean | null;
@@ -3184,6 +3339,10 @@ export interface Page {
                       itemSurface?: ('outline' | 'light' | 'card' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       bandWidth?: ('full' | 'right' | 'left') | null;
                       pullUp?: boolean | null;
                       /**
@@ -3282,6 +3441,10 @@ export interface Page {
                       surface?: ('none' | 'soft' | 'dark' | 'accent') | null;
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       duotone?: boolean | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
@@ -3310,6 +3473,10 @@ export interface Page {
                       markRoom?: boolean | null;
                       entrance?: ('on' | 'off') | null;
                       /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
+                      /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
                       cssClass?: string | null;
@@ -3330,6 +3497,10 @@ export interface Page {
                       widthStep?: number | null;
                       frameColor?: ('primary' | 'secondary' | 'accent') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -3436,6 +3607,10 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
+                      /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
                       cssClass?: string | null;
@@ -3528,6 +3703,10 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
+                      /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
                       cssClass?: string | null;
@@ -3578,6 +3757,10 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
+                      /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
                       cssClass?: string | null;
@@ -3605,6 +3788,10 @@ export interface Page {
                       secondColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
+                      /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
                       cssClass?: string | null;
@@ -3623,6 +3810,10 @@ export interface Page {
                       weight?: ('hairline' | 'regular' | 'heavy') | null;
                       lineColor?: ('accent' | 'ink' | 'muted') | null;
                       entrance?: ('on' | 'off') | null;
+                      /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
                       /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
@@ -3683,6 +3874,10 @@ export interface Page {
                       eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
                       entrance?: ('on' | 'off') | null;
                       /**
+                       * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+                       */
+                      anchor?: string | null;
+                      /**
                        * Banner 61 only. Style it in School settings > Look > Custom CSS.
                        */
                       cssClass?: string | null;
@@ -3724,6 +3919,10 @@ export interface Page {
             watermarkStrength?: number | null;
             surface?: ('none' | 'plain' | 'soft' | 'dark' | 'accent') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
             duotone?: boolean | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
@@ -3818,6 +4017,10 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
+            /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
             cssClass?: string | null;
@@ -3868,6 +4071,10 @@ export interface Page {
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
             /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
+            /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
             cssClass?: string | null;
@@ -3888,6 +4095,10 @@ export interface Page {
             widthStep?: number | null;
             frameColor?: ('primary' | 'secondary' | 'accent') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -3916,6 +4127,10 @@ export interface Page {
             secondColor?: ('plain' | 'soft' | 'dark' | 'accent') | null;
             entrance?: ('on' | 'off') | null;
             /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
+            /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
             cssClass?: string | null;
@@ -3934,6 +4149,10 @@ export interface Page {
             weight?: ('hairline' | 'regular' | 'heavy') | null;
             lineColor?: ('accent' | 'ink' | 'muted') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -3993,6 +4212,10 @@ export interface Page {
             oneColour?: boolean | null;
             eyebrowRule?: ('site' | 'none' | 'leading' | 'trailing' | 'both') | null;
             entrance?: ('on' | 'off') | null;
+            /**
+             * Optional. Lets a button or menu link jump here: link to #pricing on this page, or /page-address#pricing from another.
+             */
+            anchor?: string | null;
             /**
              * Banner 61 only. Style it in School settings > Look > Custom CSS.
              */
@@ -4105,8 +4328,6 @@ export interface Document {
    * Optional. One or two lines on what is inside.
    */
   description?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4176,7 +4397,6 @@ export interface Media {
    * Photographer or source, e.g. "Photo: Jane Smith".
    */
   credit?: string | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -4986,8 +5206,6 @@ export interface FormSubmission {
 export interface FormUpload {
   id: number;
   school?: (number | null) | School;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -5120,6 +5338,10 @@ export interface SchoolSetting {
    * Soft background (light sites). On dark sites, the light accent on accent bands.
    */
   paperColor?: string | null;
+  /**
+   * The fill of main buttons. Accent uses "Accent for small text" below when it is set. Keep button text readable: the preview above shows the contrast.
+   */
+  buttonColor?: ('primary' | 'secondary' | 'accent') | null;
   primaryDeep?: string | null;
   secondarySoft?: string | null;
   accentStrong?: string | null;
@@ -5216,6 +5438,18 @@ export interface SchoolSetting {
         | 'Oswald'
       )
     | null;
+  brandFonts?:
+    | {
+        family: string;
+        file: number | Document;
+        weight?: number | null;
+        style?: ('normal' | 'italic') | null;
+        id?: string | null;
+      }[]
+    | null;
+  headingFontBrand?: string | null;
+  bodyFontBrand?: string | null;
+  uiFontBrand?: string | null;
   /**
    * The shape of the site. Pick a theme, then move any dial to override it; empty dials follow the theme.
    */
@@ -6122,6 +6356,20 @@ export interface PagesSelect<T extends boolean = true> {
                     fullWidth?: T;
                     id?: T;
                   };
+              breadcrumb?:
+                | T
+                | {
+                    label?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          document?: T;
+                          url?: T;
+                        };
+                    id?: T;
+                  };
               backgroundType?: T;
               image?: T;
               slides?:
@@ -6154,6 +6402,7 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              anchor?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -6217,6 +6466,7 @@ export interface PagesSelect<T extends boolean = true> {
               frameColor?: T;
               eyebrowRule?: T;
               entrance?: T;
+              anchor?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -6266,6 +6516,7 @@ export interface PagesSelect<T extends boolean = true> {
               eyebrowRule?: T;
               headingRule?: T;
               entrance?: T;
+              anchor?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -6338,11 +6589,13 @@ export interface PagesSelect<T extends boolean = true> {
               mediaRound?: T;
               iconSize?: T;
               showNumbers?: T;
+              connectSteps?: T;
               surface?: T;
               cardSurface?: T;
               cardOverlay?: T;
               eyebrowRule?: T;
               entrance?: T;
+              anchor?: T;
               headBeside?: T;
               stagger?: T;
               bleed?: T;
@@ -6399,6 +6652,7 @@ export interface PagesSelect<T extends boolean = true> {
               itemSurface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              anchor?: T;
               bandWidth?: T;
               pullUp?: T;
               cssClass?: T;
@@ -6454,6 +6708,7 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              anchor?: T;
               duotone?: T;
               cssClass?: T;
               id?: T;
@@ -6476,6 +6731,7 @@ export interface PagesSelect<T extends boolean = true> {
               showMark?: T;
               markRoom?: T;
               entrance?: T;
+              anchor?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -6527,6 +6783,7 @@ export interface PagesSelect<T extends boolean = true> {
               itemSurface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              anchor?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -6565,6 +6822,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 showMark?: T;
                                 markRoom?: T;
                                 entrance?: T;
+                                anchor?: T;
                                 cssClass?: T;
                                 id?: T;
                                 blockName?: T;
@@ -6628,6 +6886,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 frameColor?: T;
                                 eyebrowRule?: T;
                                 entrance?: T;
+                                anchor?: T;
                                 cssClass?: T;
                                 id?: T;
                                 blockName?: T;
@@ -6677,6 +6936,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 eyebrowRule?: T;
                                 headingRule?: T;
                                 entrance?: T;
+                                anchor?: T;
                                 cssClass?: T;
                                 id?: T;
                                 blockName?: T;
@@ -6749,11 +7009,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 mediaRound?: T;
                                 iconSize?: T;
                                 showNumbers?: T;
+                                connectSteps?: T;
                                 surface?: T;
                                 cardSurface?: T;
                                 cardOverlay?: T;
                                 eyebrowRule?: T;
                                 entrance?: T;
+                                anchor?: T;
                                 headBeside?: T;
                                 stagger?: T;
                                 bleed?: T;
@@ -6777,6 +7039,7 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              anchor?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -6813,6 +7076,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 showMark?: T;
                                 markRoom?: T;
                                 entrance?: T;
+                                anchor?: T;
                                 cssClass?: T;
                                 id?: T;
                                 blockName?: T;
@@ -6876,6 +7140,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 frameColor?: T;
                                 eyebrowRule?: T;
                                 entrance?: T;
+                                anchor?: T;
                                 cssClass?: T;
                                 id?: T;
                                 blockName?: T;
@@ -6925,6 +7190,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 eyebrowRule?: T;
                                 headingRule?: T;
                                 entrance?: T;
+                                anchor?: T;
                                 cssClass?: T;
                                 id?: T;
                                 blockName?: T;
@@ -6943,6 +7209,7 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              anchor?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -6998,6 +7265,7 @@ export interface PagesSelect<T extends boolean = true> {
                           eyebrowRule?: T;
                           headingRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7061,6 +7329,7 @@ export interface PagesSelect<T extends boolean = true> {
                           frameColor?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7133,11 +7402,13 @@ export interface PagesSelect<T extends boolean = true> {
                           mediaRound?: T;
                           iconSize?: T;
                           showNumbers?: T;
+                          connectSteps?: T;
                           surface?: T;
                           cardSurface?: T;
                           cardOverlay?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           headBeside?: T;
                           stagger?: T;
                           bleed?: T;
@@ -7194,6 +7465,7 @@ export interface PagesSelect<T extends boolean = true> {
                           itemSurface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           bandWidth?: T;
                           pullUp?: T;
                           cssClass?: T;
@@ -7249,6 +7521,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           duotone?: T;
                           cssClass?: T;
                           id?: T;
@@ -7271,6 +7544,7 @@ export interface PagesSelect<T extends boolean = true> {
                           showMark?: T;
                           markRoom?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7287,6 +7561,7 @@ export interface PagesSelect<T extends boolean = true> {
                           widthStep?: T;
                           frameColor?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7338,6 +7613,7 @@ export interface PagesSelect<T extends boolean = true> {
                           itemSurface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7384,6 +7660,7 @@ export interface PagesSelect<T extends boolean = true> {
                           textPanel?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7409,6 +7686,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7438,6 +7716,7 @@ export interface PagesSelect<T extends boolean = true> {
                           firstColor?: T;
                           secondColor?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7452,6 +7731,7 @@ export interface PagesSelect<T extends boolean = true> {
                           weight?: T;
                           lineColor?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7491,6 +7771,7 @@ export interface PagesSelect<T extends boolean = true> {
                           oneColour?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7541,6 +7822,7 @@ export interface PagesSelect<T extends boolean = true> {
                           actionsPosition?: T;
                           sticky?: T;
                           surface?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7590,6 +7872,7 @@ export interface PagesSelect<T extends boolean = true> {
                           eyebrowRule?: T;
                           headingRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7653,6 +7936,7 @@ export interface PagesSelect<T extends boolean = true> {
                           frameColor?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7725,11 +8009,13 @@ export interface PagesSelect<T extends boolean = true> {
                           mediaRound?: T;
                           iconSize?: T;
                           showNumbers?: T;
+                          connectSteps?: T;
                           surface?: T;
                           cardSurface?: T;
                           cardOverlay?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           headBeside?: T;
                           stagger?: T;
                           bleed?: T;
@@ -7786,6 +8072,7 @@ export interface PagesSelect<T extends boolean = true> {
                           itemSurface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           bandWidth?: T;
                           pullUp?: T;
                           cssClass?: T;
@@ -7841,6 +8128,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           duotone?: T;
                           cssClass?: T;
                           id?: T;
@@ -7863,6 +8151,7 @@ export interface PagesSelect<T extends boolean = true> {
                           showMark?: T;
                           markRoom?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7879,6 +8168,7 @@ export interface PagesSelect<T extends boolean = true> {
                           widthStep?: T;
                           frameColor?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7930,6 +8220,7 @@ export interface PagesSelect<T extends boolean = true> {
                           itemSurface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -7976,6 +8267,7 @@ export interface PagesSelect<T extends boolean = true> {
                           textPanel?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -8001,6 +8293,7 @@ export interface PagesSelect<T extends boolean = true> {
                           surface?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -8030,6 +8323,7 @@ export interface PagesSelect<T extends boolean = true> {
                           firstColor?: T;
                           secondColor?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -8044,6 +8338,7 @@ export interface PagesSelect<T extends boolean = true> {
                           weight?: T;
                           lineColor?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -8083,6 +8378,7 @@ export interface PagesSelect<T extends boolean = true> {
                           oneColour?: T;
                           eyebrowRule?: T;
                           entrance?: T;
+                          anchor?: T;
                           cssClass?: T;
                           id?: T;
                           blockName?: T;
@@ -8108,6 +8404,7 @@ export interface PagesSelect<T extends boolean = true> {
               watermarkStrength?: T;
               surface?: T;
               entrance?: T;
+              anchor?: T;
               duotone?: T;
               cssClass?: T;
               id?: T;
@@ -8155,6 +8452,7 @@ export interface PagesSelect<T extends boolean = true> {
               textPanel?: T;
               eyebrowRule?: T;
               entrance?: T;
+              anchor?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -8180,6 +8478,7 @@ export interface PagesSelect<T extends boolean = true> {
               surface?: T;
               eyebrowRule?: T;
               entrance?: T;
+              anchor?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -8196,6 +8495,7 @@ export interface PagesSelect<T extends boolean = true> {
               widthStep?: T;
               frameColor?: T;
               entrance?: T;
+              anchor?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -8225,6 +8525,7 @@ export interface PagesSelect<T extends boolean = true> {
               firstColor?: T;
               secondColor?: T;
               entrance?: T;
+              anchor?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -8239,6 +8540,7 @@ export interface PagesSelect<T extends boolean = true> {
               weight?: T;
               lineColor?: T;
               entrance?: T;
+              anchor?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -8278,6 +8580,7 @@ export interface PagesSelect<T extends boolean = true> {
               oneColour?: T;
               eyebrowRule?: T;
               entrance?: T;
+              anchor?: T;
               cssClass?: T;
               id?: T;
               blockName?: T;
@@ -8442,7 +8745,6 @@ export interface MediaSelect<T extends boolean = true> {
   altAuto?: T;
   caption?: T;
   credit?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8518,8 +8820,6 @@ export interface DocumentsSelect<T extends boolean = true> {
   school?: T;
   title?: T;
   description?: T;
-  prefix?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -8824,8 +9124,6 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface FormUploadsSelect<T extends boolean = true> {
   school?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -8913,6 +9211,7 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   secondaryColor?: T;
   accentColor?: T;
   paperColor?: T;
+  buttonColor?: T;
   primaryDeep?: T;
   secondarySoft?: T;
   accentStrong?: T;
@@ -8921,6 +9220,18 @@ export interface SchoolSettingsSelect<T extends boolean = true> {
   bodyFont?: T;
   uiFont?: T;
   accentFont?: T;
+  brandFonts?:
+    | T
+    | {
+        family?: T;
+        file?: T;
+        weight?: T;
+        style?: T;
+        id?: T;
+      };
+  headingFontBrand?: T;
+  bodyFontBrand?: T;
+  uiFontBrand?: T;
   style?:
     | T
     | {

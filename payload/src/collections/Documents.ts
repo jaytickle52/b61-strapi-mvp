@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { publishersOnly } from '../access'
 import { refuseDeleteWhenUsed, usageEndpoint, usageField } from '../usage/fields'
 import { sameSchoolFolder } from '../media/folders'
+import { FONT_MIME_TYPES } from '../branding/fonts'
 
 /**
  * Files families download: handbooks, supply lists, calendars, forms to print.
@@ -52,6 +53,8 @@ export const Documents: CollectionConfig = {
       'application/vnd.openxmlformats-officedocument.presentationml.presentation',
       'text/calendar',
       'text/plain',
+      // Brand fonts (School settings > Look > Brand fonts).
+      ...FONT_MIME_TYPES,
     ],
   },
 }

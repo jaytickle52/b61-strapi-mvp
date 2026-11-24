@@ -39,6 +39,7 @@ import * as migration_20261119_184651_programs_are_pages from './20261119_184651
 import * as migration_20261120_184144_tabs_merge from './20261120_184144_tabs_merge';
 import * as migration_20261120_195000_drop_old_programs from './20261120_195000_drop_old_programs';
 import * as migration_20261120_195659_announcement_status_tracking from './20261120_195659_announcement_status_tracking';
+import * as migration_20261124_105130_design_fidelity from './20261124_105130_design_fidelity';
 
 export const migrations = [
   {
@@ -239,11 +240,16 @@ export const migrations = [
   {
     up: migration_20261120_195000_drop_old_programs.up,
     down: migration_20261120_195000_drop_old_programs.down,
-    name: '20261120_195000_drop_old_programs'
+    name: '20261120_195000_drop_old_programs',
   },
   {
     up: migration_20261120_195659_announcement_status_tracking.up,
     down: migration_20261120_195659_announcement_status_tracking.down,
-    name: '20261120_195659_announcement_status_tracking'
+    name: '20261120_195659_announcement_status_tracking',
+  },
+  {
+    up: migration_20261124_105130_design_fidelity.up,
+    down: migration_20261124_105130_design_fidelity.down,
+    name: '20261124_105130_design_fidelity'
   },
 ];
